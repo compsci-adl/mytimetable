@@ -12,6 +12,8 @@
 		"format": "prettier --write \"**/*.{js,ts,tsx,css,md,cjs,mjs,json}\""
 	},
 	"dependencies": {
+		"@nextui-org/react": "^2.4.2",
+		"framer-motion": "^11.2.12",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1"
 	},

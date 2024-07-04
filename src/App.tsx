@@ -1,5 +1,14 @@
-const App = () => {
-	return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
-};
+import { Button } from '@nextui-org/react';
 
-export default App;
+export const App = () => {
+	return (
+		<>
+			<header>
+				<h1>My Timetable</h1>
+			</header>
+			<main>
+				<Button color="primary">LOL</Button>
+			</main>
+		</>
+	);
+};
