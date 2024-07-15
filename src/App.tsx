@@ -1,11 +1,11 @@
 import { Button } from '@nextui-org/react';
 
+import { Header } from './components/Header';
+
 export const App = () => {
 	return (
 		<>
-			<header>
-				<h1>My Timetable</h1>
-			</header>
+			<Header />
 			<main>
 				<Button color="primary">LOL</Button>
 			</main>
