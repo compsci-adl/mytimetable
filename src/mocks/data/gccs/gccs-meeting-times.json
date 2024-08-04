@@ -1,0 +1,231 @@
+{
+	"status": "success",
+	"data": {
+		"query": {
+			"num_rows": 1,
+			"queryname": "COURSE_CLASS_LIST",
+			"rows": [
+				{
+					"association_group": "10",
+					"groups": [
+						{
+							"type": "Enrolment Class: Seminar",
+							"classes": [
+								{
+									"class_nbr": 21508,
+									"section": "SE01",
+									"size": 200,
+									"enrolled": 70,
+									"available": 130,
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Seminar",
+									"meetings": [
+										{
+											"dates": "23 Jul - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "1pm",
+											"end_time": "3pm",
+											"location": "Helen Mayo Nth, 103N, Florey Lecture Theatre"
+										},
+										{
+											"dates": "1 Oct - 29 Oct",
+											"days": "Tuesday",
+											"start_time": "1pm",
+											"end_time": "3pm",
+											"location": "Helen Mayo Nth, 103N, Florey Lecture Theatre"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "Related Class: Workshop",
+							"classes": [
+								{
+									"class_nbr": 22520,
+									"section": "WR03",
+									"size": 60,
+									"enrolled": 22,
+									"available": 38,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "26 Jul - 13 Sep",
+											"days": "Friday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Barr Smith South, 2060, Teaching Room"
+										},
+										{
+											"dates": "4 Oct - 1 Nov",
+											"days": "Friday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Barr Smith South, 2060, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 22905,
+									"section": "WR02",
+									"size": 60,
+									"enrolled": 17,
+									"available": 43,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "24 Jul - 11 Sep",
+											"days": "Wednesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "2 Oct - 30 Oct",
+											"days": "Wednesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 22906,
+									"section": "WR01",
+									"size": 60,
+									"enrolled": 31,
+									"available": 29,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "25 Jul - 12 Sep",
+											"days": "Thursday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "3 Oct - 31 Oct",
+											"days": "Thursday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "Related Class: Project",
+							"classes": [
+								{
+									"class_nbr": 22521,
+									"section": "PJ04",
+									"size": 31,
+									"enrolled": 25,
+									"available": 6,
+									"institution": "UNIAD",
+									"component": "Related Class: Project",
+									"meetings": [
+										{
+											"dates": "2 Aug - 13 Sep",
+											"days": "Friday",
+											"start_time": "2pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EM106, Computer Suite"
+										},
+										{
+											"dates": "4 Oct - 1 Nov",
+											"days": "Friday",
+											"start_time": "2pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EM106, Computer Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 22907,
+									"section": "PJ03",
+									"size": 32,
+									"enrolled": 14,
+									"available": 18,
+									"institution": "UNIAD",
+									"component": "Related Class: Project",
+									"meetings": [
+										{
+											"dates": "30 Jul - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "3pm",
+											"end_time": "5pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										},
+										{
+											"dates": "1 Oct - 29 Oct",
+											"days": "Tuesday",
+											"start_time": "3pm",
+											"end_time": "5pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 22908,
+									"section": "PJ02",
+									"size": 31,
+									"enrolled": 13,
+									"available": 18,
+									"institution": "UNIAD",
+									"component": "Related Class: Project",
+									"meetings": [
+										{
+											"dates": "1 Aug - 12 Sep",
+											"days": "Thursday",
+											"start_time": "9am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EM106, Computer Suite"
+										},
+										{
+											"dates": "3 Oct - 31 Oct",
+											"days": "Thursday",
+											"start_time": "9am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EM106, Computer Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 22909,
+									"section": "PJ01",
+									"size": 32,
+									"enrolled": 18,
+									"available": 14,
+									"institution": "UNIAD",
+									"component": "Related Class: Project",
+									"meetings": [
+										{
+											"dates": "1 Aug - 12 Sep",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "3 Oct - 31 Oct",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	}
+}

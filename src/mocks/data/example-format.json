@@ -1,0 +1,44 @@
+{
+	"id": "107592", // course ID
+	"name": {
+		"subject": "COMP SCI",
+		"code": "2103", // catalog number aka code
+		"title": "Algorithm Design & Data Structures"
+		// "other_names": ["ADDS, "DSA", "Data structures and algorithms"], // case insensitive in frontend search
+	},
+	"class_number": 14897,
+	"year": "2024",
+	"term": "Semester 1",
+	"campus": "North Terrace",
+	"units": 3,
+	"requirement": {
+		"restriction": "Not available to B. Information Technology students",
+		"prerequisite": ["COMP SCI 1102"], // list of codes or high school classes (can be string for now)
+		"corequisite": [], // list of codes (can be string for now)
+		"assumed_knowledge": [], // list of codes (can be string for now)
+		"incompatible": ["COMP SCI 1103", "COMP SCI 2202", "COMP SCI 2202B"] // list of codes (can be string for now)
+	},
+	"class_list": [
+		{
+			"type": "Workshop",
+			"classes": [
+				{
+					"number": "11472",
+					"meetings": [
+						{
+							"day": "Monday",
+							"date": {
+								"start": "MM-DD",
+								"end": "MM-DD"
+							},
+							"time": {
+								"start": "HH:mm",
+								"end": "HH:mm"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

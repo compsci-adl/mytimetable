@@ -1,0 +1,1378 @@
+{
+	"status": "success",
+	"data": {
+		"query": {
+			"num_rows": 1,
+			"queryname": "COURSE_CLASS_LIST",
+			"rows": [
+				{
+					"association_group": "10",
+					"groups": [
+						{
+							"type": "Enrolment Class: Practical",
+							"classes": [
+								{
+									"class_nbr": 23480,
+									"section": "PR08",
+									"size": 29,
+									"enrolled": 29,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Practical",
+									"meetings": [
+										{
+											"dates": "25 Jul - 25 Jul",
+											"days": "Thursday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										},
+										{
+											"dates": "8 Aug - 8 Aug",
+											"days": "Thursday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										},
+										{
+											"dates": "22 Aug - 22 Aug",
+											"days": "Thursday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										},
+										{
+											"dates": "5 Sep - 5 Sep",
+											"days": "Thursday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										},
+										{
+											"dates": "3 Oct - 3 Oct",
+											"days": "Thursday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										},
+										{
+											"dates": "17 Oct - 17 Oct",
+											"days": "Thursday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23481,
+									"section": "PR07",
+									"size": 44,
+									"enrolled": 38,
+									"available": 6,
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Practical",
+									"meetings": [
+										{
+											"dates": "26 Jul - 26 Jul",
+											"days": "Friday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B15, CAT Suite"
+										},
+										{
+											"dates": "9 Aug - 9 Aug",
+											"days": "Friday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B15, CAT Suite"
+										},
+										{
+											"dates": "23 Aug - 23 Aug",
+											"days": "Friday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B15, CAT Suite"
+										},
+										{
+											"dates": "6 Sep - 6 Sep",
+											"days": "Friday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B15, CAT Suite"
+										},
+										{
+											"dates": "4 Oct - 4 Oct",
+											"days": "Friday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B15, CAT Suite"
+										},
+										{
+											"dates": "18 Oct - 18 Oct",
+											"days": "Friday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B15, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23482,
+									"section": "PR06",
+									"size": 62,
+									"enrolled": 62,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Practical",
+									"meetings": [
+										{
+											"dates": "22 Jul - 22 Jul",
+											"days": "Monday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										},
+										{
+											"dates": "5 Aug - 5 Aug",
+											"days": "Monday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										},
+										{
+											"dates": "19 Aug - 19 Aug",
+											"days": "Monday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										},
+										{
+											"dates": "2 Sep - 2 Sep",
+											"days": "Monday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										},
+										{
+											"dates": "30 Sep - 30 Sep",
+											"days": "Monday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										},
+										{
+											"dates": "14 Oct - 14 Oct",
+											"days": "Monday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23483,
+									"section": "PR05",
+									"size": 32,
+									"enrolled": 32,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Practical",
+									"meetings": [
+										{
+											"dates": "23 Jul - 23 Jul",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "6 Aug - 6 Aug",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "20 Aug - 20 Aug",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "3 Sep - 3 Sep",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "1 Oct - 1 Oct",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "15 Oct - 15 Oct",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23484,
+									"section": "PR04",
+									"size": 17,
+									"enrolled": 17,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Practical",
+									"meetings": [
+										{
+											"dates": "26 Jul - 26 Jul",
+											"days": "Friday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "9 Aug - 9 Aug",
+											"days": "Friday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "23 Aug - 23 Aug",
+											"days": "Friday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "6 Sep - 6 Sep",
+											"days": "Friday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "4 Oct - 4 Oct",
+											"days": "Friday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "18 Oct - 18 Oct",
+											"days": "Friday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23485,
+									"section": "PR03",
+									"size": 69,
+									"enrolled": 68,
+									"available": 1,
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Practical",
+									"meetings": [
+										{
+											"dates": "22 Jul - 22 Jul",
+											"days": "Monday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM108, CAT Suite"
+										},
+										{
+											"dates": "5 Aug - 5 Aug",
+											"days": "Monday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM108, CAT Suite"
+										},
+										{
+											"dates": "19 Aug - 19 Aug",
+											"days": "Monday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM108, CAT Suite"
+										},
+										{
+											"dates": "2 Sep - 2 Sep",
+											"days": "Monday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM108, CAT Suite"
+										},
+										{
+											"dates": "30 Sep - 30 Sep",
+											"days": "Monday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM108, CAT Suite"
+										},
+										{
+											"dates": "14 Oct - 14 Oct",
+											"days": "Monday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM108, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23486,
+									"section": "PR02",
+									"size": 13,
+									"enrolled": 13,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Practical",
+									"meetings": [
+										{
+											"dates": "26 Jul - 26 Jul",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "9 Aug - 9 Aug",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "23 Aug - 23 Aug",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "6 Sep - 6 Sep",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "4 Oct - 4 Oct",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "18 Oct - 18 Oct",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23487,
+									"section": "PR01",
+									"size": 26,
+									"enrolled": 26,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Practical",
+									"meetings": [
+										{
+											"dates": "22 Jul - 22 Jul",
+											"days": "Monday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "5 Aug - 5 Aug",
+											"days": "Monday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "19 Aug - 19 Aug",
+											"days": "Monday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "2 Sep - 2 Sep",
+											"days": "Monday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "30 Sep - 30 Sep",
+											"days": "Monday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										},
+										{
+											"dates": "14 Oct - 14 Oct",
+											"days": "Monday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, 236, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 29011,
+									"section": "PR09",
+									"size": 60,
+									"enrolled": 60,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Practical",
+									"meetings": [
+										{
+											"dates": "24 Jul - 24 Jul",
+											"days": "Wednesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										},
+										{
+											"dates": "7 Aug - 7 Aug",
+											"days": "Wednesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										},
+										{
+											"dates": "21 Aug - 21 Aug",
+											"days": "Wednesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										},
+										{
+											"dates": "4 Sep - 4 Sep",
+											"days": "Wednesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										},
+										{
+											"dates": "2 Oct - 2 Oct",
+											"days": "Wednesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										},
+										{
+											"dates": "16 Oct - 16 Oct",
+											"days": "Wednesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "Related Class: Workshop",
+							"classes": [
+								{
+									"class_nbr": 23514,
+									"section": "WR15",
+									"size": 30,
+									"enrolled": 19,
+									"available": 11,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "31 Jul - 31 Jul",
+											"days": "Wednesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Hughes, 111b, Teaching Room"
+										},
+										{
+											"dates": "14 Aug - 14 Aug",
+											"days": "Wednesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Hughes, 111b, Teaching Room"
+										},
+										{
+											"dates": "28 Aug - 28 Aug",
+											"days": "Wednesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Hughes, 111b, Teaching Room"
+										},
+										{
+											"dates": "11 Sep - 11 Sep",
+											"days": "Wednesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Hughes, 111b, Teaching Room"
+										},
+										{
+											"dates": "9 Oct - 9 Oct",
+											"days": "Wednesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Hughes, 111b, Teaching Room"
+										},
+										{
+											"dates": "23 Oct - 23 Oct",
+											"days": "Wednesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Hughes, 111b, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23516,
+									"section": "WR13",
+									"size": 30,
+									"enrolled": 22,
+									"available": 8,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "2 Aug - 2 Aug",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EM105, Teaching Room"
+										},
+										{
+											"dates": "16 Aug - 16 Aug",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EM105, Teaching Room"
+										},
+										{
+											"dates": "30 Aug - 30 Aug",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EM105, Teaching Room"
+										},
+										{
+											"dates": "13 Sep - 13 Sep",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EM105, Teaching Room"
+										},
+										{
+											"dates": "11 Oct - 11 Oct",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EM105, Teaching Room"
+										},
+										{
+											"dates": "25 Oct - 25 Oct",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EM105, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23518,
+									"section": "WR11",
+									"size": 30,
+									"enrolled": 29,
+									"available": 1,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "1 Aug - 1 Aug",
+											"days": "Thursday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "15 Aug - 15 Aug",
+											"days": "Thursday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "29 Aug - 29 Aug",
+											"days": "Thursday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "12 Sep - 12 Sep",
+											"days": "Thursday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "10 Oct - 10 Oct",
+											"days": "Thursday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "24 Oct - 24 Oct",
+											"days": "Thursday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23519,
+									"section": "WR10",
+									"size": 30,
+									"enrolled": 17,
+									"available": 13,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "1 Aug - 1 Aug",
+											"days": "Thursday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "15 Aug - 15 Aug",
+											"days": "Thursday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "29 Aug - 29 Aug",
+											"days": "Thursday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "12 Sep - 12 Sep",
+											"days": "Thursday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "10 Oct - 10 Oct",
+											"days": "Thursday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "24 Oct - 24 Oct",
+											"days": "Thursday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23520,
+									"section": "WR09",
+									"size": 30,
+									"enrolled": 30,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "31 Jul - 31 Jul",
+											"days": "Wednesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Schulz, 214, Teaching Room"
+										},
+										{
+											"dates": "14 Aug - 14 Aug",
+											"days": "Wednesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Schulz, 214, Teaching Room"
+										},
+										{
+											"dates": "28 Aug - 28 Aug",
+											"days": "Wednesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Schulz, 214, Teaching Room"
+										},
+										{
+											"dates": "11 Sep - 11 Sep",
+											"days": "Wednesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Schulz, 214, Teaching Room"
+										},
+										{
+											"dates": "9 Oct - 9 Oct",
+											"days": "Wednesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Schulz, 214, Teaching Room"
+										},
+										{
+											"dates": "23 Oct - 23 Oct",
+											"days": "Wednesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Schulz, 214, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23521,
+									"section": "WR08",
+									"size": 30,
+									"enrolled": 19,
+									"available": 11,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "31 Jul - 31 Jul",
+											"days": "Wednesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "14 Aug - 14 Aug",
+											"days": "Wednesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "28 Aug - 28 Aug",
+											"days": "Wednesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "11 Sep - 11 Sep",
+											"days": "Wednesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "9 Oct - 9 Oct",
+											"days": "Wednesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "23 Oct - 23 Oct",
+											"days": "Wednesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23522,
+									"section": "WR07",
+									"size": 30,
+									"enrolled": 30,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "1 Aug - 1 Aug",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "15 Aug - 15 Aug",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "29 Aug - 29 Aug",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "12 Sep - 12 Sep",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "10 Oct - 10 Oct",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "24 Oct - 24 Oct",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23523,
+									"section": "WR06",
+									"size": 30,
+									"enrolled": 30,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Engineering & Mathematics, EMG07, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23524,
+									"section": "WR05",
+									"size": 30,
+									"enrolled": 30,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "31 Jul - 31 Jul",
+											"days": "Wednesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Schulz, 214, Teaching Room"
+										},
+										{
+											"dates": "14 Aug - 14 Aug",
+											"days": "Wednesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Schulz, 214, Teaching Room"
+										},
+										{
+											"dates": "28 Aug - 28 Aug",
+											"days": "Wednesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Schulz, 214, Teaching Room"
+										},
+										{
+											"dates": "11 Sep - 11 Sep",
+											"days": "Wednesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Schulz, 214, Teaching Room"
+										},
+										{
+											"dates": "9 Oct - 9 Oct",
+											"days": "Wednesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Schulz, 214, Teaching Room"
+										},
+										{
+											"dates": "23 Oct - 23 Oct",
+											"days": "Wednesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Schulz, 214, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23525,
+									"section": "WR04",
+									"size": 30,
+									"enrolled": 29,
+									"available": 1,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "1 Aug - 1 Aug",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Lower Napier, LG24, Teaching Room"
+										},
+										{
+											"dates": "15 Aug - 15 Aug",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Lower Napier, LG24, Teaching Room"
+										},
+										{
+											"dates": "29 Aug - 29 Aug",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Lower Napier, LG24, Teaching Room"
+										},
+										{
+											"dates": "12 Sep - 12 Sep",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Lower Napier, LG24, Teaching Room"
+										},
+										{
+											"dates": "10 Oct - 10 Oct",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Lower Napier, LG24, Teaching Room"
+										},
+										{
+											"dates": "24 Oct - 24 Oct",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Lower Napier, LG24, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23526,
+									"section": "WR03",
+									"size": 30,
+									"enrolled": 30,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Engineering & Mathematics, EMG06, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23527,
+									"section": "WR02",
+									"size": 30,
+									"enrolled": 30,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "2 Aug - 2 Aug",
+											"days": "Friday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										},
+										{
+											"dates": "16 Aug - 16 Aug",
+											"days": "Friday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										},
+										{
+											"dates": "30 Aug - 30 Aug",
+											"days": "Friday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										},
+										{
+											"dates": "13 Sep - 13 Sep",
+											"days": "Friday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										},
+										{
+											"dates": "11 Oct - 11 Oct",
+											"days": "Friday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										},
+										{
+											"dates": "25 Oct - 25 Oct",
+											"days": "Friday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 23528,
+									"section": "WR01",
+									"size": 30,
+									"enrolled": 30,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "2 Aug - 2 Aug",
+											"days": "Friday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										},
+										{
+											"dates": "16 Aug - 16 Aug",
+											"days": "Friday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										},
+										{
+											"dates": "30 Aug - 30 Aug",
+											"days": "Friday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										},
+										{
+											"dates": "13 Sep - 13 Sep",
+											"days": "Friday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										},
+										{
+											"dates": "11 Oct - 11 Oct",
+											"days": "Friday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										},
+										{
+											"dates": "25 Oct - 25 Oct",
+											"days": "Friday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Barr Smith South, 2052, Teaching Room"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "Related Class: Assessment",
+							"classes": [
+								{
+									"class_nbr": 23544,
+									"section": "AS08",
+									"size": 60,
+									"enrolled": 46,
+									"available": 14,
+									"institution": "UNIAD",
+									"component": "Related Class: Assessment",
+									"meetings": [
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23545,
+									"section": "AS07",
+									"size": 60,
+									"enrolled": 60,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Assessment",
+									"meetings": [
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Ingkarni Wardli, G22, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23546,
+									"section": "AS06",
+									"size": 60,
+									"enrolled": 60,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Assessment",
+									"meetings": [
+										{
+											"dates": "11 Sep - 11 Sep",
+											"days": "Wednesday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, G22, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23547,
+									"section": "AS05",
+									"size": 60,
+									"enrolled": 24,
+									"available": 36,
+									"institution": "UNIAD",
+									"component": "Related Class: Assessment",
+									"meetings": [
+										{
+											"dates": "9 Sep - 9 Sep",
+											"days": "Monday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Ingkarni Wardli, G22, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23548,
+									"section": "AS04",
+									"size": 60,
+									"enrolled": 17,
+									"available": 43,
+									"institution": "UNIAD",
+									"component": "Related Class: Assessment",
+									"meetings": [
+										{
+											"dates": "9 Sep - 9 Sep",
+											"days": "Monday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23549,
+									"section": "AS03",
+									"size": 60,
+									"enrolled": 34,
+									"available": 26,
+									"institution": "UNIAD",
+									"component": "Related Class: Assessment",
+									"meetings": [
+										{
+											"dates": "9 Sep - 9 Sep",
+											"days": "Monday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM108, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23550,
+									"section": "AS02",
+									"size": 45,
+									"enrolled": 44,
+									"available": 1,
+									"institution": "UNIAD",
+									"component": "Related Class: Assessment",
+									"meetings": [
+										{
+											"dates": "13 Sep - 13 Sep",
+											"days": "Friday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 23551,
+									"section": "AS01",
+									"size": 60,
+									"enrolled": 60,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Assessment",
+									"meetings": [
+										{
+											"dates": "9 Sep - 9 Sep",
+											"days": "Monday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Ingkarni Wardli, B23, CAT Suite"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "Automatic Enrolment Class: Seminar",
+							"classes": [
+								{
+									"class_nbr": 23552,
+									"section": "SE01",
+									"size": 420,
+									"enrolled": 345,
+									"available": 75,
+									"institution": "UNIAD",
+									"component": "Automatic Enrolment Class: Seminar",
+									"meetings": [
+										{
+											"dates": "22 Jul - 22 Jul",
+											"days": "Monday",
+											"start_time": "2pm",
+											"end_time": "3pm",
+											"location": "Scott Theatre, 001, Scott Theatre"
+										},
+										{
+											"dates": "25 Jul - 12 Sep",
+											"days": "Thursday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "The Braggs, G60, Bragg Lecture Theatre"
+										},
+										{
+											"dates": "3 Oct - 24 Oct",
+											"days": "Thursday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "The Braggs, G60, Bragg Lecture Theatre"
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	}
+}

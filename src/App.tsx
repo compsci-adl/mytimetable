@@ -17,6 +17,16 @@ export const App = () => {
 				>
 					LOL
 				</Button>
+				<Button
+					color="primary"
+					onClick={async () => {
+						const test = await fetch('/api/course/107592');
+						const data = await test.json();
+						console.log(data);
+					}}
+				>
+					OLO
+				</Button>
 			</main>
 		</>
 	);

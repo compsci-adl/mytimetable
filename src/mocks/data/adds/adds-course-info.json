@@ -1,0 +1,57 @@
+{
+	"status": "success",
+	"data": {
+		"query": {
+			"num_rows": 1,
+			"queryname": "COURSE_DTL",
+			"rows": [
+				{
+					"YEAR": "2024",
+					"COURSE_ID": "107592",
+					"COURSE_OFFER_NBR": 1,
+					"ACAD_CAREER": "UGRD",
+					"ACAD_CAREER_DESCR": "Undergraduate",
+					"TERM": "4420",
+					"TERM_DESCR": "Semester 2",
+					"COURSE_TITLE": "Algorithm Design & Data Structures",
+					"CAMPUS": "North Terrace",
+					"CAMPUS_CD": "NTRCE",
+					"COUNTRY": "AUS",
+					"SUBJECT": "COMP SCI",
+					"CATALOG_NBR": "2103",
+					"CLASS_NBR": 28669,
+					"SESSION_CD": "1",
+					"UNITS": 3,
+					"EFTLS": 0.125,
+					"FIELD_OF_EDUCATION": "020111",
+					"SSR_HECS_BAND_ID": "2A",
+					"CONTACT": "Up to 6 hours per week",
+					"AVAILABLE_FOR_NON_AWARD_STUDY": "No",
+					"AVAILABLE_FOR_STUDY_ABROAD": "Y",
+					"QUOTA": "N",
+					"QUOTA_TXT": "",
+					"RESTRICTION": "Y",
+					"RESTRICTION_TXT": "Not available to B. Information Technology students",
+					"PRE_REQUISITE": "COMP SCI 1102",
+					"CO_REQUISITE": "",
+					"ASSUMED_KNOWLEDGE": "",
+					"INCOMPATIBLE": "COMP SCI 1103, COMP SCI 2202, COMP SCI 2202B",
+					"ASSESSMENT": "Written exam and/or assignments",
+					"BIENNIAL_COURSE": "",
+					"DISCOVERY_EXPERIENCE_GLOBAL": "N",
+					"DISCOVERY_EXPERIENCE–WORKING": "N",
+					"DISCOVERY_EXPERIENCE–COMMUNITY": "N",
+					"SYLLABUS": "The course is structured to take students from an introductory knowledge of C++ to a higher level, as well as addressing some key areas of computer programming and algorithm design. Topics include: review of class hierarchies, inheritance, friends, polymorphism and type systems; recursion; OO design principles, abstract data types, testing and software reuse; introductory data structures: linked lists, stacks, queues, trees, heaps, algorithmic strategies for searching and sorting data in these structures; introductory complexity analysis.",
+					"ISLOP": false,
+					"URL": "https://www.adelaide.edu.au/course-outlines/107592/1/sem-2/2024",
+					"CRITICAL_DATES": {
+						"LAST_DAY": "Mon 05/08/2024",
+						"CENSUS_DT": "Wed 14/08/2024",
+						"LAST_DAY_TO_WFN": "Fri 13/09/2024",
+						"LAST_DAY_TO_WF": "Fri 25/10/2024"
+					}
+				}
+			]
+		}
+	}
+}

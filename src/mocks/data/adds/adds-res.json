@@ -1,0 +1,882 @@
+{
+	"id": "107592",
+	"name": {
+		"subject": "COMP SCI",
+		"code": "2103",
+		"title": "Algorithm Design & Data Structures"
+	},
+	"class_number": 28669,
+	"year": "2024",
+	"term": "Semester 2",
+	"campus": "North Terrace",
+	"units": 3,
+	"requirement": {
+		"restriction": "Not available to B. Information Technology students",
+		"prerequisite": ["COMP SCI 1102"],
+		"corequisite": [],
+		"assumed_knowledge": [],
+		"incompatible": ["COMP SCI 1103", "COMP SCI 2202", "COMP SCI 2202B"]
+	},
+	"class_list": [
+		{
+			"type": "Lecture",
+			"classes": [
+				{
+					"number": 21109,
+					"meetings": [
+						{
+							"day": "Monday",
+							"date": {
+								"start": "07-22",
+								"end": "09-09"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-23",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "15:00",
+								"end": "16:00"
+							}
+						},
+						{
+							"day": "Wednesday",
+							"date": {
+								"start": "07-24",
+								"end": "09-11"
+							},
+							"time": {
+								"start": "15:00",
+								"end": "16:00"
+							}
+						},
+						{
+							"day": "Monday",
+							"date": {
+								"start": "09-30",
+								"end": "10-21"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-01",
+								"end": "10-22"
+							},
+							"time": {
+								"start": "15:00",
+								"end": "16:00"
+							}
+						},
+						{
+							"day": "Wednesday",
+							"date": {
+								"start": "10-02",
+								"end": "10-23"
+							},
+							"time": {
+								"start": "15:00",
+								"end": "16:00"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "Practical",
+			"classes": [
+				{
+					"number": 25024,
+					"meetings": [
+						{
+							"day": "Friday",
+							"date": {
+								"start": "07-26",
+								"end": "09-13"
+							},
+							"time": {
+								"start": "11:00",
+								"end": "13:00"
+							}
+						},
+						{
+							"day": "Friday",
+							"date": {
+								"start": "10-04",
+								"end": "10-25"
+							},
+							"time": {
+								"start": "11:00",
+								"end": "13:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 25026,
+					"meetings": [
+						{
+							"day": "Thursday",
+							"date": {
+								"start": "07-25",
+								"end": "09-12"
+							},
+							"time": {
+								"start": "11:00",
+								"end": "13:00"
+							}
+						},
+						{
+							"day": "Thursday",
+							"date": {
+								"start": "10-03",
+								"end": "10-24"
+							},
+							"time": {
+								"start": "11:00",
+								"end": "13:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 25027,
+					"meetings": [
+						{
+							"day": "Thursday",
+							"date": {
+								"start": "07-25",
+								"end": "09-12"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "15:00"
+							}
+						},
+						{
+							"day": "Thursday",
+							"date": {
+								"start": "10-03",
+								"end": "10-24"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "15:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 25028,
+					"meetings": [
+						{
+							"day": "Wednesday",
+							"date": {
+								"start": "07-24",
+								"end": "09-11"
+							},
+							"time": {
+								"start": "09:00",
+								"end": "11:00"
+							}
+						},
+						{
+							"day": "Wednesday",
+							"date": {
+								"start": "10-02",
+								"end": "10-23"
+							},
+							"time": {
+								"start": "09:00",
+								"end": "11:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 25029,
+					"meetings": [
+						{
+							"day": "Friday",
+							"date": {
+								"start": "07-26",
+								"end": "09-13"
+							},
+							"time": {
+								"start": "15:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Friday",
+							"date": {
+								"start": "10-04",
+								"end": "10-25"
+							},
+							"time": {
+								"start": "15:00",
+								"end": "17:00"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "Workshop",
+			"classes": [
+				{
+					"number": 25030,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-30",
+								"end": "07-30"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-13",
+								"end": "08-13"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-27",
+								"end": "08-27"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "09-10",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-08",
+								"end": "10-08"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-22",
+								"end": "10-22"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 25031,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-30",
+								"end": "07-30"
+							},
+							"time": {
+								"start": "12:00",
+								"end": "13:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-13",
+								"end": "08-13"
+							},
+							"time": {
+								"start": "12:00",
+								"end": "13:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-27",
+								"end": "08-27"
+							},
+							"time": {
+								"start": "12:00",
+								"end": "13:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "09-10",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "12:00",
+								"end": "13:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-08",
+								"end": "10-08"
+							},
+							"time": {
+								"start": "12:00",
+								"end": "13:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-22",
+								"end": "10-22"
+							},
+							"time": {
+								"start": "12:00",
+								"end": "13:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 25032,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-30",
+								"end": "07-30"
+							},
+							"time": {
+								"start": "10:00",
+								"end": "11:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-13",
+								"end": "08-13"
+							},
+							"time": {
+								"start": "10:00",
+								"end": "11:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-27",
+								"end": "08-27"
+							},
+							"time": {
+								"start": "10:00",
+								"end": "11:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "09-10",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "10:00",
+								"end": "11:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-08",
+								"end": "10-08"
+							},
+							"time": {
+								"start": "10:00",
+								"end": "11:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-22",
+								"end": "10-22"
+							},
+							"time": {
+								"start": "10:00",
+								"end": "11:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 25033,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-30",
+								"end": "07-30"
+							},
+							"time": {
+								"start": "11:00",
+								"end": "12:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-13",
+								"end": "08-13"
+							},
+							"time": {
+								"start": "11:00",
+								"end": "12:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-27",
+								"end": "08-27"
+							},
+							"time": {
+								"start": "11:00",
+								"end": "12:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "09-10",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "11:00",
+								"end": "12:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-08",
+								"end": "10-08"
+							},
+							"time": {
+								"start": "11:00",
+								"end": "12:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-22",
+								"end": "10-22"
+							},
+							"time": {
+								"start": "11:00",
+								"end": "12:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 25034,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-30",
+								"end": "07-30"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "14:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-13",
+								"end": "08-13"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "14:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-27",
+								"end": "08-27"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "14:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "09-10",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "14:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-08",
+								"end": "10-08"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "14:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-22",
+								"end": "10-22"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "14:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 25035,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-30",
+								"end": "07-30"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-13",
+								"end": "08-13"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-27",
+								"end": "08-27"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "09-10",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-08",
+								"end": "10-08"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-22",
+								"end": "10-22"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 28667,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-30",
+								"end": "07-30"
+							},
+							"time": {
+								"start": "09:00",
+								"end": "10:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-13",
+								"end": "08-13"
+							},
+							"time": {
+								"start": "09:00",
+								"end": "10:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-27",
+								"end": "08-27"
+							},
+							"time": {
+								"start": "09:00",
+								"end": "10:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "09-10",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "09:00",
+								"end": "10:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-08",
+								"end": "10-08"
+							},
+							"time": {
+								"start": "09:00",
+								"end": "10:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-22",
+								"end": "10-22"
+							},
+							"time": {
+								"start": "09:00",
+								"end": "10:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 28668,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-30",
+								"end": "07-30"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-13",
+								"end": "08-13"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-27",
+								"end": "08-27"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "09-10",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-08",
+								"end": "10-08"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-22",
+								"end": "10-22"
+							},
+							"time": {
+								"start": "17:00",
+								"end": "18:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 28669,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-30",
+								"end": "07-30"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-13",
+								"end": "08-13"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "08-27",
+								"end": "08-27"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "09-10",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-08",
+								"end": "10-08"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-22",
+								"end": "10-22"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

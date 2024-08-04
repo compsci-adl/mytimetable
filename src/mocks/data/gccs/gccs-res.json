@@ -1,0 +1,263 @@
+{
+	"id": "106541",
+	"name": {
+		"subject": "COMP SCI",
+		"code": "1104",
+		"title": "Grand Challenges in Computer Science"
+	},
+	"class_number": 22520,
+	"year": "2024",
+	"term": "Semester 2",
+	"campus": "North Terrace",
+	"units": 3,
+	"requirement": {
+		"restriction": "Available to B.Comp Sc (Advanced) students only, or by permission of the Head of School. Non-B.Comp Sc (Advanced) students must achieve a GPA of at least 6 in Computer Science courses before being considered for entry",
+		"prerequisite": [],
+		"corequisite": [],
+		"assumed_knowledge": [
+			"COMP SCI 1101",
+			"COMP SCI 1201",
+			"ENG 1002",
+			"ENG 1003",
+			"MECH ENG 1100",
+			"MECH ENG 1101",
+			"MECH ENG 1102",
+			"MECH ENG 1103",
+			"MECH ENG 1104 or MECH ENG 1105"
+		],
+		"incompatible": []
+	},
+	"class_list": [
+		{
+			"type": "Seminar",
+			"classes": [
+				{
+					"number": 21508,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-23",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "15:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-01",
+								"end": "10-29"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "15:00"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "Workshop",
+			"classes": [
+				{
+					"number": 22520,
+					"meetings": [
+						{
+							"day": "Friday",
+							"date": {
+								"start": "07-26",
+								"end": "09-13"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Friday",
+							"date": {
+								"start": "10-04",
+								"end": "11-01"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 22905,
+					"meetings": [
+						{
+							"day": "Wednesday",
+							"date": {
+								"start": "07-24",
+								"end": "09-11"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Wednesday",
+							"date": {
+								"start": "10-02",
+								"end": "10-30"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 22906,
+					"meetings": [
+						{
+							"day": "Thursday",
+							"date": {
+								"start": "07-25",
+								"end": "09-12"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Thursday",
+							"date": {
+								"start": "10-03",
+								"end": "10-31"
+							},
+							"time": {
+								"start": "16:00",
+								"end": "17:00"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "Project",
+			"classes": [
+				{
+					"number": 22521,
+					"meetings": [
+						{
+							"day": "Friday",
+							"date": {
+								"start": "08-02",
+								"end": "09-13"
+							},
+							"time": {
+								"start": "14:00",
+								"end": "16:00"
+							}
+						},
+						{
+							"day": "Friday",
+							"date": {
+								"start": "10-04",
+								"end": "11-01"
+							},
+							"time": {
+								"start": "14:00",
+								"end": "16:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 22907,
+					"meetings": [
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "07-30",
+								"end": "09-10"
+							},
+							"time": {
+								"start": "15:00",
+								"end": "17:00"
+							}
+						},
+						{
+							"day": "Tuesday",
+							"date": {
+								"start": "10-01",
+								"end": "10-29"
+							},
+							"time": {
+								"start": "15:00",
+								"end": "17:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 22908,
+					"meetings": [
+						{
+							"day": "Thursday",
+							"date": {
+								"start": "08-01",
+								"end": "09-12"
+							},
+							"time": {
+								"start": "09:00",
+								"end": "11:00"
+							}
+						},
+						{
+							"day": "Thursday",
+							"date": {
+								"start": "10-03",
+								"end": "10-31"
+							},
+							"time": {
+								"start": "09:00",
+								"end": "11:00"
+							}
+						}
+					]
+				},
+				{
+					"number": 22909,
+					"meetings": [
+						{
+							"day": "Thursday",
+							"date": {
+								"start": "08-01",
+								"end": "09-12"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "15:00"
+							}
+						},
+						{
+							"day": "Thursday",
+							"date": {
+								"start": "10-03",
+								"end": "10-31"
+							},
+							"time": {
+								"start": "13:00",
+								"end": "15:00"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

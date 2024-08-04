@@ -1,0 +1,692 @@
+{
+	"status": "success",
+	"data": {
+		"query": {
+			"num_rows": 1,
+			"queryname": "COURSE_CLASS_LIST",
+			"rows": [
+				{
+					"association_group": "10",
+					"groups": [
+						{
+							"type": "Enrolment Class: Lecture",
+							"classes": [
+								{
+									"class_nbr": 21109,
+									"section": "LE01",
+									"size": 250,
+									"enrolled": 187,
+									"available": 63,
+									"institution": "UNIAD",
+									"component": "Enrolment Class: Lecture",
+									"notes": [
+										{
+											"topic": "",
+											"note": "For an enriching and interactive learning experience, it is highly recommended to attend the lecture in person. While the lecture will be recorded, it is primarily intended for review purposes and for individuals who cannot attend due to special circumstances. Please check MyUni for details once enrolled."
+										}
+									],
+									"meetings": [
+										{
+											"dates": "22 Jul - 9 Sep",
+											"days": "Monday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Horace Lamb, 1022, Horace Lamb Lecture Theatre"
+										},
+										{
+											"dates": "23 Jul - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Helen Mayo Nth, 103N, Florey Lecture Theatre"
+										},
+										{
+											"dates": "24 Jul - 11 Sep",
+											"days": "Wednesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Barr Smith South, 3029, Flentje Lecture Theatre"
+										},
+										{
+											"dates": "30 Sep - 21 Oct",
+											"days": "Monday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Horace Lamb, 1022, Horace Lamb Lecture Theatre"
+										},
+										{
+											"dates": "1 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Helen Mayo Nth, 103N, Florey Lecture Theatre"
+										},
+										{
+											"dates": "2 Oct - 23 Oct",
+											"days": "Wednesday",
+											"start_time": "3pm",
+											"end_time": "4pm",
+											"location": "Barr Smith South, 3029, Flentje Lecture Theatre"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "Related Class: Practical",
+							"classes": [
+								{
+									"class_nbr": 25024,
+									"section": "PR06",
+									"size": 80,
+									"enrolled": 40,
+									"available": 40,
+									"institution": "UNIAD",
+									"component": "Related Class: Practical",
+									"meetings": [
+										{
+											"dates": "26 Jul - 13 Sep",
+											"days": "Friday",
+											"start_time": "11am",
+											"end_time": "1pm",
+											"location": "Engineering & Mathematics, EM108, CAT Suite"
+										},
+										{
+											"dates": "4 Oct - 25 Oct",
+											"days": "Friday",
+											"start_time": "11am",
+											"end_time": "1pm",
+											"location": "Engineering & Mathematics, EM108, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 25026,
+									"section": "PR04",
+									"size": 44,
+									"enrolled": 37,
+									"available": 7,
+									"institution": "UNIAD",
+									"component": "Related Class: Practical",
+									"meetings": [
+										{
+											"dates": "25 Jul - 12 Sep",
+											"days": "Thursday",
+											"start_time": "11am",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, B15, CAT Suite"
+										},
+										{
+											"dates": "3 Oct - 24 Oct",
+											"days": "Thursday",
+											"start_time": "11am",
+											"end_time": "1pm",
+											"location": "Ingkarni Wardli, B15, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 25027,
+									"section": "PR03",
+									"size": 46,
+									"enrolled": 34,
+									"available": 12,
+									"institution": "UNIAD",
+									"component": "Related Class: Practical",
+									"meetings": [
+										{
+											"dates": "25 Jul - 12 Sep",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										},
+										{
+											"dates": "3 Oct - 24 Oct",
+											"days": "Thursday",
+											"start_time": "1pm",
+											"end_time": "3pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 25028,
+									"section": "PR02",
+									"size": 46,
+									"enrolled": 38,
+									"available": 8,
+									"institution": "UNIAD",
+									"component": "Related Class: Practical",
+									"meetings": [
+										{
+											"dates": "24 Jul - 11 Sep",
+											"days": "Wednesday",
+											"start_time": "9am",
+											"end_time": "11am",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										},
+										{
+											"dates": "2 Oct - 23 Oct",
+											"days": "Wednesday",
+											"start_time": "9am",
+											"end_time": "11am",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										}
+									]
+								},
+								{
+									"class_nbr": 25029,
+									"section": "PR01",
+									"size": 46,
+									"enrolled": 38,
+									"available": 8,
+									"institution": "UNIAD",
+									"component": "Related Class: Practical",
+									"meetings": [
+										{
+											"dates": "26 Jul - 13 Sep",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "5pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										},
+										{
+											"dates": "4 Oct - 25 Oct",
+											"days": "Friday",
+											"start_time": "3pm",
+											"end_time": "5pm",
+											"location": "Ingkarni Wardli, B16, CAT Suite"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "Related Class: Workshop",
+							"classes": [
+								{
+									"class_nbr": 25030,
+									"section": "WR06",
+									"size": 30,
+									"enrolled": 11,
+									"available": 19,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Hughes, 322, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Hughes, 322, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Hughes, 322, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Hughes, 322, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Hughes, 322, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Hughes, 322, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 25031,
+									"section": "WR05",
+									"size": 30,
+									"enrolled": 27,
+									"available": 3,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "12pm",
+											"end_time": "1pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 25032,
+									"section": "WR04",
+									"size": 30,
+									"enrolled": 30,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "10am",
+											"end_time": "11am",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 25033,
+									"section": "WR03",
+									"size": 30,
+									"enrolled": 30,
+									"available": "FULL",
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "11am",
+											"end_time": "12pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 25034,
+									"section": "WR02",
+									"size": 30,
+									"enrolled": 28,
+									"available": 2,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "1pm",
+											"end_time": "2pm",
+											"location": "Petroleum Engineering, G04, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 25035,
+									"section": "WR01",
+									"size": 30,
+									"enrolled": 26,
+									"available": 4,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Hughes, 323, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Hughes, 323, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Hughes, 323, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Hughes, 323, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Hughes, 323, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Hughes, 323, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 28667,
+									"section": "WR07",
+									"size": 30,
+									"enrolled": 10,
+									"available": 20,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Nexus10, UB35, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Nexus10, UB35, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Nexus10, UB35, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Nexus10, UB35, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Nexus10, UB35, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "9am",
+											"end_time": "10am",
+											"location": "Nexus10, UB35, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 28668,
+									"section": "WR08",
+									"size": 30,
+									"enrolled": 9,
+									"available": 21,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "5pm",
+											"end_time": "6pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										}
+									]
+								},
+								{
+									"class_nbr": 28669,
+									"section": "WR09",
+									"size": 30,
+									"enrolled": 16,
+									"available": 14,
+									"institution": "UNIAD",
+									"component": "Related Class: Workshop",
+									"meetings": [
+										{
+											"dates": "30 Jul - 30 Jul",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "13 Aug - 13 Aug",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "27 Aug - 27 Aug",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "10 Sep - 10 Sep",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "8 Oct - 8 Oct",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										},
+										{
+											"dates": "22 Oct - 22 Oct",
+											"days": "Tuesday",
+											"start_time": "4pm",
+											"end_time": "5pm",
+											"location": "Engineering & Mathematics, EM218, Teaching Room"
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	}
+}

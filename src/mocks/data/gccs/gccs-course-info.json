@@ -1,0 +1,57 @@
+{
+	"status": "success",
+	"data": {
+		"query": {
+			"num_rows": 1,
+			"queryname": "COURSE_DTL",
+			"rows": [
+				{
+					"YEAR": "2024",
+					"COURSE_ID": "106541",
+					"COURSE_OFFER_NBR": 1,
+					"ACAD_CAREER": "UGRD",
+					"ACAD_CAREER_DESCR": "Undergraduate",
+					"TERM": "4420",
+					"TERM_DESCR": "Semester 2",
+					"COURSE_TITLE": "Grand Challenges in Computer Science",
+					"CAMPUS": "North Terrace",
+					"CAMPUS_CD": "NTRCE",
+					"COUNTRY": "AUS",
+					"SUBJECT": "COMP SCI",
+					"CATALOG_NBR": "1104",
+					"CLASS_NBR": 22520,
+					"SESSION_CD": "1",
+					"UNITS": 3,
+					"EFTLS": 0.125,
+					"FIELD_OF_EDUCATION": "020100",
+					"SSR_HECS_BAND_ID": "2A",
+					"CONTACT": "Up to 5 hours per week",
+					"AVAILABLE_FOR_NON_AWARD_STUDY": "No",
+					"AVAILABLE_FOR_STUDY_ABROAD": "N",
+					"QUOTA": "N",
+					"QUOTA_TXT": "",
+					"RESTRICTION": "Y",
+					"RESTRICTION_TXT": "Available to B.Comp Sc (Advanced) students only, or by permission of the Head of School. Non-B.Comp Sc (Advanced) students must achieve a GPA of at least 6 in Computer Science courses before being considered for entry",
+					"PRE_REQUISITE": "",
+					"CO_REQUISITE": "",
+					"ASSUMED_KNOWLEDGE": "COMP SCI 1101, COMP SCI 1201, ENG 1002, ENG 1003, MECH ENG 1100, MECH ENG 1101, MECH ENG 1102, MECH ENG 1103, MECH ENG 1104 or MECH ENG 1105",
+					"INCOMPATIBLE": "",
+					"ASSESSMENT": "Assignments and/or Group Project",
+					"BIENNIAL_COURSE": "",
+					"DISCOVERY_EXPERIENCE_GLOBAL": "N",
+					"DISCOVERY_EXPERIENCE–WORKING": "N",
+					"DISCOVERY_EXPERIENCE–COMMUNITY": "N",
+					"SYLLABUS": "This course provides an introduction to key research areas in Computer Science and the 'Grand Challenges'. Topics include AI, Algorithms, Distributed Systems, Networking, Data Mining and Hardware; scholarship and writing in the discipline, critical analysis and thinking skills.",
+					"ISLOP": false,
+					"URL": "https://www.adelaide.edu.au/course-outlines/106541/1/sem-2/2024",
+					"CRITICAL_DATES": {
+						"LAST_DAY": "Mon 05/08/2024",
+						"CENSUS_DT": "Wed 14/08/2024",
+						"LAST_DAY_TO_WFN": "Fri 13/09/2024",
+						"LAST_DAY_TO_WF": "Fri 25/10/2024"
+					}
+				}
+			]
+		}
+	}
+}

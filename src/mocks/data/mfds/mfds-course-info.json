@@ -1,0 +1,57 @@
+{
+	"status": "success",
+	"data": {
+		"query": {
+			"num_rows": 1,
+			"queryname": "COURSE_DTL",
+			"rows": [
+				{
+					"YEAR": "2024",
+					"COURSE_ID": "109685",
+					"COURSE_OFFER_NBR": 1,
+					"ACAD_CAREER": "UGRD",
+					"ACAD_CAREER_DESCR": "Undergraduate",
+					"TERM": "4420",
+					"TERM_DESCR": "Semester 2",
+					"COURSE_TITLE": "Mathematics for Data Science I",
+					"CAMPUS": "North Terrace",
+					"CAMPUS_CD": "NTRCE",
+					"COUNTRY": "AUS",
+					"SUBJECT": "MATHS",
+					"CATALOG_NBR": "1004",
+					"CLASS_NBR": 23514,
+					"SESSION_CD": "1",
+					"UNITS": 3,
+					"EFTLS": 0.125,
+					"FIELD_OF_EDUCATION": "010101",
+					"SSR_HECS_BAND_ID": "1",
+					"CONTACT": "Up to 3 hours per week",
+					"AVAILABLE_FOR_NON_AWARD_STUDY": "Yes",
+					"AVAILABLE_FOR_STUDY_ABROAD": "Y",
+					"QUOTA": "N",
+					"QUOTA_TXT": "",
+					"RESTRICTION": "Y",
+					"RESTRICTION_TXT": "Not available for BMaSc or BMaSc(Adv) students or BMaSc (Hons) [Direct Entry]",
+					"PRE_REQUISITE": "At least a C- in SACE Stage 2 Mathematical Methods or IB Mathematics: at least 3 in Applications and Interpretations HL; or 4 in Analysis and Approaches SL",
+					"CO_REQUISITE": "",
+					"ASSUMED_KNOWLEDGE": "",
+					"INCOMPATIBLE": "MATHS 1008, MATHS 1010, MATHS 1012",
+					"ASSESSMENT": "On-going assessment, exam",
+					"BIENNIAL_COURSE": "",
+					"DISCOVERY_EXPERIENCE_GLOBAL": "N",
+					"DISCOVERY_EXPERIENCE–WORKING": "N",
+					"DISCOVERY_EXPERIENCE–COMMUNITY": "N",
+					"SYLLABUS": "Data science is one of the highest-paying graduate jobs, for those with the relevant mathematical training. This course introduces fundamental mathematical concepts relevant to data and computer science and provides a basis for further study in data science, statistics and cybersecurity. Topics covered are probability: sets, counting, probability axioms, Bayes theorem; applications of calculus: integration and continuous probability distributions, series approximations; linear algebra: vectors and matrices, matrix algebra, vector spaces, eigenvalues and diagonalisation. The course draws connections between each of these fundamental mathematical concepts and modern data science applications and introduces mathematical applications using Python programming.",
+					"ISLOP": false,
+					"URL": "https://www.adelaide.edu.au/course-outlines/109685/1/sem-2/2024",
+					"CRITICAL_DATES": {
+						"LAST_DAY": "Mon 05/08/2024",
+						"CENSUS_DT": "Wed 14/08/2024",
+						"LAST_DAY_TO_WFN": "Fri 13/09/2024",
+						"LAST_DAY_TO_WF": "Fri 25/10/2024"
+					}
+				}
+			]
+		}
+	}
+}
