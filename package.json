@@ -14,11 +14,12 @@
 	"dependencies": {
 		"@fontsource-variable/outfit": "^5.0.13",
 		"@nextui-org/react": "^2.4.2",
+		"@tanstack/react-query": "^5.51.23",
 		"axios": "^1.7.2",
 		"framer-motion": "^11.2.12",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
-		"swr": "^2.2.5"
+		"zustand": "^4.5.4"
 	},
 	"devDependencies": {
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",

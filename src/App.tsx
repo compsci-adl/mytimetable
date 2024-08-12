@@ -1,32 +1,12 @@
-import { Button } from '@nextui-org/react';
-
 import { Header } from './components/Header';
+import { SearchForm } from './components/SearchForm';
 
 export const App = () => {
 	return (
 		<>
 			<Header />
-			<main>
-				<Button
-					color="primary"
-					onClick={async () => {
-						const test = await fetch('/api/courses');
-						const data = await test.json();
-						console.log(data);
-					}}
-				>
-					LOL
-				</Button>
-				<Button
-					color="primary"
-					onClick={async () => {
-						const test = await fetch('/api/course/107592');
-						const data = await test.json();
-						console.log(data);
-					}}
-				>
-					OLO
-				</Button>
+			<main className="mx-auto max-w-screen-xl px-2">
+				<SearchForm />
 			</main>
 		</>
 	);
