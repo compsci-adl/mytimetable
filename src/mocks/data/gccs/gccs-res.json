@@ -6,7 +6,7 @@
 		"title": "Grand Challenges in Computer Science"
 	},
 	"class_number": 22520,
-	"year": "2024",
+	"year": 2024,
 	"term": "Semester 2",
 	"campus": "North Terrace",
 	"units": 3,
@@ -27,15 +27,16 @@
 		],
 		"incompatible": []
 	},
-	"class_list": [
+	"classList": [
 		{
 			"type": "Seminar",
 			"classes": [
 				{
-					"number": 21508,
+					"number": "21508",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Helen Mayo Nth, 103N, Florey Lecture Theatre",
 							"date": {
 								"start": "07-23",
 								"end": "09-10"
@@ -47,6 +48,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Helen Mayo Nth, 103N, Florey Lecture Theatre",
 							"date": {
 								"start": "10-01",
 								"end": "10-29"
@@ -64,10 +66,11 @@
 			"type": "Workshop",
 			"classes": [
 				{
-					"number": 22520,
+					"number": "22520",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2060, Teaching Room",
 							"date": {
 								"start": "07-26",
 								"end": "09-13"
@@ -79,6 +82,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2060, Teaching Room",
 							"date": {
 								"start": "10-04",
 								"end": "11-01"
@@ -91,10 +95,11 @@
 					]
 				},
 				{
-					"number": 22905,
+					"number": "22905",
 					"meetings": [
 						{
 							"day": "Wednesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "07-24",
 								"end": "09-11"
@@ -106,6 +111,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "10-02",
 								"end": "10-30"
@@ -118,10 +124,11 @@
 					]
 				},
 				{
-					"number": 22906,
+					"number": "22906",
 					"meetings": [
 						{
 							"day": "Thursday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "07-25",
 								"end": "09-12"
@@ -133,6 +140,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "10-03",
 								"end": "10-31"
@@ -150,10 +158,11 @@
 			"type": "Project",
 			"classes": [
 				{
-					"number": 22521,
+					"number": "22521",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Engineering & Mathematics, EM106, Computer Suite",
 							"date": {
 								"start": "08-02",
 								"end": "09-13"
@@ -165,6 +174,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Engineering & Mathematics, EM106, Computer Suite",
 							"date": {
 								"start": "10-04",
 								"end": "11-01"
@@ -177,10 +187,11 @@
 					]
 				},
 				{
-					"number": 22907,
+					"number": "22907",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "07-30",
 								"end": "09-10"
@@ -192,6 +203,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "10-01",
 								"end": "10-29"
@@ -204,10 +216,11 @@
 					]
 				},
 				{
-					"number": 22908,
+					"number": "22908",
 					"meetings": [
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EM106, Computer Suite",
 							"date": {
 								"start": "08-01",
 								"end": "09-12"
@@ -219,6 +232,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EM106, Computer Suite",
 							"date": {
 								"start": "10-03",
 								"end": "10-31"
@@ -231,10 +245,11 @@
 					]
 				},
 				{
-					"number": 22909,
+					"number": "22909",
 					"meetings": [
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "08-01",
 								"end": "09-12"
@@ -246,6 +261,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "10-03",
 								"end": "10-31"

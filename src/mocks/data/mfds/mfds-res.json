@@ -6,7 +6,7 @@
 		"title": "Mathematics for Data Science I"
 	},
 	"class_number": 23514,
-	"year": "2024",
+	"year": 2024,
 	"term": "Semester 2",
 	"campus": "North Terrace",
 	"units": 3,
@@ -19,15 +19,16 @@
 		"assumed_knowledge": [],
 		"incompatible": ["MATHS 1008", "MATHS 1010", "MATHS 1012"]
 	},
-	"class_list": [
+	"classList": [
 		{
 			"type": "Practical",
 			"classes": [
 				{
-					"number": 23480,
+					"number": "23480",
 					"meetings": [
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "07-25",
 								"end": "07-25"
@@ -39,6 +40,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "08-08",
 								"end": "08-08"
@@ -50,6 +52,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "08-22",
 								"end": "08-22"
@@ -61,6 +64,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "09-05",
 								"end": "09-05"
@@ -72,6 +76,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "10-03",
 								"end": "10-03"
@@ -83,6 +88,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "10-17",
 								"end": "10-17"
@@ -95,10 +101,11 @@
 					]
 				},
 				{
-					"number": 23481,
+					"number": "23481",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, B15, CAT Suite",
 							"date": {
 								"start": "07-26",
 								"end": "07-26"
@@ -110,6 +117,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, B15, CAT Suite",
 							"date": {
 								"start": "08-09",
 								"end": "08-09"
@@ -121,6 +129,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, B15, CAT Suite",
 							"date": {
 								"start": "08-23",
 								"end": "08-23"
@@ -132,6 +141,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, B15, CAT Suite",
 							"date": {
 								"start": "09-06",
 								"end": "09-06"
@@ -143,6 +153,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, B15, CAT Suite",
 							"date": {
 								"start": "10-04",
 								"end": "10-04"
@@ -154,6 +165,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, B15, CAT Suite",
 							"date": {
 								"start": "10-18",
 								"end": "10-18"
@@ -166,10 +178,11 @@
 					]
 				},
 				{
-					"number": 23482,
+					"number": "23482",
 					"meetings": [
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "07-22",
 								"end": "07-22"
@@ -181,6 +194,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "08-05",
 								"end": "08-05"
@@ -192,6 +206,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "08-19",
 								"end": "08-19"
@@ -203,6 +218,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "09-02",
 								"end": "09-02"
@@ -214,6 +230,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "09-30",
 								"end": "09-30"
@@ -225,6 +242,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "10-14",
 								"end": "10-14"
@@ -237,10 +255,11 @@
 					]
 				},
 				{
-					"number": 23483,
+					"number": "23483",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "07-23",
 								"end": "07-23"
@@ -252,6 +271,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "08-06",
 								"end": "08-06"
@@ -263,6 +283,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "08-20",
 								"end": "08-20"
@@ -274,6 +295,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "09-03",
 								"end": "09-03"
@@ -285,6 +307,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "10-01",
 								"end": "10-01"
@@ -296,6 +319,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "10-15",
 								"end": "10-15"
@@ -308,10 +332,11 @@
 					]
 				},
 				{
-					"number": 23484,
+					"number": "23484",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "07-26",
 								"end": "07-26"
@@ -323,6 +348,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "08-09",
 								"end": "08-09"
@@ -334,6 +360,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "08-23",
 								"end": "08-23"
@@ -345,6 +372,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "09-06",
 								"end": "09-06"
@@ -356,6 +384,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "10-04",
 								"end": "10-04"
@@ -367,6 +396,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "10-18",
 								"end": "10-18"
@@ -379,10 +409,11 @@
 					]
 				},
 				{
-					"number": 23485,
+					"number": "23485",
 					"meetings": [
 						{
 							"day": "Monday",
+							"location": "Engineering & Mathematics, EM108, CAT Suite",
 							"date": {
 								"start": "07-22",
 								"end": "07-22"
@@ -394,6 +425,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Engineering & Mathematics, EM108, CAT Suite",
 							"date": {
 								"start": "08-05",
 								"end": "08-05"
@@ -405,6 +437,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Engineering & Mathematics, EM108, CAT Suite",
 							"date": {
 								"start": "08-19",
 								"end": "08-19"
@@ -416,6 +449,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Engineering & Mathematics, EM108, CAT Suite",
 							"date": {
 								"start": "09-02",
 								"end": "09-02"
@@ -427,6 +461,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Engineering & Mathematics, EM108, CAT Suite",
 							"date": {
 								"start": "09-30",
 								"end": "09-30"
@@ -438,6 +473,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Engineering & Mathematics, EM108, CAT Suite",
 							"date": {
 								"start": "10-14",
 								"end": "10-14"
@@ -450,10 +486,11 @@
 					]
 				},
 				{
-					"number": 23486,
+					"number": "23486",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "07-26",
 								"end": "07-26"
@@ -465,6 +502,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "08-09",
 								"end": "08-09"
@@ -476,6 +514,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "08-23",
 								"end": "08-23"
@@ -487,6 +526,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "09-06",
 								"end": "09-06"
@@ -498,6 +538,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "10-04",
 								"end": "10-04"
@@ -509,6 +550,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "10-18",
 								"end": "10-18"
@@ -521,10 +563,11 @@
 					]
 				},
 				{
-					"number": 23487,
+					"number": "23487",
 					"meetings": [
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "07-22",
 								"end": "07-22"
@@ -536,6 +579,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "08-05",
 								"end": "08-05"
@@ -547,6 +591,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "08-19",
 								"end": "08-19"
@@ -558,6 +603,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "09-02",
 								"end": "09-02"
@@ -569,6 +615,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "09-30",
 								"end": "09-30"
@@ -580,6 +627,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, 236, CAT Suite",
 							"date": {
 								"start": "10-14",
 								"end": "10-14"
@@ -592,10 +640,11 @@
 					]
 				},
 				{
-					"number": 29011,
+					"number": "29011",
 					"meetings": [
 						{
 							"day": "Wednesday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "07-24",
 								"end": "07-24"
@@ -607,6 +656,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "08-07",
 								"end": "08-07"
@@ -618,6 +668,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "08-21",
 								"end": "08-21"
@@ -629,6 +680,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "09-04",
 								"end": "09-04"
@@ -640,6 +692,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "10-02",
 								"end": "10-02"
@@ -651,6 +704,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "10-16",
 								"end": "10-16"
@@ -668,10 +722,11 @@
 			"type": "Workshop",
 			"classes": [
 				{
-					"number": 23514,
+					"number": "23514",
 					"meetings": [
 						{
 							"day": "Wednesday",
+							"location": "Hughes, 111b, Teaching Room",
 							"date": {
 								"start": "07-31",
 								"end": "07-31"
@@ -683,6 +738,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Hughes, 111b, Teaching Room",
 							"date": {
 								"start": "08-14",
 								"end": "08-14"
@@ -694,6 +750,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Hughes, 111b, Teaching Room",
 							"date": {
 								"start": "08-28",
 								"end": "08-28"
@@ -705,6 +762,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Hughes, 111b, Teaching Room",
 							"date": {
 								"start": "09-11",
 								"end": "09-11"
@@ -716,6 +774,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Hughes, 111b, Teaching Room",
 							"date": {
 								"start": "10-09",
 								"end": "10-09"
@@ -727,6 +786,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Hughes, 111b, Teaching Room",
 							"date": {
 								"start": "10-23",
 								"end": "10-23"
@@ -739,10 +799,11 @@
 					]
 				},
 				{
-					"number": 23516,
+					"number": "23516",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Engineering & Mathematics, EM105, Teaching Room",
 							"date": {
 								"start": "08-02",
 								"end": "08-02"
@@ -754,6 +815,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Engineering & Mathematics, EM105, Teaching Room",
 							"date": {
 								"start": "08-16",
 								"end": "08-16"
@@ -765,6 +827,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Engineering & Mathematics, EM105, Teaching Room",
 							"date": {
 								"start": "08-30",
 								"end": "08-30"
@@ -776,6 +839,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Engineering & Mathematics, EM105, Teaching Room",
 							"date": {
 								"start": "09-13",
 								"end": "09-13"
@@ -787,6 +851,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Engineering & Mathematics, EM105, Teaching Room",
 							"date": {
 								"start": "10-11",
 								"end": "10-11"
@@ -798,6 +863,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Engineering & Mathematics, EM105, Teaching Room",
 							"date": {
 								"start": "10-25",
 								"end": "10-25"
@@ -810,10 +876,11 @@
 					]
 				},
 				{
-					"number": 23518,
+					"number": "23518",
 					"meetings": [
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "08-01",
 								"end": "08-01"
@@ -825,6 +892,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "08-15",
 								"end": "08-15"
@@ -836,6 +904,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "08-29",
 								"end": "08-29"
@@ -847,6 +916,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "09-12",
 								"end": "09-12"
@@ -858,6 +928,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "10-10",
 								"end": "10-10"
@@ -869,6 +940,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "10-24",
 								"end": "10-24"
@@ -881,10 +953,11 @@
 					]
 				},
 				{
-					"number": 23519,
+					"number": "23519",
 					"meetings": [
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "08-01",
 								"end": "08-01"
@@ -896,6 +969,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "08-15",
 								"end": "08-15"
@@ -907,6 +981,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "08-29",
 								"end": "08-29"
@@ -918,6 +993,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "09-12",
 								"end": "09-12"
@@ -929,6 +1005,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "10-10",
 								"end": "10-10"
@@ -940,6 +1017,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "10-24",
 								"end": "10-24"
@@ -952,10 +1030,11 @@
 					]
 				},
 				{
-					"number": 23520,
+					"number": "23520",
 					"meetings": [
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "07-31",
 								"end": "07-31"
@@ -967,6 +1046,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "08-14",
 								"end": "08-14"
@@ -978,6 +1058,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "08-28",
 								"end": "08-28"
@@ -989,6 +1070,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "09-11",
 								"end": "09-11"
@@ -1000,6 +1082,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "10-09",
 								"end": "10-09"
@@ -1011,6 +1094,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "10-23",
 								"end": "10-23"
@@ -1023,10 +1107,11 @@
 					]
 				},
 				{
-					"number": 23521,
+					"number": "23521",
 					"meetings": [
 						{
 							"day": "Wednesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "07-31",
 								"end": "07-31"
@@ -1038,6 +1123,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "08-14",
 								"end": "08-14"
@@ -1049,6 +1135,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "08-28",
 								"end": "08-28"
@@ -1060,6 +1147,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "09-11",
 								"end": "09-11"
@@ -1071,6 +1159,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "10-09",
 								"end": "10-09"
@@ -1082,6 +1171,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "10-23",
 								"end": "10-23"
@@ -1094,10 +1184,11 @@
 					]
 				},
 				{
-					"number": 23522,
+					"number": "23522",
 					"meetings": [
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "08-01",
 								"end": "08-01"
@@ -1109,6 +1200,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "08-15",
 								"end": "08-15"
@@ -1120,6 +1212,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "08-29",
 								"end": "08-29"
@@ -1131,6 +1224,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "09-12",
 								"end": "09-12"
@@ -1142,6 +1236,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "10-10",
 								"end": "10-10"
@@ -1153,6 +1248,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "10-24",
 								"end": "10-24"
@@ -1165,10 +1261,11 @@
 					]
 				},
 				{
-					"number": 23523,
+					"number": "23523",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -1180,6 +1277,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -1191,6 +1289,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -1202,6 +1301,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -1213,6 +1313,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -1224,6 +1325,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG07, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
@@ -1236,10 +1338,11 @@
 					]
 				},
 				{
-					"number": 23524,
+					"number": "23524",
 					"meetings": [
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "07-31",
 								"end": "07-31"
@@ -1251,6 +1354,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "08-14",
 								"end": "08-14"
@@ -1262,6 +1366,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "08-28",
 								"end": "08-28"
@@ -1273,6 +1378,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "09-11",
 								"end": "09-11"
@@ -1284,6 +1390,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "10-09",
 								"end": "10-09"
@@ -1295,6 +1402,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Schulz, 214, Teaching Room",
 							"date": {
 								"start": "10-23",
 								"end": "10-23"
@@ -1307,10 +1415,11 @@
 					]
 				},
 				{
-					"number": 23525,
+					"number": "23525",
 					"meetings": [
 						{
 							"day": "Thursday",
+							"location": "Lower Napier, LG24, Teaching Room",
 							"date": {
 								"start": "08-01",
 								"end": "08-01"
@@ -1322,6 +1431,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Lower Napier, LG24, Teaching Room",
 							"date": {
 								"start": "08-15",
 								"end": "08-15"
@@ -1333,6 +1443,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Lower Napier, LG24, Teaching Room",
 							"date": {
 								"start": "08-29",
 								"end": "08-29"
@@ -1344,6 +1455,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Lower Napier, LG24, Teaching Room",
 							"date": {
 								"start": "09-12",
 								"end": "09-12"
@@ -1355,6 +1467,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Lower Napier, LG24, Teaching Room",
 							"date": {
 								"start": "10-10",
 								"end": "10-10"
@@ -1366,6 +1479,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Lower Napier, LG24, Teaching Room",
 							"date": {
 								"start": "10-24",
 								"end": "10-24"
@@ -1378,10 +1492,11 @@
 					]
 				},
 				{
-					"number": 23526,
+					"number": "23526",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -1393,6 +1508,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -1404,6 +1520,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -1415,6 +1532,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -1426,6 +1544,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -1437,6 +1556,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EMG06, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
@@ -1449,10 +1569,11 @@
 					]
 				},
 				{
-					"number": 23527,
+					"number": "23527",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "08-02",
 								"end": "08-02"
@@ -1464,6 +1585,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "08-16",
 								"end": "08-16"
@@ -1475,6 +1597,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "08-30",
 								"end": "08-30"
@@ -1486,6 +1609,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "09-13",
 								"end": "09-13"
@@ -1497,6 +1621,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "10-11",
 								"end": "10-11"
@@ -1508,6 +1633,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "10-25",
 								"end": "10-25"
@@ -1520,10 +1646,11 @@
 					]
 				},
 				{
-					"number": 23528,
+					"number": "23528",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "08-02",
 								"end": "08-02"
@@ -1535,6 +1662,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "08-16",
 								"end": "08-16"
@@ -1546,6 +1674,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "08-30",
 								"end": "08-30"
@@ -1557,6 +1686,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "09-13",
 								"end": "09-13"
@@ -1568,6 +1698,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "10-11",
 								"end": "10-11"
@@ -1579,6 +1710,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Barr Smith South, 2052, Teaching Room",
 							"date": {
 								"start": "10-25",
 								"end": "10-25"
@@ -1596,10 +1728,11 @@
 			"type": "Assessment",
 			"classes": [
 				{
-					"number": 23544,
+					"number": "23544",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -1612,10 +1745,11 @@
 					]
 				},
 				{
-					"number": 23545,
+					"number": "23545",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Ingkarni Wardli, G22, CAT Suite",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -1628,10 +1762,11 @@
 					]
 				},
 				{
-					"number": 23546,
+					"number": "23546",
 					"meetings": [
 						{
 							"day": "Wednesday",
+							"location": "Ingkarni Wardli, G22, CAT Suite",
 							"date": {
 								"start": "09-11",
 								"end": "09-11"
@@ -1644,10 +1779,11 @@
 					]
 				},
 				{
-					"number": 23547,
+					"number": "23547",
 					"meetings": [
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, G22, CAT Suite",
 							"date": {
 								"start": "09-09",
 								"end": "09-09"
@@ -1660,10 +1796,11 @@
 					]
 				},
 				{
-					"number": 23548,
+					"number": "23548",
 					"meetings": [
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "09-09",
 								"end": "09-09"
@@ -1676,10 +1813,11 @@
 					]
 				},
 				{
-					"number": 23549,
+					"number": "23549",
 					"meetings": [
 						{
 							"day": "Monday",
+							"location": "Engineering & Mathematics, EM108, CAT Suite",
 							"date": {
 								"start": "09-09",
 								"end": "09-09"
@@ -1692,10 +1830,11 @@
 					]
 				},
 				{
-					"number": 23550,
+					"number": "23550",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "09-13",
 								"end": "09-13"
@@ -1708,10 +1847,11 @@
 					]
 				},
 				{
-					"number": 23551,
+					"number": "23551",
 					"meetings": [
 						{
 							"day": "Monday",
+							"location": "Ingkarni Wardli, B23, CAT Suite",
 							"date": {
 								"start": "09-09",
 								"end": "09-09"
@@ -1729,10 +1869,11 @@
 			"type": "Seminar",
 			"classes": [
 				{
-					"number": 23552,
+					"number": "23552",
 					"meetings": [
 						{
 							"day": "Monday",
+							"location": "Scott Theatre, 001, Scott Theatre",
 							"date": {
 								"start": "07-22",
 								"end": "07-22"
@@ -1744,6 +1885,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "The Braggs, G60, Bragg Lecture Theatre",
 							"date": {
 								"start": "07-25",
 								"end": "09-12"
@@ -1755,6 +1897,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "The Braggs, G60, Bragg Lecture Theatre",
 							"date": {
 								"start": "10-03",
 								"end": "10-24"

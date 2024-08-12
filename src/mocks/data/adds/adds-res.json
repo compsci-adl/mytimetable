@@ -6,7 +6,7 @@
 		"title": "Algorithm Design & Data Structures"
 	},
 	"class_number": 28669,
-	"year": "2024",
+	"year": 2024,
 	"term": "Semester 2",
 	"campus": "North Terrace",
 	"units": 3,
@@ -17,15 +17,16 @@
 		"assumed_knowledge": [],
 		"incompatible": ["COMP SCI 1103", "COMP SCI 2202", "COMP SCI 2202B"]
 	},
-	"class_list": [
+	"classList": [
 		{
 			"type": "Lecture",
 			"classes": [
 				{
-					"number": 21109,
+					"number": "21109",
 					"meetings": [
 						{
 							"day": "Monday",
+							"location": "Horace Lamb, 1022, Horace Lamb Lecture Theatre",
 							"date": {
 								"start": "07-22",
 								"end": "09-09"
@@ -37,6 +38,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Helen Mayo Nth, 103N, Florey Lecture Theatre",
 							"date": {
 								"start": "07-23",
 								"end": "09-10"
@@ -48,6 +50,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Barr Smith South, 3029, Flentje Lecture Theatre",
 							"date": {
 								"start": "07-24",
 								"end": "09-11"
@@ -59,6 +62,7 @@
 						},
 						{
 							"day": "Monday",
+							"location": "Horace Lamb, 1022, Horace Lamb Lecture Theatre",
 							"date": {
 								"start": "09-30",
 								"end": "10-21"
@@ -70,6 +74,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Helen Mayo Nth, 103N, Florey Lecture Theatre",
 							"date": {
 								"start": "10-01",
 								"end": "10-22"
@@ -81,6 +86,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Barr Smith South, 3029, Flentje Lecture Theatre",
 							"date": {
 								"start": "10-02",
 								"end": "10-23"
@@ -98,10 +104,11 @@
 			"type": "Practical",
 			"classes": [
 				{
-					"number": 25024,
+					"number": "25024",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Engineering & Mathematics, EM108, CAT Suite",
 							"date": {
 								"start": "07-26",
 								"end": "09-13"
@@ -113,6 +120,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Engineering & Mathematics, EM108, CAT Suite",
 							"date": {
 								"start": "10-04",
 								"end": "10-25"
@@ -125,10 +133,11 @@
 					]
 				},
 				{
-					"number": 25026,
+					"number": "25026",
 					"meetings": [
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, B15, CAT Suite",
 							"date": {
 								"start": "07-25",
 								"end": "09-12"
@@ -140,6 +149,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, B15, CAT Suite",
 							"date": {
 								"start": "10-03",
 								"end": "10-24"
@@ -152,10 +162,11 @@
 					]
 				},
 				{
-					"number": 25027,
+					"number": "25027",
 					"meetings": [
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "07-25",
 								"end": "09-12"
@@ -167,6 +178,7 @@
 						},
 						{
 							"day": "Thursday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "10-03",
 								"end": "10-24"
@@ -179,10 +191,11 @@
 					]
 				},
 				{
-					"number": 25028,
+					"number": "25028",
 					"meetings": [
 						{
 							"day": "Wednesday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "07-24",
 								"end": "09-11"
@@ -194,6 +207,7 @@
 						},
 						{
 							"day": "Wednesday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "10-02",
 								"end": "10-23"
@@ -206,10 +220,11 @@
 					]
 				},
 				{
-					"number": 25029,
+					"number": "25029",
 					"meetings": [
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "07-26",
 								"end": "09-13"
@@ -221,6 +236,7 @@
 						},
 						{
 							"day": "Friday",
+							"location": "Ingkarni Wardli, B16, CAT Suite",
 							"date": {
 								"start": "10-04",
 								"end": "10-25"
@@ -238,10 +254,11 @@
 			"type": "Workshop",
 			"classes": [
 				{
-					"number": 25030,
+					"number": "25030",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 322, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -253,6 +270,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 322, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -264,6 +282,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 322, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -275,6 +294,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 322, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -286,6 +306,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 322, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -297,6 +318,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 322, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
@@ -309,10 +331,11 @@
 					]
 				},
 				{
-					"number": 25031,
+					"number": "25031",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -324,6 +347,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -335,6 +359,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -346,6 +371,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -357,6 +383,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -368,6 +395,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
@@ -380,10 +408,11 @@
 					]
 				},
 				{
-					"number": 25032,
+					"number": "25032",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -395,6 +424,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -406,6 +436,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -417,6 +448,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -428,6 +460,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -439,6 +472,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
@@ -451,10 +485,11 @@
 					]
 				},
 				{
-					"number": 25033,
+					"number": "25033",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -466,6 +501,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -477,6 +513,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -488,6 +525,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -499,6 +537,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -510,6 +549,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
@@ -522,10 +562,11 @@
 					]
 				},
 				{
-					"number": 25034,
+					"number": "25034",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -537,6 +578,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -548,6 +590,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -559,6 +602,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -570,6 +614,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -581,6 +626,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Petroleum Engineering, G04, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
@@ -593,10 +639,11 @@
 					]
 				},
 				{
-					"number": 25035,
+					"number": "25035",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 323, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -608,6 +655,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 323, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -619,6 +667,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 323, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -630,6 +679,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 323, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -641,6 +691,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 323, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -652,6 +703,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Hughes, 323, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
@@ -664,10 +716,11 @@
 					]
 				},
 				{
-					"number": 28667,
+					"number": "28667",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Nexus10, UB35, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -679,6 +732,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Nexus10, UB35, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -690,6 +744,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Nexus10, UB35, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -701,6 +756,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Nexus10, UB35, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -712,6 +768,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Nexus10, UB35, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -723,6 +780,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Nexus10, UB35, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
@@ -735,10 +793,11 @@
 					]
 				},
 				{
-					"number": 28668,
+					"number": "28668",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -750,6 +809,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -761,6 +821,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -772,6 +833,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -783,6 +845,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -794,6 +857,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
@@ -806,10 +870,11 @@
 					]
 				},
 				{
-					"number": 28669,
+					"number": "28669",
 					"meetings": [
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "07-30",
 								"end": "07-30"
@@ -821,6 +886,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "08-13",
 								"end": "08-13"
@@ -832,6 +898,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "08-27",
 								"end": "08-27"
@@ -843,6 +910,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "09-10",
 								"end": "09-10"
@@ -854,6 +922,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "10-08",
 								"end": "10-08"
@@ -865,6 +934,7 @@
 						},
 						{
 							"day": "Tuesday",
+							"location": "Engineering & Mathematics, EM218, Teaching Room",
 							"date": {
 								"start": "10-22",
 								"end": "10-22"
