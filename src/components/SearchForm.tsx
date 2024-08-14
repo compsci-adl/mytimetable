@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import { getCourses } from '../apis';
 
+// https://github.com/nextui-org/nextui/issues/2182
 type Key = string | number;
 
 export const SearchForm = () => {
