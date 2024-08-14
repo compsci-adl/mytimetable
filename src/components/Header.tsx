@@ -8,16 +8,11 @@ import {
 
 export const Header = () => {
 	return (
-		<Navbar>
+		<Navbar isBordered maxWidth="xl">
 			<NavbarBrand>
 				<h1 className="font-bold text-inherit">My Timetable</h1>
 			</NavbarBrand>
 			<NavbarContent justify="end">
-				<NavbarItem>
-					<Button color="primary" variant="flat" isIconOnly>
-						⚙️
-					</Button>
-				</NavbarItem>
 				<NavbarItem>
 					<Button
 						color="primary"
@@ -27,6 +22,11 @@ export const Header = () => {
 						as="a"
 					>
 						🦆
+					</Button>
+				</NavbarItem>
+				<NavbarItem>
+					<Button color="primary" variant="flat" isIconOnly>
+						⚙️
 					</Button>
 				</NavbarItem>
 			</NavbarContent>
