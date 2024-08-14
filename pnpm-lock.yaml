@@ -20,18 +20,30 @@ importers:
       axios:
         specifier: ^1.7.2
         version: 1.7.2
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       framer-motion:
         specifier: ^11.2.12
         version: 11.2.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      mutative:
+        specifier: ^1.0.8
+        version: 1.0.8
       react:
         specifier: ^18.3.1
         version: 18.3.1
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      simple-zustand-devtools:
+        specifier: ^1.1.0
+        version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zustand@4.5.4(@types/react@18.3.3)(react@18.3.1))
       zustand:
         specifier: ^4.5.4
         version: 4.5.4(@types/react@18.3.3)(react@18.3.1)
+      zustand-mutative:
+        specifier: ^1.0.3
+        version: 1.0.3(@types/react@18.3.3)(mutative@1.0.8)(react@18.3.1)(zustand@4.5.4(@types/react@18.3.3)(react@18.3.1))
     devDependencies:
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.3.0
@@ -2342,6 +2354,10 @@ packages:
       typescript:
         optional: true
 
+  mutative@1.0.8:
+    resolution: {integrity: sha512-bVVGCfEQTJDbsa+L1LX3jJftFnWZWfH0XIM+h/rJYnjgof3ZimBSuF/mOrh/NJI7H4pWGoji+DDuurPGpUZofw==}
+    engines: {node: '>=14.0'}
+
   mute-stream@1.0.0:
     resolution: {integrity: sha512-avsJQhyd+680gKXyG/sQc0nXaC6rBkPOfyHYcFb9+hdkqQkR9bdnkJ0AMZhke0oesPqIO+mFFJ+IdBc7mst4IA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
@@ -2711,6 +2727,15 @@ packages:
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
 
+  simple-zustand-devtools@1.1.0:
+    resolution: {integrity: sha512-Axfcfr9L3YL3kto7aschCQLY2VUlXXMnIVtaTe9Y0qWbNmPsX/y7KsNprmxBZoB0pww5ZGs1u/ohcrvQ3tE6jA==}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      '@types/react-dom': '>=18.0.0'
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+      zustand: '>=1.0.2'
+
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
@@ -3002,6 +3027,14 @@ packages:
   yoctocolors-cjs@2.1.2:
     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
     engines: {node: '>=18'}
+
+  zustand-mutative@1.0.3:
+    resolution: {integrity: sha512-/AwS/KhQEWsrftYSlyJ1tQEZhKAB9hwTDx6gepc8YZVAcyXeRLZMfV2XliGjnL9vEp3P4jMREL0W3zi3jtAh4Q==}
+    peerDependencies:
+      '@types/react': ^18.0 || ^17.0
+      mutative: ^1.0.8
+      react: ^18.0 || ^17.0
+      zustand: ^4.0
 
   zustand@4.5.4:
     resolution: {integrity: sha512-/BPMyLKJPtFEvVL0E9E9BTUM63MNyhPGlvxk1XjrfWTUlV+BR8jufjsovHzrtR6YNcBEcL7cMHovL1n9xHawEg==}
@@ -6046,6 +6079,8 @@ snapshots:
     optionalDependencies:
       typescript: 5.5.2
 
+  mutative@1.0.8: {}
+
   mute-stream@1.0.0: {}
 
   mz@2.7.0:
@@ -6331,6 +6366,14 @@ snapshots:
     dependencies:
       is-arrayish: 0.3.2
 
+  simple-zustand-devtools@1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zustand@4.5.4(@types/react@18.3.3)(react@18.3.1)):
+    dependencies:
+      '@types/react': 18.3.3
+      '@types/react-dom': 18.3.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      zustand: 4.5.4(@types/react@18.3.3)(react@18.3.1)
+
   slash@3.0.0: {}
 
   slice-ansi@5.0.0:
@@ -6590,6 +6633,13 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   yoctocolors-cjs@2.1.2: {}
+
+  zustand-mutative@1.0.3(@types/react@18.3.3)(mutative@1.0.8)(react@18.3.1)(zustand@4.5.4(@types/react@18.3.3)(react@18.3.1)):
+    dependencies:
+      '@types/react': 18.3.3
+      mutative: 1.0.8
+      react: 18.3.1
+      zustand: 4.5.4(@types/react@18.3.3)(react@18.3.1)
 
   zustand@4.5.4(@types/react@18.3.3)(react@18.3.1):
     dependencies:

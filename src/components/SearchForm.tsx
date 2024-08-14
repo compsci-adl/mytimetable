@@ -1,8 +1,9 @@
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { getCourses } from '../apis';
+import { getCourse, getCourses } from '../apis';
+import { useCourses } from '../store/courses';
 
 // https://github.com/nextui-org/nextui/issues/2182
 type Key = string | number;
@@ -14,9 +15,30 @@ export const SearchForm = () => {
 		queryFn: ({ queryKey }) => getCourses(queryKey[1]),
 	});
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const courseQuery = useQuery({
+		queryKey: ['course', { id: (selectedCourseId as string) ?? '' }] as const,
+		queryFn: ({ queryKey }) => getCourse(queryKey[1]),
+		enabled: false,
+	});
+
+	const coursesState = useCourses();
+
+	useEffect(() => {
+		if (!courseQuery.isSuccess) return;
+		const course = courseQuery.data.data;
+		coursesState.addCourse({
+			name: `${course.name.subject} ${course.name.code}`,
+			id: course.id,
+			classes: course.class_list.map((c) => ({
+				id: c.id,
+				classNumber: c.classes[0].number,
+			})),
+		});
+	}, [courseQuery.data, courseQuery.isSuccess]);
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log(selectedCourseId);
+		await courseQuery.refetch();
 		setSelectedCourseId(null);
 	};
 
@@ -28,6 +50,7 @@ export const SearchForm = () => {
 				defaultItems={coursesQuery.data?.data.courses ?? []}
 				selectedKey={selectedCourseId}
 				onSelectionChange={setSelectedCourseId}
+				disabledKeys={coursesState.courses.map((c) => c.id)}
 			>
 				{(course) => (
 					<AutocompleteItem key={course.id} value={course.id}>
@@ -35,7 +58,12 @@ export const SearchForm = () => {
 					</AutocompleteItem>
 				)}
 			</Autocomplete>
-			<Button color="primary" type="submit" isDisabled={!selectedCourseId}>
+			<Button
+				color="primary"
+				type="submit"
+				isDisabled={!selectedCourseId}
+				isLoading={courseQuery.isFetching}
+			>
 				Add
 			</Button>
 		</form>
