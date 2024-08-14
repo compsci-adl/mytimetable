@@ -1,5 +1,6 @@
 {
-	"id": "107592",
+	"id": "8b8afe1b-449b-4cce-b108-8dd8eef4648e",
+	"course_id": "107592",
 	"name": {
 		"subject": "COMP SCI",
 		"code": "2103",
@@ -17,8 +18,9 @@
 		"assumed_knowledge": [],
 		"incompatible": ["COMP SCI 1103", "COMP SCI 2202", "COMP SCI 2202B"]
 	},
-	"classList": [
+	"class_list": [
 		{
+			"id": "f437d75b-b29f-469b-ac3a-b63e4f9957fa",
 			"type": "Lecture",
 			"classes": [
 				{
@@ -101,6 +103,7 @@
 			]
 		},
 		{
+			"id": "7af13310-485b-4a42-a882-20ae5a75501a",
 			"type": "Practical",
 			"classes": [
 				{
@@ -251,6 +254,7 @@
 			]
 		},
 		{
+			"id": "4b3d4cde-ce18-49bc-b73d-4b4732b2c92d",
 			"type": "Workshop",
 			"classes": [
 				{

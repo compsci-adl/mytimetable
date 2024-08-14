@@ -1,5 +1,6 @@
 {
-	"id": "109685",
+	"id": "33254151-e980-4727-882c-4bece847fdab",
+	"course_id": "109685",
 	"name": {
 		"subject": "MATHS",
 		"code": "1004",
@@ -19,8 +20,9 @@
 		"assumed_knowledge": [],
 		"incompatible": ["MATHS 1008", "MATHS 1010", "MATHS 1012"]
 	},
-	"classList": [
+	"class_list": [
 		{
+			"id": "e1e90cf3-2b27-4eeb-afb8-e78b6ae7d680",
 			"type": "Practical",
 			"classes": [
 				{
@@ -719,6 +721,7 @@
 			]
 		},
 		{
+			"id": "ab1cd3c9-2311-4ae9-9025-c71b741ddf9d",
 			"type": "Workshop",
 			"classes": [
 				{
@@ -1725,6 +1728,7 @@
 			]
 		},
 		{
+			"id": "7d577e9e-3582-4547-87dd-0fe5d5ad62b1",
 			"type": "Assessment",
 			"classes": [
 				{
@@ -1866,6 +1870,7 @@
 			]
 		},
 		{
+			"id": "e4d43f7e-898f-4b34-ad48-20e6d54a4635",
 			"type": "Seminar",
 			"classes": [
 				{

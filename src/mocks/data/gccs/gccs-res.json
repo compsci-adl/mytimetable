@@ -1,5 +1,6 @@
 {
-	"id": "106541",
+	"id": "35dcf831-4888-475a-a172-7842ae3c526e",
+	"course_id": "106541",
 	"name": {
 		"subject": "COMP SCI",
 		"code": "1104",
@@ -27,8 +28,9 @@
 		],
 		"incompatible": []
 	},
-	"classList": [
+	"class_list": [
 		{
+			"id": "a00cf20d-ddc6-4d7a-870e-47bfd50e514a",
 			"type": "Seminar",
 			"classes": [
 				{
@@ -63,6 +65,7 @@
 			]
 		},
 		{
+			"id": "4771f084-d27e-42e8-ad78-3c40e625445d",
 			"type": "Workshop",
 			"classes": [
 				{
@@ -155,6 +158,7 @@
 			]
 		},
 		{
+			"id": "61a9d88c-a6ba-4cb9-a9e8-c785a0b81709",
 			"type": "Project",
 			"classes": [
 				{

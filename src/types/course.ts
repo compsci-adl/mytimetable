@@ -1,5 +1,6 @@
 export type Course = {
 	id: string;
+	course_id: string;
 	name: {
 		subject: string;
 		code: string;
@@ -12,6 +13,7 @@ export type Course = {
 	units: number;
 	requirements: unknown;
 	class_list: Array<{
+		id: string;
 		type: string;
 		classes: Array<{
 			number: string;
