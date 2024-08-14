@@ -1,5 +1,4 @@
 import { Chip } from '@nextui-org/react';
-import clsx from 'clsx';
 
 import { useCourses } from '../store/courses';
 
@@ -14,7 +13,7 @@ const CourseChip = ({ name, id, className }: CourseChipProps) => {
 			onClick={() => {
 				console.log('click', id);
 			}}
-			className={clsx('cursor-pointer', className)}
+			className={className}
 		>
 			{name}
 		</Chip>
