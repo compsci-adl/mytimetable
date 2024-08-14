@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { mutative } from 'zustand-mutative';
+import { persist } from 'zustand/middleware';
 
 type Course = {
 	id: string;
@@ -17,16 +18,19 @@ type CoursesState = {
 };
 
 export const useCourses = create<CoursesState>()(
-	mutative((set) => ({
-		courses: [],
-		addCourse: (course) =>
-			set((state) => {
-				state.courses.push(course);
-			}),
-		removeCourse: (courseId) => {
-			set((state) => {
-				state.courses = state.courses.filter((c) => c.id !== courseId);
-			});
-		},
-	})),
+	persist(
+		mutative((set) => ({
+			courses: [],
+			addCourse: (course) =>
+				set((state) => {
+					state.courses.push(course);
+				}),
+			removeCourse: (courseId) => {
+				set((state) => {
+					state.courses = state.courses.filter((c) => c.id !== courseId);
+				});
+			},
+		})),
+		{ name: 'enrolled-courses' },
+	),
 );
