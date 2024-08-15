@@ -1,5 +1,6 @@
 import { Chip } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { useEffect } from 'react';
 
 import { getCourse } from '../apis';
@@ -34,7 +35,10 @@ const CourseChip = ({ name, id, className }: CourseChipProps) => {
 			onClick={() => {
 				console.log('click', id);
 			}}
-			className={className}
+			className={clsx(
+				courseQuery.isPending ? 'cursor-wait' : 'cursor-pointer',
+				className,
+			)}
 		>
 			{name}
 			{courseQuery.isPending && ' ⏳'}
