@@ -29,19 +29,24 @@ const CourseChip = ({ name, id, className }: CourseChipProps) => {
 
 	return (
 		<Chip
+			color="primary"
+			variant="bordered"
 			onClose={() => {
 				removeCourse(id);
 			}}
 			onClick={() => {
 				console.log('click', id);
 			}}
-			className={clsx(
-				courseQuery.isPending ? 'cursor-wait' : 'cursor-pointer',
-				className,
-			)}
+			classNames={{
+				base: clsx(
+					'hover:brightness-125',
+					courseQuery.isPending ? 'cursor-wait' : 'cursor-pointer',
+					className,
+				),
+			}}
 		>
+			{courseQuery.isPending && '⏳ '}
 			{name}
-			{courseQuery.isPending && ' ⏳'}
 		</Chip>
 	);
 };
