@@ -1,8 +1,8 @@
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import { getCourse, getCourses } from '../apis';
+import { getCourses } from '../apis';
 import { useCourses } from '../store/courses';
 
 // https://github.com/nextui-org/nextui/issues/2182
@@ -14,31 +14,23 @@ export const SearchForm = () => {
 		queryKey: ['courses', { year: 2024, term: 'sem2' }] as const,
 		queryFn: ({ queryKey }) => getCourses(queryKey[1]),
 	});
+	const courses = coursesQuery.data?.data.courses;
+	const courseList =
+		courses?.map((c) => ({
+			id: c.id,
+			name: `${c.name.subject} ${c.name.code} - ${c.name.title}`,
+		})) ?? [];
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
-	const courseQuery = useQuery({
-		queryKey: ['course', { id: (selectedCourseId as string) ?? '' }] as const,
-		queryFn: ({ queryKey }) => getCourse(queryKey[1]),
-		enabled: false,
-	});
 
 	const coursesState = useCourses();
-
-	useEffect(() => {
-		if (!courseQuery.isSuccess) return;
-		const course = courseQuery.data.data;
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const course = courses?.find((c) => c.id === selectedCourseId);
+		if (!course) return;
 		coursesState.addCourse({
 			name: `${course.name.subject} ${course.name.code}`,
 			id: course.id,
-			classes: course.class_list.map((c) => ({
-				id: c.id,
-				classNumber: c.classes[0].number,
-			})),
 		});
-	}, [courseQuery.data, courseQuery.isSuccess]);
-
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		await courseQuery.refetch();
 		setSelectedCourseId(null);
 	};
 
@@ -47,7 +39,7 @@ export const SearchForm = () => {
 			<Autocomplete
 				label="Search a course"
 				isDisabled={coursesQuery.isPending}
-				defaultItems={coursesQuery.data?.data.courses ?? []}
+				defaultItems={courseList}
 				selectedKey={selectedCourseId}
 				onSelectionChange={setSelectedCourseId}
 				disabledKeys={coursesState.courses.map((c) => c.id)}
@@ -58,12 +50,7 @@ export const SearchForm = () => {
 					</AutocompleteItem>
 				)}
 			</Autocomplete>
-			<Button
-				color="primary"
-				type="submit"
-				isDisabled={!selectedCourseId}
-				isLoading={courseQuery.isFetching}
-			>
+			<Button color="primary" type="submit" isDisabled={!selectedCourseId}>
 				Add
 			</Button>
 		</form>

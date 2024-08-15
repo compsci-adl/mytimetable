@@ -10,15 +10,27 @@ export const handlers = [
 			courses: [
 				{
 					id: '8b8afe1b-449b-4cce-b108-8dd8eef4648e',
-					name: 'COMP SCI 2103 - Algorithm Design & Data Structures',
+					name: {
+						subject: 'COMP SCI',
+						code: '2103',
+						title: 'Algorithm Design & Data Structures',
+					},
 				},
 				{
 					id: '35dcf831-4888-475a-a172-7842ae3c526e',
-					name: 'COMP SCI 1104 - Grand Challenges in Computer Science',
+					name: {
+						subject: 'COMP SCI',
+						code: '1104',
+						title: 'Grand Challenges in Computer Science',
+					},
 				},
 				{
 					id: '33254151-e980-4727-882c-4bece847fdab',
-					name: 'MATHS 1004 - Mathematics for Data Science I',
+					name: {
+						subject: 'MATHS',
+						code: '1004',
+						title: 'Mathematics for Data Science I',
+					},
 				},
 			],
 		});
