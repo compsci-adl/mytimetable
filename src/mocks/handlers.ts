@@ -4,8 +4,11 @@ import adds from './data/adds/adds-res.json';
 import gccs from './data/gccs/gccs-res.json';
 import mfds from './data/mfds/mfds-res.json';
 
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const handlers = [
-	http.get('/api/courses', () => {
+	http.get('/api/courses', async () => {
+		// await wait(2000);
 		return HttpResponse.json({
 			courses: [
 				{
@@ -35,7 +38,8 @@ export const handlers = [
 			],
 		});
 	}),
-	http.get('/api/course/:id', ({ params }) => {
+	http.get('/api/course/:id', async ({ params }) => {
+		// await wait(3000);
 		const { id } = params;
 		const idResMap = {
 			'8b8afe1b-449b-4cce-b108-8dd8eef4648e': adds,
