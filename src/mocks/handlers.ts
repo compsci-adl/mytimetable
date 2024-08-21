@@ -39,7 +39,7 @@ export const handlers = [
 		});
 	}),
 	http.get('/api/course/:id', async ({ params }) => {
-		// await wait(3000);
+		await wait(3000);
 		const { id } = params;
 		const idResMap = {
 			'8b8afe1b-449b-4cce-b108-8dd8eef4648e': adds,

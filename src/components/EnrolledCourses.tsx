@@ -1,13 +1,53 @@
-import { Chip } from '@nextui-org/react';
+import {
+	Chip,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
+	useDisclosure,
+} from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { getCourse } from '../apis';
+import { useCourse } from '../store/course';
 import { useCourses } from '../store/courses';
 
-type CourseChipProps = { name: string; id: string; className?: string };
-const CourseChip = ({ name, id, className }: CourseChipProps) => {
+type CourseModalProps = {
+	isOpen: boolean;
+	onOpenChange: (isOpen: boolean) => void;
+	id: string;
+};
+const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
+	const course = useCourse(id);
+
+	if (!course) return;
+	return (
+		<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+			<ModalContent>
+				{() => (
+					<>
+						<ModalHeader className="flex flex-col gap-1">
+							{course.name.subject} {course.name.code} - {course.name.title}
+						</ModalHeader>
+						<ModalBody>
+							<p>Nothing for now</p>
+						</ModalBody>
+					</>
+				)}
+			</ModalContent>
+		</Modal>
+	);
+};
+
+type CourseChipProps = {
+	name: string;
+	id: string;
+	onOpenModal: (id: string) => void;
+	className?: string;
+};
+const CourseChip = ({ name, id, onOpenModal, className }: CourseChipProps) => {
 	const courseQuery = useQuery({
 		queryKey: ['course', id] as const,
 		queryFn: ({ queryKey }) => getCourse({ id: queryKey[1] }),
@@ -26,6 +66,7 @@ const CourseChip = ({ name, id, className }: CourseChipProps) => {
 			})),
 		});
 	}, [courseQuery.data, courseQuery.isSuccess]);
+	const isLoading = courseQuery.isPending;
 
 	return (
 		<Chip
@@ -35,17 +76,17 @@ const CourseChip = ({ name, id, className }: CourseChipProps) => {
 				removeCourse(id);
 			}}
 			onClick={() => {
-				console.log('click', id);
+				if (isLoading) return;
+				onOpenModal(id);
 			}}
 			classNames={{
 				base: clsx(
-					'hover:brightness-125',
-					courseQuery.isPending ? 'cursor-wait' : 'cursor-pointer',
+					isLoading ? 'cursor-wait' : 'cursor-pointer hover:brightness-125',
 					className,
 				),
 			}}
 		>
-			{courseQuery.isPending && '⏳ '}
+			{isLoading && '⏳ '}
 			{name}
 		</Chip>
 	);
@@ -53,11 +94,31 @@ const CourseChip = ({ name, id, className }: CourseChipProps) => {
 
 export const EnrolledCourses = () => {
 	const courses = useCourses((s) => s.courses);
+	const [courseModalId, setCourseModalId] = useState<string | null>(null);
+	const courseModal = useDisclosure();
+
 	return (
-		<div className="flex flex-wrap gap-2">
-			{courses.map((c) => (
-				<CourseChip name={c.name} id={c.id} key={c.id} />
-			))}
-		</div>
+		<>
+			<div className="flex flex-wrap gap-2">
+				{courses.map((c) => (
+					<CourseChip
+						name={c.name}
+						id={c.id}
+						key={c.id}
+						onOpenModal={(id) => {
+							setCourseModalId(id);
+							courseModal.onOpen();
+						}}
+					/>
+				))}
+			</div>
+			{courseModalId && (
+				<CourseModal
+					isOpen={courseModal.isOpen}
+					onOpenChange={courseModal.onOpenChange}
+					id={courseModalId}
+				/>
+			)}
+		</>
 	);
 };
