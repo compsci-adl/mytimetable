@@ -22,7 +22,7 @@
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"simple-zustand-devtools": "^1.1.0",
-		"zustand": "^4.5.4",
+		"zustand": "^4.5.5",
 		"zustand-mutative": "^1.0.3"
 	},
 	"devDependencies": {
