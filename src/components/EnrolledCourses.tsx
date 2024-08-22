@@ -57,7 +57,7 @@ const CourseChip = ({ name, id, onOpenModal, className }: CourseChipProps) => {
 		if (!courseQuery.isSuccess) return;
 		const course = courses.find((c) => c.id === id);
 		if (course?.classes.length !== 0) return;
-		const courseData = courseQuery.data.data;
+		const courseData = courseQuery.data;
 		addClasses({
 			id,
 			classes: courseData.class_list.map((c) => ({

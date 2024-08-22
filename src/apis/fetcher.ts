@@ -1,5 +1,5 @@
-import axios from 'axios';
+import ky from 'ky';
 
-export const fetcher = axios.create({
-	baseURL: import.meta.env.VITE_API_BASE_URL,
+export const fetcher = ky.create({
+	prefixUrl: import.meta.env.VITE_API_BASE_URL,
 });

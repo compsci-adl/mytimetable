@@ -12,10 +12,10 @@ type CoursesRes = {
 	}>;
 };
 
-export const getCourses = (params: { year: number; term: string }) => {
-	return fetcher.get<CoursesRes>('/courses', { params });
+export const getCourses = async (params: { year: number; term: string }) => {
+	return fetcher.get<CoursesRes>('courses', { searchParams: params }).json();
 };
 
 export const getCourse = async ({ id }: { id: string }) => {
-	return fetcher.get<Course>(`/course/${id}`);
+	return fetcher.get<Course>(`course/${id}`).json();
 };

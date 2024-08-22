@@ -14,7 +14,7 @@ export const SearchForm = () => {
 		queryKey: ['courses', { year: 2024, term: 'sem2' }] as const,
 		queryFn: ({ queryKey }) => getCourses(queryKey[1]),
 	});
-	const courses = coursesQuery.data?.data.courses;
+	const courses = coursesQuery.data?.courses;
 	const courseList =
 		courses?.map((c) => ({
 			id: c.id,

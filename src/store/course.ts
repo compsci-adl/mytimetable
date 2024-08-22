@@ -17,7 +17,7 @@ export const useCourse = (id: string) => {
 		const data = queryClient.getQueryData<
 			Awaited<ReturnType<typeof getCourse>>
 		>(['course', id]);
-		setCourse(data?.data ?? null);
+		setCourse(data ?? null);
 	}, [id, queryClient]);
 
 	return course;
