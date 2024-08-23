@@ -2,6 +2,9 @@ import { create } from 'zustand';
 import { mutative } from 'zustand-mutative';
 import { persist } from 'zustand/middleware';
 
+import { getCourse } from '../apis';
+import { queryClient } from '../lib/query';
+
 type Course = {
 	id: string;
 	name: string;
@@ -14,27 +17,31 @@ type Courses = Array<Course>;
 type CoursesState = {
 	courses: Courses;
 	addCourse: (course: Omit<Course, 'classes'>) => void;
-	addClasses: (params: {
-		id: string;
-		classes: Array<{ id: string; classNumber: string }>;
-	}) => void;
 	removeCourse: (courseId: string) => void;
 };
 
-export const useCourses = create<CoursesState>()(
+export const useEnrolledCourses = create<CoursesState>()(
 	persist(
 		mutative((set) => ({
 			courses: [],
-			addCourse: (course) => {
+			addCourse: async (course) => {
+				// Add course to state
 				set((state) => {
 					state.courses.push({ ...course, classes: [] });
 				});
-			},
-			addClasses: ({ id, classes }) => {
+				// Fetch course data
+				const data = await queryClient.ensureQueryData({
+					queryKey: ['course', course.id] as const,
+					queryFn: ({ queryKey }) => getCourse({ id: queryKey[1] }),
+				});
+				// Initialize course classes to default
 				set((state) => {
-					const course = state.courses.find((c) => c.id === id);
-					if (!course) return;
-					course.classes = classes;
+					const enrolledCourse = state.courses.find((c) => c.id === course.id);
+					if (!enrolledCourse) return;
+					enrolledCourse.classes = data.class_list.map((c) => ({
+						id: c.id,
+						classNumber: c.classes[0].number,
+					}));
 				});
 			},
 			removeCourse: (courseId) => {
@@ -43,6 +50,6 @@ export const useCourses = create<CoursesState>()(
 				});
 			},
 		})),
-		{ name: 'enrolled-courses' },
+		{ name: 'enrolled-courses', version: 0 },
 	),
 );

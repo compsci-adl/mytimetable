@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
 import { getCourses } from '../apis';
-import { useCourses } from '../store/courses';
+import { useEnrolledCourses } from '../data/enrolled-courses';
 
 // https://github.com/nextui-org/nextui/issues/2182
 type Key = string | number;
@@ -22,12 +22,12 @@ export const SearchForm = () => {
 		})) ?? [];
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
 
-	const coursesState = useCourses();
+	const enrolledCourses = useEnrolledCourses();
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const course = courses?.find((c) => c.id === selectedCourseId);
 		if (!course) return;
-		coursesState.addCourse({
+		enrolledCourses.addCourse({
 			name: `${course.name.subject} ${course.name.code}`,
 			id: course.id,
 		});
@@ -42,7 +42,7 @@ export const SearchForm = () => {
 				defaultItems={courseList}
 				selectedKey={selectedCourseId}
 				onSelectionChange={setSelectedCourseId}
-				disabledKeys={coursesState.courses.map((c) => c.id)}
+				disabledKeys={enrolledCourses.courses.map((c) => c.id)}
 			>
 				{(course) => (
 					<AutocompleteItem key={course.id} value={course.id}>

@@ -6,13 +6,12 @@ import {
 	ModalHeader,
 	useDisclosure,
 } from '@nextui-org/react';
-import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { getCourse } from '../apis';
-import { useCourse } from '../store/course';
-import { useCourses } from '../store/courses';
+import { useCourseInfo } from '../data/course-info';
+import { useEnrolledCourses } from '../data/enrolled-courses';
+import { useQueryLoading } from '../utils/query-loading';
 
 type CourseModalProps = {
 	isOpen: boolean;
@@ -20,7 +19,7 @@ type CourseModalProps = {
 	id: string;
 };
 const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
-	const course = useCourse(id);
+	const course = useCourseInfo(id);
 
 	if (!course) return;
 	return (
@@ -48,25 +47,9 @@ type CourseChipProps = {
 	className?: string;
 };
 const CourseChip = ({ name, id, onOpenModal, className }: CourseChipProps) => {
-	const courseQuery = useQuery({
-		queryKey: ['course', id] as const,
-		queryFn: ({ queryKey }) => getCourse({ id: queryKey[1] }),
-	});
-	const { removeCourse, addClasses, courses } = useCourses();
-	useEffect(() => {
-		if (!courseQuery.isSuccess) return;
-		const course = courses.find((c) => c.id === id);
-		if (course?.classes.length !== 0) return;
-		const courseData = courseQuery.data;
-		addClasses({
-			id,
-			classes: courseData.class_list.map((c) => ({
-				id: c.id,
-				classNumber: c.classes[0].number,
-			})),
-		});
-	}, [courseQuery.data, courseQuery.isSuccess]);
-	const isLoading = courseQuery.isPending;
+	const removeCourse = useEnrolledCourses((s) => s.removeCourse);
+
+	const isLoading = useQueryLoading(['course', id]);
 
 	return (
 		<Chip
@@ -93,7 +76,7 @@ const CourseChip = ({ name, id, onOpenModal, className }: CourseChipProps) => {
 };
 
 export const EnrolledCourses = () => {
-	const courses = useCourses((s) => s.courses);
+	const courses = useEnrolledCourses((s) => s.courses);
 	const [courseModalId, setCourseModalId] = useState<string | null>(null);
 	const courseModal = useDisclosure();
 

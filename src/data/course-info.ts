@@ -4,12 +4,7 @@ import { useEffect, useState } from 'react';
 import type { getCourse } from '../apis';
 import type { Course } from '../types/course';
 
-/**
- * Get course data from the cache
- * @param id Course ID
- * @returns Course data
- */
-export const useCourse = (id: string) => {
+export const useCourseInfo = (id: string) => {
 	const queryClient = useQueryClient();
 	const [course, setCourse] = useState<Course | null>(null);
 
