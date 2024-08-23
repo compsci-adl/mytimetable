@@ -35,12 +35,22 @@ export const handlers = [
 						title: 'Mathematics for Data Science I',
 					},
 				},
+				{
+					id: 'bde0f6b8-9bf8-4f47-a895-2b2cc8fc8a44',
+					name: {
+						subject: 'ERROR',
+						code: '2333',
+						title: 'Web & Database Computing',
+					},
+				},
 			],
 		});
 	}),
 	http.get('/api/course/:id', async ({ params }) => {
 		await wait(3000);
 		const { id } = params;
+		if (id === 'bde0f6b8-9bf8-4f47-a895-2b2cc8fc8a44')
+			return HttpResponse.json({ error: 'Course not found' }, { status: 404 });
 		const idResMap = {
 			'8b8afe1b-449b-4cce-b108-8dd8eef4648e': adds,
 			'35dcf831-4888-475a-a172-7842ae3c526e': gccs,

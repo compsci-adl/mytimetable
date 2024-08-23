@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 import { useCourseInfo } from '../data/course-info';
 import { useEnrolledCourses } from '../data/enrolled-courses';
-import { useQueryLoading } from '../utils/query-loading';
+import { useQueryStatus } from '../utils/query-status';
 
 type CourseModalProps = {
 	isOpen: boolean;
@@ -49,7 +49,7 @@ type CourseChipProps = {
 const CourseChip = ({ name, id, onOpenModal, className }: CourseChipProps) => {
 	const removeCourse = useEnrolledCourses((s) => s.removeCourse);
 
-	const isLoading = useQueryLoading(['course', id]);
+	const { isLoading, isError } = useQueryStatus(['course', id]);
 
 	return (
 		<Chip
@@ -59,7 +59,7 @@ const CourseChip = ({ name, id, onOpenModal, className }: CourseChipProps) => {
 				removeCourse(id);
 			}}
 			onClick={() => {
-				if (isLoading) return;
+				if (isLoading || isError) return;
 				onOpenModal(id);
 			}}
 			classNames={{
@@ -70,6 +70,7 @@ const CourseChip = ({ name, id, onOpenModal, className }: CourseChipProps) => {
 			}}
 		>
 			{isLoading && '⏳ '}
+			{isError && '❌ '}
 			{name}
 		</Chip>
 	);

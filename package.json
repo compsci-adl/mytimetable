@@ -15,6 +15,7 @@
 		"@fontsource-variable/outfit": "^5.0.13",
 		"@nextui-org/react": "^2.4.2",
 		"@tanstack/react-query": "^5.51.23",
+		"@tanstack/react-query-devtools": "^5.52.1",
 		"clsx": "^2.1.1",
 		"framer-motion": "^11.2.12",
 		"ky": "^1.7.1",
