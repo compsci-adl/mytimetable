@@ -4,9 +4,7 @@ import React, { useState } from 'react';
 
 import { getCourses } from '../apis';
 import { useEnrolledCourses } from '../data/enrolled-courses';
-
-// https://github.com/nextui-org/nextui/issues/2182
-type Key = string | number;
+import type { Key } from '../types/key';
 
 export const SearchForm = () => {
 	const coursesQuery = useQuery({

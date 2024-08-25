@@ -16,6 +16,7 @@ import {
 	useEnrolledCourse,
 	useEnrolledCourses,
 } from '../data/enrolled-courses';
+import type { Key } from '../types/key';
 import { useQueryStatus } from '../utils/query-status';
 
 type CourseModalProps = {
@@ -30,8 +31,8 @@ const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 		const selectedClass = courseData?.classes.find((c) => c.id === classTypeId);
 		return selectedClass?.classNumber;
 	};
-	const getSelectedKeys = (selectedClassNumber: string | undefined) => {
-		return selectedClassNumber ? [selectedClassNumber] : undefined;
+	const getKeys = (nullableKey: Key | undefined) => {
+		return nullableKey ? [nullableKey] : undefined;
 	};
 
 	if (!course) return;
@@ -48,9 +49,9 @@ const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 								<Select
 									key={classType.id}
 									label={`${classType.type} Time`}
-									selectedKeys={getSelectedKeys(
-										getSelectedClassNumber(classType.id),
-									)}
+									selectedKeys={getKeys(getSelectedClassNumber(classType.id))}
+									// Prevent the selected class from being clicked again to avoid it becoming undefined
+									disabledKeys={getKeys(getSelectedClassNumber(classType.id))}
 									onSelectionChange={(selectedClassNumber) =>
 										updateClass({
 											classNumber: [...selectedClassNumber][0] as string,
