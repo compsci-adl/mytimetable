@@ -18,6 +18,11 @@ type CoursesState = {
 	courses: Courses;
 	addCourse: (course: Omit<Course, 'classes'>) => void;
 	removeCourse: (courseId: string) => void;
+	updateCourseClass: (props: {
+		courseId: string;
+		classTypeId: string;
+		classNumber: string;
+	}) => void;
 };
 
 export const useEnrolledCourses = create<CoursesState>()(
@@ -49,7 +54,25 @@ export const useEnrolledCourses = create<CoursesState>()(
 					state.courses = state.courses.filter((c) => c.id !== courseId);
 				});
 			},
+			updateCourseClass: ({ courseId, classTypeId, classNumber }) => {
+				set((state) => {
+					const course = state.courses.find((c) => c.id === courseId);
+					if (!course) return;
+					const classType = course.classes.find((c) => c.id === classTypeId);
+					if (!classType) return;
+					classType.classNumber = classNumber;
+				});
+			},
 		})),
 		{ name: 'enrolled-courses', version: 0 },
 	),
 );
+
+export const useEnrolledCourse = (id: string) => {
+	const course = useEnrolledCourses((s) => s.courses.find((c) => c.id === id));
+	const updateCourseClass = useEnrolledCourses((s) => s.updateCourseClass);
+	const updateClass = (props: { classTypeId: string; classNumber: string }) => {
+		updateCourseClass({ courseId: id, ...props });
+	};
+	return { course, updateClass };
+};
