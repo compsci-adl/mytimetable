@@ -16,7 +16,6 @@ const enum CourseId {
 
 export const handlers = [
 	http.get('/api/courses', async () => {
-		// await wait(2000);
 		return HttpResponse.json({
 			courses: [
 				{
