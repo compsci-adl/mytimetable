@@ -54,7 +54,7 @@ export const handlers = [
 		});
 	}),
 	http.get('/api/course/:id', async ({ params }) => {
-		const { id } = params;
+		const { id } = params as { id: CourseId };
 		if (id === CourseId.ERROR)
 			return HttpResponse.json({ error: 'Course not found' }, { status: 404 });
 		const idResMap = {
@@ -62,6 +62,6 @@ export const handlers = [
 			[CourseId.GCCS]: gccs,
 			[CourseId.MFDS]: mfds,
 		};
-		return HttpResponse.json(idResMap[id as keyof typeof idResMap]);
+		return HttpResponse.json(idResMap[id]);
 	}),
 ];
