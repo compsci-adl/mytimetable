@@ -1,78 +1,10 @@
-import {
-	Chip,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
-	Select,
-	SelectItem,
-	useDisclosure,
-} from '@nextui-org/react';
+import { Chip, useDisclosure } from '@nextui-org/react';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useCourseInfo } from '../data/course-info';
-import {
-	useEnrolledCourse,
-	useEnrolledCourses,
-} from '../data/enrolled-courses';
-import type { Key } from '../types/key';
+import { useEnrolledCourses } from '../data/enrolled-courses';
 import { useQueryStatus } from '../utils/query-status';
-
-type CourseModalProps = {
-	isOpen: boolean;
-	onOpenChange: (isOpen: boolean) => void;
-	id: string;
-};
-const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
-	const course = useCourseInfo(id);
-	const { course: courseData, updateClass } = useEnrolledCourse(id);
-	const getSelectedClassNumber = (classTypeId: string) => {
-		const selectedClass = courseData?.classes.find((c) => c.id === classTypeId);
-		return selectedClass?.classNumber;
-	};
-	const getKeys = (nullableKey: Key | undefined) => {
-		return nullableKey ? [nullableKey] : undefined;
-	};
-
-	if (!course) return;
-	return (
-		<Modal isOpen={isOpen} onOpenChange={onOpenChange} size="lg">
-			<ModalContent>
-				{() => (
-					<>
-						<ModalHeader className="flex flex-col gap-1">
-							{course.name.subject} {course.name.code} - {course.name.title}
-						</ModalHeader>
-						<ModalBody as="form" className="mb-4">
-							{course.class_list.map((classType) => (
-								<Select
-									key={classType.id}
-									label={`${classType.type} Time`}
-									selectedKeys={getKeys(getSelectedClassNumber(classType.id))}
-									// Prevent the selected class from being clicked again to avoid it becoming undefined
-									disabledKeys={getKeys(getSelectedClassNumber(classType.id))}
-									onSelectionChange={(selectedClassNumber) =>
-										updateClass({
-											classNumber: [...selectedClassNumber][0] as string,
-											classTypeId: classType.id,
-										})
-									}
-								>
-									{classType.classes.map((classInfo) => (
-										<SelectItem key={classInfo.number}>
-											{classInfo.number}
-										</SelectItem>
-									))}
-								</Select>
-							))}
-						</ModalBody>
-					</>
-				)}
-			</ModalContent>
-		</Modal>
-	);
-};
+import { CourseModal } from './CourseModal';
 
 type CourseChipProps = {
 	name: string;

@@ -1,3 +1,11 @@
+export type Meeting = {
+	day: string;
+	location: string;
+	date: { start: string; end: string };
+	time: { start: string; end: string };
+};
+export type Meetings = Array<Meeting>;
+
 export type Course = {
 	id: string;
 	course_id: string;
@@ -17,12 +25,7 @@ export type Course = {
 		type: string;
 		classes: Array<{
 			number: string;
-			meetings: Array<{
-				day: string;
-				location: string;
-				date: { start: string; end: string };
-				time: { start: string; end: string };
-			}>;
+			meetings: Meetings;
 		}>;
 	}>;
 };
