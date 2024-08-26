@@ -4,7 +4,8 @@ import adds from './data/adds/adds-res.json';
 import gccs from './data/gccs/gccs-res.json';
 import mfds from './data/mfds/mfds-res.json';
 
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// Use tanstack query devtools instead of hardcoding loading times
+// const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const enum CourseId {
 	ADDS = '8b8afe1b-449b-4cce-b108-8dd8eef4648e',
@@ -54,7 +55,6 @@ export const handlers = [
 		});
 	}),
 	http.get('/api/course/:id', async ({ params }) => {
-		await wait(3000);
 		const { id } = params;
 		if (id === CourseId.ERROR)
 			return HttpResponse.json({ error: 'Course not found' }, { status: 404 });
