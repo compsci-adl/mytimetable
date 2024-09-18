@@ -7,6 +7,7 @@ import {
 } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 
 import { getCourses } from '../apis';
 import { TERMS, YEAR } from '../constants';
@@ -15,6 +16,8 @@ import { LocalStorageKey } from '../local-storage-keys';
 import type { Key } from '../types/key';
 
 export const SearchForm = () => {
+	const enrolledCourses = useEnrolledCourses();
+
 	const [selectedTerm, setSelectedTerm] = useState(
 		localStorage.getItem(LocalStorageKey.Term) ?? 'sem1',
 	);
@@ -22,6 +25,7 @@ export const SearchForm = () => {
 		setSelectedTerm(term);
 		localStorage.setItem(LocalStorageKey.Term, term);
 	};
+	const isTermSelectDisabled = enrolledCourses.courses.length > 0;
 
 	const coursesQuery = useQuery({
 		// TODO: Replace params with config data
@@ -36,7 +40,6 @@ export const SearchForm = () => {
 		})) ?? [];
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
 
-	const enrolledCourses = useEnrolledCourses();
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const course = courses?.find((c) => c.id === selectedCourseId);
@@ -50,16 +53,24 @@ export const SearchForm = () => {
 
 	return (
 		<div className="flex gap-2 mobile:flex-col">
-			<Select
-				label="Select a term"
-				selectedKeys={[selectedTerm]}
-				onSelectionChange={(keys) => changeTerm(keys.currentKey!)}
-				className="w-72 mobile:w-full"
+			<div
+				onClick={() => {
+					if (!isTermSelectDisabled) return;
+					toast.warning('You need to drop all courses to change the term');
+				}}
 			>
-				{TERMS.map((term) => (
-					<SelectItem key={term.alias}>{term.name}</SelectItem>
-				))}
-			</Select>
+				<Select
+					label="Select a term"
+					selectedKeys={[selectedTerm]}
+					onSelectionChange={(keys) => changeTerm(keys.currentKey!)}
+					className="w-72 mobile:w-full"
+					isDisabled={isTermSelectDisabled}
+				>
+					{TERMS.map((term) => (
+						<SelectItem key={term.alias}>{term.name}</SelectItem>
+					))}
+				</Select>
+			</div>
 			<form className="flex grow items-center gap-2" onSubmit={handleSubmit}>
 				<Autocomplete
 					label="Search a course"
