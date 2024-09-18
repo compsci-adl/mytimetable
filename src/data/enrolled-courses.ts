@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 
 import { getCourse } from '../apis';
 import { queryClient } from '../lib/query';
+import { LocalStorageKey } from '../local-storage-keys';
 import type { DetailedEnrolledCourse } from '../types/course';
 import { useCoursesInfo } from './course-info';
 
@@ -66,7 +67,7 @@ export const useEnrolledCourses = create<CoursesState>()(
 				});
 			},
 		})),
-		{ name: 'enrolled-courses', version: 0 },
+		{ name: LocalStorageKey.EnrolledCourses, version: 0 },
 	),
 );
 
