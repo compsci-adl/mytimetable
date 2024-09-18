@@ -16,7 +16,7 @@ import type { Key } from '../types/key';
 
 export const SearchForm = () => {
 	const [selectedTerm, setSelectedTerm] = useState(
-		localStorage.getItem('term') ?? 'sem1',
+		localStorage.getItem(LocalStorageKey.Term) ?? 'sem1',
 	);
 	const changeTerm = (term: string) => {
 		setSelectedTerm(term);
