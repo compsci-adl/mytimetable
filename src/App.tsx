@@ -1,10 +1,10 @@
 import { EnrolledCourses } from './components/EnrolledCourses';
 import { Header } from './components/Header';
 import { SearchForm } from './components/SearchForm';
-import { useInitCourseInfo } from './helpers/init-course-info';
+import { useCoursesInfo } from './data/course-info';
 
 export const App = () => {
-	useInitCourseInfo();
+	useCoursesInfo();
 
 	return (
 		<>

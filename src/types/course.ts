@@ -29,3 +29,9 @@ export type Course = {
 		}>;
 	}>;
 };
+
+export type DetailedEnrolledCourse = {
+	id: string;
+	name: Course['name'];
+	classes: Array<{ id: string; type: string; meetings: Meetings }>;
+};
