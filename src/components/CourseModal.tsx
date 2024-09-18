@@ -12,14 +12,14 @@ import {
 	TableHeader,
 	TableRow,
 } from '@nextui-org/react';
-import type dayjs from 'dayjs';
 import { Fragment } from 'react/jsx-runtime';
 
 import { useGetCourseInfo } from '../data/course-info';
 import { useEnrolledCourse } from '../data/enrolled-courses';
+import type dayjs from '../lib/dayjs';
 import type { Meetings } from '../types/course';
 import type { Key } from '../types/key';
-import { dateToDayjs, timeToDayjs } from '../utils/dayjs';
+import { dateToDayjs, timeToDayjs } from '../utils/date';
 
 const DATE_FORMAT = 'D MMM';
 const TIME_FORMAT = 'h:mm A';
