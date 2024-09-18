@@ -11,6 +11,7 @@ import { useEnrolledCourses } from './data/enrolled-courses';
 import './index.css';
 import { queryClient } from './lib/query';
 
+// MSW
 const enableMocking = async () => {
 	if (!import.meta.env.DEV) return;
 	const { worker } = await import('./mocks/browser');
@@ -18,6 +19,7 @@ const enableMocking = async () => {
 };
 await enableMocking();
 
+// Zustand
 if (import.meta.env.DEV) {
 	mountStoreDevtool('Courses', useEnrolledCourses);
 }
