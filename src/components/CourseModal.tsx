@@ -15,7 +15,7 @@ import {
 import type dayjs from 'dayjs';
 import { Fragment } from 'react/jsx-runtime';
 
-import { useCourseInfo } from '../data/course-info';
+import { useGetCourseInfo } from '../data/course-info';
 import { useEnrolledCourse } from '../data/enrolled-courses';
 import type { Meetings } from '../types/course';
 import type { Key } from '../types/key';
@@ -86,7 +86,7 @@ type CourseModalProps = {
 	id: string;
 };
 export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
-	const courseInfo = useCourseInfo(id);
+	const courseInfo = useGetCourseInfo(id);
 	const { course, updateClass } = useEnrolledCourse(id);
 	const getSelectedClassNumber = (classTypeId: string) => {
 		const selectedClass = course?.classes.find((c) => c.id === classTypeId);

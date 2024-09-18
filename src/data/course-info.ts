@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import type { Course } from '../types/course';
 
-export const useCourseInfo = (id: string) => {
+export const useGetCourseInfo = (id: string) => {
 	const queryClient = useQueryClient();
 	const [course, setCourse] = useState<Course | null>(null);
 
