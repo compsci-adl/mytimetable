@@ -45,7 +45,7 @@
 		"msw": "^2.3.1",
 		"postcss": "^8.4.39",
 		"prettier": "^3.3.2",
-		"prettier-plugin-tailwindcss": "^0.6.5",
+		"prettier-plugin-tailwindcss": "^0.6.6",
 		"simple-git-hooks": "^2.11.1",
 		"tailwindcss": "^3.4.4",
 		"typescript": "^5.2.2",
