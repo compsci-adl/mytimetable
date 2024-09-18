@@ -1,15 +1,31 @@
-import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react';
+import {
+	Autocomplete,
+	AutocompleteItem,
+	Button,
+	Select,
+	SelectItem,
+} from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
 import { getCourses } from '../apis';
+import { TERMS, YEAR } from '../constants';
 import { useEnrolledCourses } from '../data/enrolled-courses';
+import { LocalStorageKey } from '../local-storage-keys';
 import type { Key } from '../types/key';
 
 export const SearchForm = () => {
+	const [selectedTerm, setSelectedTerm] = useState(
+		localStorage.getItem('term') ?? 'sem1',
+	);
+	const changeTerm = (term: string) => {
+		setSelectedTerm(term);
+		localStorage.setItem(LocalStorageKey.Term, term);
+	};
+
 	const coursesQuery = useQuery({
 		// TODO: Replace params with config data
-		queryKey: ['courses', { year: 2024, term: 'sem2' }] as const,
+		queryKey: ['courses', { year: YEAR, term: selectedTerm }] as const,
 		queryFn: ({ queryKey }) => getCourses(queryKey[1]),
 	});
 	const courses = coursesQuery.data?.courses;
@@ -33,24 +49,36 @@ export const SearchForm = () => {
 	};
 
 	return (
-		<form className="flex items-center gap-2" onSubmit={handleSubmit}>
-			<Autocomplete
-				label="Search a course"
-				isDisabled={coursesQuery.isPending}
-				defaultItems={courseList}
-				selectedKey={selectedCourseId}
-				onSelectionChange={setSelectedCourseId}
-				disabledKeys={enrolledCourses.courses.map((c) => c.id)}
+		<div className="flex gap-2 mobile:flex-col">
+			<Select
+				label="Select a term"
+				selectedKeys={[selectedTerm]}
+				onSelectionChange={(keys) => changeTerm(keys.currentKey!)}
+				className="w-72 mobile:w-full"
 			>
-				{(course) => (
-					<AutocompleteItem key={course.id} value={course.id}>
-						{course.name}
-					</AutocompleteItem>
-				)}
-			</Autocomplete>
-			<Button color="primary" type="submit" isDisabled={!selectedCourseId}>
-				Add
-			</Button>
-		</form>
+				{TERMS.map((term) => (
+					<SelectItem key={term.alias}>{term.name}</SelectItem>
+				))}
+			</Select>
+			<form className="flex grow items-center gap-2" onSubmit={handleSubmit}>
+				<Autocomplete
+					label="Search a course"
+					isDisabled={coursesQuery.isPending}
+					defaultItems={courseList}
+					selectedKey={selectedCourseId}
+					onSelectionChange={setSelectedCourseId}
+					disabledKeys={enrolledCourses.courses.map((c) => c.id)}
+				>
+					{(course) => (
+						<AutocompleteItem key={course.id} value={course.id}>
+							{course.name}
+						</AutocompleteItem>
+					)}
+				</Autocomplete>
+				<Button color="primary" type="submit" isDisabled={!selectedCourseId}>
+					Add
+				</Button>
+			</form>
+		</div>
 	);
 };
