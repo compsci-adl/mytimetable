@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
+import { Toaster } from 'sonner';
 
 import { App } from './App';
 import { useEnrolledCourses } from './data/enrolled-courses';
@@ -29,6 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 		<QueryClientProvider client={queryClient}>
 			<ReactQueryDevtools initialIsOpen={false} />
 			<NextUIProvider>
+				<Toaster richColors position="top-center" />
 				<App />
 			</NextUIProvider>
 		</QueryClientProvider>

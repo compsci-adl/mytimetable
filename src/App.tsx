@@ -1,3 +1,4 @@
+import { Calendar } from './components/Calendar';
 import { EnrolledCourses } from './components/EnrolledCourses';
 import { Header } from './components/Header';
 import { SearchForm } from './components/SearchForm';
@@ -12,6 +13,7 @@ export const App = () => {
 			<main className="mx-auto my-4 max-w-screen-xl space-y-4 px-2">
 				<SearchForm />
 				<EnrolledCourses />
+				<Calendar />
 			</main>
 		</>
 	);

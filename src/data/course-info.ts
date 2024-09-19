@@ -26,5 +26,5 @@ export const useCoursesInfo = () => {
 			queryFn: () => getCourse({ id }),
 		})),
 	});
-	return data.map((d) => d.data).filter((d) => d !== undefined);
+	return data.map((d) => d.data).filter(Boolean) as Course[];
 };
