@@ -4,6 +4,7 @@ import { mutative } from 'zustand-mutative';
 import { persist } from 'zustand/middleware';
 
 import { getCourse } from '../apis';
+import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
 import { queryClient } from '../lib/query';
 import type { DetailedEnrolledCourse } from '../types/course';
@@ -111,4 +112,12 @@ export const useDetailedEnrolledCourses = (): Array<DetailedEnrolledCourse> => {
 	});
 
 	return detailedCourses.filter((c) => c !== null);
+};
+
+export const useCourseColor = (id: string) => {
+	const courseIndex = useEnrolledCourses((s) =>
+		s.courses.findIndex((c) => c.id === id),
+	);
+	if (courseIndex === -1) return NOT_FOUND_COLOR;
+	return COURSE_COLORS[courseIndex];
 };

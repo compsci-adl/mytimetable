@@ -4,16 +4,16 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { getCourse } from '../apis';
-import { useEnrolledCourses } from '../data/enrolled-courses';
+import { useCourseColor, useEnrolledCourses } from '../data/enrolled-courses';
 import { CourseModal } from './CourseModal';
 
 type CourseChipProps = {
 	name: string;
 	id: string;
 	onOpenModal: (id: string) => void;
-	className?: string;
 };
-const CourseChip = ({ name, id, onOpenModal, className }: CourseChipProps) => {
+const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
+	const color = useCourseColor(id);
 	const removeCourse = useEnrolledCourses((s) => s.removeCourse);
 
 	const { isFetching, isError } = useQuery({
@@ -23,8 +23,7 @@ const CourseChip = ({ name, id, onOpenModal, className }: CourseChipProps) => {
 
 	return (
 		<Chip
-			color="primary"
-			variant="bordered"
+			variant="dot"
 			onClose={() => {
 				removeCourse(id);
 			}}
@@ -34,9 +33,10 @@ const CourseChip = ({ name, id, onOpenModal, className }: CourseChipProps) => {
 			}}
 			classNames={{
 				base: clsx(
+					'border-primary text-primary',
 					isFetching ? 'cursor-wait' : 'cursor-pointer hover:brightness-125',
-					className,
 				),
+				dot: color.dot,
 			}}
 		>
 			{isFetching && '⏳ '}

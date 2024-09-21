@@ -109,7 +109,9 @@ export const useCalendar = () => {
 		setCurrentWeek((c) => c.subtract(1, 'week'));
 	};
 
+	console.log('currentWeek', enrolledCourses);
 	const courses = getWeekCourses(currentWeek, enrolledCourses);
+	console.log('courses', courses);
 
 	return { currentWeek, nextWeek, prevWeek, courses };
 };
