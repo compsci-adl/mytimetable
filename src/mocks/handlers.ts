@@ -58,7 +58,7 @@ export const handlers = [
 					id: CourseId.ERROR2,
 					name: {
 						subject: 'ERROR',
-						code: '2334',
+						code: '1145',
 						title: 'Web & Database Computing II',
 					},
 				},
@@ -66,7 +66,7 @@ export const handlers = [
 					id: CourseId.ERROR3,
 					name: {
 						subject: 'ERROR',
-						code: '2335',
+						code: '1419',
 						title: 'Web & Database Computing III',
 					},
 				},
@@ -74,7 +74,7 @@ export const handlers = [
 					id: CourseId.ERROR4,
 					name: {
 						subject: 'ERROR',
-						code: '2336',
+						code: '1981',
 						title: 'Web & Database Computing IV',
 					},
 				},
@@ -82,7 +82,7 @@ export const handlers = [
 					id: CourseId.ERROR5,
 					name: {
 						subject: 'ERROR',
-						code: '2337',
+						code: '0000',
 						title: 'Web & Database Computing V',
 					},
 				},
