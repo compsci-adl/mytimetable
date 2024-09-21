@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { create } from 'zustand';
 import { mutative } from 'zustand-mutative';
 import { persist } from 'zustand/middleware';
@@ -30,9 +31,14 @@ type CoursesState = {
 
 export const useEnrolledCourses = create<CoursesState>()(
 	persist(
-		mutative((set) => ({
+		mutative((set, get) => ({
 			courses: [],
 			addCourse: async (course) => {
+				// Limit to 7 courses
+				if (get().courses.length >= 7) {
+					toast.error('8 courses for a term is crazy! 💀');
+					return get().courses;
+				}
 				// Add course to state
 				set((state) => {
 					state.courses.push({ ...course, classes: [] });
