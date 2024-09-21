@@ -1,5 +1,3 @@
-export const YEAR = Number(import.meta.env.VITE_YEAR);
-
 export const TERMS = [
 	{ alias: 'sem', name: 'Semester', period: 2 },
 	{ alias: 'tri', name: 'Trimester', period: 3 },

@@ -1,4 +1,4 @@
-import { YEAR } from '../constants';
+import { YEAR } from '../constants/year';
 import dayjs from '../lib/dayjs';
 
 export const dateToDayjs = (date: string) => {

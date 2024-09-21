@@ -3,8 +3,8 @@ import { mutative } from 'zustand-mutative';
 import { persist } from 'zustand/middleware';
 
 import { getCourse } from '../apis';
+import { LocalStorageKey } from '../constants/local-storage-keys';
 import { queryClient } from '../lib/query';
-import { LocalStorageKey } from '../local-storage-keys';
 import type { DetailedEnrolledCourse } from '../types/course';
 import { useCoursesInfo } from './course-info';
 

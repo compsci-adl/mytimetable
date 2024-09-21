@@ -10,9 +10,10 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 import { getCourses } from '../apis';
-import { TERMS, YEAR } from '../constants';
+import { LocalStorageKey } from '../constants/local-storage-keys';
+import { TERMS } from '../constants/terms';
+import { YEAR } from '../constants/year';
 import { useEnrolledCourses } from '../data/enrolled-courses';
-import { LocalStorageKey } from '../local-storage-keys';
 import type { Key } from '../types/key';
 
 export const SearchForm = () => {
