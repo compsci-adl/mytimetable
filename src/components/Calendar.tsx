@@ -79,6 +79,7 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 					</div>
 				))}
 			</div>
+			{/* FIXME: Remove the last two grid rows for 21:00 */}
 			<div className="text-2xs text-apple-gray-500 relative -top-[0.35rem] row-span-full row-start-2 grid grid-cols-subgrid grid-rows-[repeat(15,_minmax(0,_1fr))] pr-2 text-end">
 				{Array.from({ length: 15 }, (_, i) => (
 					<div key={i}>{String(7 + i).padStart(2, '0')}:00</div>
@@ -99,6 +100,10 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 	);
 };
 
+const getGridRow = (time: string) => {
+	const t = timeToDayjs(time);
+	return t.hour() * 2 + (t.minute() >= 30 ? 1 : 0) - 13;
+};
 const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
 	return (
 		<div className="absolute left-10 top-10 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))] z-0">
@@ -122,10 +127,6 @@ const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
 	);
 };
 
-const getGridRow = (time: string) => {
-	const t = timeToDayjs(time);
-	return t.hour() * 2 + (t.minute() >= 30 ? 1 : 0) - 13;
-};
 export const Calendar = () => {
 	const { courses, currentWeek, actions } = useCalendar();
 
