@@ -1,6 +1,7 @@
 import { Button } from '@nextui-org/react';
 import clsx from 'clsx';
 
+import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
 import { useCourseColor } from '../data/enrolled-courses';
 import { useCalendar } from '../helpers/calendar';
@@ -77,6 +78,35 @@ export const Calendar = () => {
 	return (
 		<div>
 			<CalendarHeader currentWeek={currentWeek} actions={actions} />
+			<div className="grid grid-cols-[auto_repeat(5,_minmax(0,_1fr))] grid-rows-[repeat(31,_minmax(0,_1fr))] border-apple-gray-300">
+				<div className="col-span-full col-start-2 grid grid-cols-subgrid border-b-1">
+					{WEEK_DAYS.map((day, i) => (
+						<div
+							key={day}
+							className="flex justify-center gap-1 text-lg font-light"
+						>
+							<div>{day.slice(0, 3)}</div>
+							<div>{currentWeek.add(i, 'day').date()}</div>
+						</div>
+					))}
+				</div>
+				<div className="relative -top-[0.35rem] row-span-full row-start-2 mr-2 grid grid-cols-subgrid grid-rows-[repeat(15,_minmax(0,_1fr))] text-end text-2xs text-apple-gray-500">
+					{Array.from({ length: 15 }, (_, i) => (
+						<div key={i}>{String(7 + i).padStart(2, '0')}:00</div>
+					))}
+				</div>
+				<div className="col-span-full col-start-2 row-start-2 row-end-[30] grid grid-cols-subgrid grid-rows-subgrid">
+					{Array.from({ length: 5 * 28 }, (_, i) => (
+						<div
+							key={i}
+							className={clsx(
+								'h-10 border-r-1',
+								[5, 6, 7, 8, 9].includes(i % 10) && 'border-b-1',
+							)}
+						/>
+					))}
+				</div>
+			</div>
 			{Object.entries(courses).map(([day, dayCourses]) => (
 				<div key={day}>
 					<h2>{day}</h2>

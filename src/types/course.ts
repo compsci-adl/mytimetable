@@ -1,4 +1,4 @@
-type WeekDay = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
+import type { WeekDay } from '../constants/week-days';
 
 export type DateTimeRange = { start: string; end: string };
 

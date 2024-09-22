@@ -15,6 +15,9 @@ export default {
 			fontSize: {
 				'2xs': ['0.625rem', { lineHeight: '0.75rem' }],
 			},
+			colors: {
+				'apple-gray': { 300: '#DFDFDF', 500: '#AFAFAF' },
+			},
 		},
 	},
 	darkMode: 'class',
