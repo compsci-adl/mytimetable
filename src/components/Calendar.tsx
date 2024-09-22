@@ -7,13 +7,11 @@ import { useCalendar } from '../helpers/calendar';
 import type dayjs from '../lib/dayjs';
 import type { WeekCourse } from '../types/course';
 
-const CourseCard = ({
-	course,
-	className,
-}: {
+type CourseCardProps = {
 	course: WeekCourse;
 	className?: string;
-}) => {
+};
+const CourseCard = ({ course, className }: CourseCardProps) => {
 	const color = useCourseColor(course.id);
 
 	return (
