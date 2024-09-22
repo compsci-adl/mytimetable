@@ -1,5 +1,6 @@
 import { Calendar } from './components/Calendar';
 import { EnrolledCourses } from './components/EnrolledCourses';
+import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { SearchForm } from './components/SearchForm';
 import { useCoursesInfo } from './data/course-info';
@@ -14,6 +15,7 @@ export const App = () => {
 				<SearchForm />
 				<EnrolledCourses />
 				<Calendar />
+				<Footer />
 			</main>
 		</>
 	);
