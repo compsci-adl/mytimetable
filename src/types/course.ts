@@ -1,10 +1,12 @@
 type WeekDay = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
 
+export type DateTimeRange = { start: string; end: string };
+
 type Meeting = {
 	day: WeekDay;
 	location: string;
-	date: { start: string; end: string };
-	time: { start: string; end: string };
+	date: DateTimeRange;
+	time: DateTimeRange;
 };
 export type Meetings = Array<Meeting>;
 export type CourseName = {
@@ -45,6 +47,6 @@ export type WeekCourse = {
 	classId: string;
 	classType: string;
 	location: string;
-	time: { start: string; end: string };
+	time: DateTimeRange;
 };
 export type WeekCourses = Record<WeekDay, Array<WeekCourse>>;
