@@ -67,7 +67,7 @@ const CalendarHeader = ({ currentWeek, actions }: CalendarHeaderProps) => {
 
 const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 	return (
-		<div className="border-apple-gray-300 grid grid-cols-[2.5rem_repeat(5,_minmax(0,_1fr))] grid-rows-[2.5rem_repeat(30,_minmax(0,_1fr))]">
+		<div className="border-apple-gray-300 grid grid-cols-[2.5rem_repeat(5,_minmax(0,_1fr))] grid-rows-[2.5rem_repeat(30,_minmax(0,_1fr))] -z-50">
 			<div className="sticky top-12 z-50 col-span-full col-start-2 grid grid-cols-subgrid border-b-1 bg-white">
 				{WEEK_DAYS.map((day, i) => (
 					<div
