@@ -4,8 +4,8 @@ module.exports = {
 	trailingComma: 'all',
 	useTabs: true,
 	plugins: [
-		'@trivago/prettier-plugin-sort-imports',
-		'prettier-plugin-tailwindcss',
+		require.resolve('prettier-plugin-tailwindcss'),
+		require.resolve('@trivago/prettier-plugin-sort-imports'),
 	],
 	importOrder: ['<THIRD_PARTY_MODULES>', '^[./]'],
 	importOrderSeparation: true,
