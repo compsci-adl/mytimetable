@@ -108,8 +108,18 @@ export const useCalendar = () => {
 		if (currentWeek.isSame(startWeek)) return;
 		setCurrentWeek((c) => c.subtract(1, 'week'));
 	};
+	const goToStartWeek = () => {
+		setCurrentWeek(startWeek);
+	};
+	const goToEndWeek = () => {
+		setCurrentWeek(endWeek);
+	};
 
 	const courses = getWeekCourses(currentWeek, enrolledCourses);
 
-	return { currentWeek, nextWeek, prevWeek, courses };
+	return {
+		courses,
+		currentWeek,
+		actions: { prevWeek, nextWeek, goToStartWeek, goToEndWeek },
+	};
 };

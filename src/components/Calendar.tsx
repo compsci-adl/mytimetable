@@ -36,47 +36,47 @@ const CourseCard = ({ course, className }: CourseCardProps) => {
 
 type CalendarHeaderProps = {
 	currentWeek: dayjs.Dayjs;
-	nextWeek: () => void;
-	prevWeek: () => void;
+	actions: ReturnType<typeof useCalendar>['actions'];
 };
-const CalendarHeader = ({
-	currentWeek,
-	nextWeek,
-	prevWeek,
-}: CalendarHeaderProps) => {
+const CalendarHeader = ({ currentWeek, actions }: CalendarHeaderProps) => {
+	const actionButtons = [
+		{ icon: '⏪', description: 'Start week', action: actions.goToStartWeek },
+		{ icon: '◀️', description: 'Previous week', action: actions.prevWeek },
+		{ icon: '▶️', description: 'Next week', action: actions.nextWeek },
+		{ icon: '⏩', description: 'End week', action: actions.goToEndWeek },
+	];
 	return (
 		<div className="flex items-center justify-between">
 			<h2 className="text-3xl">
-				<span className="mr-2 font-bold">{currentWeek.format('MMMM')}</span>
+				<span className="mr-2 font-bold">
+					{/* Month for Wednesday in the week is more accurate than Monday */}
+					{currentWeek.add(2, 'day').format('MMMM')}
+				</span>
 				<span className="font-light">{YEAR}</span>
 			</h2>
-			<div className="flex gap-2 *:text-3xl">
-				<Button
-					isIconOnly
-					variant="light"
-					onClick={prevWeek}
-					title="Previous week"
-				>
-					⬅️
-				</Button>
-				<Button isIconOnly variant="light" onClick={nextWeek} title="Next week">
-					➡️
-				</Button>
+			<div className="flex *:text-3xl">
+				{actionButtons.map(({ icon, description, action }) => (
+					<Button
+						key={description}
+						isIconOnly
+						variant="light"
+						onClick={action}
+						title={description}
+					>
+						{icon}
+					</Button>
+				))}
 			</div>
 		</div>
 	);
 };
 
 export const Calendar = () => {
-	const { courses, currentWeek, nextWeek, prevWeek } = useCalendar();
+	const { courses, currentWeek, actions } = useCalendar();
 
 	return (
 		<div>
-			<CalendarHeader
-				currentWeek={currentWeek}
-				nextWeek={nextWeek}
-				prevWeek={prevWeek}
-			/>
+			<CalendarHeader currentWeek={currentWeek} actions={actions} />
 			{Object.entries(courses).map(([day, dayCourses]) => (
 				<div key={day}>
 					<h2>{day}</h2>
