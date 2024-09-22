@@ -7,22 +7,19 @@ import { useCourseColor } from '../data/enrolled-courses';
 import { useCalendar } from '../helpers/calendar';
 import type dayjs from '../lib/dayjs';
 import type { WeekCourse } from '../types/course';
+import { timeToDayjs } from '../utils/date';
+import { calcDuration } from '../utils/duration';
 
-type CourseCardProps = {
-	course: WeekCourse;
-	className?: string;
-};
-const CourseCard = ({ course, className }: CourseCardProps) => {
+const CourseCard = ({ course }: { course: WeekCourse }) => {
 	const color = useCourseColor(course.id);
 
 	return (
 		<div
 			className={clsx(
-				'rounded-md border-l-3 p-1 text-xs',
+				'h-full rounded-md border-l-3 p-1 text-xs',
 				color.border,
 				color.bg,
 				color.text,
-				className,
 			)}
 		>
 			<div className="text-2xs">{course.time.start}</div>
@@ -47,7 +44,7 @@ const CalendarHeader = ({ currentWeek, actions }: CalendarHeaderProps) => {
 		{ icon: '⏩', description: 'End week', action: actions.goToEndWeek },
 	];
 	return (
-		<div className="flex items-center justify-between">
+		<div className="sticky top-0 z-50 flex items-center justify-between bg-white py-1">
 			<h2 className="text-3xl">
 				<span className="mr-2 font-bold">
 					{/* Month for Wednesday in the week is more accurate than Monday */}
@@ -68,50 +65,77 @@ const CalendarHeader = ({ currentWeek, actions }: CalendarHeaderProps) => {
 	);
 };
 
+const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
+	return (
+		<div className="border-apple-gray-300 grid grid-cols-[2.5rem_repeat(5,_minmax(0,_1fr))] grid-rows-[2.5rem_repeat(30,_minmax(0,_1fr))]">
+			<div className="sticky top-12 z-50 col-span-full col-start-2 grid grid-cols-subgrid border-b-1 bg-white">
+				{WEEK_DAYS.map((day, i) => (
+					<div
+						key={day}
+						className="flex justify-center gap-1 text-lg font-light"
+					>
+						<div>{day.slice(0, 3)}</div>
+						<div>{currentWeek.add(i, 'day').date()}</div>
+					</div>
+				))}
+			</div>
+			<div className="text-2xs text-apple-gray-500 relative -top-[0.35rem] row-span-full row-start-2 grid grid-cols-subgrid grid-rows-[repeat(15,_minmax(0,_1fr))] pr-2 text-end">
+				{Array.from({ length: 15 }, (_, i) => (
+					<div key={i}>{String(7 + i).padStart(2, '0')}:00</div>
+				))}
+			</div>
+			<div className="col-span-full col-start-2 row-start-2 row-end-[30] grid grid-cols-subgrid grid-rows-subgrid">
+				{Array.from({ length: 5 * 28 }, (_, i) => (
+					<div
+						key={i}
+						className={clsx(
+							'h-12 border-r-1',
+							[5, 6, 7, 8, 9].includes(i % 10) && 'border-b-1',
+						)}
+					/>
+				))}
+			</div>
+		</div>
+	);
+};
+
+const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
+	return (
+		<div className="absolute left-10 top-10 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))] z-0">
+			{courses.map((dayCourses, i) =>
+				dayCourses.map((course) => (
+					<div
+						className="p-[1px]"
+						key={course.id + course.classId}
+						style={{
+							gridColumnStart: i + 1,
+							gridRowStart: getGridRow(course.time.start),
+							gridRowEnd: getGridRow(course.time.end),
+							height: calcDuration(course.time) * 6 + 'rem',
+						}}
+					>
+						<CourseCard course={course} />
+					</div>
+				)),
+			)}
+		</div>
+	);
+};
+
+const getGridRow = (time: string) => {
+	const t = timeToDayjs(time);
+	return t.hour() * 2 + (t.minute() >= 30 ? 1 : 0) - 13;
+};
 export const Calendar = () => {
 	const { courses, currentWeek, actions } = useCalendar();
 
 	return (
 		<div>
 			<CalendarHeader currentWeek={currentWeek} actions={actions} />
-			<div className="border-apple-gray-300 grid grid-cols-[auto_repeat(5,_minmax(0,_1fr))] grid-rows-[repeat(31,_minmax(0,_1fr))]">
-				<div className="col-span-full col-start-2 grid grid-cols-subgrid border-b-1">
-					{WEEK_DAYS.map((day, i) => (
-						<div
-							key={day}
-							className="flex justify-center gap-1 text-lg font-light"
-						>
-							<div>{day.slice(0, 3)}</div>
-							<div>{currentWeek.add(i, 'day').date()}</div>
-						</div>
-					))}
-				</div>
-				<div className="text-2xs text-apple-gray-500 relative -top-[0.35rem] row-span-full row-start-2 mr-2 grid grid-cols-subgrid grid-rows-[repeat(15,_minmax(0,_1fr))] text-end">
-					{Array.from({ length: 15 }, (_, i) => (
-						<div key={i}>{String(7 + i).padStart(2, '0')}:00</div>
-					))}
-				</div>
-				<div className="col-span-full col-start-2 row-start-2 row-end-[30] grid grid-cols-subgrid grid-rows-subgrid">
-					{Array.from({ length: 5 * 28 }, (_, i) => (
-						<div
-							key={i}
-							className={clsx(
-								'h-10 border-r-1',
-								[5, 6, 7, 8, 9].includes(i % 10) && 'border-b-1',
-							)}
-						/>
-					))}
-				</div>
+			<div className="relative">
+				<CalendarBg currentWeek={currentWeek} />
+				<CalendarCourses courses={courses} />
 			</div>
-			{courses.map((dayCourses, i) => (
-				<div key={i}>
-					<div className="flex flex-wrap gap-1 *:basis-1/5">
-						{dayCourses.map((c) => (
-							<CourseCard course={c} key={c.id + c.classId} />
-						))}
-					</div>
-				</div>
-			))}
 		</div>
 	);
 };
