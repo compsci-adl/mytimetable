@@ -1,8 +1,10 @@
 import { Button } from '@nextui-org/react';
 import clsx from 'clsx';
 
+import { YEAR } from '../constants/year';
 import { useCourseColor } from '../data/enrolled-courses';
 import { useCalendar } from '../helpers/calendar';
+import type dayjs from '../lib/dayjs';
 import type { WeekCourse } from '../types/course';
 
 const CourseCard = ({
@@ -34,28 +36,49 @@ const CourseCard = ({
 	);
 };
 
+type CalendarHeaderProps = {
+	currentWeek: dayjs.Dayjs;
+	nextWeek: () => void;
+	prevWeek: () => void;
+};
+const CalendarHeader = ({
+	currentWeek,
+	nextWeek,
+	prevWeek,
+}: CalendarHeaderProps) => {
+	return (
+		<div className="flex items-center justify-between">
+			<h2 className="text-3xl">
+				<span className="mr-2 font-bold">{currentWeek.format('MMMM')}</span>
+				<span className="font-light">{YEAR}</span>
+			</h2>
+			<div className="flex gap-2 *:text-3xl">
+				<Button
+					isIconOnly
+					variant="light"
+					onClick={prevWeek}
+					title="Previous week"
+				>
+					⬅️
+				</Button>
+				<Button isIconOnly variant="light" onClick={nextWeek} title="Next week">
+					➡️
+				</Button>
+			</div>
+		</div>
+	);
+};
+
 export const Calendar = () => {
 	const { courses, currentWeek, nextWeek, prevWeek } = useCalendar();
 
 	return (
 		<div>
-			<h1>{currentWeek.format('MMMM D, YYYY')}</h1>
-			<Button
-				isIconOnly
-				variant="light"
-				className="text-2xl"
-				onClick={prevWeek}
-			>
-				⬅️
-			</Button>
-			<Button
-				isIconOnly
-				variant="light"
-				className="text-2xl"
-				onClick={nextWeek}
-			>
-				➡️
-			</Button>
+			<CalendarHeader
+				currentWeek={currentWeek}
+				nextWeek={nextWeek}
+				prevWeek={prevWeek}
+			/>
 			{Object.entries(courses).map(([day, dayCourses]) => (
 				<div key={day}>
 					<h2>{day}</h2>
