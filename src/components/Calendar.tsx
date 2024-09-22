@@ -38,10 +38,10 @@ type CalendarHeaderProps = {
 };
 const CalendarHeader = ({ currentWeek, actions }: CalendarHeaderProps) => {
 	const actionButtons = [
-		{ icon: '⏪', description: 'Start week', action: actions.goToStartWeek },
+		{ icon: '⏪', description: 'First week', action: actions.goToStartWeek },
 		{ icon: '◀️', description: 'Previous week', action: actions.prevWeek },
 		{ icon: '▶️', description: 'Next week', action: actions.nextWeek },
-		{ icon: '⏩', description: 'End week', action: actions.goToEndWeek },
+		{ icon: '⏩', description: 'Last week', action: actions.goToEndWeek },
 	];
 	return (
 		<div className="sticky top-0 z-50 flex items-center justify-between bg-white py-1">
