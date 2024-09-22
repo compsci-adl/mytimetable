@@ -49,4 +49,4 @@ export type WeekCourse = {
 	location: string;
 	time: DateTimeRange;
 };
-export type WeekCourses = Record<WeekDay, Array<WeekCourse>>;
+export type WeekCourses = Array<Array<WeekCourse>>;

@@ -103,9 +103,8 @@ export const Calendar = () => {
 					))}
 				</div>
 			</div>
-			{Object.entries(courses).map(([day, dayCourses]) => (
-				<div key={day}>
-					<h2>{day}</h2>
+			{courses.map((dayCourses, i) => (
+				<div key={i}>
 					<div className="flex flex-wrap gap-1 *:basis-1/5">
 						{dayCourses.map((c) => (
 							<CourseCard course={c} key={c.id + c.classId} />

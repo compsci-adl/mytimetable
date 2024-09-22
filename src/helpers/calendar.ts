@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { WEEK_DAYS } from '../constants/week-days';
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import dayjs from '../lib/dayjs';
 import type {
@@ -50,13 +51,7 @@ export const getWeekCourses = (
 	enrolledCourses: Array<DetailedEnrolledCourse>,
 ): WeekCourses => {
 	const weekEnd = weekStart.add(4, 'days');
-	const courses: WeekCourses = {
-		Monday: [],
-		Tuesday: [],
-		Wednesday: [],
-		Thursday: [],
-		Friday: [],
-	};
+	const courses: WeekCourses = [[], [], [], [], []];
 
 	enrolledCourses.forEach((c) => {
 		c.classes.forEach((cl) => {
@@ -73,7 +68,7 @@ export const getWeekCourses = (
 					location: m.location,
 					time: m.time,
 				};
-				courses[m.day].push(course);
+				courses[WEEK_DAYS.indexOf(m.day)].push(course);
 			});
 		});
 	});

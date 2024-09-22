@@ -67,8 +67,8 @@ describe('getWeekCourses', () => {
 			},
 		];
 		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
-		const expectedRes: WeekCourses = {
-			Monday: [
+		const expectedRes: WeekCourses = [
+			[
 				{
 					id: 'cs',
 					name: { code: 'cs', subject: 'cs', title: 'compsci' },
@@ -78,7 +78,7 @@ describe('getWeekCourses', () => {
 					time: { start: '17:00', end: '18:00' },
 				},
 			],
-			Tuesday: [
+			[
 				{
 					id: 'm',
 					name: { code: 'm', subject: 'm', title: 'math' },
@@ -88,9 +88,9 @@ describe('getWeekCourses', () => {
 					time: { start: '09:00', end: '10:00' },
 				},
 			],
-			Wednesday: [],
-			Thursday: [],
-			Friday: [
+			[],
+			[],
+			[
 				{
 					id: 'cs',
 					name: { code: 'cs', subject: 'cs', title: 'compsci' },
@@ -100,7 +100,7 @@ describe('getWeekCourses', () => {
 					time: { start: '09:00', end: '10:00' },
 				},
 			],
-		};
+		];
 		expect(courses).toEqual(expectedRes);
 	});
 	it('should return the courses if course start at the end of the week', () => {
@@ -125,12 +125,12 @@ describe('getWeekCourses', () => {
 			},
 		];
 		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
-		const expectedRes: WeekCourses = {
-			Monday: [],
-			Tuesday: [],
-			Wednesday: [],
-			Thursday: [],
-			Friday: [
+		const expectedRes: WeekCourses = [
+			[],
+			[],
+			[],
+			[],
+			[
 				{
 					id: 'm',
 					name: { code: 'm', subject: 'm', title: 'math' },
@@ -140,7 +140,7 @@ describe('getWeekCourses', () => {
 					time: { start: '09:00', end: '10:00' },
 				},
 			],
-		};
+		];
 		expect(courses).toEqual(expectedRes);
 	});
 	it('should return the courses if course end at the start of the week', () => {
@@ -165,8 +165,8 @@ describe('getWeekCourses', () => {
 			},
 		];
 		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
-		const expectedRes: WeekCourses = {
-			Monday: [
+		const expectedRes: WeekCourses = [
+			[
 				{
 					id: 'm',
 					name: { code: 'm', subject: 'm', title: 'math' },
@@ -176,11 +176,11 @@ describe('getWeekCourses', () => {
 					time: { start: '09:00', end: '10:00' },
 				},
 			],
-			Tuesday: [],
-			Wednesday: [],
-			Thursday: [],
-			Friday: [],
-		};
+			[],
+			[],
+			[],
+			[],
+		];
 		expect(courses).toEqual(expectedRes);
 	});
 });
