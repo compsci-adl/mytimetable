@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react';
+import { Button, Tooltip } from '@nextui-org/react';
 import clsx from 'clsx';
 
 import { WEEK_DAYS } from '../constants/week-days';
@@ -57,15 +57,11 @@ const CalendarHeader = ({ currentWeek, actions }: CalendarHeaderProps) => {
 			</h2>
 			<div className="flex *:text-3xl">
 				{actionButtons.map(({ icon, description, action }) => (
-					<Button
-						key={description}
-						isIconOnly
-						variant="light"
-						onClick={action}
-						title={description}
-					>
-						{icon}
-					</Button>
+					<Tooltip content={description} key={description}>
+						<Button isIconOnly variant="light" onClick={action}>
+							{icon}
+						</Button>
+					</Tooltip>
 				))}
 			</div>
 		</div>
