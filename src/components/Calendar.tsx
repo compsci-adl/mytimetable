@@ -78,7 +78,7 @@ export const Calendar = () => {
 	return (
 		<div>
 			<CalendarHeader currentWeek={currentWeek} actions={actions} />
-			<div className="grid grid-cols-[auto_repeat(5,_minmax(0,_1fr))] grid-rows-[repeat(31,_minmax(0,_1fr))] border-apple-gray-300">
+			<div className="border-apple-gray-300 grid grid-cols-[auto_repeat(5,_minmax(0,_1fr))] grid-rows-[repeat(31,_minmax(0,_1fr))]">
 				<div className="col-span-full col-start-2 grid grid-cols-subgrid border-b-1">
 					{WEEK_DAYS.map((day, i) => (
 						<div
@@ -90,7 +90,7 @@ export const Calendar = () => {
 						</div>
 					))}
 				</div>
-				<div className="relative -top-[0.35rem] row-span-full row-start-2 mr-2 grid grid-cols-subgrid grid-rows-[repeat(15,_minmax(0,_1fr))] text-end text-2xs text-apple-gray-500">
+				<div className="text-2xs text-apple-gray-500 relative -top-[0.35rem] row-span-full row-start-2 mr-2 grid grid-cols-subgrid grid-rows-[repeat(15,_minmax(0,_1fr))] text-end">
 					{Array.from({ length: 15 }, (_, i) => (
 						<div key={i}>{String(7 + i).padStart(2, '0')}:00</div>
 					))}
