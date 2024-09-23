@@ -158,7 +158,7 @@ export const useOtherWeekCourseTimes = ({
 	courseId,
 	classTypeId,
 	currentWeek,
-	currentClassNumber,
+	// currentClassNumber,
 }: {
 	courseId: string;
 	classTypeId: string;
@@ -170,7 +170,8 @@ export const useOtherWeekCourseTimes = ({
 	const times: OtherWeekCoursesTimes = [[], [], [], [], []];
 	classes.forEach((cl) => {
 		cl.meetings.forEach((m) => {
-			if (cl.number === currentClassNumber) return;
+			// FIXME: Sometimes this will hide the wrong class #6
+			// if (cl.number === currentClassNumber) return;
 			const isMeetingInWeek = checkDateRangeInWeek(currentWeek, m.date);
 			if (!isMeetingInWeek) return;
 			const time: OtherWeekCourseTime = {
