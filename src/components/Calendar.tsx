@@ -111,7 +111,7 @@ const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
 				dayCourses.map((course, j) => (
 					<div
 						className="p-[1px]"
-						key={course.id + course.classId}
+						key={course.id + course.classTypeId + j}
 						style={{
 							gridColumnStart: i + 1,
 							gridRowStart: getGridRow(course.time.start),

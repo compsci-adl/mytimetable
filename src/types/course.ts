@@ -38,15 +38,21 @@ export type Course = {
 export type DetailedEnrolledCourse = {
 	id: string;
 	name: CourseName;
-	classes: Array<{ id: string; type: string; meetings: Meetings }>;
+	classes: Array<{
+		typeId: string;
+		type: string;
+		classNumber: string;
+		meetings: Meetings;
+	}>;
 };
 
 export type WeekCourse = {
 	id: string;
 	name: CourseName;
-	classId: string;
+	classTypeId: string;
 	classType: string;
 	location: string;
 	time: DateTimeRange;
+	classNumber: string;
 };
 export type WeekCourses = Array<Array<WeekCourse>>;

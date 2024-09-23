@@ -4,6 +4,7 @@ import { WEEK_DAYS } from '../constants/week-days';
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import dayjs from '../lib/dayjs';
 import type {
+	DateTimeRange,
 	DetailedEnrolledCourse,
 	WeekCourse,
 	WeekCourses,
@@ -40,6 +41,17 @@ export const getStartEndWeek = (
 	return [getMonday(startWeek), getMonday(endWeek)];
 };
 
+const checkDateRangeInWeek = (
+	weekStart: dayjs.Dayjs,
+	dateRange: DateTimeRange,
+) => {
+	const weekEnd = weekStart.add(4, 'days');
+	return (
+		weekEnd.isSameOrAfter(dateToDayjs(dateRange.start)) &&
+		weekStart.isSameOrBefore(dateToDayjs(dateRange.end))
+	);
+};
+
 /**
  * Get courses for each day of the week
  * @param weekStart Start of the week (Monday)
@@ -50,23 +62,21 @@ export const getWeekCourses = (
 	weekStart: dayjs.Dayjs,
 	enrolledCourses: Array<DetailedEnrolledCourse>,
 ): WeekCourses => {
-	const weekEnd = weekStart.add(4, 'days');
 	const courses: WeekCourses = [[], [], [], [], []];
 
 	enrolledCourses.forEach((c) => {
 		c.classes.forEach((cl) => {
 			cl.meetings.forEach((m) => {
-				const isMeetingInWeek =
-					weekEnd.isSameOrAfter(dateToDayjs(m.date.start)) &&
-					weekStart.isSameOrBefore(dateToDayjs(m.date.end));
+				const isMeetingInWeek = checkDateRangeInWeek(weekStart, m.date);
 				if (!isMeetingInWeek) return;
 				const course: WeekCourse = {
 					id: c.id,
 					name: c.name,
-					classId: cl.id,
+					classTypeId: cl.typeId,
 					classType: cl.type,
 					location: m.location,
 					time: m.time,
+					classNumber: cl.classNumber,
 				};
 				courses[WEEK_DAYS.indexOf(m.day)].push(course);
 			});

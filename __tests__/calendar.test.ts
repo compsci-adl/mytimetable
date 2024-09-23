@@ -23,7 +23,8 @@ describe('getWeekCourses', () => {
 				classes: [
 					{
 						type: 'Lecture',
-						id: 'l',
+						typeId: 'l',
+						classNumber: '1',
 						meetings: [
 							{
 								location: 'bragg',
@@ -41,7 +42,8 @@ describe('getWeekCourses', () => {
 				classes: [
 					{
 						type: 'Practical',
-						id: 'p',
+						typeId: 'p',
+						classNumber: '6',
 						meetings: [
 							{
 								location: 'online',
@@ -53,7 +55,8 @@ describe('getWeekCourses', () => {
 					},
 					{
 						type: 'Workshop',
-						id: 'w',
+						typeId: 'w',
+						classNumber: '3',
 						meetings: [
 							{
 								location: 'iw',
@@ -72,20 +75,22 @@ describe('getWeekCourses', () => {
 				{
 					id: 'cs',
 					name: { code: 'cs', subject: 'cs', title: 'compsci' },
-					classId: 'p',
+					classTypeId: 'p',
 					classType: 'Practical',
 					location: 'online',
 					time: { start: '17:00', end: '18:00' },
+					classNumber: '6',
 				},
 			],
 			[
 				{
 					id: 'm',
 					name: { code: 'm', subject: 'm', title: 'math' },
-					classId: 'l',
+					classTypeId: 'l',
 					classType: 'Lecture',
 					location: 'bragg',
 					time: { start: '09:00', end: '10:00' },
+					classNumber: '1',
 				},
 			],
 			[],
@@ -94,10 +99,11 @@ describe('getWeekCourses', () => {
 				{
 					id: 'cs',
 					name: { code: 'cs', subject: 'cs', title: 'compsci' },
-					classId: 'w',
+					classTypeId: 'w',
 					classType: 'Workshop',
 					location: 'iw',
 					time: { start: '09:00', end: '10:00' },
+					classNumber: '3',
 				},
 			],
 		];
@@ -111,7 +117,8 @@ describe('getWeekCourses', () => {
 				classes: [
 					{
 						type: 'Lecture',
-						id: 'l',
+						typeId: 'l',
+						classNumber: '1',
 						meetings: [
 							{
 								location: 'bragg',
@@ -134,10 +141,11 @@ describe('getWeekCourses', () => {
 				{
 					id: 'm',
 					name: { code: 'm', subject: 'm', title: 'math' },
-					classId: 'l',
+					classTypeId: 'l',
 					classType: 'Lecture',
 					location: 'bragg',
 					time: { start: '09:00', end: '10:00' },
+					classNumber: '1',
 				},
 			],
 		];
@@ -151,7 +159,8 @@ describe('getWeekCourses', () => {
 				classes: [
 					{
 						type: 'Lecture',
-						id: 'l',
+						typeId: 'l',
+						classNumber: '1',
 						meetings: [
 							{
 								location: 'bragg',
@@ -170,10 +179,11 @@ describe('getWeekCourses', () => {
 				{
 					id: 'm',
 					name: { code: 'm', subject: 'm', title: 'math' },
-					classId: 'l',
+					classTypeId: 'l',
 					classType: 'Lecture',
 					location: 'bragg',
 					time: { start: '09:00', end: '10:00' },
+					classNumber: '1',
 				},
 			],
 			[],
@@ -191,7 +201,8 @@ describe('getWeekCourses', () => {
 				classes: [
 					{
 						type: 'Practical',
-						id: 'p',
+						typeId: 'p',
+						classNumber: '6',
 						meetings: [
 							{
 								location: 'online',
@@ -209,7 +220,8 @@ describe('getWeekCourses', () => {
 				classes: [
 					{
 						type: 'Lecture',
-						id: 'l',
+						typeId: 'l',
+						classNumber: '1',
 						meetings: [
 							{
 								location: 'bragg',
@@ -228,18 +240,20 @@ describe('getWeekCourses', () => {
 				{
 					id: 'm',
 					name: { code: 'm', subject: 'm', title: 'math' },
-					classId: 'l',
+					classTypeId: 'l',
 					classType: 'Lecture',
 					location: 'bragg',
 					time: { start: '09:00', end: '10:00' },
+					classNumber: '1',
 				},
 				{
 					id: 'cs',
 					name: { code: 'cs', subject: 'cs', title: 'compsci' },
-					classId: 'p',
+					classTypeId: 'p',
 					classType: 'Practical',
 					location: 'online',
 					time: { start: '17:00', end: '18:00' },
+					classNumber: '6',
 				},
 			],
 			[],
@@ -257,7 +271,8 @@ describe('getWeekCourses', () => {
 				classes: [
 					{
 						type: 'Practical',
-						id: 'p',
+						typeId: 'p',
+						classNumber: '6',
 						meetings: [
 							{
 								location: 'online',
@@ -275,7 +290,8 @@ describe('getWeekCourses', () => {
 				classes: [
 					{
 						type: 'Lecture',
-						id: 'l',
+						typeId: 'l',
+						classNumber: '1',
 						meetings: [
 							{
 								location: 'bragg',
@@ -294,18 +310,20 @@ describe('getWeekCourses', () => {
 				{
 					id: 'm',
 					name: { code: 'm', subject: 'm', title: 'math' },
-					classId: 'l',
+					classTypeId: 'l',
 					classType: 'Lecture',
 					location: 'bragg',
 					time: { start: '11:00', end: '12:00' },
+					classNumber: '1',
 				},
 				{
 					id: 'cs',
 					name: { code: 'cs', subject: 'cs', title: 'compsci' },
-					classId: 'p',
+					classTypeId: 'p',
 					classType: 'Practical',
 					location: 'online',
 					time: { start: '09:00', end: '12:00' },
+					classNumber: '6',
 				},
 			],
 			[],
