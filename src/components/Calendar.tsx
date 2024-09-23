@@ -117,7 +117,7 @@ const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
 							gridRowStart: getGridRow(course.time.start),
 							gridRowEnd: getGridRow(course.time.end),
 							height: calcDuration(course.time) * 6 + 'rem',
-							zIndex: 10 - j,
+							zIndex: 10 - j, // TODO: Remove zIndex after implementing course conflicts #5
 						}}
 					>
 						<CourseCard course={course} />

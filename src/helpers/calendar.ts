@@ -73,6 +73,7 @@ export const getWeekCourses = (
 		});
 	});
 
+	// TODO: Remove this sorting after implementing course conflicts #5
 	courses.forEach((dayCourses) => {
 		// Sort by start time
 		dayCourses.sort((a, b) => {
