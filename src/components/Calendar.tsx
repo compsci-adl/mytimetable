@@ -16,7 +16,7 @@ const CourseCard = ({ course }: { course: WeekCourse }) => {
 	return (
 		<div
 			className={clsx(
-				'h-full rounded-md border-l-3 p-1 text-xs overflow-hidden',
+				'h-full rounded-md border-l-3 p-1 text-xs overflow-hidden opacity-75',
 				color.border,
 				color.bg,
 				color.text,
