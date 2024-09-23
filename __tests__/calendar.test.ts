@@ -183,4 +183,136 @@ describe('getWeekCourses', () => {
 		];
 		expect(courses).toEqual(expectedRes);
 	});
+	it('should sort courses by start time in a day', () => {
+		const enrolledCourses: Array<DetailedEnrolledCourse> = [
+			{
+				id: 'cs',
+				name: { code: 'cs', subject: 'cs', title: 'compsci' },
+				classes: [
+					{
+						type: 'Practical',
+						id: 'p',
+						meetings: [
+							{
+								location: 'online',
+								day: 'Monday',
+								date: { start: '09-09', end: '09-27' },
+								time: { start: '17:00', end: '18:00' },
+							},
+						],
+					},
+				],
+			},
+			{
+				id: 'm',
+				name: { code: 'm', subject: 'm', title: 'math' },
+				classes: [
+					{
+						type: 'Lecture',
+						id: 'l',
+						meetings: [
+							{
+								location: 'bragg',
+								day: 'Monday',
+								date: { start: '09-09', end: '09-27' },
+								time: { start: '09:00', end: '10:00' },
+							},
+						],
+					},
+				],
+			},
+		];
+		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
+		const expectedRes: WeekCourses = [
+			[
+				{
+					id: 'm',
+					name: { code: 'm', subject: 'm', title: 'math' },
+					classId: 'l',
+					classType: 'Lecture',
+					location: 'bragg',
+					time: { start: '09:00', end: '10:00' },
+				},
+				{
+					id: 'cs',
+					name: { code: 'cs', subject: 'cs', title: 'compsci' },
+					classId: 'p',
+					classType: 'Practical',
+					location: 'online',
+					time: { start: '17:00', end: '18:00' },
+				},
+			],
+			[],
+			[],
+			[],
+			[],
+		];
+		expect(courses).toEqual(expectedRes);
+	});
+	it('should sort courses by duration (shortest first) in a day', () => {
+		const enrolledCourses: Array<DetailedEnrolledCourse> = [
+			{
+				id: 'cs',
+				name: { code: 'cs', subject: 'cs', title: 'compsci' },
+				classes: [
+					{
+						type: 'Practical',
+						id: 'p',
+						meetings: [
+							{
+								location: 'online',
+								day: 'Monday',
+								date: { start: '09-09', end: '09-27' },
+								time: { start: '09:00', end: '12:00' },
+							},
+						],
+					},
+				],
+			},
+			{
+				id: 'm',
+				name: { code: 'm', subject: 'm', title: 'math' },
+				classes: [
+					{
+						type: 'Lecture',
+						id: 'l',
+						meetings: [
+							{
+								location: 'bragg',
+								day: 'Monday',
+								date: { start: '09-09', end: '09-27' },
+								time: { start: '11:00', end: '12:00' },
+							},
+						],
+					},
+				],
+			},
+		];
+		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
+		const expectedRes: WeekCourses = [
+			[
+				{
+					id: 'm',
+					name: { code: 'm', subject: 'm', title: 'math' },
+					classId: 'l',
+					classType: 'Lecture',
+					location: 'bragg',
+					time: { start: '11:00', end: '12:00' },
+				},
+				{
+					id: 'cs',
+					name: { code: 'cs', subject: 'cs', title: 'compsci' },
+					classId: 'p',
+					classType: 'Practical',
+					location: 'online',
+					time: { start: '09:00', end: '12:00' },
+				},
+			],
+			[],
+			[],
+			[],
+			[],
+		];
+		expect(courses).toEqual(expectedRes);
+	});
 });

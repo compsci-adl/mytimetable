@@ -8,7 +8,7 @@ import type {
 	WeekCourse,
 	WeekCourses,
 } from '../types/course';
-import { dateToDayjs, getMonday } from '../utils/date';
+import { dateToDayjs, getMonday, timeToDayjs } from '../utils/date';
 
 const MAX_DATE = dayjs('6666-06-06');
 const MIN_DATE = dayjs('2005-03-12');
@@ -70,6 +70,27 @@ export const getWeekCourses = (
 				};
 				courses[WEEK_DAYS.indexOf(m.day)].push(course);
 			});
+		});
+	});
+
+	courses.forEach((dayCourses) => {
+		// Sort by start time
+		dayCourses.sort((a, b) => {
+			const aStart = timeToDayjs(a.time.start);
+			const bStart = timeToDayjs(b.time.start);
+			if (aStart.isBefore(bStart)) return -1;
+			if (aStart.isAfter(bStart)) return 1;
+			return 0;
+		});
+		// Sort by duration (shortest first)
+		dayCourses.sort((a, b) => {
+			const aStart = timeToDayjs(a.time.start);
+			const aEnd = timeToDayjs(a.time.end);
+			const bStart = timeToDayjs(b.time.start);
+			const bEnd = timeToDayjs(b.time.end);
+			const aDuration = aStart.diff(aEnd, 'minute');
+			const bDuration = bStart.diff(bEnd, 'minute');
+			return bDuration - aDuration;
 		});
 	});
 

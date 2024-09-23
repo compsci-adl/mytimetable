@@ -108,7 +108,7 @@ const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
 	return (
 		<div className="absolute left-10 top-10 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))] z-0">
 			{courses.map((dayCourses, i) =>
-				dayCourses.map((course) => (
+				dayCourses.map((course, j) => (
 					<div
 						className="p-[1px]"
 						key={course.id + course.classId}
@@ -117,6 +117,7 @@ const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
 							gridRowStart: getGridRow(course.time.start),
 							gridRowEnd: getGridRow(course.time.end),
 							height: calcDuration(course.time) * 6 + 'rem',
+							zIndex: 10 - j,
 						}}
 					>
 						<CourseCard course={course} />
