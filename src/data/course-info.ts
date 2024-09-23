@@ -17,6 +17,14 @@ export const useGetCourseInfo = (id: string) => {
 	return course;
 };
 
+export const useGetCourseClasses = (courseId: string, classTypeId: string) => {
+	const course = useGetCourseInfo(courseId);
+	if (!course) return null;
+	const classType = course.class_list.find((c) => c.id === classTypeId);
+	if (!classType) return null;
+	return classType.classes;
+};
+
 export const useCoursesInfo = () => {
 	const courses = useEnrolledCourses((c) => c.courses);
 	const coursesIds = courses.map((course) => course.id);

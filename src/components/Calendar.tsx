@@ -1,25 +1,57 @@
 import { Button, Tooltip } from '@nextui-org/react';
 import clsx from 'clsx';
+import { useRef, useState } from 'react';
+import { create } from 'zustand';
 
 import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
-import { useCourseColor } from '../data/enrolled-courses';
-import { useCalendar } from '../helpers/calendar';
+import { useCourseColor, useEnrolledCourse } from '../data/enrolled-courses';
+import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import type dayjs from '../lib/dayjs';
 import type { WeekCourse } from '../types/course';
 import { timeToDayjs } from '../utils/date';
+import { useDrag, useDrop } from '../utils/dnd';
 import { calcDuration } from '../utils/duration';
+
+type DraggingCourseState = {
+	isDragging: boolean;
+	course: WeekCourse | null;
+	start: (course: WeekCourse) => void;
+	stop: () => void;
+};
+const useDraggingCourse = create<DraggingCourseState>()((set) => ({
+	isDragging: false,
+	course: null,
+	start: (course) => set({ isDragging: true, course }),
+	stop: () => set({ isDragging: false, course: null }),
+}));
 
 const CourseCard = ({ course }: { course: WeekCourse }) => {
 	const color = useCourseColor(course.id);
 
+	const draggingCourse = useDraggingCourse();
+	const [isDragging, setIsDragging] = useState(false);
+	const ref = useRef<HTMLDivElement | null>(null);
+	useDrag(ref, {
+		onDragStart: () => {
+			setIsDragging(true);
+			draggingCourse.start(course);
+		},
+		onDrop: () => {
+			setIsDragging(false);
+			draggingCourse.stop();
+		},
+	});
+
 	return (
 		<div
+			ref={ref}
 			className={clsx(
-				'h-full rounded-md border-l-3 p-1 text-xs overflow-hidden opacity-75',
+				'h-full overflow-hidden rounded-md border-l-3 p-1 text-xs',
 				color.border,
 				color.bg,
 				color.text,
+				isDragging ? 'opacity-50' : 'opacity-75',
 			)}
 		>
 			<div className="text-2xs">{course.time.start}</div>
@@ -67,7 +99,7 @@ const CalendarHeader = ({ currentWeek, actions }: CalendarHeaderProps) => {
 
 const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 	return (
-		<div className="border-apple-gray-300 grid grid-cols-[2.5rem_repeat(5,_minmax(0,_1fr))] grid-rows-[2.5rem_repeat(30,_minmax(0,_1fr))] -z-50">
+		<div className="-z-50 grid grid-cols-[2.5rem_repeat(5,_minmax(0,_1fr))] grid-rows-[2.5rem_repeat(30,_minmax(0,_1fr))] border-apple-gray-300">
 			<div className="sticky top-12 z-50 col-span-full col-start-2 grid grid-cols-subgrid border-b-1 bg-white">
 				{WEEK_DAYS.map((day, i) => (
 					<div
@@ -80,7 +112,7 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 				))}
 			</div>
 			{/* FIXME: Remove the last two grid rows for 21:00 */}
-			<div className="text-2xs text-apple-gray-500 relative -top-[0.35rem] row-span-full row-start-2 grid grid-cols-subgrid grid-rows-[repeat(15,_minmax(0,_1fr))] pr-2 text-end">
+			<div className="relative -top-[0.35rem] row-span-full row-start-2 grid grid-cols-subgrid grid-rows-[repeat(15,_minmax(0,_1fr))] pr-2 text-end text-2xs text-apple-gray-500">
 				{Array.from({ length: 15 }, (_, i) => (
 					<div key={i}>{String(7 + i).padStart(2, '0')}:00</div>
 				))}
@@ -106,7 +138,7 @@ const getGridRow = (time: string) => {
 };
 const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
 	return (
-		<div className="absolute left-10 top-10 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))] z-0">
+		<div className="absolute left-10 top-10 z-0 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]">
 			{courses.map((dayCourses, i) =>
 				dayCourses.map((course, j) => (
 					<div
@@ -128,8 +160,89 @@ const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
 	);
 };
 
+type CourseTimePlaceholderCardProps = {
+	courseId: string;
+	classNumber: string;
+	classTypeId: string;
+};
+const CourseTimePlaceholderCard = ({
+	courseId,
+	classNumber,
+	classTypeId,
+}: CourseTimePlaceholderCardProps) => {
+	const color = useCourseColor(courseId);
+
+	const { updateClass } = useEnrolledCourse(courseId);
+
+	const [isDraggedOver, setIsDraggedOver] = useState(false);
+	const ref = useRef<HTMLDivElement | null>(null);
+	useDrop(ref, {
+		onDragEnter: () => setIsDraggedOver(true),
+		onDragLeave: () => setIsDraggedOver(false),
+		onDrop: () => {
+			setIsDraggedOver(false);
+			updateClass({ classTypeId, classNumber });
+		},
+	});
+
+	return (
+		<div
+			className={clsx(
+				'z-40 h-full w-full rounded-md',
+				color.bg,
+				isDraggedOver ? 'opacity-80 brightness-75' : 'opacity-50',
+			)}
+			ref={ref}
+		>
+			{/* FIXME: Fix grid width to remove this placeholder */}
+			<div className="invisible">PLACEHOLDER DO NOT REMOVE THIS</div>
+		</div>
+	);
+};
+
+const CalendarCourseOtherTimes = ({
+	currentWeek,
+}: {
+	currentWeek: dayjs.Dayjs;
+}) => {
+	const course = useDraggingCourse((s) => s.course)!;
+	const times = useOtherWeekCourseTimes({
+		courseId: course.id,
+		classTypeId: course.classTypeId,
+		currentWeek,
+		currentClassNumber: course.classNumber,
+	});
+
+	if (times.length === 0) return;
+	return (
+		<div className="absolute left-10 top-10 z-40 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]">
+			{times.map((dayTimes, i) =>
+				dayTimes.map((time, j) => (
+					<div
+						className="p-[1px]"
+						key={time.classNumber + j}
+						style={{
+							gridColumnStart: i + 1,
+							gridRowStart: getGridRow(time.time.start),
+							gridRowEnd: getGridRow(time.time.end),
+							height: calcDuration(time.time) * 6 + 'rem',
+						}}
+					>
+						<CourseTimePlaceholderCard
+							courseId={course.id}
+							classNumber={time.classNumber}
+							classTypeId={course.classTypeId}
+						/>
+					</div>
+				)),
+			)}
+		</div>
+	);
+};
+
 export const Calendar = () => {
 	const { courses, currentWeek, actions } = useCalendar();
+	const isDragging = useDraggingCourse((s) => s.isDragging);
 
 	return (
 		<div>
@@ -137,6 +250,7 @@ export const Calendar = () => {
 			<div className="relative">
 				<CalendarBg currentWeek={currentWeek} />
 				<CalendarCourses courses={courses} />
+				{isDragging && <CalendarCourseOtherTimes currentWeek={currentWeek} />}
 			</div>
 		</div>
 	);

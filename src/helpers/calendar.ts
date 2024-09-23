@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 
 import { WEEK_DAYS } from '../constants/week-days';
+import { useGetCourseClasses } from '../data/course-info';
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import dayjs from '../lib/dayjs';
 import type {
 	DateTimeRange,
 	DetailedEnrolledCourse,
+	OtherWeekCourseTime,
+	OtherWeekCoursesTimes,
 	WeekCourse,
 	WeekCourses,
 } from '../types/course';
@@ -149,4 +152,34 @@ export const useCalendar = () => {
 		currentWeek,
 		actions: { prevWeek, nextWeek, goToStartWeek, goToEndWeek },
 	};
+};
+
+export const useOtherWeekCourseTimes = ({
+	courseId,
+	classTypeId,
+	currentWeek,
+	currentClassNumber,
+}: {
+	courseId: string;
+	classTypeId: string;
+	currentWeek: dayjs.Dayjs;
+	currentClassNumber: string;
+}) => {
+	const classes = useGetCourseClasses(courseId, classTypeId);
+	if (!classes) return [];
+	const times: OtherWeekCoursesTimes = [[], [], [], [], []];
+	classes.forEach((cl) => {
+		cl.meetings.forEach((m) => {
+			if (cl.number === currentClassNumber) return;
+			const isMeetingInWeek = checkDateRangeInWeek(currentWeek, m.date);
+			if (!isMeetingInWeek) return;
+			const time: OtherWeekCourseTime = {
+				classNumber: cl.number,
+				time: m.time,
+			};
+			times[WEEK_DAYS.indexOf(m.day)].push(time);
+		});
+	});
+
+	return times;
 };
