@@ -41,6 +41,9 @@ const CourseCard = ({ course }: { course: WeekCourse }) => {
 			setIsDragging(false);
 			draggingCourse.stop();
 		},
+		getInitialDataForExternal: () => {
+			return { 'text/plain': course.classNumber };
+		},
 	});
 
 	return (
