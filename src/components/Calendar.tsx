@@ -67,13 +67,38 @@ const CourseCard = ({ course }: { course: WeekCourse }) => {
 type CalendarHeaderProps = {
 	currentWeek: dayjs.Dayjs;
 	actions: ReturnType<typeof useCalendar>['actions'];
+	status: ReturnType<typeof useCalendar>['status'];
 };
-const CalendarHeader = ({ currentWeek, actions }: CalendarHeaderProps) => {
+const CalendarHeader = ({
+	currentWeek,
+	actions,
+	status,
+}: CalendarHeaderProps) => {
 	const actionButtons = [
-		{ icon: '⏪', description: 'First week', action: actions.goToStartWeek },
-		{ icon: '◀️', description: 'Previous week', action: actions.prevWeek },
-		{ icon: '▶️', description: 'Next week', action: actions.nextWeek },
-		{ icon: '⏩', description: 'Last week', action: actions.goToEndWeek },
+		{
+			icon: '⏪',
+			description: 'First week',
+			action: actions.goToStartWeek,
+			disabled: status.isStartWeek,
+		},
+		{
+			icon: '◀️',
+			description: 'Previous week',
+			action: actions.prevWeek,
+			disabled: status.isStartWeek,
+		},
+		{
+			icon: '▶️',
+			description: 'Next week',
+			action: actions.nextWeek,
+			disabled: status.isEndWeek,
+		},
+		{
+			icon: '⏩',
+			description: 'Last week',
+			action: actions.goToEndWeek,
+			disabled: status.isEndWeek,
+		},
 	];
 	return (
 		<div className="sticky top-0 z-50 flex items-center justify-between bg-white py-1">
@@ -84,11 +109,17 @@ const CalendarHeader = ({ currentWeek, actions }: CalendarHeaderProps) => {
 				</span>
 				<span className="font-light">{YEAR}</span>
 			</h2>
-			<div className="flex *:text-3xl">
-				{actionButtons.map(({ icon, description, action }) => (
-					<Tooltip content={description} key={description}>
-						<Button isIconOnly variant="light" onClick={action}>
-							{icon}
+			<div className="flex">
+				{actionButtons.map((a) => (
+					<Tooltip content={a.description} key={a.description}>
+						<Button
+							isIconOnly
+							variant="light"
+							onClick={a.action}
+							disabled={a.disabled}
+							className="text-3xl disabled:opacity-50"
+						>
+							{a.icon}
 						</Button>
 					</Tooltip>
 				))}
@@ -241,12 +272,16 @@ const CalendarCourseOtherTimes = ({
 };
 
 export const Calendar = () => {
-	const { courses, currentWeek, actions } = useCalendar();
+	const { courses, currentWeek, actions, status } = useCalendar();
 	const isDragging = useDraggingCourse((s) => s.isDragging);
 
 	return (
 		<div>
-			<CalendarHeader currentWeek={currentWeek} actions={actions} />
+			<CalendarHeader
+				currentWeek={currentWeek}
+				actions={actions}
+				status={status}
+			/>
 			<div className="relative">
 				<CalendarBg currentWeek={currentWeek} />
 				<CalendarCourses courses={courses} />
