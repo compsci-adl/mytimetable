@@ -128,7 +128,7 @@ export const useCalendar = () => {
 		if (currentWeek.isAfter(endWeek)) {
 			setCurrentWeek(endWeek);
 		}
-	}, [startWeek, endWeek, currentWeek]);
+	}, [startWeek, endWeek, currentWeek, setCurrentWeek]);
 
 	const nextWeek = () => {
 		if (currentWeek.isSame(endWeek)) return;
