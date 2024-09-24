@@ -128,7 +128,13 @@ export const useCalendar = () => {
 		if (currentWeek.isAfter(endWeek)) {
 			setCurrentWeek(endWeek);
 		}
-	}, [startWeek, endWeek, currentWeek, setCurrentWeek]);
+		/* eslint-disable react-hooks/exhaustive-deps */
+	}, [
+		startWeek.format('MMDD'),
+		endWeek.format('MMDD'),
+		currentWeek.format('MMDD'),
+	]);
+	/* eslint-enable react-hooks/exhaustive-deps */
 
 	const nextWeek = () => {
 		if (currentWeek.isSame(endWeek)) return;
