@@ -22,7 +22,7 @@ type Course = {
 type Courses = Array<Course>;
 type CoursesState = {
 	courses: Courses;
-	addCourse: (course: Omit<Course, 'classes'>) => void;
+	addCourse: (course: Omit<Course, 'classes' | 'color'>) => void;
 	removeCourse: (courseId: string) => void;
 	updateCourseClass: (props: {
 		courseId: string;
