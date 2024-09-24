@@ -16,7 +16,13 @@ import { queryClient } from './lib/query';
 const enableMocking = async () => {
 	if (!import.meta.env.DEV) return;
 	const { worker } = await import('./mocks/browser');
-	return worker.start();
+	return worker.start({
+		onUnhandledRequest(request, print) {
+			if (request.url.includes('/api')) {
+				return print.warning();
+			}
+		},
+	});
 };
 await enableMocking();
 
