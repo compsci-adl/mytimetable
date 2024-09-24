@@ -11,7 +11,7 @@ import {
 	Tabs,
 } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useHelpModal } from '../helpers/help-modal';
 
@@ -84,6 +84,13 @@ export const HelpModal = () => {
 			x: direction ? '-100%' : '100%',
 		}),
 	};
+
+	useEffect(() => {
+		if (!helpModal.isOpen) {
+			setStepIndex(0);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [helpModal.isOpen]);
 
 	const step = STEPS[stepIndex];
 
