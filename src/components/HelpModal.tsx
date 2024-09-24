@@ -50,10 +50,10 @@ const STEPS = [
 	},
 	{
 		content:
-			'If you encounter any lesson clashes when using MyTimetable, you can open the modal to change the lesson.',
+			'If you encounter any class clashes when using MyTimetable, you can open the modal to change the class.',
 		image: {
 			path: '/help/modal.png',
-			alt: 'Course modal to change lesson time',
+			alt: 'Course modal to change class time',
 		},
 	},
 	{
