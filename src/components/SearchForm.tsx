@@ -66,6 +66,7 @@ export const SearchForm = () => {
 					onSelectionChange={(keys) => changeTerm(keys.currentKey!)}
 					className="w-72 mobile:w-full"
 					isDisabled={isTermSelectDisabled}
+					disallowEmptySelection
 				>
 					{TERMS.map((term) => (
 						<SelectItem key={term.alias}>{term.name}</SelectItem>
