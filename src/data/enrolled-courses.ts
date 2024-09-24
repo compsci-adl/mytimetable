@@ -17,6 +17,7 @@ type Course = {
 		id: string; // Class type (Lecture / Workshop / etc.) ID
 		classNumber: string; // Meeting time number (ID)
 	}>;
+	color: number; // Color index in COURSE_COLORS
 };
 type Courses = Array<Course>;
 type CoursesState = {
@@ -36,13 +37,20 @@ export const useEnrolledCourses = create<CoursesState>()(
 			courses: [],
 			addCourse: async (course) => {
 				// Limit to 7 courses
-				if (get().courses.length >= 7) {
+				const currentCourses = get().courses;
+				if (currentCourses.length >= 7) {
 					toast.error('8 courses for a term is crazy! 💀');
-					return get().courses;
+					return currentCourses;
+				}
+				// Generate a color index
+				let color = 0;
+				if (currentCourses.length > 0) {
+					const maxColor = Math.max(...currentCourses.map((c) => c.color));
+					color = (maxColor + 1) % COURSE_COLORS.length;
 				}
 				// Add course to state
 				set((state) => {
-					state.courses.push({ ...course, classes: [] });
+					state.courses.push({ ...course, classes: [], color });
 				});
 				// Fetch course data
 				const data = await queryClient.ensureQueryData({
@@ -120,9 +128,9 @@ export const useDetailedEnrolledCourses = (): Array<DetailedEnrolledCourse> => {
 };
 
 export const useCourseColor = (id: string) => {
-	const courseIndex = useEnrolledCourses((s) =>
-		s.courses.findIndex((c) => c.id === id),
+	const colorIndex = useEnrolledCourses(
+		(s) => s.courses.find((c) => c.id === id)?.color,
 	);
-	if (courseIndex === -1) return NOT_FOUND_COLOR;
-	return COURSE_COLORS[courseIndex];
+	if (colorIndex === undefined) return NOT_FOUND_COLOR;
+	return COURSE_COLORS[colorIndex];
 };
