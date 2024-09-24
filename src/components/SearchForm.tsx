@@ -73,7 +73,10 @@ export const SearchForm = () => {
 					))}
 				</Select>
 			</div>
-			<form className="flex grow items-center gap-2" onSubmit={handleSubmit}>
+			<form
+				className="flex grow items-center gap-2 mobile:flex-col"
+				onSubmit={handleSubmit}
+			>
 				<Autocomplete
 					label="Search a course"
 					isDisabled={coursesQuery.isPending}
@@ -88,7 +91,12 @@ export const SearchForm = () => {
 						</AutocompleteItem>
 					)}
 				</Autocomplete>
-				<Button color="primary" type="submit" isDisabled={!selectedCourseId}>
+				<Button
+					color="primary"
+					type="submit"
+					isDisabled={!selectedCourseId}
+					className="mobile:w-full"
+				>
 					Add
 				</Button>
 			</form>
