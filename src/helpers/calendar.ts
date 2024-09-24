@@ -16,6 +16,7 @@ import { dateToDayjs, getMonday, timeToDayjs } from '../utils/date';
 
 const MAX_DATE = dayjs('6666-06-06');
 const MIN_DATE = dayjs('2005-03-12');
+const CURRENT_MONDAY = getMonday(dayjs());
 
 /**
  * Get the start date (Monday) of the start and end week
@@ -25,8 +26,7 @@ const MIN_DATE = dayjs('2005-03-12');
 export const getStartEndWeek = (
 	dates: Array<{ start: string; end: string }>,
 ): [dayjs.Dayjs, dayjs.Dayjs] => {
-	const currentMonday = getMonday(dayjs());
-	if (dates.length === 0) return [currentMonday, currentMonday];
+	if (dates.length === 0) return [CURRENT_MONDAY, CURRENT_MONDAY];
 
 	let startWeek = MAX_DATE;
 	let endWeek = MIN_DATE;
@@ -119,7 +119,7 @@ export const useCalendar = () => {
 	);
 	const [startWeek, endWeek] = getStartEndWeek(dates);
 
-	const [currentWeek, setCurrentWeek] = useState(getMonday(dayjs()));
+	const [currentWeek, setCurrentWeek] = useState(CURRENT_MONDAY);
 
 	useEffect(() => {
 		if (currentWeek.isBefore(startWeek)) {
