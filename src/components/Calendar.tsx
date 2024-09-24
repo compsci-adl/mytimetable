@@ -11,7 +11,7 @@ import type dayjs from '../lib/dayjs';
 import type { WeekCourse } from '../types/course';
 import { timeToDayjs } from '../utils/date';
 import { useDrag, useDrop } from '../utils/dnd';
-import { calcDuration } from '../utils/duration';
+import { calcHoursDuration } from '../utils/hours-duration';
 
 type DraggingCourseState = {
 	isDragging: boolean;
@@ -148,7 +148,7 @@ const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
 							gridColumnStart: i + 1,
 							gridRowStart: getGridRow(course.time.start),
 							gridRowEnd: getGridRow(course.time.end),
-							height: calcDuration(course.time) * 6 + 'rem',
+							height: calcHoursDuration(course.time) * 6 + 'rem',
 							zIndex: 10 - j, // TODO: Remove zIndex after implementing course conflicts #5
 						}}
 					>
@@ -225,7 +225,7 @@ const CalendarCourseOtherTimes = ({
 							gridColumnStart: i + 1,
 							gridRowStart: getGridRow(time.time.start),
 							gridRowEnd: getGridRow(time.time.end),
-							height: calcDuration(time.time) * 6 + 'rem',
+							height: calcHoursDuration(time.time) * 6 + 'rem',
 						}}
 					>
 						<CourseTimePlaceholderCard
