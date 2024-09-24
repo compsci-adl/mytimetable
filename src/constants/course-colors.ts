@@ -64,6 +64,6 @@ const BLACK = color({
 	dot: 'bg-[#000000]',
 });
 
-export const COURSE_COLORS = [BLUE, PURPLE, GREEN, ORANGE, YELLOW, BROWN, RED];
+export const COURSE_COLORS = [BLUE, PURPLE, GREEN, ORANGE, YELLOW, RED, BROWN];
 
 export const NOT_FOUND_COLOR = BLACK;
