@@ -184,11 +184,19 @@ export const useOtherWeekCourseTimes = ({
 			// if (cl.number === currentClassNumber) return;
 			const isMeetingInWeek = checkDateRangeInWeek(currentWeek, m.date);
 			if (!isMeetingInWeek) return;
-			const time: OtherWeekCourseTime = {
-				classNumber: cl.number,
+			const time = times[WEEK_DAYS.indexOf(m.day)];
+			const existingTime = time.find(
+				(t) => t.time.start === m.time.start && t.time.end === m.time.end,
+			);
+			if (existingTime) {
+				existingTime.classNumbers.push(cl.number);
+				return;
+			}
+			const newTime: OtherWeekCourseTime = {
+				classNumbers: [cl.number],
 				time: m.time,
 			};
-			times[WEEK_DAYS.indexOf(m.day)].push(time);
+			time.push(newTime);
 		});
 	});
 

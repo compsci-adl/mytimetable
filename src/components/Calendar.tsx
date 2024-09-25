@@ -253,8 +253,8 @@ const CalendarCourseOtherTimes = ({
 			{times.map((dayTimes, i) =>
 				dayTimes.map((time, j) => (
 					<div
-						className="p-[1px]"
-						key={time.classNumber + j}
+						className="flex gap-[1px] p-[1px]"
+						key={`${i}${j}`}
 						style={{
 							gridColumnStart: i + 1,
 							gridRowStart: getGridRow(time.time.start),
@@ -262,11 +262,14 @@ const CalendarCourseOtherTimes = ({
 							height: calcHoursDuration(time.time) * 6 + 'rem',
 						}}
 					>
-						<CourseTimePlaceholderCard
-							courseId={course.id}
-							classNumber={time.classNumber}
-							classTypeId={course.classTypeId}
-						/>
+						{time.classNumbers.map((classNumber) => (
+							<CourseTimePlaceholderCard
+								key={classNumber}
+								courseId={course.id}
+								classNumber={classNumber}
+								classTypeId={course.classTypeId}
+							/>
+						))}
 					</div>
 				)),
 			)}
