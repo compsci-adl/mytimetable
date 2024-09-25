@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 
 import { WEEK_DAYS } from '../constants/week-days';
 import { useGetCourseClasses } from '../data/course-info';
-import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
+import {
+	useDetailedEnrolledCourses,
+	useEnrolledCourseClassNumber,
+} from '../data/enrolled-courses';
 import dayjs from '../lib/dayjs';
 import type {
 	DateTimeRange,
@@ -168,20 +171,21 @@ export const useOtherWeekCourseTimes = ({
 	courseId,
 	classTypeId,
 	currentWeek,
-	// currentClassNumber,
 }: {
 	courseId: string;
 	classTypeId: string;
 	currentWeek: dayjs.Dayjs;
-	currentClassNumber: string;
 }) => {
 	const classes = useGetCourseClasses(courseId, classTypeId);
+	const currentClassNumber = useEnrolledCourseClassNumber(
+		courseId,
+		classTypeId,
+	);
 	if (!classes) return [];
 	const times: OtherWeekCoursesTimes = [[], [], [], [], []];
 	classes.forEach((cl) => {
 		cl.meetings.forEach((m) => {
-			// FIXME: Sometimes this will hide the wrong class #6
-			// if (cl.number === currentClassNumber) return;
+			if (cl.number === currentClassNumber) return;
 			const isMeetingInWeek = checkDateRangeInWeek(currentWeek, m.date);
 			if (!isMeetingInWeek) return;
 			const time = times[WEEK_DAYS.indexOf(m.day)];

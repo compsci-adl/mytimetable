@@ -95,6 +95,17 @@ export const useEnrolledCourse = (id: string) => {
 	return { course, updateClass };
 };
 
+export const useEnrolledCourseClassNumber = (
+	courseId: string,
+	classTypeId: string,
+) => {
+	const course = useEnrolledCourses((s) =>
+		s.courses.find((c) => c.id === courseId),
+	);
+	const classType = course?.classes.find((c) => c.id === classTypeId);
+	return classType?.classNumber;
+};
+
 export const useDetailedEnrolledCourses = (): Array<DetailedEnrolledCourse> => {
 	const coursesInfo = useCoursesInfo();
 
