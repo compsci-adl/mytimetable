@@ -117,7 +117,13 @@ const CalendarHeader = ({
 			<h2 className="text-3xl">
 				<span className="mr-2 font-bold">
 					{/* Month for Wednesday in the week is more accurate than Monday */}
-					{currentWeek.add(2, 'day').format('MMMM')}
+					{
+						(
+							t('calendar.months', {
+								returnObjects: true,
+							}) as Array<string>
+						)[currentWeek.add(2, 'day').month()]
+					}
 				</span>
 				<span className="font-light">{YEAR}</span>
 			</h2>
@@ -141,6 +147,8 @@ const CalendarHeader = ({
 };
 
 const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
+	const { t } = useTranslation();
+
 	return (
 		<div className="-z-50 grid grid-cols-[2.5rem_repeat(5,_minmax(0,_1fr))] grid-rows-[2.5rem_repeat(30,_minmax(0,_1fr))] border-apple-gray-300">
 			<div className="sticky top-12 z-50 col-span-full col-start-2 grid grid-cols-subgrid border-b-1 bg-white">
@@ -149,7 +157,15 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 						key={day}
 						className="flex justify-center gap-1 text-lg font-light"
 					>
-						<div>{day.slice(0, 3)}</div>
+						<div>
+							{
+								(
+									t('calendar.week-days', {
+										returnObjects: true,
+									}) as Array<string>
+								)[WEEK_DAYS.findIndex((d) => d === day)]
+							}
+						</div>
 						<div>{currentWeek.add(i, 'day').date()}</div>
 					</div>
 				))}

@@ -19,7 +19,22 @@
 		"first-week": "First week",
 		"previous-week": "Previous week",
 		"next-week": "Next week",
-		"last-week": "Last week"
+		"last-week": "Last week",
+		"week-days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+		"months": [
+			"Janurary",
+			"February",
+			"March",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December"
+		]
 	},
 	"footer": {
 		"github": "Github Repo",
