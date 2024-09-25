@@ -87,6 +87,7 @@ export const SearchForm = () => {
 					selectedKey={selectedCourseId}
 					onSelectionChange={setSelectedCourseId}
 					disabledKeys={enrolledCourses.courses.map((c) => c.id)}
+					listboxProps={{ emptyContent: t('search.course-not-found') }}
 				>
 					{(course) => (
 						<AutocompleteItem key={course.id} value={course.id}>

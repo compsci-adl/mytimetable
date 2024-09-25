@@ -2,7 +2,8 @@
 	"search": {
 		"select-term": "Select a term",
 		"search-course": "Search a course",
-		"add": "Add"
+		"add": "Add",
+		"course-not-found": "No course found"
 	},
 	"header": {
 		"help": "Help",
