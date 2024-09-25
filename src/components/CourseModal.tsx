@@ -12,6 +12,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@nextui-org/react';
+import { useTranslation } from 'react-i18next';
 import { Fragment } from 'react/jsx-runtime';
 
 import { useGetCourseInfo } from '../data/course-info';
@@ -49,13 +50,15 @@ const MeetingsTime = ({
 	meetings: Meetings;
 	classType: string;
 }) => {
+	const { t } = useTranslation();
+
 	return (
 		<Table aria-label={`${classType} Meetings Table`}>
 			<TableHeader>
-				<TableColumn>Dates</TableColumn>
-				<TableColumn>Days</TableColumn>
-				<TableColumn>Time</TableColumn>
-				<TableColumn>Location</TableColumn>
+				<TableColumn>{t('course-modal.dates')}</TableColumn>
+				<TableColumn>{t('course-modal.days')}</TableColumn>
+				<TableColumn>{t('course-modal.time')}</TableColumn>
+				<TableColumn>{t('course-modal.location')}</TableColumn>
 			</TableHeader>
 			<TableBody>
 				{meetings.map((meeting, i) => (

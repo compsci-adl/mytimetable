@@ -12,60 +12,59 @@ import {
 } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useHelpModal } from '../helpers/help-modal';
 
-const STEPS = [
-	{
-		content: 'Select a term.',
-		image: {
-			path: '/help/select-term.png',
-			alt: 'Select a term',
-		},
-	},
-	{
-		content:
-			'Search for a course and press “Add” to add the course to the timetable.',
-		image: { path: '/help/search-course.png', alt: 'Search a course' },
-	},
-	{
-		content:
-			'Scroll down to see the calendar with your enrolled courses. You can drag a class and drop it in one of the highlighted boxes to change its time.',
-		image: {
-			path: '/help/calendar.png',
-			alt: 'Drag and drop a course in calendar',
-		},
-	},
-	{
-		content: 'Change the calendar week to see more classes.',
-		image: { path: '/help/change-week.png', alt: 'Change calendar week' },
-	},
-	{
-		content:
-			'Click your enrolled course to see details of your enrolled classes.',
-		image: {
-			path: '/help/click-course.png',
-			alt: 'Highlighted enrolled course',
-		},
-	},
-	{
-		content:
-			'If you encounter any class clashes when using MyTimetable, you can open the modal to change the class.',
-		image: {
-			path: '/help/modal.png',
-			alt: 'Course modal to change class time',
-		},
-	},
-	{
-		content:
-			'You can enrol for courses in Access Adelaide by using the class numbers, once you are happy with your class times.',
-		image: {
-			path: '/help/access-adelaide.png',
-			alt: 'Access Adelaide enrolment',
-		},
-	},
-];
 export const HelpModal = () => {
+	const { t } = useTranslation();
+
+	const STEPS = [
+		{
+			content: t('help.steps.select-term'),
+			image: {
+				path: '/help/select-term.png',
+				alt: 'Select a term',
+			},
+		},
+		{
+			content: t('help.steps.search-course'),
+			image: { path: '/help/search-course.png', alt: 'Search a course' },
+		},
+		{
+			content: t('help.steps.calendar-dnd'),
+			image: {
+				path: '/help/calendar.png',
+				alt: 'Drag and drop a course in calendar',
+			},
+		},
+		{
+			content: t('help.steps.change-week'),
+			image: { path: '/help/change-week.png', alt: 'Change calendar week' },
+		},
+		{
+			content: t('help.steps.course-details'),
+			image: {
+				path: '/help/click-course.png',
+				alt: 'Highlighted enrolled course',
+			},
+		},
+		{
+			content: t('help.steps.course-modal'),
+			image: {
+				path: '/help/modal.png',
+				alt: 'Course modal to change class time',
+			},
+		},
+		{
+			content: t('help.steps.access-adelaide'),
+			image: {
+				path: '/help/access-adelaide.png',
+				alt: 'Access Adelaide enrolment',
+			},
+		},
+	];
+
 	const helpModal = useHelpModal();
 
 	const [direction, setDirection] = useState(true);
@@ -102,7 +101,7 @@ export const HelpModal = () => {
 			scrollBehavior="inside"
 		>
 			<ModalContent>
-				<ModalHeader>How to use MyTimetable</ModalHeader>
+				<ModalHeader>{t('help.title')}</ModalHeader>
 				<ModalBody>
 					{/* FIXME: Tabs are missing animation when controlled */}
 					<Tabs
@@ -147,11 +146,11 @@ export const HelpModal = () => {
 				<ModalFooter>
 					{stepIndex < STEPS.length - 1 ? (
 						<Button color="primary" onClick={() => setStepIndex(stepIndex + 1)}>
-							Next Step
+							{t('help.actions.next-step')}
 						</Button>
 					) : (
 						<Button color="primary" onClick={helpModal.close}>
-							Get Started!
+							{t('help.actions.get-started')}
 						</Button>
 					)}
 				</ModalFooter>

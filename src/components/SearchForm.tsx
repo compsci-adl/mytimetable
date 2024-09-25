@@ -7,6 +7,7 @@ import {
 } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { getCourses } from '../apis';
@@ -17,6 +18,8 @@ import { useEnrolledCourses } from '../data/enrolled-courses';
 import type { Key } from '../types/key';
 
 export const SearchForm = () => {
+	const { t } = useTranslation();
+
 	const enrolledCourses = useEnrolledCourses();
 
 	const [selectedTerm, setSelectedTerm] = useState(
@@ -57,11 +60,11 @@ export const SearchForm = () => {
 			<div
 				onClick={() => {
 					if (!isTermSelectDisabled) return;
-					toast.warning('You need to drop all courses to change the term');
+					toast.warning(t('toast.drop-to-change-term'));
 				}}
 			>
 				<Select
-					label="Select a term"
+					label={t('search.select-term')}
 					selectedKeys={[selectedTerm]}
 					onSelectionChange={(keys) => changeTerm(keys.currentKey!)}
 					className="w-72 mobile:w-full"
@@ -78,7 +81,7 @@ export const SearchForm = () => {
 				onSubmit={handleSubmit}
 			>
 				<Autocomplete
-					label="Search a course"
+					label={t('search.search-course')}
 					isDisabled={coursesQuery.isPending}
 					defaultItems={courseList}
 					selectedKey={selectedCourseId}
@@ -97,7 +100,7 @@ export const SearchForm = () => {
 					isDisabled={!selectedCourseId}
 					className="mobile:w-full"
 				>
-					Add
+					{t('search.add')}
 				</Button>
 			</form>
 		</div>

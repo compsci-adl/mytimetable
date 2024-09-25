@@ -1,0 +1,48 @@
+{
+	"search": {
+		"select-term": "选择学期",
+		"search-course": "搜索课程",
+		"add": "添加"
+	},
+	"header": {
+		"help": "帮助",
+		"report": "反馈",
+		"change-language": "切换语言"
+	},
+	"course-modal": {
+		"dates": "日期",
+		"days": "星期",
+		"time": "时间",
+		"location": "地点"
+	},
+	"calendar": {
+		"first-week": "首周",
+		"previous-week": "上一周",
+		"next-week": "下一周",
+		"last-week": "末周"
+	},
+	"footer": {
+		"github": "Github 开源地址",
+		"csclub": "阿德莱德大学计算机社团"
+	},
+	"help": {
+		"title": "如何使用 MyTimetable",
+		"steps": {
+			"select-term": "选择你的学期",
+			"search-course": "搜索课程后点击添加将课程添加至课程表",
+			"calendar-dnd": "下滑查看你的课程表，你可以通过托拽课程修改时间",
+			"change-week": "切换周数查看更多课程",
+			"course-details": "点击你的选课查看详情",
+			"course-modal": "如果你在使用 MyTimetable 时遇到任何课程冲突，你可以打开详情弹窗来更改课程",
+			"access-adelaide": "你可以使用 Class Number 在 Access Adelaide 中进行选课"
+		},
+		"actions": {
+			"next-step": "下一步",
+			"get-started": "开始使用"
+		}
+	},
+	"toast": {
+		"drop-to-change-term": "你需要删除所有课程以更改学期",
+		"too-many-courses": "课程过多"
+	}
+}

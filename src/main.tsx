@@ -9,6 +9,7 @@ import { Toaster } from 'sonner';
 
 import { App } from './App';
 import { useEnrolledCourses } from './data/enrolled-courses';
+import './i18n';
 import './index.css';
 import { queryClient } from './lib/query';
 

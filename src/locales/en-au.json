@@ -1,0 +1,48 @@
+{
+	"search": {
+		"select-term": "Select a term",
+		"search-course": "Search a course",
+		"add": "Add"
+	},
+	"header": {
+		"help": "Help",
+		"report": "Report a Bug",
+		"change-language": "Change Language"
+	},
+	"course-modal": {
+		"dates": "Dates",
+		"days": "Days",
+		"time": "Time",
+		"location": "Location"
+	},
+	"calendar": {
+		"first-week": "First week",
+		"previous-week": "Previous week",
+		"next-week": "Next week",
+		"last-week": "Last week"
+	},
+	"footer": {
+		"github": "Github Repo",
+		"csclub": "The University of Adelaide Computer Science Club"
+	},
+	"help": {
+		"title": "How to use MyTimetable",
+		"steps": {
+			"select-term": "Select a term.",
+			"search-course": "Search for a course and press “Add” to add the course to the timetable.",
+			"calendar-dnd": "Scroll down to see the calendar with your enrolled courses. You can drag a class and drop it in one of the highlighted boxes to change its time.",
+			"change-week": "Change the calendar week to see more classes.",
+			"course-details": "Click your enrolled course to see details of your enrolled classes.",
+			"course-modal": "If you encounter any class clashes when using MyTimetable, you can open the modal to change the class.",
+			"access-adelaide": "You can enrol for courses in Access Adelaide by using the class numbers, once you are happy with your class times."
+		},
+		"actions": {
+			"next-step": "Next Step",
+			"get-started": "Get Started!"
+		}
+	},
+	"toast": {
+		"drop-to-change-term": "You need to drop all courses to change the term",
+		"too-many-courses": "8 courses for a term is crazy! 💀"
+	}
+}

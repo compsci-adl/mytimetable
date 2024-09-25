@@ -1,6 +1,7 @@
 import { Button, Tooltip } from '@nextui-org/react';
 import clsx from 'clsx';
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { create } from 'zustand';
 
 import { WEEK_DAYS } from '../constants/week-days';
@@ -83,28 +84,30 @@ const CalendarHeader = ({
 	actions,
 	status,
 }: CalendarHeaderProps) => {
+	const { t } = useTranslation();
+
 	const actionButtons = [
 		{
 			icon: '⏪',
-			description: 'First week',
+			description: t('calendar.first-week'),
 			action: actions.goToStartWeek,
 			disabled: status.isStartWeek,
 		},
 		{
 			icon: '◀️',
-			description: 'Previous week',
+			description: t('calendar.previous-week'),
 			action: actions.prevWeek,
 			disabled: status.isStartWeek,
 		},
 		{
 			icon: '▶️',
-			description: 'Next week',
+			description: t('calendar.next-week'),
 			action: actions.nextWeek,
 			disabled: status.isEndWeek,
 		},
 		{
 			icon: '⏩',
-			description: 'Last week',
+			description: t('calendar.last-week'),
 			action: actions.goToEndWeek,
 			disabled: status.isEndWeek,
 		},

@@ -1,3 +1,6 @@
 {
-	"tailwindCSS.classAttributes": ["class", "className", "classNames"]
+	"tailwindCSS.classAttributes": ["class", "className", "classNames"],
+	"i18n-ally.localesPaths": ["src/locales"],
+	"i18n-ally.sourceLanguage": "en-au",
+	"i18n-ally.keystyle": "nested"
 }

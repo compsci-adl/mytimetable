@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"lokalise.i18n-ally",
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint",
+		"gruntfuggly.todo-tree"
+	]
+}

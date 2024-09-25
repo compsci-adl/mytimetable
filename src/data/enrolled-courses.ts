@@ -6,6 +6,7 @@ import { persist } from 'zustand/middleware';
 import { getCourse } from '../apis';
 import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
+import i18n from '../i18n';
 import { queryClient } from '../lib/query';
 import type { DetailedEnrolledCourse } from '../types/course';
 import { useCoursesInfo } from './course-info';
@@ -39,7 +40,7 @@ export const useEnrolledCourses = create<CoursesState>()(
 				// Limit to 7 courses
 				const currentCourses = get().courses;
 				if (currentCourses.length >= 7) {
-					toast.error('8 courses for a term is crazy! 💀');
+					toast.error(i18n.t('toast.too-many-courses'));
 					return currentCourses;
 				}
 				// Generate a color index
