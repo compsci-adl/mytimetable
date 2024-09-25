@@ -8,11 +8,11 @@ import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
 import { useCourseColor, useEnrolledCourse } from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
+import { calcHoursDuration } from '../helpers/hours-duration';
 import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
 import { timeToDayjs } from '../utils/date';
 import { useDrag, useDrop } from '../utils/dnd';
-import { calcHoursDuration } from '../utils/hours-duration';
 
 type DraggingCourseState = {
 	isDragging: boolean;
