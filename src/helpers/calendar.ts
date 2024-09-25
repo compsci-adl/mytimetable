@@ -71,18 +71,18 @@ export const getWeekCourses = (
 	const courses: WeekCourses = [[], [], [], [], []];
 
 	enrolledCourses.forEach((c) => {
-		c.classes.forEach((cl) => {
-			cl.meetings.forEach((m) => {
+		c.classes.forEach((cls) => {
+			cls.meetings.forEach((m) => {
 				const isMeetingInWeek = checkDateRangeInWeek(weekStart, m.date);
 				if (!isMeetingInWeek) return;
 				const course = courses[WEEK_DAYS.indexOf(m.day)];
 				const newCourse: WeekCourse = {
 					id: c.id,
 					name: c.name,
-					classTypeId: cl.typeId,
-					classType: cl.type,
+					classTypeId: cls.typeId,
+					classType: cls.type,
 					location: m.location,
-					classNumber: cl.classNumber,
+					classNumber: cls.classNumber,
 				};
 				const existingTime = course.find(
 					(t) => t.time.start === m.time.start && t.time.end === m.time.end,
@@ -126,7 +126,7 @@ export const useCalendar = () => {
 	const enrolledCourses = useDetailedEnrolledCourses();
 
 	const dates = enrolledCourses.flatMap((c) =>
-		c.classes.flatMap((cl) => cl.meetings.flatMap((m) => m.date)),
+		c.classes.flatMap((cls) => cls.meetings.flatMap((m) => m.date)),
 	);
 	const [startWeek, endWeek] = getStartEndWeek(dates);
 
@@ -191,16 +191,16 @@ export const useOtherWeekCourseTimes = ({
 	);
 	if (!classes) return [];
 	const times: OtherWeekCoursesTimes = [[], [], [], [], []];
-	classes.forEach((cl) => {
-		cl.meetings.forEach((m) => {
-			if (cl.number === currentClassNumber) return;
+	classes.forEach((cls) => {
+		cls.meetings.forEach((m) => {
+			if (cls.number === currentClassNumber) return;
 			const isMeetingInWeek = checkDateRangeInWeek(currentWeek, m.date);
 			if (!isMeetingInWeek) return;
 			const time = times[WEEK_DAYS.indexOf(m.day)];
 			const existingTime = time.find(
 				(t) => t.time.start === m.time.start && t.time.end === m.time.end,
 			);
-			const newClass = { number: cl.number, location: m.location };
+			const newClass = { number: cls.number, location: m.location };
 			if (existingTime) {
 				existingTime.classes.push(newClass);
 				return;

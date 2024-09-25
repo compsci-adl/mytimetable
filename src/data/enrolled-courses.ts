@@ -116,21 +116,21 @@ export const useDetailedEnrolledCourses = (): Array<DetailedEnrolledCourse> => {
 		return {
 			...course,
 			name: courseInfo.name,
-			classes: course.classes.map((cl) => {
+			classes: course.classes.map((cls) => {
 				const notFound = {
-					typeId: cl.id,
+					typeId: cls.id,
 					type: 'NOT_FOUND',
 					classNumber: '66666',
 					meetings: [],
 				};
-				const classInfo = courseInfo.class_list.find((c) => c.id === cl.id);
+				const classInfo = courseInfo.class_list.find((c) => c.id === cls.id);
 				if (!classInfo) return notFound;
 				const { type, classes } = classInfo;
 				const meetings = classes.find(
-					(c) => c.number === cl.classNumber,
+					(c) => c.number === cls.classNumber,
 				)?.meetings;
 				if (!meetings) return notFound;
-				return { typeId: cl.id, type, classNumber: cl.classNumber, meetings };
+				return { typeId: cls.id, type, classNumber: cls.classNumber, meetings };
 			}),
 		};
 	});
