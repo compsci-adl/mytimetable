@@ -75,39 +75,47 @@ export const getWeekCourses = (
 			cl.meetings.forEach((m) => {
 				const isMeetingInWeek = checkDateRangeInWeek(weekStart, m.date);
 				if (!isMeetingInWeek) return;
-				const course: WeekCourse = {
+				const course = courses[WEEK_DAYS.indexOf(m.day)];
+				const newCourse: WeekCourse = {
 					id: c.id,
 					name: c.name,
 					classTypeId: cl.typeId,
 					classType: cl.type,
 					location: m.location,
-					time: m.time,
 					classNumber: cl.classNumber,
 				};
-				courses[WEEK_DAYS.indexOf(m.day)].push(course);
+				const existingTime = course.find(
+					(t) => t.time.start === m.time.start && t.time.end === m.time.end,
+				);
+				if (existingTime) {
+					existingTime.courses.push(newCourse);
+					return;
+				}
+				const newTime = m.time;
+				course.push({ time: newTime, courses: [newCourse] });
 			});
 		});
 	});
 
 	// TODO: Remove this sorting after implementing course conflicts #5
 	courses.forEach((dayCourses) => {
-		// Sort by start time
-		dayCourses.sort((a, b) => {
-			const aStart = timeToDayjs(a.time.start);
-			const bStart = timeToDayjs(b.time.start);
-			if (aStart.isBefore(bStart)) return -1;
-			if (aStart.isAfter(bStart)) return 1;
-			return 0;
-		});
-		// Sort by duration (shortest first)
+		// Sort by duration (shortest first) and start time (latest first)
 		dayCourses.sort((a, b) => {
 			const aStart = timeToDayjs(a.time.start);
 			const aEnd = timeToDayjs(a.time.end);
 			const bStart = timeToDayjs(b.time.start);
 			const bEnd = timeToDayjs(b.time.end);
-			const aDuration = aStart.diff(aEnd, 'minute');
-			const bDuration = bStart.diff(bEnd, 'minute');
-			return bDuration - aDuration;
+
+			const aDuration = aEnd.diff(aStart, 'minute');
+			const bDuration = bEnd.diff(bStart, 'minute');
+
+			if (aDuration === bDuration) {
+				if (aStart.isBefore(bStart)) return 1;
+				if (aStart.isAfter(bStart)) return -1;
+				return 0;
+			}
+
+			return aDuration - bDuration;
 		});
 	});
 

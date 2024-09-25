@@ -8,7 +8,7 @@ import { YEAR } from '../constants/year';
 import { useCourseColor, useEnrolledCourse } from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import type dayjs from '../lib/dayjs';
-import type { WeekCourse } from '../types/course';
+import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
 import { timeToDayjs } from '../utils/date';
 import { useDrag, useDrop } from '../utils/dnd';
 import { calcHoursDuration } from '../utils/hours-duration';
@@ -26,7 +26,13 @@ const useDraggingCourse = create<DraggingCourseState>()((set) => ({
 	stop: () => set({ isDragging: false, course: null }),
 }));
 
-const CourseCard = ({ course }: { course: WeekCourse }) => {
+const CourseCard = ({
+	course,
+	time,
+}: {
+	course: WeekCourse;
+	time: DateTimeRange;
+}) => {
 	const color = useCourseColor(course.id);
 
 	const draggingCourse = useDraggingCourse();
@@ -57,7 +63,7 @@ const CourseCard = ({ course }: { course: WeekCourse }) => {
 				isDragging ? 'opacity-30' : 'opacity-75',
 			)}
 		>
-			<div className="text-2xs">{course.time.start}</div>
+			<div className="text-2xs">{time.start}</div>
 			<div className="font-bold">
 				[{course.classType}] {course.name.subject} {course.name.code} -{' '}
 				{course.name.title}
@@ -170,23 +176,29 @@ const getGridRow = (time: string) => {
 	const t = timeToDayjs(time);
 	return t.hour() * 2 + (t.minute() >= 30 ? 1 : 0) - 13;
 };
-const CalendarCourses = ({ courses }: { courses: WeekCourse[][] }) => {
+const CalendarCourses = ({ courses: day }: { courses: WeekCourses }) => {
 	return (
 		<div className="absolute left-10 top-10 z-0 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]">
-			{courses.map((dayCourses, i) =>
-				dayCourses.map((course, j) => (
+			{day.map((times, i) =>
+				times.map((time, j) => (
 					<div
-						className="p-[1px]"
-						key={course.id + course.classTypeId + j}
+						className="flex gap-[1px] p-[1px]"
+						key={`${i}${j}`}
 						style={{
 							gridColumnStart: i + 1,
-							gridRowStart: getGridRow(course.time.start),
-							gridRowEnd: getGridRow(course.time.end),
-							height: calcHoursDuration(course.time) * 6 + 'rem',
+							gridRowStart: getGridRow(time.time.start),
+							gridRowEnd: getGridRow(time.time.end),
+							height: calcHoursDuration(time.time) * 6 + 'rem',
 							zIndex: 10 - j, // TODO: Remove zIndex after implementing course conflicts #5
 						}}
 					>
-						<CourseCard course={course} />
+						{time.courses.map((course) => (
+							<CourseCard
+								key={course.id + course.classTypeId}
+								course={course}
+								time={time.time}
+							/>
+						))}
 					</div>
 				)),
 			)}
