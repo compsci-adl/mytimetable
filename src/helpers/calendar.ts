@@ -99,7 +99,7 @@ export const getWeekCourses = (
 
 	// TODO: Remove this sorting after implementing course conflicts #5
 	courses.forEach((dayCourses) => {
-		// Sort by duration (shortest first) and start time (latest first)
+		// Sort by duration (longest first) and start time (earliest first)
 		dayCourses.sort((a, b) => {
 			const aStart = timeToDayjs(a.time.start);
 			const aEnd = timeToDayjs(a.time.end);
@@ -110,12 +110,12 @@ export const getWeekCourses = (
 			const bDuration = bEnd.diff(bStart, 'minute');
 
 			if (aDuration === bDuration) {
-				if (aStart.isBefore(bStart)) return 1;
-				if (aStart.isAfter(bStart)) return -1;
+				if (aStart.isBefore(bStart)) return -1;
+				if (aStart.isAfter(bStart)) return 1;
 				return 0;
 			}
 
-			return aDuration - bDuration;
+			return bDuration - aDuration;
 		});
 	});
 

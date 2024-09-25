@@ -189,7 +189,7 @@ const CalendarCourses = ({ courses: day }: { courses: WeekCourses }) => {
 							gridRowStart: getGridRow(time.time.start),
 							gridRowEnd: getGridRow(time.time.end),
 							height: calcHoursDuration(time.time) * 6 + 'rem',
-							zIndex: 10 - j, // TODO: Remove zIndex after implementing course conflicts #5
+							zIndex: j, // TODO: Remove zIndex after implementing course conflicts #5
 						}}
 					>
 						{time.courses.map((course) => (
