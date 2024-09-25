@@ -118,11 +118,9 @@ const CalendarHeader = ({
 				<span className="mr-2 font-bold">
 					{/* Month for Wednesday in the week is more accurate than Monday */}
 					{
-						(
-							t('calendar.months', {
-								returnObjects: true,
-							}) as Array<string>
-						)[currentWeek.add(2, 'day').month()]
+						(t('calendar.months') as unknown as Array<string>)[
+							currentWeek.add(2, 'day').month()
+						]
 					}
 				</span>
 				<span className="font-light">{YEAR}</span>
@@ -159,11 +157,9 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 					>
 						<div>
 							{
-								(
-									t('calendar.week-days', {
-										returnObjects: true,
-									}) as Array<string>
-								)[WEEK_DAYS.findIndex((d) => d === day)]
+								(t('calendar.week-days') as unknown as Array<string>)[
+									WEEK_DAYS.findIndex((d) => d === day)
+								]
 							}
 						</div>
 						<div>{currentWeek.add(i, 'day').date()}</div>

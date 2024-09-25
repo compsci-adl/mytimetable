@@ -14,6 +14,7 @@ i18n
 			'zh-CN': { translation: zhCN },
 		},
 		fallbackLng: 'en-AU',
+		returnObjects: true,
 	});
 
 export default i18n;
