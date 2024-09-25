@@ -89,7 +89,7 @@ export const handlers = [
 			],
 		});
 	}),
-	http.get('/api/course/:id', async ({ params }) => {
+	http.get('/api/courses/:id', async ({ params }) => {
 		const { id } = params as { id: CourseId };
 		if (
 			id === CourseId.ERROR1 ||

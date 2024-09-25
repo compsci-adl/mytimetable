@@ -17,5 +17,5 @@ export const getCourses = async (params: { year: number; term: string }) => {
 };
 
 export const getCourse = async ({ id }: { id: string }) => {
-	return fetcher.get<Course>(`course/${id}`).json();
+	return fetcher.get<Course>(`courses/${id}`).json();
 };
