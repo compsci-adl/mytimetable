@@ -54,7 +54,7 @@ const CourseCard = ({ course }: { course: WeekCourse }) => {
 				color.border,
 				color.bg,
 				color.text,
-				isDragging ? 'opacity-50' : 'opacity-75',
+				isDragging ? 'opacity-30' : 'opacity-75',
 			)}
 		>
 			<div className="text-2xs">{course.time.start}</div>
