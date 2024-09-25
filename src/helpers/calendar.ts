@@ -188,12 +188,13 @@ export const useOtherWeekCourseTimes = ({
 			const existingTime = time.find(
 				(t) => t.time.start === m.time.start && t.time.end === m.time.end,
 			);
+			const newClass = { number: cl.number, location: m.location };
 			if (existingTime) {
-				existingTime.classNumbers.push(cl.number);
+				existingTime.classes.push(newClass);
 				return;
 			}
 			const newTime: OtherWeekCourseTime = {
-				classNumbers: [cl.number],
+				classes: [newClass],
 				time: m.time,
 			};
 			time.push(newTime);

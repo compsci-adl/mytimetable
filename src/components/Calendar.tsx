@@ -198,11 +198,13 @@ type CourseTimePlaceholderCardProps = {
 	courseId: string;
 	classNumber: string;
 	classTypeId: string;
+	location: string;
 };
 const CourseTimePlaceholderCard = ({
 	courseId,
 	classNumber,
 	classTypeId,
+	location,
 }: CourseTimePlaceholderCardProps) => {
 	const color = useCourseColor(courseId);
 
@@ -222,14 +224,14 @@ const CourseTimePlaceholderCard = ({
 	return (
 		<div
 			className={clsx(
-				'z-40 h-full w-full rounded-md',
+				'z-40 flex h-full w-full items-center justify-center rounded-md text-xs',
 				color.bg,
+				color.text,
 				isDraggedOver ? 'opacity-80 brightness-75' : 'opacity-50',
 			)}
 			ref={ref}
 		>
-			{/* FIXME: Fix grid width to remove this placeholder */}
-			<div className="invisible">PLACEHOLDER DO NOT REMOVE THIS</div>
+			<div className="text-center">{location}</div>
 		</div>
 	);
 };
@@ -262,12 +264,13 @@ const CalendarCourseOtherTimes = ({
 							height: calcHoursDuration(time.time) * 6 + 'rem',
 						}}
 					>
-						{time.classNumbers.map((classNumber) => (
+						{time.classes.map((c) => (
 							<CourseTimePlaceholderCard
-								key={classNumber}
+								key={c.number}
 								courseId={course.id}
-								classNumber={classNumber}
+								classNumber={c.number}
 								classTypeId={course.classTypeId}
+								location={c.location}
 							/>
 						))}
 					</div>
