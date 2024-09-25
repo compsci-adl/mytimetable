@@ -224,15 +224,17 @@ const CourseTimePlaceholderCard = ({
 	return (
 		<div
 			className={clsx(
-				'z-40 h-full w-full overflow-hidden rounded-md pt-4 text-xs',
+				'relative z-40 h-full w-full overflow-hidden rounded-md pt-4 text-xs',
 				color.bg,
 				color.text,
 				isDraggedOver ? 'opacity-80 brightness-75' : 'opacity-50',
 			)}
 			ref={ref}
 		>
-			{/* FIXME: Fix grid width to remove this placeholder, and center the location text */}
-			<div className="text-center">{location}</div>
+			{/* FIXME: Fix grid width to remove this placeholder, and center the location text by flex */}
+			<div className="absolute top-1/2 w-full -translate-y-1/2 text-center">
+				{location}
+			</div>
 			<div className="invisible">
 				PLACEHOLDER DO NOT REMOVE ME AND I AM VERY LOOOOOONG
 			</div>
