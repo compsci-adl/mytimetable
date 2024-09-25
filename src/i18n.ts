@@ -14,10 +14,6 @@ i18n
 			'zh-CN': { translation: zhCN },
 		},
 		fallbackLng: 'en-AU',
-		preload: ['en-AU', 'zh-CN'],
-		interpolation: {
-			escapeValue: false,
-		},
 	});
 
 export default i18n;
