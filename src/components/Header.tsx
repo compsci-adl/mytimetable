@@ -13,12 +13,9 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { LANGUAGES } from '../constants/languages';
 import { useHelpModal } from '../helpers/help-modal';
 
-const LANGUAGES = [
-	{ code: 'en-AU', name: 'English', flag: '🇦🇺' },
-	{ code: 'zh-CN', name: '中文', flag: '🇨🇳' },
-];
 const DEFAULT_LANGUAGE = LANGUAGES[0];
 
 const HEADER_BUTTON_PROPS = {
