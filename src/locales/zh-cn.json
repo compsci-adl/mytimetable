@@ -57,7 +57,7 @@
 		}
 	},
 	"toast": {
-		"drop-to-change-term": "你需要删除所有课程以更改学期",
+		"drop-to-change-term": "请删除所有课程以更改学期",
 		"too-many-courses": "课程过多"
 	}
 }
