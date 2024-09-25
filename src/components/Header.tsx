@@ -83,6 +83,7 @@ export const Header = () => {
 						<PopoverContent>
 							{LANGUAGES.map((language) => (
 								<Button
+									key={language.code}
 									fullWidth
 									variant="light"
 									onClick={() => i18n.changeLanguage(language.code)}
