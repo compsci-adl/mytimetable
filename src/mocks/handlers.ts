@@ -90,8 +90,7 @@ export const handlers = [
 	http.get('/api/subjects', async () => {
 		return HttpResponse.json({
 			subjects: deduplicateArray(COURSES.map(({ name }) => name.subject)).map(
-				// (code, i) => ({ code, name: `Subject ${i}` }),
-				(code, i) => ({ code, name: `Computer Science` }),
+				(code, i) => ({ code, name: `Subject ${i}` }),
 			),
 		});
 	}),
