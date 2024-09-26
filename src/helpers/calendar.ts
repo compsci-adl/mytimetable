@@ -132,6 +132,13 @@ export const useCalendar = () => {
 
 	const [currentWeek, setCurrentWeek] = useState(CURRENT_MONDAY);
 
+	// Every time enrolled courses change, reset the current week to the start week
+	useEffect(() => {
+		if (enrolledCourses.length === 0) return;
+		setCurrentWeek(startWeek);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [enrolledCourses.length, startWeek.format('MMDD')]);
+
 	useEffect(() => {
 		if (currentWeek.isBefore(startWeek)) {
 			setCurrentWeek(startWeek);
