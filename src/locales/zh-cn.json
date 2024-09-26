@@ -47,7 +47,7 @@
 		"title": "如何使用 MyTimetable",
 		"steps": {
 			"select-term": "选择你的学期",
-			"search-course": "搜索课程后点击“添加”将课程添加至课程表",
+			"search-course": "选择一个学科并搜索课程，点击“添加”将课程添加至课程表",
 			"calendar-dnd": "下滑查看课程表，可以通过托拽课程修改时间",
 			"change-week": "切换周数查看更多课程",
 			"course-details": "点击你的选课查看详情",

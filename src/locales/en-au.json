@@ -47,7 +47,7 @@
 		"title": "How to use MyTimetable",
 		"steps": {
 			"select-term": "Select a term.",
-			"search-course": "Search for a course and press “Add” to add the course to the timetable.",
+			"search-course": "Choose a subject area, search for a course, and click “Add” to include it in your timetable.",
 			"calendar-dnd": "Scroll down to see the calendar with your enrolled courses. You can drag a class and drop it in one of the highlighted boxes to change its time.",
 			"change-week": "Change the calendar week to see more classes.",
 			"course-details": "Click your enrolled course to see details of your enrolled classes.",
