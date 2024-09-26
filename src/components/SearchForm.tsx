@@ -94,7 +94,7 @@ export const SearchForm = () => {
 			<Autocomplete
 				defaultItems={subjectList}
 				label={t('search.choose-subject')}
-				className="w-80 mobile:w-full"
+				className="w-[22rem] mobile:w-full"
 				selectedKey={subject}
 				onSelectionChange={(key) => setSubject(key as string)}
 				listboxProps={{ emptyContent: t('search.subject-not-found') }}

@@ -1,6 +1,5 @@
 import { http, HttpResponse } from 'msw';
 
-import { deduplicateArray } from '../utils/deduplicate-array';
 import adds from './data/adds/adds-res.json';
 import gccs from './data/gccs/gccs-res.json';
 import mfds from './data/mfds/mfds-res.json';
@@ -84,15 +83,23 @@ const COURSES = [
 			title: 'Web & Database Computing V',
 		},
 	},
+] as const;
+
+type SubjectCodes = (typeof COURSES)[number]['name']['subject'];
+const availableSubjects: Array<{ code: SubjectCodes; name: string }> = [
+	{ code: 'COMP SCI', name: 'Computer Science' },
+	{ code: 'MATHS', name: 'Mathematics' },
+	{ code: 'ERROR', name: 'Error' },
+];
+const subjects = [
+	...availableSubjects,
+	// Long subject
+	{ code: 'PETROGEO', name: 'Petroleum Geology & Geophysics' },
 ];
 
 export const handlers = [
 	http.get('/api/subjects', async () => {
-		return HttpResponse.json({
-			subjects: deduplicateArray(COURSES.map(({ name }) => name.subject)).map(
-				(code, i) => ({ code, name: `Subject ${i}` }),
-			),
-		});
+		return HttpResponse.json({ subjects });
 	}),
 	http.get('/api/courses', async ({ request }) => {
 		const url = new URL(request.url);
