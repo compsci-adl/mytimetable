@@ -38,7 +38,7 @@ export const Header = () => {
 	return (
 		<Navbar isBordered maxWidth="xl" position="static">
 			<NavbarBrand>
-				<h1 className="font-bold text-inherit">My Timetable</h1>
+				<h1 className="font-bold text-inherit">MyTimetable</h1>
 			</NavbarBrand>
 			<NavbarContent justify="end">
 				<NavbarItem>
