@@ -3,7 +3,9 @@
 		"select-term": "选择学期",
 		"search-course": "搜索课程",
 		"add": "添加",
-		"course-not-found": "未找到课程"
+		"course-not-found": "未找到课程",
+		"choose-subject": "选择学科",
+		"subject-not-found": "未找到学科"
 	},
 	"header": {
 		"help": "帮助",

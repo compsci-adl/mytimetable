@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
-import { getCourses } from '../apis';
+import { getCourses, getSubjects } from '../apis';
 import { LocalStorageKey } from '../constants/local-storage-keys';
 import { TERMS } from '../constants/terms';
 import { YEAR } from '../constants/year';
@@ -31,10 +31,25 @@ export const SearchForm = () => {
 	};
 	const isTermSelectDisabled = enrolledCourses.courses.length > 0;
 
+	const subjectsQuery = useQuery({
+		queryKey: ['subjects'],
+		queryFn: getSubjects,
+	});
+	const subjectList =
+		subjectsQuery.data?.subjects.map(({ code, name }) => ({
+			code,
+			name: `${code} - ${name}`,
+		})) ?? [];
+	const [subject, setSubject] = useState<string | null>(null);
+
 	const coursesQuery = useQuery({
 		// TODO: Replace params with config data
-		queryKey: ['courses', { year: YEAR, term: selectedTerm }] as const,
+		queryKey: [
+			'courses',
+			{ year: YEAR, term: selectedTerm, subject: subject! },
+		] as const,
 		queryFn: ({ queryKey }) => getCourses(queryKey[1]),
+		enabled: subject !== null,
 	});
 	const courses = coursesQuery.data?.courses;
 	const courseList =
@@ -67,7 +82,7 @@ export const SearchForm = () => {
 					label={t('search.select-term')}
 					selectedKeys={[selectedTerm]}
 					onSelectionChange={(keys) => changeTerm(keys.currentKey!)}
-					className="w-72 mobile:w-full"
+					className="w-60 mobile:w-full"
 					isDisabled={isTermSelectDisabled}
 					disallowEmptySelection
 				>
@@ -76,6 +91,20 @@ export const SearchForm = () => {
 					))}
 				</Select>
 			</div>
+			<Autocomplete
+				defaultItems={subjectList}
+				label={t('search.choose-subject')}
+				className="w-60 mobile:w-full"
+				selectedKey={subject}
+				onSelectionChange={(key) => setSubject(key as string)}
+				listboxProps={{ emptyContent: t('search.subject-not-found') }}
+			>
+				{(subject) => (
+					<AutocompleteItem key={subject.code} value={subject.code}>
+						{subject.name}
+					</AutocompleteItem>
+				)}
+			</Autocomplete>
 			<form
 				className="flex grow items-center gap-2 mobile:flex-col"
 				onSubmit={handleSubmit}

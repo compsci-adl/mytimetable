@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
+import { deduplicateArray } from '../utils/deduplicate-array';
 import adds from './data/adds/adds-res.json';
 import gccs from './data/gccs/gccs-res.json';
 import mfds from './data/mfds/mfds-res.json';
@@ -18,75 +19,86 @@ const enum CourseId {
 	ERROR5 = '28c72dfb-1777-4ed1-99a4-eec5c86005f4',
 }
 
+const COURSES = [
+	{
+		id: CourseId.ADDS,
+		name: {
+			subject: 'COMP SCI',
+			code: '2103',
+			title: 'Algorithm Design & Data Structures',
+		},
+	},
+	{
+		id: CourseId.GCCS,
+		name: {
+			subject: 'COMP SCI',
+			code: '1104',
+			title: 'Grand Challenges in Computer Science',
+		},
+	},
+	{
+		id: CourseId.MFDS,
+		name: {
+			subject: 'MATHS',
+			code: '1004',
+			title: 'Mathematics for Data Science I',
+		},
+	},
+	{
+		id: CourseId.ERROR1,
+		name: {
+			subject: 'ERROR',
+			code: '2333',
+			title: 'Web & Database Computing',
+		},
+	},
+	{
+		id: CourseId.ERROR2,
+		name: {
+			subject: 'ERROR',
+			code: '1145',
+			title: 'Web & Database Computing II',
+		},
+	},
+	{
+		id: CourseId.ERROR3,
+		name: {
+			subject: 'ERROR',
+			code: '1419',
+			title: 'Web & Database Computing III',
+		},
+	},
+	{
+		id: CourseId.ERROR4,
+		name: {
+			subject: 'ERROR',
+			code: '1981',
+			title: 'Web & Database Computing IV',
+		},
+	},
+	{
+		id: CourseId.ERROR5,
+		name: {
+			subject: 'ERROR',
+			code: '0000',
+			title: 'Web & Database Computing V',
+		},
+	},
+];
+
 export const handlers = [
-	http.get('/api/courses', async () => {
+	http.get('/api/subjects', async () => {
 		return HttpResponse.json({
-			courses: [
-				{
-					id: CourseId.ADDS,
-					name: {
-						subject: 'COMP SCI',
-						code: '2103',
-						title: 'Algorithm Design & Data Structures',
-					},
-				},
-				{
-					id: CourseId.GCCS,
-					name: {
-						subject: 'COMP SCI',
-						code: '1104',
-						title: 'Grand Challenges in Computer Science',
-					},
-				},
-				{
-					id: CourseId.MFDS,
-					name: {
-						subject: 'MATHS',
-						code: '1004',
-						title: 'Mathematics for Data Science I',
-					},
-				},
-				{
-					id: CourseId.ERROR1,
-					name: {
-						subject: 'ERROR',
-						code: '2333',
-						title: 'Web & Database Computing',
-					},
-				},
-				{
-					id: CourseId.ERROR2,
-					name: {
-						subject: 'ERROR',
-						code: '1145',
-						title: 'Web & Database Computing II',
-					},
-				},
-				{
-					id: CourseId.ERROR3,
-					name: {
-						subject: 'ERROR',
-						code: '1419',
-						title: 'Web & Database Computing III',
-					},
-				},
-				{
-					id: CourseId.ERROR4,
-					name: {
-						subject: 'ERROR',
-						code: '1981',
-						title: 'Web & Database Computing IV',
-					},
-				},
-				{
-					id: CourseId.ERROR5,
-					name: {
-						subject: 'ERROR',
-						code: '0000',
-						title: 'Web & Database Computing V',
-					},
-				},
-			],
+			subjects: deduplicateArray(COURSES.map(({ name }) => name.subject)).map(
+				(code, i) => ({ code, name: `Subject ${i}` }),
+			),
+		});
+	}),
+	http.get('/api/courses', async ({ request }) => {
+		const url = new URL(request.url);
+		const subject = url.searchParams.get('subject');
+		return HttpResponse.json({
+			courses: COURSES.filter((c) => c.name.subject === subject),
 		});
 	}),
 	http.get('/api/courses/:id', async ({ params }) => {

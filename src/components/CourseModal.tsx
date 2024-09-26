@@ -21,6 +21,7 @@ import type dayjs from '../lib/dayjs';
 import type { Meetings } from '../types/course';
 import type { Key } from '../types/key';
 import { dateToDayjs, timeToDayjs } from '../utils/date';
+import { deduplicateArray } from '../utils/deduplicate-array';
 
 const DATE_FORMAT = 'D MMM';
 const TIME_FORMAT = 'h:mm A';
@@ -78,7 +79,7 @@ const getPreviewMeetingInfo = (meetings: Meetings) => {
 	const displayMeetings = meetings.map(
 		(m) => `${m.day} ${getDisplayTime(m.time)}`,
 	);
-	return [...new Set(displayMeetings)].join(' & ');
+	return deduplicateArray(displayMeetings).join(' & ');
 };
 const getKeys = (nullableKey: Key | undefined) => {
 	return nullableKey ? [nullableKey] : undefined;
