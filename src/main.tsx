@@ -25,7 +25,7 @@ const enableMocking = async () => {
 		},
 	});
 };
-await enableMocking();
+enableMocking();
 
 // Zustand
 if (import.meta.env.DEV) {
