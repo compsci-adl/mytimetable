@@ -46,6 +46,7 @@
 	"help": {
 		"title": "如何使用 MyTimetable",
 		"steps": {
+			"welcome": "欢迎使用 MyTimetable！选课前你可以在这里轻松安排你的课程表。我们强烈建议你通过电脑或平板使用。",
 			"select-term": "选择你的学期",
 			"search-course": "选择一个学科并搜索课程，点击“添加”将课程添加至课程表",
 			"calendar-dnd": "下滑查看课程表，可以通过托拽课程修改时间",

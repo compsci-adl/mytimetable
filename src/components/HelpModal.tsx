@@ -21,6 +21,13 @@ export const HelpModal = () => {
 
 	const STEPS = [
 		{
+			content: t('help.steps.welcome'),
+			image: {
+				path: '/help/welcome.png',
+				alt: 'Website preview',
+			},
+		},
+		{
 			content: t('help.steps.select-term'),
 			image: {
 				path: '/help/select-term.png',
