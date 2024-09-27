@@ -32,8 +32,8 @@ export const SearchForm = () => {
 	const isTermSelectDisabled = enrolledCourses.courses.length > 0;
 
 	const subjectsQuery = useQuery({
-		queryKey: ['subjects'],
-		queryFn: getSubjects,
+		queryKey: ['subjects', { year: YEAR, term: selectedTerm }] as const,
+		queryFn: ({ queryKey }) => getSubjects(queryKey[1]),
 	});
 	const subjectList =
 		subjectsQuery.data?.subjects.map(({ code, name }) => ({

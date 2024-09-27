@@ -28,6 +28,6 @@ type SubjectsRes = {
 	subjects: Array<{ code: string; name: string }>;
 };
 
-export const getSubjects = async () => {
-	return fetcher.get<SubjectsRes>('subjects').json();
+export const getSubjects = async (params: { year: number; term: string }) => {
+	return fetcher.get<SubjectsRes>('subjects', { searchParams: params }).json();
 };
