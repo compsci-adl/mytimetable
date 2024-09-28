@@ -137,7 +137,7 @@ export const useCalendar = () => {
 		if (enrolledCourses.length === 0) return;
 		setCurrentWeek(startWeek);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [enrolledCourses.length, startWeek.format('MMDD')]);
+	}, [enrolledCourses.length]);
 
 	useEffect(() => {
 		if (currentWeek.isBefore(startWeek)) {
