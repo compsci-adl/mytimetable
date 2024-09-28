@@ -57,6 +57,7 @@
 		},
 		"actions": {
 			"next-step": "下一步",
+			"previous-step": "上一步",
 			"get-started": "开始使用"
 		}
 	},

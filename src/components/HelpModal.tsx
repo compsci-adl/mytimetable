@@ -10,6 +10,7 @@ import {
 	Tab,
 	Tabs,
 } from '@nextui-org/react';
+import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -150,9 +151,20 @@ export const HelpModal = () => {
 						</AnimatePresence>
 					</div>
 				</ModalBody>
-				<ModalFooter>
+				<ModalFooter className="justify-between">
+					<Button
+						color="primary"
+						onClick={() => setStepIndex(stepIndex - 1)}
+						className={clsx('invisible', stepIndex > 0 && 'visible')}
+					>
+						{t('help.actions.previous-step')}
+					</Button>
 					{stepIndex < STEPS.length - 1 ? (
-						<Button color="primary" onClick={() => setStepIndex(stepIndex + 1)}>
+						<Button
+							className="self-end"
+							color="primary"
+							onClick={() => setStepIndex(stepIndex + 1)}
+						>
 							{t('help.actions.next-step')}
 						</Button>
 					) : (

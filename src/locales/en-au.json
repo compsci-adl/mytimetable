@@ -57,6 +57,7 @@
 		},
 		"actions": {
 			"next-step": "Next Step",
+			"previous-step": "Previous Step",
 			"get-started": "Get Started!"
 		}
 	},
