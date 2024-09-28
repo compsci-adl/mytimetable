@@ -17,8 +17,8 @@ import type {
 } from '../types/course';
 import { dateToDayjs, getMonday, timeToDayjs } from '../utils/date';
 
-const MAX_DATE = dayjs('6666-06-06');
-const MIN_DATE = dayjs('2005-03-12');
+const MAX_DATE = dayjs('2900-12-12');
+const MIN_DATE = dayjs('1900-01-01');
 const CURRENT_MONDAY = getMonday(dayjs());
 
 /**
@@ -140,11 +140,8 @@ export const useCalendar = () => {
 	}, [enrolledCourses.length]);
 
 	useEffect(() => {
-		if (currentWeek.isBefore(startWeek)) {
+		if (currentWeek.isBefore(startWeek) || currentWeek.isAfter(endWeek)) {
 			setCurrentWeek(startWeek);
-		}
-		if (currentWeek.isAfter(endWeek)) {
-			setCurrentWeek(endWeek);
 		}
 		/* eslint-disable react-hooks/exhaustive-deps */
 	}, [
