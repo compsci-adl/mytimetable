@@ -27,6 +27,7 @@ export type Course = {
 	requirements: unknown;
 	class_list: Array<{
 		id: string;
+		category: 'enrolment' | 'related';
 		type: string;
 		classes: Array<{
 			number: string;

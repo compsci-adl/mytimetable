@@ -23,6 +23,7 @@
 	"class_list": [
 		{
 			"id": "e1e90cf3-2b27-4eeb-afb8-e78b6ae7d680",
+			"category": "enrolment",
 			"type": "Practical",
 			"classes": [
 				{
@@ -722,6 +723,7 @@
 		},
 		{
 			"id": "ab1cd3c9-2311-4ae9-9025-c71b741ddf9d",
+			"category": "related",
 			"type": "Workshop",
 			"classes": [
 				{
@@ -1729,6 +1731,7 @@
 		},
 		{
 			"id": "7d577e9e-3582-4547-87dd-0fe5d5ad62b1",
+			"category": "related",
 			"type": "Assessment",
 			"classes": [
 				{
@@ -1871,6 +1874,7 @@
 		},
 		{
 			"id": "e4d43f7e-898f-4b34-ad48-20e6d54a4635",
+			"category": "enrolment",
 			"type": "Seminar",
 			"classes": [
 				{

@@ -21,6 +21,7 @@
 	"class_list": [
 		{
 			"id": "f437d75b-b29f-469b-ac3a-b63e4f9957fa",
+			"category": "enrolment",
 			"type": "Lecture",
 			"classes": [
 				{
@@ -104,6 +105,7 @@
 		},
 		{
 			"id": "7af13310-485b-4a42-a882-20ae5a75501a",
+			"category": "related",
 			"type": "Practical",
 			"classes": [
 				{
@@ -255,6 +257,7 @@
 		},
 		{
 			"id": "4b3d4cde-ce18-49bc-b73d-4b4732b2c92d",
+			"category": "related",
 			"type": "Workshop",
 			"classes": [
 				{
