@@ -46,7 +46,7 @@
 	"help": {
 		"title": "How to use MyTimetable",
 		"steps": {
-			"welcome": "Welcome to MyTimetable! With this tool, you can easily schedule your timetable before enrollment. We highly recommend using a computer or tablet to get started.",
+			"welcome": "Welcome to MyTimetable! With this tool, you can easily schedule your timetable before enrolment. We highly recommend using a computer or tablet to get started.",
 			"select-term": "Select a term.",
 			"search-course": "Choose a subject area, search for a course, and click “Add” to include it in your timetable.",
 			"calendar-dnd": "Scroll down to see the calendar with your enrolled courses. You can drag a class and drop it in one of the highlighted boxes to change its time.",
