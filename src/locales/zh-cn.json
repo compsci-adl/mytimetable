@@ -9,7 +9,7 @@
 	},
 	"header": {
 		"help": "帮助",
-		"report": "反馈",
+		"feedback": "反馈",
 		"change-language": "切换语言"
 	},
 	"course-modal": {

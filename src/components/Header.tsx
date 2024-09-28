@@ -49,13 +49,13 @@ export const Header = () => {
 					</Tooltip>
 				</NavbarItem>
 				<NavbarItem>
-					<Tooltip content={t('header.report')} size="sm">
+					<Tooltip content={t('header.feedback')} size="sm">
 						<Button
 							{...HEADER_BUTTON_PROPS}
 							as={Link}
-							href="mailto:dev@csclub.org.au"
+							href="https://forms.gle/4HFumRNK8jtEhxJz6"
 						>
-							🐛
+							🗣
 						</Button>
 					</Tooltip>
 				</NavbarItem>
