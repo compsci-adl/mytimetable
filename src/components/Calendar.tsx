@@ -27,6 +27,15 @@ const useDraggingCourse = create<DraggingCourseState>()((set) => ({
 	stop: () => set({ isDragging: false, course: null }),
 }));
 
+// FIXME: Fix grid width to remove this placeholder
+const InvisiblePlaceholder = () => {
+	return (
+		<div className="invisible">
+			PLACEHOLDER DO NOT REMOVE ME AND I AM VERY LOOOOOONG
+		</div>
+	);
+};
+
 const CourseCard = ({
 	course,
 	time,
@@ -66,10 +75,10 @@ const CourseCard = ({
 		>
 			<div className="text-2xs">{time.start}</div>
 			<div className="font-bold">
-				[{course.classType}] {course.name.subject} {course.name.code} -{' '}
-				{course.name.title}
+				[{course.classType}] {course.name.title}
 			</div>
 			<div>{course.location}</div>
+			<InvisiblePlaceholder />
 		</div>
 	);
 };
@@ -258,13 +267,11 @@ const CourseTimePlaceholderCard = ({
 			)}
 			ref={ref}
 		>
-			{/* FIXME: Fix grid width to remove this placeholder, and center the location text by flex */}
+			{/* FIXME: Remove placeholder and center the location text by flex */}
 			<div className="absolute top-1/2 w-full -translate-y-1/2 text-center">
 				{location}
 			</div>
-			<div className="invisible">
-				PLACEHOLDER DO NOT REMOVE ME AND I AM VERY LOOOOOONG
-			</div>
+			<InvisiblePlaceholder />
 		</div>
 	);
 };
