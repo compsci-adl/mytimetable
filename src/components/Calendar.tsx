@@ -36,31 +36,42 @@ const InvisiblePlaceholder = () => {
 	);
 };
 
-const CourseCard = ({
-	course,
-	time,
-}: {
+type CourseCardProps = {
 	course: WeekCourse;
 	time: DateTimeRange;
-}) => {
+	currentWeek: dayjs.Dayjs;
+};
+const CourseCard = ({ course, time, currentWeek }: CourseCardProps) => {
+	const otherTimes = useOtherWeekCourseTimes({
+		courseId: course.id,
+		classTypeId: course.classTypeId,
+		currentWeek,
+	});
+	const isOnlyTime = !otherTimes.some((times) => times.length !== 0);
+
 	const color = useCourseColor(course.id);
 
 	const draggingCourse = useDraggingCourse();
 	const [isDragging, setIsDragging] = useState(false);
 	const ref = useRef<HTMLDivElement | null>(null);
-	useDrag(ref, {
-		onDragStart: () => {
-			setIsDragging(true);
-			draggingCourse.start(course);
+	useDrag(
+		ref,
+		{
+			canDrag: () => !isOnlyTime,
+			onDragStart: () => {
+				setIsDragging(true);
+				draggingCourse.start(course);
+			},
+			onDrop: () => {
+				setIsDragging(false);
+				draggingCourse.stop();
+			},
+			getInitialDataForExternal: () => {
+				return { 'text/plain': course.classNumber };
+			},
 		},
-		onDrop: () => {
-			setIsDragging(false);
-			draggingCourse.stop();
-		},
-		getInitialDataForExternal: () => {
-			return { 'text/plain': course.classNumber };
-		},
-	});
+		[isOnlyTime],
+	);
 
 	return (
 		<div
@@ -73,7 +84,10 @@ const CourseCard = ({
 				isDragging ? 'opacity-30' : 'opacity-75',
 			)}
 		>
-			<div className="text-2xs">{time.start}</div>
+			<div className="flex justify-between text-2xs">
+				<div>{time.start}</div>
+				{isOnlyTime && <div>📌</div>}
+			</div>
 			<div className="font-bold">
 				[{course.classType}] {course.name.title}
 			</div>
@@ -200,7 +214,13 @@ const getGridRow = (time: string) => {
 	const t = timeToDayjs(time);
 	return t.hour() * 2 + (t.minute() >= 30 ? 1 : 0) - 13;
 };
-const CalendarCourses = ({ courses: day }: { courses: WeekCourses }) => {
+const CalendarCourses = ({
+	courses: day,
+	currentWeek,
+}: {
+	courses: WeekCourses;
+	currentWeek: dayjs.Dayjs;
+}) => {
 	return (
 		<div className="absolute left-10 top-10 z-0 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]">
 			{day.map((times, i) =>
@@ -221,6 +241,7 @@ const CalendarCourses = ({ courses: day }: { courses: WeekCourses }) => {
 								key={course.id + course.classTypeId}
 								course={course}
 								time={time.time}
+								currentWeek={currentWeek}
 							/>
 						))}
 					</div>
@@ -332,7 +353,7 @@ export const Calendar = () => {
 			/>
 			<div className="relative">
 				<CalendarBg currentWeek={currentWeek} />
-				<CalendarCourses courses={courses} />
+				<CalendarCourses courses={courses} currentWeek={currentWeek} />
 				{isDragging && <CalendarCourseOtherTimes currentWeek={currentWeek} />}
 			</div>
 		</div>
