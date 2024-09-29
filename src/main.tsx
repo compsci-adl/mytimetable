@@ -15,17 +15,18 @@ import { queryClient } from './lib/query';
 
 // MSW
 const enableMocking = async () => {
-	if (!import.meta.env.DEV) return;
 	const { worker } = await import('./mocks/browser');
 	return worker.start({
 		onUnhandledRequest(request, print) {
-			if (request.url.includes('/api')) {
+			if (request.url.includes('/mock')) {
 				return print.warning();
 			}
 		},
 	});
 };
-enableMocking();
+if (import.meta.env.DEV) {
+	await enableMocking();
+}
 
 // Zustand
 if (import.meta.env.DEV) {

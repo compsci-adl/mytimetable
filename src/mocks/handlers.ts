@@ -98,25 +98,19 @@ const subjects = [
 ];
 
 export const handlers = [
-	http.get('/api/subjects', async () => {
+	http.get('/mock/subjects', async () => {
 		return HttpResponse.json({ subjects });
 	}),
-	http.get('/api/courses', async ({ request }) => {
+	http.get('/mock/courses', async ({ request }) => {
 		const url = new URL(request.url);
 		const subject = url.searchParams.get('subject');
 		return HttpResponse.json({
 			courses: COURSES.filter((c) => c.name.subject === subject),
 		});
 	}),
-	http.get('/api/courses/:id', async ({ params }) => {
+	http.get('/mock/courses/:id', async ({ params }) => {
 		const { id } = params as { id: CourseId };
-		if (
-			id === CourseId.ERROR1 ||
-			id === CourseId.ERROR2 ||
-			id === CourseId.ERROR3 ||
-			id === CourseId.ERROR4 ||
-			id === CourseId.ERROR5
-		)
+		if (id !== CourseId.ADDS && id !== CourseId.GCCS && id !== CourseId.MFDS)
 			return HttpResponse.json({ error: 'Course not found' }, { status: 404 });
 		const idResMap = {
 			[CourseId.ADDS]: adds,
