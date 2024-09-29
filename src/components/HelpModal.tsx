@@ -133,16 +133,16 @@ export const HelpModal = () => {
 								animate="center"
 								exit="exit"
 								transition={{ ease: 'easeInOut', duration: 0.3 }}
-								className="absolute h-full w-full p-4"
+								className="absolute h-full w-full p-4 mobile:p-1"
 							>
-								<Card className="h-full p-2">
-									<CardBody>
-										<p className="text-lg">{step.content}</p>
-										<div className="flex h-full flex-col justify-center">
+								<Card className="h-full p-2 mobile:p-1">
+									<CardBody className="gap-2">
+										<div className="text-lg mobile:text-sm">{step.content}</div>
+										<div className="flex grow items-center justify-center">
 											<img
 												alt={step.image.alt}
 												src={step.image.path}
-												className="max-h-[28rem] object-contain"
+												className="max-h-[28rem]"
 											/>
 										</div>
 									</CardBody>
