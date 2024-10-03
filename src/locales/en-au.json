@@ -62,6 +62,10 @@
 			"get-started": "Get Started!"
 		}
 	},
+	"zoom": {
+		"zoom-in": "Zoom In",
+		"zoom-out": "Zoom Out"
+	},
 	"toast": {
 		"drop-to-change-term": "You need to drop all courses to change the term",
 		"too-many-courses": "8 courses for a term is crazy! 💀"

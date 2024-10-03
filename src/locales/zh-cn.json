@@ -62,6 +62,10 @@
 			"get-started": "开始使用"
 		}
 	},
+	"zoom": {
+		"zoom-in": "放大",
+		"zoom-out": "缩小"
+	},
 	"toast": {
 		"drop-to-change-term": "请删除所有课程以更改学期",
 		"too-many-courses": "课程过多"

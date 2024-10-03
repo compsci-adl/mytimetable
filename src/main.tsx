@@ -36,7 +36,7 @@ if (import.meta.env.DEV) {
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<QueryClientProvider client={queryClient}>
-			<ReactQueryDevtools initialIsOpen={false} />
+			<ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
 			<NextUIProvider>
 				<Toaster richColors position="top-center" />
 				<App />
