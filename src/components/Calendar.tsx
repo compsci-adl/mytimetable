@@ -200,7 +200,7 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 					<div
 						key={i}
 						className={clsx(
-							'h-12 border-r-1',
+							'h-9 border-r-1',
 							[5, 6, 7, 8, 9].includes(i % 10) && 'border-b-1',
 						)}
 					/>
@@ -209,6 +209,8 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 		</div>
 	);
 };
+
+const HOUR_HEIGHT = 4.5;
 
 const getGridRow = (time: string) => {
 	const t = timeToDayjs(time);
@@ -232,7 +234,7 @@ const CalendarCourses = ({
 							gridColumnStart: i + 1,
 							gridRowStart: getGridRow(time.time.start),
 							gridRowEnd: getGridRow(time.time.end),
-							height: calcHoursDuration(time.time) * 6 + 'rem',
+							height: calcHoursDuration(time.time) * HOUR_HEIGHT + 'rem',
 							zIndex: j, // TODO: Remove zIndex after implementing course conflicts #5
 						}}
 					>
@@ -321,7 +323,7 @@ const CalendarCourseOtherTimes = ({
 							gridColumnStart: i + 1,
 							gridRowStart: getGridRow(time.time.start),
 							gridRowEnd: getGridRow(time.time.end),
-							height: calcHoursDuration(time.time) * 6 + 'rem',
+							height: calcHoursDuration(time.time) * HOUR_HEIGHT + 'rem',
 						}}
 					>
 						{time.classes.map((c) => (
