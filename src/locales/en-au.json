@@ -37,7 +37,8 @@
 			"October",
 			"November",
 			"December"
-		]
+		],
+		"immoveable-course": "Immoveable course"
 	},
 	"footer": {
 		"github": "Github Repo",

@@ -37,7 +37,8 @@
 			"十月",
 			"十一月",
 			"十二月"
-		]
+		],
+		"immoveable-course": "此课程无法移动"
 	},
 	"footer": {
 		"github": "Github 开源地址",

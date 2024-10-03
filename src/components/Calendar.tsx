@@ -42,6 +42,8 @@ type CourseCardProps = {
 	currentWeek: dayjs.Dayjs;
 };
 const CourseCard = ({ course, time, currentWeek }: CourseCardProps) => {
+	const { t } = useTranslation();
+
 	const otherTimes = useOtherWeekCourseTimes({
 		courseId: course.id,
 		classTypeId: course.classTypeId,
@@ -86,7 +88,11 @@ const CourseCard = ({ course, time, currentWeek }: CourseCardProps) => {
 		>
 			<div className="flex justify-between text-2xs">
 				<div>{time.start}</div>
-				{isOnlyTime && <div>📌</div>}
+				{isOnlyTime && (
+					<Tooltip content={t('calendar.immoveable-course')} size="sm">
+						<div>📌</div>
+					</Tooltip>
+				)}
 			</div>
 			<div className="font-bold">
 				[{course.classType}] {course.name.title}
