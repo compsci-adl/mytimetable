@@ -7,11 +7,8 @@ import { create } from 'zustand';
 import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
 import { useCourseColor, useEnrolledCourse } from '../data/enrolled-courses';
-import {
-	useCalendar,
-	useCalendarHourHeight,
-	useOtherWeekCourseTimes,
-} from '../helpers/calendar';
+import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
+import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
 import { calcHoursDuration } from '../helpers/hours-duration';
 import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';

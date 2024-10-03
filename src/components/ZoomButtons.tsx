@@ -5,7 +5,7 @@ import {
 	MAX_HOUR_HEIGHT,
 	MIN_HOUR_HEIGHT,
 	useCalendarHourHeight,
-} from '../helpers/calendar';
+} from '../helpers/calendar-hour-height';
 
 export const ZoomButtons = () => {
 	const { t } = useTranslation();

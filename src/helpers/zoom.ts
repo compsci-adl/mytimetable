@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { useCalendarHourHeight } from './calendar';
+import { useCalendarHourHeight } from './calendar-hour-height';
 
 type UseZoomProps = {
 	element: HTMLElement;
