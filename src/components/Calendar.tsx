@@ -7,7 +7,11 @@ import { create } from 'zustand';
 import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
 import { useCourseColor, useEnrolledCourse } from '../data/enrolled-courses';
-import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
+import {
+	useCalendar,
+	useCalendarHourHeight,
+	useOtherWeekCourseTimes,
+} from '../helpers/calendar';
 import { calcHoursDuration } from '../helpers/hours-duration';
 import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
@@ -176,6 +180,8 @@ const CalendarHeader = ({
 const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 	const { t } = useTranslation();
 
+	const blockHeight = useCalendarHourHeight((s) => s.height);
+
 	return (
 		<div className="-z-50 grid grid-cols-[2.5rem_repeat(5,_minmax(0,_1fr))] grid-rows-[2.5rem_repeat(30,_minmax(0,_1fr))] border-apple-gray-300">
 			<div className="sticky top-12 z-50 col-span-full col-start-2 grid grid-cols-subgrid border-b-1 bg-white">
@@ -206,17 +212,16 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 					<div
 						key={i}
 						className={clsx(
-							'h-9 border-r-1',
+							'border-r-1',
 							[5, 6, 7, 8, 9].includes(i % 10) && 'border-b-1',
 						)}
+						style={{ height: blockHeight / 2 + 'rem' }}
 					/>
 				))}
 			</div>
 		</div>
 	);
 };
-
-const HOUR_HEIGHT = 4.5;
 
 const getGridRow = (time: string) => {
 	const t = timeToDayjs(time);
@@ -229,6 +234,8 @@ const CalendarCourses = ({
 	courses: WeekCourses;
 	currentWeek: dayjs.Dayjs;
 }) => {
+	const blockHeight = useCalendarHourHeight((s) => s.height);
+
 	return (
 		<div className="absolute left-10 top-10 z-0 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]">
 			{day.map((times, i) =>
@@ -240,7 +247,7 @@ const CalendarCourses = ({
 							gridColumnStart: i + 1,
 							gridRowStart: getGridRow(time.time.start),
 							gridRowEnd: getGridRow(time.time.end),
-							height: calcHoursDuration(time.time) * HOUR_HEIGHT + 'rem',
+							height: calcHoursDuration(time.time) * blockHeight + 'rem',
 							zIndex: j, // TODO: Remove zIndex after implementing course conflicts #5
 						}}
 					>
@@ -310,6 +317,8 @@ const CalendarCourseOtherTimes = ({
 }: {
 	currentWeek: dayjs.Dayjs;
 }) => {
+	const blockHeight = useCalendarHourHeight((s) => s.height);
+
 	const course = useDraggingCourse((s) => s.course)!;
 	const times = useOtherWeekCourseTimes({
 		courseId: course.id,
@@ -329,7 +338,7 @@ const CalendarCourseOtherTimes = ({
 							gridColumnStart: i + 1,
 							gridRowStart: getGridRow(time.time.start),
 							gridRowEnd: getGridRow(time.time.end),
-							height: calcHoursDuration(time.time) * HOUR_HEIGHT + 'rem',
+							height: calcHoursDuration(time.time) * blockHeight + 'rem',
 						}}
 					>
 						{time.classes.map((c) => (

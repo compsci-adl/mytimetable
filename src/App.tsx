@@ -6,10 +6,12 @@ import { HelpModal } from './components/HelpModal';
 import { SearchForm } from './components/SearchForm';
 import { useCoursesInfo } from './data/course-info';
 import { useFirstTimeHelp } from './helpers/help-modal';
+import { useZoom } from './helpers/zoom';
 
 export const App = () => {
 	useCoursesInfo();
 	useFirstTimeHelp();
+	useZoom();
 
 	return (
 		<>

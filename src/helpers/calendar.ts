@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { create } from 'zustand';
 
 import { WEEK_DAYS } from '../constants/week-days';
 import { useGetCourseClasses } from '../data/course-info';
@@ -219,3 +220,12 @@ export const useOtherWeekCourseTimes = ({
 
 	return times;
 };
+
+export const useCalendarHourHeight = create<{
+	height: number;
+	setHeight: (getNewHeight: (height: number) => number) => void;
+}>()((set) => ({
+	height: 4.5,
+	setHeight: (getNewHeight) =>
+		set((state) => ({ height: getNewHeight(state.height) })),
+}));
