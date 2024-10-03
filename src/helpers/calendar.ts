@@ -221,11 +221,16 @@ export const useOtherWeekCourseTimes = ({
 	return times;
 };
 
+const MIN_HEIGHT = 3;
+const MAX_HEIGHT = 10;
 export const useCalendarHourHeight = create<{
 	height: number;
 	setHeight: (getNewHeight: (height: number) => number) => void;
 }>()((set) => ({
 	height: 4.5,
 	setHeight: (getNewHeight) =>
-		set((state) => ({ height: getNewHeight(state.height) })),
+		set((state) => {
+			const height = getNewHeight(state.height);
+			return { height: Math.min(Math.max(height, MIN_HEIGHT), MAX_HEIGHT) };
+		}),
 }));
