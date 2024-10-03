@@ -18,6 +18,9 @@ export default {
 			colors: {
 				'apple-gray': { 300: '#DFDFDF', 500: '#AFAFAF' },
 			},
+			fontFamily: {
+				'noto-emoji': ['"Noto Color Emoji"', 'sans-serif'],
+			},
 		},
 	},
 	darkMode: 'class',

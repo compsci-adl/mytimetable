@@ -71,7 +71,7 @@ export const Header = () => {
 						>
 							<div>
 								<PopoverTrigger>
-									<Button {...HEADER_BUTTON_PROPS}>
+									<Button {...HEADER_BUTTON_PROPS} className="font-noto-emoji">
 										{currentLanguage.flag}
 									</Button>
 								</PopoverTrigger>
@@ -85,7 +85,8 @@ export const Header = () => {
 									variant="light"
 									onClick={() => i18n.changeLanguage(language.code)}
 								>
-									{language.name} {language.flag}
+									<span>{language.name} </span>
+									<span className="font-noto-emoji">{language.flag}</span>
 								</Button>
 							))}
 						</PopoverContent>
