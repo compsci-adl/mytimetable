@@ -2,12 +2,12 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import { useCalendarHourHeight } from './calendar';
 
-const WHEEL_SPEED = 0.08;
-const PINCH_SPEED = 0.03;
-
-export const useZoom = () => {
-	const setCalendarHeight = useCalendarHourHeight((s) => s.setHeight);
-
+type UseZoomProps = {
+	element: HTMLElement;
+	onWheelZoom: (deltaY: number) => void;
+	onPinchZoom: (distanceDiff: number) => void;
+};
+const useZoom = ({ element, onPinchZoom, onWheelZoom }: UseZoomProps) => {
 	// Pinch (Tablet or phone) zoom
 	// FIXME: Not so smooth on safari, sometimes detect as scroll
 	const pointers = useRef<PointerEvent[]>([]);
@@ -33,17 +33,19 @@ export const useZoom = () => {
 			);
 			const distanceDiff = currentDistance - prevDistance.current;
 			if (prevDistance.current !== -1) {
-				setCalendarHeight((h) => h + distanceDiff * PINCH_SPEED);
+				onPinchZoom(distanceDiff);
 			}
 			prevDistance.current = currentDistance;
 		},
-		[setCalendarHeight],
+		[onPinchZoom],
 	);
 	const onPointerUp = useCallback((e: PointerEvent) => {
 		pointers.current = pointers.current.filter(
 			(p) => p.pointerId !== e.pointerId,
 		);
-		if (pointers.current.length < 2) prevDistance.current = -1;
+		if (pointers.current.length < 2) {
+			prevDistance.current = -1;
+		}
 	}, []);
 
 	// Trackpad (Laptop) zoom
@@ -53,27 +55,43 @@ export const useZoom = () => {
 			if (e.deltaY % 1 === 0) return;
 			e.preventDefault();
 			e.stopPropagation();
-			setCalendarHeight((h) => h - e.deltaY * WHEEL_SPEED);
+			onWheelZoom(e.deltaY);
 		},
-		[setCalendarHeight],
+		[onWheelZoom],
 	);
 
 	useEffect(() => {
-		document.addEventListener('wheel', onWheel, { passive: false });
-		document.addEventListener('pointerdown', onPointerDown);
-		document.addEventListener('pointermove', onPointerMove);
-		document.addEventListener('pointerup', onPointerUp);
-		document.addEventListener('pointercancel', onPointerUp);
-		document.addEventListener('pointerout', onPointerUp);
-		document.addEventListener('pointerleave', onPointerUp);
+		element.addEventListener('wheel', onWheel, { passive: false });
+		element.addEventListener('pointerdown', onPointerDown);
+		element.addEventListener('pointermove', onPointerMove);
+		element.addEventListener('pointerup', onPointerUp);
+		element.addEventListener('pointercancel', onPointerUp);
+		element.addEventListener('pointerout', onPointerUp);
+		element.addEventListener('pointerleave', onPointerUp);
 		return () => {
-			document.removeEventListener('wheel', onWheel);
-			document.removeEventListener('pointerdown', onPointerDown);
-			document.removeEventListener('pointermove', onPointerMove);
-			document.removeEventListener('pointerup', onPointerUp);
-			document.removeEventListener('pointercancel', onPointerUp);
-			document.removeEventListener('pointerout', onPointerUp);
-			document.removeEventListener('pointerleave', onPointerUp);
+			element.removeEventListener('wheel', onWheel);
+			element.removeEventListener('pointerdown', onPointerDown);
+			element.removeEventListener('pointermove', onPointerMove);
+			element.removeEventListener('pointerup', onPointerUp);
+			element.removeEventListener('pointercancel', onPointerUp);
+			element.removeEventListener('pointerout', onPointerUp);
+			element.removeEventListener('pointerleave', onPointerUp);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [onWheel, onPointerDown, onPointerMove, onPointerUp]);
+};
+
+const WHEEL_SPEED = 0.08;
+const PINCH_SPEED = 0.03;
+export const useCalendarZoom = () => {
+	const setCalendarHeight = useCalendarHourHeight((s) => s.setHeight);
+	useZoom({
+		element: document.body,
+		onWheelZoom: (deltaY) => {
+			setCalendarHeight((h) => h - deltaY * WHEEL_SPEED);
+		},
+		onPinchZoom: (distanceDiff) => {
+			setCalendarHeight((h) => h + distanceDiff * PINCH_SPEED);
+		},
+	});
 };
