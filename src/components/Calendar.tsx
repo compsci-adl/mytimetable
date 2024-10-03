@@ -10,6 +10,7 @@ import { useCourseColor, useEnrolledCourse } from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
 import { calcHoursDuration } from '../helpers/hours-duration';
+import { useZoom } from '../helpers/zoom';
 import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
 import { timeToDayjs } from '../utils/date';
@@ -354,12 +355,26 @@ const CalendarCourseOtherTimes = ({
 	);
 };
 
+const WHEEL_SPEED = 0.08;
+const PINCH_SPEED = 0.03;
 export const Calendar = () => {
 	const { courses, currentWeek, actions, status } = useCalendar();
 	const isDragging = useDraggingCourse((s) => s.isDragging);
 
+	const ref = useRef<HTMLDivElement | null>(null);
+	const setCalendarHeight = useCalendarHourHeight((s) => s.setHeight);
+	useZoom({
+		ref,
+		onWheelZoom: (deltaY) => {
+			setCalendarHeight((h) => h - deltaY * WHEEL_SPEED);
+		},
+		onPinchZoom: (distanceDiff) => {
+			setCalendarHeight((h) => h + distanceDiff * PINCH_SPEED);
+		},
+	});
+
 	return (
-		<div>
+		<div ref={ref} className="touch-pan-y">
 			<CalendarHeader
 				currentWeek={currentWeek}
 				actions={actions}

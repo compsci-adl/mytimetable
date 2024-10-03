@@ -7,12 +7,10 @@ import { SearchForm } from './components/SearchForm';
 import { ZoomButtons } from './components/ZoomButtons';
 import { useCoursesInfo } from './data/course-info';
 import { useFirstTimeHelp } from './helpers/help-modal';
-import { useCalendarZoom } from './helpers/zoom';
 
 export const App = () => {
 	useCoursesInfo();
 	useFirstTimeHelp();
-	useCalendarZoom();
 
 	return (
 		<>
