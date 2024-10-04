@@ -1,6 +1,6 @@
 # My Timetable
 
-Timetable planner for University of Adelaide students
+A drag-and-drop timetable planner for the University of Adelaide students.
 
 ## Development
 
