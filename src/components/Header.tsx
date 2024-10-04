@@ -38,6 +38,7 @@ export const Header = () => {
 	return (
 		<Navbar isBordered maxWidth="xl" position="static">
 			<NavbarBrand>
+				<img src="/favicon.svg" alt="Logo" className="mr-2 w-6" />
 				<h1 className="font-bold text-inherit">MyTimetable</h1>
 			</NavbarBrand>
 			<NavbarContent justify="end">
