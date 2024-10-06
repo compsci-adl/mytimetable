@@ -5,7 +5,7 @@ import { useMount } from '../utils/mount';
 
 export const Error = ({ error }: FallbackProps) => {
 	const errorMessage = String(error);
-	const prefilledFeedbackForm = `${import.meta.env.VITE_FEEDBACK_FORM_URL_PREFILL_ERROR_MESSAGE}+${errorMessage}%0ACause:+`;
+	const prefilledFeedbackForm = `${import.meta.env.VITE_FEEDBACK_FORM_URL_PREFILL_ERROR_MESSAGE}${errorMessage}%0ACause:+`;
 
 	useMount(() => {
 		// Clear local data to reset the app
@@ -14,7 +14,7 @@ export const Error = ({ error }: FallbackProps) => {
 
 	return (
 		<div className="mx-2 flex h-dvh flex-col items-center justify-center gap-2">
-			<h1 className="text-4xl">Oops.. Something went wrong!</h1>
+			<h1 className="text-4xl">Oops... Something went wrong!</h1>
 			<p>
 				We're sorry, but we need to clear all saved data for this website
 				(including any locally stored courses and times).
