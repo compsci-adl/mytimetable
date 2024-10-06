@@ -1,5 +1,6 @@
 import { Button, Tooltip } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
+import { FaMinus, FaPlus } from 'react-icons/fa';
 
 import {
 	MAX_HOUR_HEIGHT,
@@ -21,7 +22,7 @@ export const ZoomButtons = () => {
 					isIconOnly
 					size="sm"
 				>
-					➕
+					<FaPlus />
 				</Button>
 			</Tooltip>
 			<Tooltip content={t('zoom.zoom-out')} placement="left">
@@ -31,7 +32,7 @@ export const ZoomButtons = () => {
 					isIconOnly
 					size="sm"
 				>
-					➖
+					<FaMinus />
 				</Button>
 			</Tooltip>
 		</div>

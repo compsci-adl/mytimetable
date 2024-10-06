@@ -144,7 +144,7 @@ const CalendarHeader = ({
 		},
 	];
 	return (
-		<div className="sticky top-0 z-50 flex items-center justify-between bg-white py-1">
+		<div className="sticky top-0 z-50 flex items-center justify-between bg-background py-1">
 			<h2 className="text-3xl mobile:text-2xl">
 				<span className="mr-2 font-bold">
 					{/* Month for Wednesday in the week is more accurate than Monday */}
@@ -181,8 +181,8 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 	const blockHeight = useCalendarHourHeight((s) => s.height);
 
 	return (
-		<div className="-z-50 grid grid-cols-[2.5rem_repeat(5,_minmax(0,_1fr))] grid-rows-[2.5rem_repeat(30,_minmax(0,_1fr))] border-apple-gray-300">
-			<div className="sticky top-12 z-50 col-span-full col-start-2 grid grid-cols-subgrid border-b-1 bg-white">
+		<div className="-z-50 grid grid-cols-[2.5rem_repeat(5,_minmax(0,_1fr))] grid-rows-[2.5rem_repeat(30,_minmax(0,_1fr))]">
+			<div className="sticky top-12 z-50 col-span-full col-start-2 grid grid-cols-subgrid border-b-1 border-apple-gray-300 bg-background">
 				{WEEK_DAYS.map((day, i) => (
 					<div
 						key={day}
@@ -210,7 +210,7 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 					<div
 						key={i}
 						className={clsx(
-							'border-r-1',
+							'border-r-1 border-apple-gray-300',
 							[5, 6, 7, 8, 9].includes(i % 10) && 'border-b-1',
 						)}
 						style={{ height: blockHeight / 2 + 'rem' }}

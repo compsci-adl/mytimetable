@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LANGUAGES } from '../constants/languages';
+import { useDarkMode } from '../helpers/dark-mode';
 import { useHelpModal } from '../helpers/help-modal';
 
 const DEFAULT_LANGUAGE = LANGUAGES[0];
@@ -35,8 +36,15 @@ export const Header = () => {
 
 	const [isChangeLanguageOpen, setIsChangeLanguageOpen] = useState(false);
 
+	const { isDarkMode, toggleIsDarkMode } = useDarkMode();
+
 	return (
-		<Navbar isBordered maxWidth="xl" position="static">
+		<Navbar
+			isBordered
+			maxWidth="xl"
+			position="static"
+			classNames={{ wrapper: 'px-4' }}
+		>
 			<NavbarBrand>
 				<img src="/favicon.svg" alt="Logo" className="mr-2 w-6" />
 				<h1 className="font-bold text-inherit">MyTimetable</h1>
@@ -57,6 +65,13 @@ export const Header = () => {
 							href={import.meta.env.VITE_FEEDBACK_FORM_URL}
 						>
 							🗣
+						</Button>
+					</Tooltip>
+				</NavbarItem>
+				<NavbarItem>
+					<Tooltip content={t('header.toggle-dark-mode')} size="sm">
+						<Button {...HEADER_BUTTON_PROPS} onClick={toggleIsDarkMode}>
+							{isDarkMode ? '🌚' : '🌞'}
 						</Button>
 					</Tooltip>
 				</NavbarItem>
@@ -84,7 +99,10 @@ export const Header = () => {
 									key={language.code}
 									fullWidth
 									variant="light"
-									onClick={() => i18n.changeLanguage(language.code)}
+									onClick={() => {
+										i18n.changeLanguage(language.code);
+										setIsChangeLanguageOpen(false);
+									}}
 								>
 									<span>{language.name} </span>
 									<span className="font-noto-emoji">{language.flag}</span>

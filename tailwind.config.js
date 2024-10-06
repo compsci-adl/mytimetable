@@ -15,14 +15,31 @@ export default {
 			fontSize: {
 				'2xs': ['0.625rem', { lineHeight: '0.75rem' }],
 			},
-			colors: {
-				'apple-gray': { 300: '#DFDFDF', 500: '#AFAFAF' },
-			},
+			colors: {},
 			fontFamily: {
 				'noto-emoji': ['"Noto Color Emoji"', 'sans-serif'],
 			},
 		},
 	},
-	darkMode: 'class',
-	plugins: [nextui()],
+	darkMode: 'media',
+	plugins: [
+		nextui({
+			themes: {
+				light: {
+					colors: {
+						primary: { DEFAULT: '#FC8500', foreground: '#FFFFFF' },
+						'apple-gray': { 300: '#DFDFDF', 500: '#AFAFAF' },
+					},
+				},
+				dark: {
+					colors: {
+						primary: { DEFAULT: '#FC8500', foreground: '#FFFFFF' },
+						foreground: '#D5D5D5',
+						background: '#161718',
+						'apple-gray': { 300: '#313131', 500: '#434444' },
+					},
+				},
+			},
+		}),
+	],
 };

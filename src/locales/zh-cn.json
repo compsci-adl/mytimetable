@@ -10,7 +10,8 @@
 	"header": {
 		"help": "帮助",
 		"feedback": "反馈",
-		"change-language": "切换语言"
+		"change-language": "切换语言",
+		"toggle-dark-mode": "切换深色模式"
 	},
 	"course-modal": {
 		"dates": "日期",

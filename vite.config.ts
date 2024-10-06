@@ -16,7 +16,7 @@ export default defineConfig({
 					'A drag-and-drop timetable planner for the University of Adelaide students.',
 				display: 'standalone',
 				background_color: '#FFFFFF',
-				theme_color: '#FFFFFF',
+				theme_color: '#FC8500',
 				icons: [
 					{
 						src: 'pwa-192x192.png',

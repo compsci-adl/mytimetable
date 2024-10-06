@@ -10,7 +10,8 @@
 	"header": {
 		"help": "Help",
 		"feedback": "Feedback",
-		"change-language": "Change Language"
+		"change-language": "Change Language",
+		"toggle-dark-mode": "Toggle Dark Mode"
 	},
 	"course-modal": {
 		"dates": "Dates",
