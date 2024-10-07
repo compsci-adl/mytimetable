@@ -17,8 +17,6 @@ import { LANGUAGES } from '../constants/languages';
 import { useDarkMode } from '../helpers/dark-mode';
 import { useHelpModal } from '../helpers/help-modal';
 
-const DEFAULT_LANGUAGE = LANGUAGES[0];
-
 const HEADER_BUTTON_PROPS = {
 	size: 'sm',
 	isIconOnly: true,
@@ -29,8 +27,6 @@ const HEADER_BUTTON_PROPS = {
 
 export const Header = () => {
 	const { t, i18n } = useTranslation();
-	const currentLanguage =
-		LANGUAGES.find((l) => l.code === i18n.language) ?? DEFAULT_LANGUAGE;
 
 	const openHelpModal = useHelpModal((s) => s.open);
 
@@ -87,9 +83,7 @@ export const Header = () => {
 						>
 							<div>
 								<PopoverTrigger>
-									<Button {...HEADER_BUTTON_PROPS} className="font-noto-emoji">
-										{currentLanguage.flag}
-									</Button>
+									<Button {...HEADER_BUTTON_PROPS}>🌐</Button>
 								</PopoverTrigger>
 							</div>
 						</Tooltip>
