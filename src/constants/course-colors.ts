@@ -1,69 +1,51 @@
-// Thanks to @Char2sGu for the help with types
-type CourseColor<Primary extends string> = {
-	border: `border-[#${Primary}]`;
-	bg: `bg-[#${string}]`;
-	text: `text-[#${string}]`;
-	dot: `bg-[#${NoInfer<Primary>}]`;
+const BLUE = {
+	bg: 'bg-apple-blue-300',
+	border: 'border-apple-blue-500',
+	text: 'text-apple-blue-700',
+	dot: 'bg-apple-blue-500',
 };
-
-/**
- * Enforces dot color to be the same as border color
- * @param color
- * @returns
- */
-const color = <Primary extends string>(color: CourseColor<Primary>) => {
-	return color;
+const PURPLE = {
+	bg: 'bg-apple-purple-300',
+	border: 'border-apple-purple-500',
+	text: 'text-apple-purple-700',
+	dot: 'bg-apple-purple-500',
 };
-
-const BLUE = color({
-	border: 'border-[#1D9BF6]',
-	bg: 'bg-[#C9E6FE]',
-	text: 'text-[#1D6AA1]',
-	dot: 'bg-[#1D9BF6]',
-});
-const PURPLE = color({
-	border: 'border-[#AF38D1]',
-	bg: 'bg-[#EACDF4]',
-	text: 'text-[#762C8B]',
-	dot: 'bg-[#AF38D1]',
-});
-const GREEN = color({
-	border: 'border-[#4AD321]',
-	bg: 'bg-[#D4F6C9]',
-	text: 'text-[#3E8522]',
-	dot: 'bg-[#4AD321]',
-});
-const ORANGE = color({
-	border: 'border-[#FA6D0D]',
-	bg: 'bg-[#FEDBC4]',
-	text: 'text-[#A75117]',
-	dot: 'bg-[#FA6D0D]',
-});
-const YELLOW = color({
-	border: 'border-[#FCB80F]',
-	bg: 'bg-[#FDEEC3]',
-	text: 'text-[#936E10]',
-	dot: 'bg-[#FCB80F]',
-});
-const BROWN = color({
-	border: 'border-[#7D5E3B]',
-	bg: 'bg-[#DFD8CF]',
-	text: 'text-[#5E4D39]',
-	dot: 'bg-[#7D5E3B]',
-});
-const RED = color({
-	border: 'border-[#F50445]',
-	bg: 'bg-[#FEBFD1]',
-	text: 'text-[#BB1644]',
-	dot: 'bg-[#F50445]',
-});
-const BLACK = color({
-	border: 'border-[#000000]',
-	bg: 'bg-[#D3D3D3]',
-	text: 'text-[#000000]',
-	dot: 'bg-[#000000]',
-});
+const GREEN = {
+	bg: 'bg-apple-green-300',
+	border: 'border-apple-green-500',
+	text: 'text-apple-green-700',
+	dot: 'bg-apple-green-500',
+};
+const ORANGE = {
+	bg: 'bg-apple-orange-300',
+	border: 'border-apple-orange-500',
+	text: 'text-apple-orange-700',
+	dot: 'bg-apple-orange-500',
+};
+const YELLOW = {
+	bg: 'bg-apple-yellow-300',
+	border: 'border-apple-yellow-500',
+	text: 'text-apple-yellow-700',
+	dot: 'bg-apple-yellow-500',
+};
+const BROWN = {
+	bg: 'bg-apple-brown-300',
+	border: 'border-apple-brown-500',
+	text: 'text-apple-brown-700',
+	dot: 'bg-apple-brown-500',
+};
+const RED = {
+	bg: 'bg-apple-red-300',
+	border: 'border-apple-red-500',
+	text: 'text-apple-red-700',
+	dot: 'bg-apple-red-500',
+};
 
 export const COURSE_COLORS = [BLUE, PURPLE, GREEN, ORANGE, YELLOW, RED, BROWN];
 
-export const NOT_FOUND_COLOR = BLACK;
+export const NOT_FOUND_COLOR = {
+	bg: 'bg-not-found-300',
+	border: 'border-not-found-500',
+	text: 'text-not-found-700',
+	dot: 'bg-not-found-500',
+};
