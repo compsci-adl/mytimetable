@@ -46,7 +46,7 @@ export default {
 						primary: { DEFAULT: '#FC8500', foreground: '#FFFFFF' },
 						foreground: '#D5D5D5',
 						background: '#161718',
-						'apple-gray': { 300: '#313131', 500: '#434444' },
+						'apple-gray': { 300: '#313131', 500: '#8F8F8F' },
 						'apple-blue': { 300: '#19283B', 500: '#1D9BF6', 700: '#1D9BF6' },
 						'apple-purple': { 300: '#2F1E36', 500: '#BF58DA', 700: '#BF57DA' },
 						'apple-green': { 300: '#1D341F', 500: '#30D33B', 700: '#30D33B' },
