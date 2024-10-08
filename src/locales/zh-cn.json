@@ -41,10 +41,6 @@
 		],
 		"immoveable-course": "此课程无法移动"
 	},
-	"footer": {
-		"github": "Github 开源地址",
-		"csclub": "阿德莱德大学计算机社团"
-	},
 	"help": {
 		"title": "如何使用 MyTimetable",
 		"steps": {

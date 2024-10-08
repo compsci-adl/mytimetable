@@ -41,10 +41,6 @@
 		],
 		"immoveable-course": "Immoveable course"
 	},
-	"footer": {
-		"github": "Github Repo",
-		"csclub": "The University of Adelaide Computer Science Club"
-	},
 	"help": {
 		"title": "How to use MyTimetable",
 		"steps": {
