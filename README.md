@@ -1,4 +1,4 @@
-# My Timetable
+# MyTimetable
 
 ![banner image](public/banner.png)
 
