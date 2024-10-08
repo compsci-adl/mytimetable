@@ -38,7 +38,7 @@ const LINKS = [
 export const Footer = () => {
 	return (
 		<footer className="text-xs text-apple-gray-500">
-			<div className="flex gap-6 mobile:flex-col">
+			<div className="flex gap-6 mobile:flex-col mobile:gap-2">
 				{FOOTER_SECTIONS.map((section, i) => (
 					<section key={i}>
 						<h3 className="text-sm font-semibold uppercase tracking-wider">
