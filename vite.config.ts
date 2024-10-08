@@ -13,7 +13,7 @@ export default defineConfig({
 				name: 'MyTimetable',
 				short_name: 'MyTimetable',
 				description:
-					'A drag-and-drop timetable planner for the University of Adelaide students.',
+					'A drag-and-drop timetable planner for University of Adelaide students.',
 				display: 'standalone',
 				background_color: '#FFFFFF',
 				theme_color: '#FC8500',
