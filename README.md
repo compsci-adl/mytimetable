@@ -1,5 +1,7 @@
 # My Timetable
 
+![banner image](public/banner.png)
+
 A drag-and-drop timetable planner for University of Adelaide students.
 
 ## Development
