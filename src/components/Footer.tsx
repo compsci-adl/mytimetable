@@ -37,7 +37,7 @@ const LINKS = [
 
 export const Footer = () => {
 	return (
-		<footer className="text-xs text-apple-gray-500">
+		<footer className="text-xs text-apple-gray-700">
 			<div className="flex gap-6 mobile:flex-col mobile:gap-2">
 				{FOOTER_SECTIONS.map((section, i) => (
 					<section key={i}>

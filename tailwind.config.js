@@ -28,7 +28,7 @@ export default {
 				light: {
 					colors: {
 						primary: { DEFAULT: '#FC8500', foreground: '#FFFFFF' },
-						'apple-gray': { 300: '#DFDFDF', 500: '#AFAFAF' },
+						'apple-gray': { 300: '#DFDFDF', 500: '#AFAFAF', 700: '#6b6b6b' },
 						// Calendar Event Colors
 						// 300 - bg, 500 - border, 700 - text
 						'apple-blue': { 300: '#C9E6FE', 500: '#1D9BF6', 700: '#1D6AA1' },
@@ -46,7 +46,7 @@ export default {
 						primary: { DEFAULT: '#FC8500', foreground: '#FFFFFF' },
 						foreground: '#D5D5D5',
 						background: '#161718',
-						'apple-gray': { 300: '#313131', 500: '#8F8F8F' },
+						'apple-gray': { 300: '#313131', 500: '#434444', 700: '#8F8F8F' },
 						'apple-blue': { 300: '#19283B', 500: '#1D9BF6', 700: '#1D9BF6' },
 						'apple-purple': { 300: '#2F1E36', 500: '#BF58DA', 700: '#BF57DA' },
 						'apple-green': { 300: '#1D341F', 500: '#30D33B', 700: '#30D33B' },
