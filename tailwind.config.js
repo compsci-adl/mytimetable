@@ -27,7 +27,7 @@ export default {
 			themes: {
 				light: {
 					colors: {
-						primary: { DEFAULT: '#FC8500', foreground: '#FFFFFF' },
+						primary: { DEFAULT: '#FC8500', foreground: '#000000' },
 						'apple-gray': { 300: '#DFDFDF', 500: '#AFAFAF', 700: '#6b6b6b' },
 						// Calendar Event Colors
 						// 300 - bg, 500 - border, 700 - text
@@ -43,7 +43,7 @@ export default {
 				},
 				dark: {
 					colors: {
-						primary: { DEFAULT: '#FC8500', foreground: '#FFFFFF' },
+						primary: { DEFAULT: '#FC8500', foreground: '#000000' },
 						foreground: '#D5D5D5',
 						background: '#161718',
 						'apple-gray': { 300: '#313131', 500: '#434444', 700: '#8F8F8F' },
