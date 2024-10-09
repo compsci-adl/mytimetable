@@ -85,7 +85,7 @@ const CourseCard = ({ course, time, currentWeek }: CourseCardProps) => {
 				color.border,
 				color.bg,
 				color.text,
-				isDragging ? 'opacity-30' : 'opacity-75',
+				isDragging ? 'opacity-30' : 'opacity-85',
 			)}
 		>
 			<div className="flex justify-between text-2xs">
