@@ -52,7 +52,7 @@ export const Footer = () => {
 	return (
 		<footer className="text-xs text-apple-gray-700">
 			<Divider className="my-4" />
-			<div className="mb-4 flex items-center justify-between">
+			<div className="md:flex-rows mb-4 flex flex-col items-center justify-between">
 				<div className="flex items-center">
 					<img src="/favicon.svg" alt="Logo" className="mr-2 w-10" />
 					<h1 className="ml-1 text-xl font-bold text-foreground">
@@ -60,7 +60,7 @@ export const Footer = () => {
 					</h1>
 				</div>
 
-				<div className="flex gap-6">
+				<div className="mt-4 flex gap-6 md:mt-0">
 					{FOOTER_SECTIONS.map((section, i) => (
 						<h3
 							key={i}
