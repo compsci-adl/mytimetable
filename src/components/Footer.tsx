@@ -90,7 +90,6 @@ export const Footer = () => {
 					<a
 						href="https://csclub.org.au/"
 						target="_blank"
-						rel="noopener"
 						className="underline"
 					>
 						The University of Adelaide Computer Science Club
@@ -104,7 +103,6 @@ export const Footer = () => {
 							key={i}
 							className="transition-colors duration-300 hover:text-primary"
 							target="_blank"
-							rel="noopener"
 						>
 							<Icon />
 						</a>
