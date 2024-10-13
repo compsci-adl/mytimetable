@@ -1,5 +1,10 @@
-import { Divider } from '@nextui-org/react';
-import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react';
+import {
+	Divider,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
+} from '@nextui-org/react';
 import { useState } from 'react';
 import {
 	FaDiscord,
@@ -63,7 +68,7 @@ export const Footer = () => {
 	return (
 		<footer className="text-xs text-apple-gray-700">
 			<Divider className="my-4" />
-			<div className="mb-4 flex flex-col items-center justify-between md:flex-row">
+			<div className="mb-4 flex items-center justify-between mobile:flex-col">
 				<div className="flex items-center gap-2">
 					<img src="/favicon.svg" alt="Logo" className="w-10" />
 					<h1 className="ml-1 text-xl font-bold text-foreground">
@@ -71,11 +76,11 @@ export const Footer = () => {
 					</h1>
 				</div>
 
-				<div className="mt-4 flex gap-6 md:mt-0">
+				<div className="mt-0 flex gap-6 mobile:mt-4">
 					{FOOTER_SECTIONS.map((section, i) => (
 						<h3
 							key={i}
-							className="cursor-pointer text-sm font-semibold uppercase tracking-wider"
+							className="cursor-pointer text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary"
 							onClick={() => setOpenModal(section.title)}
 						>
 							{section.title}
@@ -84,8 +89,8 @@ export const Footer = () => {
 				</div>
 			</div>
 
-			<div className="mb-6 flex flex-col items-center justify-between text-center md:mb-4 md:flex-row">
-				<div className="mb-4 flex items-center md:mb-0">
+			<div className="mb-4 flex items-center justify-between text-center mobile:mb-6 mobile:flex-col">
+				<div className="flex items-center mobile:mb-4">
 					<span className="mr-1">&copy; {new Date().getFullYear()}</span>
 					<a
 						href="https://csclub.org.au/"
