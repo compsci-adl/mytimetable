@@ -1,4 +1,11 @@
-import { Divider } from '@nextui-org/react';
+import {
+	Divider,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
+} from '@nextui-org/react';
+import { useState } from 'react';
 import {
 	FaDiscord,
 	FaEnvelope,
@@ -7,6 +14,26 @@ import {
 	FaInstagram,
 	FaLinkedin,
 } from 'react-icons/fa';
+
+interface FooterModalProps {
+	title: string;
+	content: string;
+	isOpen: boolean;
+	onClose: () => void;
+}
+
+const FooterModal = ({ title, content, isOpen, onClose }: FooterModalProps) => {
+	return (
+		<Modal isOpen={isOpen} onClose={onClose}>
+			<ModalContent>
+				<ModalHeader>{title}</ModalHeader>
+				<ModalBody>
+					<p className="mb-4">{content}</p>
+				</ModalBody>
+			</ModalContent>
+		</Modal>
+	);
+};
 
 const FOOTER_SECTIONS = [
 	{
@@ -22,7 +49,7 @@ const FOOTER_SECTIONS = [
 	{
 		title: 'Privacy',
 		content:
-			'MyTimetable collects anonymous analytics data to help improve user experience and enhance the functionality of the website. This data is collected without personally identifying users and is used solely for analytical purposes. We may share collective data with relevant third parties to provide insights into user engagement and improve our services. We are committed to protecting your privacy and will not share any personally identifiable information.',
+			'MyTimetable collects anonymous analytics data to help improve user experience and enhance the functionality of the website. We may share collective data with relevant third parties to provide insights into user engagement and improve our services. We are committed to protecting your privacy and will not share any personally identifiable information.',
 	},
 ];
 
@@ -36,34 +63,65 @@ const LINKS = [
 ];
 
 export const Footer = () => {
+	const [openModal, setOpenModal] = useState<string | null>(null);
+
 	return (
-		<footer className="text-xs text-apple-gray-700">
-			<div className="flex gap-6 mobile:flex-col mobile:gap-2">
-				{FOOTER_SECTIONS.map((section, i) => (
-					<section key={i}>
-						<h3 className="text-sm font-semibold uppercase tracking-wider">
+		<footer className="text-apple-gray-700">
+			<Divider className="mb-4" />
+			<div className="grid grid-cols-2 items-center gap-2 mobile:grid-cols-1 mobile:justify-items-center mobile:gap-4">
+				<div className="flex items-center gap-2">
+					<img src="/favicon.svg" alt="Logo" className="w-10" />
+					<h1 className="ml-1 text-xl font-bold text-foreground">
+						MyTimetable
+					</h1>
+				</div>
+
+				<div className="mt-0 flex gap-6 justify-self-end mobile:justify-self-auto">
+					{FOOTER_SECTIONS.map((section, i) => (
+						<h3
+							key={i}
+							className="cursor-pointer text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary"
+							onClick={() => setOpenModal(section.title)}
+						>
 							{section.title}
 						</h3>
-						<p className="text-justify">{section.content}</p>
-					</section>
-				))}
-			</div>
-			<Divider className="my-2" />
-			<div className="flex justify-between mobile:flex-col mobile:items-center mobile:gap-2">
-				<div>
+					))}
+				</div>
+
+				<div className="flex items-center text-sm">
 					<span className="mr-1">&copy; {new Date().getFullYear()}</span>
-					<a href="https://csclub.org.au/" className="underline">
+					<a
+						href="https://csclub.org.au/"
+						target="_blank"
+						className="underline"
+					>
 						The University of Adelaide Computer Science Club
 					</a>
 				</div>
-				<div className="flex gap-2 text-lg">
+
+				<div className="flex gap-5 justify-self-end text-2xl mobile:justify-self-auto">
 					{LINKS.map(({ icon: Icon, link }, i) => (
-						<a href={link} key={i}>
-							<Icon className="transition-colors hover:text-foreground" />
+						<a
+							href={link}
+							key={i}
+							className="transition-colors duration-300 hover:text-primary"
+							target="_blank"
+						>
+							<Icon />
 						</a>
 					))}
 				</div>
 			</div>
+
+			{FOOTER_SECTIONS.map((section) => (
+				<FooterModal
+					key={section.title}
+					title={section.title}
+					content={section.content}
+					isOpen={openModal === section.title}
+					onClose={() => setOpenModal(null)}
+				/>
+			))}
 		</footer>
 	);
 };
