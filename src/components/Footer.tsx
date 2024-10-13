@@ -66,9 +66,9 @@ export const Footer = () => {
 	const [openModal, setOpenModal] = useState<string | null>(null);
 
 	return (
-		<footer className="text-xs text-apple-gray-700">
-			<Divider className="my-4" />
-			<div className="mb-4 flex items-center justify-between mobile:flex-col">
+		<footer className="text-apple-gray-700">
+			<Divider className="mb-4" />
+			<div className="grid grid-cols-2 items-center gap-2 mobile:grid-cols-1 mobile:justify-items-center mobile:gap-4">
 				<div className="flex items-center gap-2">
 					<img src="/favicon.svg" alt="Logo" className="w-10" />
 					<h1 className="ml-1 text-xl font-bold text-foreground">
@@ -76,7 +76,7 @@ export const Footer = () => {
 					</h1>
 				</div>
 
-				<div className="mt-0 flex gap-6 mobile:mt-4">
+				<div className="mt-0 flex gap-6 justify-self-end mobile:justify-self-auto">
 					{FOOTER_SECTIONS.map((section, i) => (
 						<h3
 							key={i}
@@ -87,10 +87,8 @@ export const Footer = () => {
 						</h3>
 					))}
 				</div>
-			</div>
 
-			<div className="mb-4 flex items-center justify-between text-center mobile:mb-6 mobile:flex-col">
-				<div className="flex items-center mobile:mb-4">
+				<div className="flex items-center text-sm">
 					<span className="mr-1">&copy; {new Date().getFullYear()}</span>
 					<a
 						href="https://csclub.org.au/"
@@ -101,7 +99,7 @@ export const Footer = () => {
 					</a>
 				</div>
 
-				<div className="flex justify-center gap-5 text-2xl">
+				<div className="flex gap-5 justify-self-end text-2xl mobile:justify-self-auto">
 					{LINKS.map(({ icon: Icon, link }, i) => (
 						<a
 							href={link}
