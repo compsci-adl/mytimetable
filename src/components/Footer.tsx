@@ -1,4 +1,5 @@
 import { Divider } from '@nextui-org/react';
+import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react';
 import { useState } from 'react';
 import {
 	FaDiscord,
@@ -9,7 +10,25 @@ import {
 	FaLinkedin,
 } from 'react-icons/fa';
 
-import FooterModal from './FooterModal';
+interface FooterModalProps {
+	title: string;
+	content: string;
+	isOpen: boolean;
+	onClose: () => void;
+}
+
+const FooterModal = ({ title, content, isOpen, onClose }: FooterModalProps) => {
+	return (
+		<Modal isOpen={isOpen} onClose={onClose}>
+			<ModalContent>
+				<ModalHeader>{title}</ModalHeader>
+				<ModalBody>
+					<p className="mb-4">{content}</p>
+				</ModalBody>
+			</ModalContent>
+		</Modal>
+	);
+};
 
 const FOOTER_SECTIONS = [
 	{
@@ -41,20 +60,12 @@ const LINKS = [
 export const Footer = () => {
 	const [openModal, setOpenModal] = useState<string | null>(null);
 
-	const handleOpenModal = (sectionTitle: string) => {
-		setOpenModal(sectionTitle);
-	};
-
-	const handleCloseModal = () => {
-		setOpenModal(null);
-	};
-
 	return (
 		<footer className="text-xs text-apple-gray-700">
 			<Divider className="my-4" />
 			<div className="mb-4 flex flex-col items-center justify-between md:flex-row">
-				<div className="flex items-center">
-					<img src="/favicon.svg" alt="Logo" className="mr-2 w-10" />
+				<div className="flex items-center gap-2">
+					<img src="/favicon.svg" alt="Logo" className="w-10" />
 					<h1 className="ml-1 text-xl font-bold text-foreground">
 						MyTimetable
 					</h1>
@@ -65,7 +76,7 @@ export const Footer = () => {
 						<h3
 							key={i}
 							className="cursor-pointer text-sm font-semibold uppercase tracking-wider"
-							onClick={() => handleOpenModal(section.title)}
+							onClick={() => setOpenModal(section.title)}
 						>
 							{section.title}
 						</h3>
@@ -107,7 +118,7 @@ export const Footer = () => {
 					title={section.title}
 					content={section.content}
 					isOpen={openModal === section.title}
-					onClose={handleCloseModal}
+					onClose={() => setOpenModal(null)}
 				/>
 			))}
 		</footer>
