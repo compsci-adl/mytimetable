@@ -59,6 +59,17 @@ export const SearchForm = () => {
 		})) ?? [];
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
 
+	const courseSearchFilter = (text: string, input: string) => {
+		text = text.normalize('NFC');
+		const courseName = text.split(' - ')[1];
+		const courseAbbr = (
+			courseName.match(/[A-Z]/g)?.join('') ?? ''
+		).toLowerCase();
+		text = text.toLocaleLowerCase();
+		input = input.normalize('NFC').toLocaleLowerCase();
+		return text.includes(input) || courseAbbr.includes(input);
+	};
+
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const course = courses?.find((c) => c.id === selectedCourseId);
@@ -117,6 +128,7 @@ export const SearchForm = () => {
 					onSelectionChange={setSelectedCourseId}
 					disabledKeys={enrolledCourses.courses.map((c) => c.id)}
 					listboxProps={{ emptyContent: t('search.course-not-found') }}
+					defaultFilter={courseSearchFilter}
 				>
 					{(course) => (
 						<AutocompleteItem key={course.id} value={course.id}>
