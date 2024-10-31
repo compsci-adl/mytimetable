@@ -9,7 +9,7 @@
 		"build": "tsc -b && vite build",
 		"lint": "eslint ./src",
 		"preview": "vite preview",
-		"format": "prettier --write \"**/*.{js,ts,tsx,css,md,cjs,mjs,json,html}\"",
+		"format": "prettier --write \"**/*.{js,ts,tsx,css,md,cjs,mjs,json,html,yml,yaml}\"",
 		"format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,css,json,mjs,cjs,yml,yaml}\"",
 		"test": "vitest"
 	},
