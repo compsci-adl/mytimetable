@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useHelpModal } from '../helpers/help-modal';
+import { prefetchImages } from '../utils/prefetch-image';
 
 export const HelpModal = () => {
 	const { t } = useTranslation();
@@ -72,6 +73,11 @@ export const HelpModal = () => {
 			},
 		},
 	];
+
+	useEffect(() => {
+		const imagePaths = STEPS.map((step) => step.image.path);
+		prefetchImages(imagePaths);
+	}, []);
 
 	const helpModal = useHelpModal();
 
