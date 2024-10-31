@@ -7,7 +7,7 @@
 		"prepare": "simple-git-hooks",
 		"dev": "vite",
 		"build": "tsc -b && vite build",
-		"lint": "eslint .",
+		"lint": "eslint ./src",
 		"preview": "vite preview",
 		"format": "prettier --write \"**/*.{js,ts,tsx,css,md,cjs,mjs,json,html}\"",
 		"format:check": "prettier --check \"**/*.{js,ts,tsx,css,md,cjs,mjs,json,html}\"",
