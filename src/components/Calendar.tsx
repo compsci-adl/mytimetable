@@ -154,7 +154,7 @@ const CalendarHeader = ({
 						]
 					}
 				</span>
-				<span className="font-light">{YEAR}</span>
+				{!isNaN(YEAR) ? <span className="font-light">{YEAR}</span> : null}
 			</h2>
 			<div className="flex">
 				{actionButtons.map((a) => (
