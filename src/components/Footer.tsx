@@ -55,7 +55,7 @@ const FOOTER_SECTIONS = [
 
 const LINKS = [
 	{ icon: FaEnvelope, link: 'mailto:dev@csclub.org.au' },
-	{ icon: FaGithub, link: 'https://github.com/compsci-adl/mytimetable' },
+	{ icon: FaGithub, link: 'https://github.com/compsci-adl' },
 	{ icon: FaInstagram, link: 'https://www.instagram.com/csclub.adl/' },
 	{ icon: FaFacebook, link: 'https://www.facebook.com/compsci.adl/' },
 	{ icon: FaDiscord, link: 'https://discord.gg/UjvVxHA' },
