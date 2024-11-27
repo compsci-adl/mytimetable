@@ -28,6 +28,3 @@ dist-ssr
 .env
 .env.local
 .env.*.local
-
-# MSW
-mockServiceWorker.js
