@@ -9,6 +9,7 @@ import { YEAR } from '../constants/year';
 import { useCourseColor, useEnrolledCourse } from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
+import { useExportCalendar } from '../helpers/export-calendar';
 import { calcHoursDuration } from '../helpers/hours-duration';
 import { useZoom } from '../helpers/zoom';
 import type dayjs from '../lib/dayjs';
@@ -171,6 +172,47 @@ const CalendarHeader = ({
 					</Tooltip>
 				))}
 			</div>
+		</div>
+	);
+};
+
+const EndButtons = () => {
+	const blockHeight = useCalendarHourHeight((s) => s.height);
+
+	const { copy, exportFile } = useExportCalendar();
+
+	return (
+		<div
+			className="absolute -bottom-[0.5rem] left-0 flex w-full items-center justify-center gap-4"
+			style={{ height: blockHeight + 'rem' }}
+		>
+			<Tooltip content="Copy to clipboard">
+				<Button
+					variant="flat"
+					color="primary"
+					size="lg"
+					isIconOnly
+					className="text-2xl"
+					onPress={copy}
+				>
+					📋
+				</Button>
+			</Tooltip>
+			<Button color="primary" size="lg" className="font-semibold">
+				Ready to Enrol 🚀
+			</Button>
+			<Tooltip content="Export as file">
+				<Button
+					variant="flat"
+					color="primary"
+					size="lg"
+					isIconOnly
+					className="text-2xl"
+					onPress={exportFile}
+				>
+					💾
+				</Button>
+			</Tooltip>
 		</div>
 	);
 };
@@ -384,6 +426,7 @@ export const Calendar = () => {
 				<CalendarBg currentWeek={currentWeek} />
 				<CalendarCourses courses={courses} currentWeek={currentWeek} />
 				{isDragging && <CalendarCourseOtherTimes currentWeek={currentWeek} />}
+				<EndButtons />
 			</div>
 		</div>
 	);
