@@ -10,7 +10,7 @@
 		"lint": "eslint ./src",
 		"preview": "vite preview",
 		"format": "prettier --write \"**/*.{js,ts,tsx,css,md,cjs,mjs,json,html}\"",
-		"format:check": "prettier --check \"**/*.{js,ts,tsx,css,md,cjs,mjs,json,html}\"",
+		"format:check": "prettier --check \"**/*.{js,ts,tsx,css,md,cjs,mjs,json,html}\" --ignore-path \"./.prettierignore\"",
 		"test": "vitest"
 	},
 	"dependencies": {
