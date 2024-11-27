@@ -16,7 +16,6 @@ import { useTranslation } from 'react-i18next';
 import { LANGUAGES } from '../constants/languages';
 import { useDarkMode } from '../helpers/dark-mode';
 import { useHelpModal } from '../helpers/help-modal';
-import { Tips } from './Tips';
 
 const HEADER_BUTTON_PROPS = {
 	size: 'sm',
@@ -46,9 +45,6 @@ export const Header = () => {
 				<img src="/favicon.svg" alt="Logo" className="mr-2 w-6" />
 				<h1 className="font-bold text-inherit">MyTimetable</h1>
 			</NavbarBrand>
-			<div className="text-sm text-apple-gray-700 mobile:hidden">
-				<Tips />
-			</div>
 			<NavbarContent justify="end">
 				<NavbarItem>
 					<Tooltip content={t('header.help')} size="sm">
