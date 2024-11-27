@@ -15,6 +15,8 @@ import {
 	FaLinkedin,
 } from 'react-icons/fa';
 
+import { Tips } from './Tips';
+
 interface FooterModalProps {
 	title: string;
 	content: string;
@@ -55,7 +57,7 @@ const FOOTER_SECTIONS = [
 
 const LINKS = [
 	{ icon: FaEnvelope, link: 'mailto:dev@csclub.org.au' },
-	{ icon: FaGithub, link: 'https://github.com/compsci-adl/mytimetable' },
+	{ icon: FaGithub, link: 'https://github.com/compsci-adl' },
 	{ icon: FaInstagram, link: 'https://www.instagram.com/csclub.adl/' },
 	{ icon: FaFacebook, link: 'https://www.facebook.com/compsci.adl/' },
 	{ icon: FaDiscord, link: 'https://discord.gg/UjvVxHA' },
@@ -66,8 +68,11 @@ export const Footer = () => {
 	const [openModal, setOpenModal] = useState<string | null>(null);
 
 	return (
-		<footer className="text-apple-gray-700">
-			<Divider className="mb-4" />
+		<footer className="space-y-4 text-apple-gray-700">
+			<div className="text-center text-sm">
+				<Tips />
+			</div>
+			<Divider />
 			<div className="grid grid-cols-2 items-center gap-2 mobile:grid-cols-1 mobile:justify-items-center mobile:gap-4">
 				<div className="flex items-center gap-2">
 					<img src="/favicon.svg" alt="Logo" className="w-10" />
