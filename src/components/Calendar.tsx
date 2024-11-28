@@ -1,4 +1,4 @@
-import { Button, Tooltip } from '@nextui-org/react';
+import { Button, Tooltip, useDisclosure } from '@nextui-org/react';
 import clsx from 'clsx';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,7 @@ import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
 import { timeToDayjs } from '../utils/date';
 import { useDrag, useDrop } from '../utils/dnd';
+import { EnrolmentModal } from './EnrolmentModal';
 
 type DraggingCourseState = {
 	isDragging: boolean;
@@ -179,6 +180,11 @@ const CalendarHeader = ({
 const EndButtons = () => {
 	const blockHeight = useCalendarHourHeight((s) => s.height);
 
+	const {
+		isOpen: isReadyModalOpen,
+		onOpen: onReadyModalOpen,
+		onOpenChange: onReadyModalOpenChange,
+	} = useDisclosure();
 	const { copy, exportFile } = useExportCalendar();
 
 	return (
@@ -198,9 +204,18 @@ const EndButtons = () => {
 					📋
 				</Button>
 			</Tooltip>
-			<Button color="primary" size="lg" className="font-semibold">
-				Ready to Enrol 🚀
+			<Button
+				color="primary"
+				size="lg"
+				className="font-semibold"
+				onPress={onReadyModalOpen}
+			>
+				Ready for Enrolment 🚀
 			</Button>
+			<EnrolmentModal
+				isOpen={isReadyModalOpen}
+				onOpenChange={onReadyModalOpenChange}
+			/>
 			<Tooltip content="Export as file">
 				<Button
 					variant="flat"
