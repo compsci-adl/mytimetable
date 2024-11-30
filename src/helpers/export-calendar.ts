@@ -11,8 +11,10 @@ export const useExportCalendar = () => {
 				.map(({ type, classNumber }) => type + ': ' + classNumber)
 				.join('\n'),
 		}));
-		const resStr = res.map((d) => d.name + '\n\n' + d.classes).join('\n\n\n');
-		await navigator.clipboard.writeText(resStr);
+		const resStr = res.map((d) => d.name + '\n\n' + d.classes).join('\n\n');
+		const advertisement =
+			'Planned with MyTimeTable\nhttps://mytimetable.csclub.org.au/';
+		await navigator.clipboard.writeText(resStr + '\n\n\n' + advertisement);
 		toast.success('Copied to clipboard!');
 	};
 	const exportFile = () => {};
