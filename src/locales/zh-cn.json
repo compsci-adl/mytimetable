@@ -39,7 +39,12 @@
 			"十一月",
 			"十二月"
 		],
-		"immoveable-course": "此课程无法移动"
+		"immoveable-course": "此课程无法移动",
+		"end-actions": {
+			"copy": "复制到剪切板",
+			"ready": "准备选课",
+			"copy-success": "已成功复制到剪切板！"
+		}
 	},
 	"help": {
 		"title": "如何使用 MyTimetable",

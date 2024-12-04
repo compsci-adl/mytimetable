@@ -177,7 +177,9 @@ const CalendarHeader = ({
 	);
 };
 
-const EndButtons = () => {
+const EndActions = () => {
+	const { t } = useTranslation();
+
 	const blockHeight = useCalendarHourHeight((s) => s.height);
 
 	const {
@@ -192,7 +194,7 @@ const EndButtons = () => {
 			className="absolute -bottom-[0.5rem] left-0 flex w-full items-center justify-center gap-4"
 			style={{ height: blockHeight + 'rem' }}
 		>
-			<Tooltip content="Copy to clipboard">
+			<Tooltip content={t('calendar.end-actions.copy')}>
 				<Button
 					variant="flat"
 					color="primary"
@@ -210,7 +212,7 @@ const EndButtons = () => {
 				className="font-semibold"
 				onPress={onReadyModalOpen}
 			>
-				Ready for Enrolment 🚀
+				{t('calendar.end-actions.ready')} 🚀
 			</Button>
 			<EnrolmentModal
 				isOpen={isReadyModalOpen}
@@ -429,7 +431,7 @@ export const Calendar = () => {
 				<CalendarBg currentWeek={currentWeek} />
 				<CalendarCourses courses={courses} currentWeek={currentWeek} />
 				{isDragging && <CalendarCourseOtherTimes currentWeek={currentWeek} />}
-				<EndButtons />
+				<EndActions />
 			</div>
 		</div>
 	);

@@ -1,8 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 
 export const useExportCalendar = () => {
+	const { t } = useTranslation();
+
 	const enrolledCourses = useDetailedEnrolledCourses();
 	const copyText = async () => {
 		const res = enrolledCourses.map((c) => ({
@@ -15,7 +18,7 @@ export const useExportCalendar = () => {
 		const advertisement =
 			'Planned with MyTimetable\nhttps://mytimetable.csclub.org.au/';
 		await navigator.clipboard.writeText(resStr + '\n\n\n' + advertisement);
-		toast.success('Copied to clipboard!');
+		toast.success(t('calendar.end-actions.copy-success'));
 	};
 	return { copyText };
 };

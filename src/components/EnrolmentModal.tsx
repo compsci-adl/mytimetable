@@ -12,6 +12,7 @@ import {
 	ModalHeader,
 } from '@nextui-org/react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 
@@ -20,6 +21,8 @@ type ReadyModalProps = {
 	onOpenChange: (isOpen: boolean) => void;
 };
 export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
+	const { t } = useTranslation();
+
 	const enrolledCourses = useDetailedEnrolledCourses();
 	const isOnlyCourse = enrolledCourses.length === 1;
 
@@ -30,7 +33,7 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 			size={isOnlyCourse ? 'xs' : '2xl'}
 		>
 			<ModalContent>
-				<ModalHeader>Ready for Enrolment</ModalHeader>
+				<ModalHeader>{t('calendar.end-actions.ready')}</ModalHeader>
 				<ModalBody className={clsx(!isOnlyCourse && 'grid grid-cols-2')}>
 					{enrolledCourses.map((c) => (
 						<Card key={c.id}>

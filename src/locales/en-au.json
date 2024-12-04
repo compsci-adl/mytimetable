@@ -39,7 +39,12 @@
 			"November",
 			"December"
 		],
-		"immoveable-course": "Immoveable course"
+		"immoveable-course": "Immoveable course",
+		"end-actions": {
+			"copy": "Copy to clipboard",
+			"ready": "Ready for Enrolment",
+			"copy-success": "Copied to clipboard!"
+		}
 	},
 	"help": {
 		"title": "How to use MyTimetable",
