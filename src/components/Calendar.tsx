@@ -185,7 +185,7 @@ const EndButtons = () => {
 		onOpen: onReadyModalOpen,
 		onOpenChange: onReadyModalOpenChange,
 	} = useDisclosure();
-	const { copy, exportFile } = useExportCalendar();
+	const { copyText } = useExportCalendar();
 
 	return (
 		<div
@@ -199,7 +199,7 @@ const EndButtons = () => {
 					size="lg"
 					isIconOnly
 					className="text-2xl"
-					onPress={copy}
+					onPress={copyText}
 				>
 					📋
 				</Button>
@@ -216,18 +216,6 @@ const EndButtons = () => {
 				isOpen={isReadyModalOpen}
 				onOpenChange={onReadyModalOpenChange}
 			/>
-			<Tooltip content="Export as file">
-				<Button
-					variant="flat"
-					color="primary"
-					size="lg"
-					isIconOnly
-					className="text-2xl"
-					onPress={exportFile}
-				>
-					💾
-				</Button>
-			</Tooltip>
 		</div>
 	);
 };
