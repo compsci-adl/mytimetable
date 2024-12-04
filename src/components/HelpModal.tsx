@@ -26,50 +26,50 @@ export const HelpModal = () => {
 		{
 			content: t('help.steps.welcome'),
 			image: {
-				path: '/help/welcome.png',
+				path: '/help/welcome.webp',
 				alt: 'Website preview',
 			},
 		},
 		{
 			content: t('help.steps.select-term'),
 			image: {
-				path: '/help/select-term.png',
+				path: '/help/select-term.webp',
 				alt: 'Select a term',
 			},
 		},
 		{
 			content: t('help.steps.search-course'),
-			image: { path: '/help/search-course.png', alt: 'Search a course' },
+			image: { path: '/help/search-course.webp', alt: 'Search a course' },
 		},
 		{
 			content: t('help.steps.calendar-dnd'),
 			image: {
-				path: '/help/calendar.png',
+				path: '/help/calendar.webp',
 				alt: 'Drag and drop a course in calendar',
 			},
 		},
 		{
 			content: t('help.steps.change-week'),
-			image: { path: '/help/change-week.png', alt: 'Change calendar week' },
+			image: { path: '/help/change-week.webp', alt: 'Change calendar week' },
 		},
 		{
 			content: t('help.steps.course-details'),
 			image: {
-				path: '/help/click-course.png',
+				path: '/help/click-course.webp',
 				alt: 'Highlighted enrolled course',
 			},
 		},
 		{
 			content: t('help.steps.course-modal'),
 			image: {
-				path: '/help/modal.png',
+				path: '/help/modal.webp',
 				alt: 'Course modal to change class time',
 			},
 		},
 		{
 			content: t('help.steps.access-adelaide'),
 			image: {
-				path: '/help/access-adelaide.png',
+				path: '/help/access-adelaide.webp',
 				alt: 'Access Adelaide enrolment',
 			},
 		},
