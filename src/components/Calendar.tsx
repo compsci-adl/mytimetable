@@ -6,7 +6,11 @@ import { create } from 'zustand';
 
 import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
-import { useCourseColor, useEnrolledCourse } from '../data/enrolled-courses';
+import {
+	useCourseColor,
+	useEnrolledCourse,
+	useEnrolledCourses,
+} from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
 import { useExportCalendar } from '../helpers/export-calendar';
@@ -420,6 +424,8 @@ export const Calendar = () => {
 		},
 	});
 
+	const noCourses = useEnrolledCourses((s) => s.courses.length === 0);
+
 	return (
 		<div ref={ref} className="touch-pan-y">
 			<CalendarHeader
@@ -431,7 +437,7 @@ export const Calendar = () => {
 				<CalendarBg currentWeek={currentWeek} />
 				<CalendarCourses courses={courses} currentWeek={currentWeek} />
 				{isDragging && <CalendarCourseOtherTimes currentWeek={currentWeek} />}
-				<EndActions />
+				{!noCourses && <EndActions />}
 			</div>
 		</div>
 	);
