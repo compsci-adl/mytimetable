@@ -56,7 +56,8 @@
 			"change-week": "切换周数查看更多课程",
 			"course-details": "点击你的选课查看详情",
 			"course-modal": "如果在使用 MyTimetable 时遇到任何课程冲突，可以随时打开详情弹窗来更改课程",
-			"access-adelaide": "课程调整完毕后，可以使用详情中的 Class Number 在 Access Adelaide 中进行选课"
+			"ready-button": "课程调整完毕后，点击日历底部的“准备选课”按钮",
+			"access-adelaide": "你可以用弹窗中的 Class Number 在 Access Adelaide 中进行选课"
 		},
 		"actions": {
 			"next-step": "下一步",
