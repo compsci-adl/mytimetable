@@ -24,7 +24,7 @@
 		"noFallthroughCasesInSwitch": true,
 
 		/* Testing */
-		"types": ["vitest/globals"]
+		"types": ["vitest/globals", "umami"]
 	},
 	"include": ["src", "__tests__"]
 }
