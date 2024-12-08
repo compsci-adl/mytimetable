@@ -43,7 +43,8 @@
 		"end-actions": {
 			"copy": "复制到剪切板",
 			"ready": "准备选课",
-			"copy-success": "已成功复制到剪切板！"
+			"copy-success": "已成功复制到剪切板！",
+			"enrolment-instruction": "复制课程代号并前往 Access Adelaide 的 Enrolment 页面输入以正式选课"
 		}
 	},
 	"help": {
