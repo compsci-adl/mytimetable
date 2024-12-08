@@ -38,9 +38,8 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 			<ModalContent>
 				<ModalHeader className="flex-col">
 					<div>{t('calendar.end-actions.ready')}</div>
-					<div className="text-xs font-normal">
-						Copy the numbers below and enter them on the enrollment page of
-						Access Adelaide.
+					<div className="text-sm font-normal">
+						{t('calendar.end-actions.enrolment-instruction')}
 					</div>
 				</ModalHeader>
 				<ModalBody className={clsx(!isOnlyCourse && 'grid grid-cols-2')}>
