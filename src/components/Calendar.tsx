@@ -1,4 +1,4 @@
-import { Button, Tooltip } from '@nextui-org/react';
+import { Button, Tooltip, useDisclosure } from '@nextui-org/react';
 import clsx from 'clsx';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +6,11 @@ import { create } from 'zustand';
 
 import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
-import { useCourseColor, useEnrolledCourse } from '../data/enrolled-courses';
+import {
+	useCourseColor,
+	useEnrolledCourse,
+	useEnrolledCourses,
+} from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
 import { calcHoursDuration } from '../helpers/hours-duration';
@@ -15,6 +19,7 @@ import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
 import { timeToDayjs } from '../utils/date';
 import { useDrag, useDrop } from '../utils/dnd';
+import { EnrolmentModal } from './EnrolmentModal';
 
 type DraggingCourseState = {
 	isDragging: boolean;
@@ -171,6 +176,38 @@ const CalendarHeader = ({
 					</Tooltip>
 				))}
 			</div>
+		</div>
+	);
+};
+
+const EndActions = () => {
+	const { t } = useTranslation();
+
+	const blockHeight = useCalendarHourHeight((s) => s.height);
+
+	const {
+		isOpen: isReadyModalOpen,
+		onOpen: onReadyModalOpen,
+		onOpenChange: onReadyModalOpenChange,
+	} = useDisclosure();
+	return (
+		<div
+			className="absolute -bottom-[0.5rem] left-0 flex w-full items-center justify-center gap-4"
+			style={{ height: blockHeight + 'rem' }}
+		>
+			{/* TODO: Share Button */}
+			<Button
+				color="primary"
+				size="lg"
+				className="font-semibold"
+				onPress={onReadyModalOpen}
+			>
+				{t('calendar.end-actions.ready')} 🚀
+			</Button>
+			<EnrolmentModal
+				isOpen={isReadyModalOpen}
+				onOpenChange={onReadyModalOpenChange}
+			/>
 		</div>
 	);
 };
@@ -373,6 +410,8 @@ export const Calendar = () => {
 		},
 	});
 
+	const noCourses = useEnrolledCourses((s) => s.courses.length === 0);
+
 	return (
 		<div ref={ref} className="touch-pan-y">
 			<CalendarHeader
@@ -384,6 +423,7 @@ export const Calendar = () => {
 				<CalendarBg currentWeek={currentWeek} />
 				<CalendarCourses courses={courses} currentWeek={currentWeek} />
 				{isDragging && <CalendarCourseOtherTimes currentWeek={currentWeek} />}
+				{!noCourses && <EndActions />}
 			</div>
 		</div>
 	);

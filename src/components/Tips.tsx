@@ -44,6 +44,7 @@ const TIPS = [
 		<a href="https://csclub.org.au/open-source">CS Club Open Source Team</a> to
 		work on projects like this!
 	</>,
+	<>You can search for courses using abbreviations</>,
 ];
 
 const tips = shuffle(TIPS);

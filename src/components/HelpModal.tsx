@@ -67,6 +67,13 @@ export const HelpModal = () => {
 			},
 		},
 		{
+			content: t('help.steps.ready-button'),
+			image: {
+				path: '/help/ready-button.webp',
+				alt: 'Ready button at bottom',
+			},
+		},
+		{
 			content: t('help.steps.access-adelaide'),
 			image: {
 				path: '/help/access-adelaide.webp',
