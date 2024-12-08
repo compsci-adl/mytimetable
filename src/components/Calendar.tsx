@@ -13,7 +13,6 @@ import {
 } from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
-import { useExportCalendar } from '../helpers/export-calendar';
 import { calcHoursDuration } from '../helpers/hours-duration';
 import { useZoom } from '../helpers/zoom';
 import type dayjs from '../lib/dayjs';
@@ -191,8 +190,6 @@ const EndActions = () => {
 		onOpen: onReadyModalOpen,
 		onOpenChange: onReadyModalOpenChange,
 	} = useDisclosure();
-	const { copyText } = useExportCalendar();
-
 	return (
 		<div
 			className="absolute -bottom-[0.5rem] left-0 flex w-full items-center justify-center gap-4"
