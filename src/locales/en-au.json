@@ -39,7 +39,12 @@
 			"November",
 			"December"
 		],
-		"immoveable-course": "Immoveable course"
+		"immoveable-course": "Immoveable course",
+		"end-actions": {
+			"copy": "Copy to clipboard",
+			"ready": "Ready for Enrolment",
+			"copy-success": "Copied to clipboard!"
+		}
 	},
 	"help": {
 		"title": "How to use MyTimetable",
@@ -51,7 +56,8 @@
 			"change-week": "Change the calendar week to see more classes.",
 			"course-details": "Click your enrolled course to see details of your enrolled classes.",
 			"course-modal": "If you encounter any class clashes when using MyTimetable, you can open the modal to change the class.",
-			"access-adelaide": "You can enrol for courses in Access Adelaide by using the class numbers, once you are happy with your class times."
+			"ready-button": "Once you are satisfied with your class times, click the \"Ready for Enrollment\" button at the bottom of the calendar.",
+			"access-adelaide": "You can easily enroll in courses on Access Adelaide using the class numbers shown in the modal."
 		},
 		"actions": {
 			"next-step": "Next Step",
