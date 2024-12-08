@@ -23,7 +23,6 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 
-		/* Testing */
 		"types": ["vitest/globals", "umami"]
 	},
 	"include": ["src", "__tests__"]
