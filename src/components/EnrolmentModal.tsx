@@ -36,7 +36,13 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 			size={isOnlyCourse ? 'xs' : '2xl'}
 		>
 			<ModalContent>
-				<ModalHeader>{t('calendar.end-actions.ready')}</ModalHeader>
+				<ModalHeader className="flex-col">
+					<div>{t('calendar.end-actions.ready')}</div>
+					<div className="text-xs font-normal">
+						Copy the numbers below and enter them on the enrollment page of
+						Access Adelaide.
+					</div>
+				</ModalHeader>
 				<ModalBody className={clsx(!isOnlyCourse && 'grid grid-cols-2')}>
 					{enrolledCourses.map((c) => (
 						<Card key={c.id}>
