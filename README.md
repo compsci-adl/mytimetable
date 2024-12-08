@@ -2,7 +2,7 @@
 
 ![banner image](public/banner.png)
 
-A drag-and-drop timetable planner for University of Adelaide students.
+MyTimetable is a simple drag-and-drop timetable planner for University of Adelaide students. Easily organise your course classes and create the perfect timetable with this tool by the CS Club Open Source Team.
 
 ## Development
 
