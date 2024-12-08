@@ -10,11 +10,13 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
+	Tooltip,
 } from '@nextui-org/react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
+import { useExportCalendar } from '../helpers/export-calendar';
 
 type ReadyModalProps = {
 	isOpen: boolean;
@@ -22,6 +24,7 @@ type ReadyModalProps = {
 };
 export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 	const { t } = useTranslation();
+	const { copyText } = useExportCalendar();
 
 	const enrolledCourses = useDetailedEnrolledCourses();
 	const isOnlyCourse = enrolledCourses.length === 1;
@@ -58,7 +61,17 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 						</Card>
 					))}
 				</ModalBody>
-				<ModalFooter>
+				<ModalFooter className="justify-between">
+					<Tooltip content={t('calendar.end-actions.copy')} size="sm">
+						<Button
+							isIconOnly
+							className="text-xl"
+							onPress={copyText}
+							variant="flat"
+						>
+							📋
+						</Button>
+					</Tooltip>
 					<Button
 						href="https://access.adelaide.edu.au/"
 						as={Link}

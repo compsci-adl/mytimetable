@@ -198,18 +198,7 @@ const EndActions = () => {
 			className="absolute -bottom-[0.5rem] left-0 flex w-full items-center justify-center gap-4"
 			style={{ height: blockHeight + 'rem' }}
 		>
-			<Tooltip content={t('calendar.end-actions.copy')}>
-				<Button
-					variant="flat"
-					color="primary"
-					size="lg"
-					isIconOnly
-					className="text-2xl"
-					onPress={copyText}
-				>
-					📋
-				</Button>
-			</Tooltip>
+			{/* TODO: Share Button */}
 			<Button
 				color="primary"
 				size="lg"
