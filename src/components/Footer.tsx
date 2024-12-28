@@ -1,5 +1,7 @@
 import {
 	Divider,
+	link,
+	Link,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -13,6 +15,8 @@ import {
 	FaGithub,
 	FaInstagram,
 	FaLinkedin,
+	FaTiktok,
+	FaYoutube,
 } from 'react-icons/fa';
 
 import { Tips } from './Tips';
@@ -60,6 +64,8 @@ const LINKS = [
 	{ icon: FaGithub, link: 'https://github.com/compsci-adl' },
 	{ icon: FaInstagram, link: 'https://www.instagram.com/csclub.adl/' },
 	{ icon: FaFacebook, link: 'https://www.facebook.com/compsci.adl/' },
+	{ icon: FaTiktok, link: 'https://www.tiktok.com/@csclub.adl/' },
+	{ icon: FaYoutube, link: 'https://www.youtube.com/@csclub-adl/' },
 	{ icon: FaDiscord, link: 'https://discord.gg/UjvVxHA' },
 	{ icon: FaLinkedin, link: 'https://www.linkedin.com/company/compsci-adl/' },
 ];
