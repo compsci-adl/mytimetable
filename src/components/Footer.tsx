@@ -63,11 +63,11 @@ const LINKS = [
 	{ icon: FaEnvelope, link: 'mailto:dev@csclub.org.au' },
 	{ icon: FaGithub, link: 'https://github.com/compsci-adl' },
 	{ icon: FaInstagram, link: 'https://www.instagram.com/csclub.adl/' },
-	{ icon: FaFacebook, link: 'https://www.facebook.com/compsci.adl/' },
 	{ icon: FaTiktok, link: 'https://www.tiktok.com/@csclub.adl/' },
-	{ icon: FaYoutube, link: 'https://www.youtube.com/@csclub-adl/' },
+	{ icon: FaFacebook, link: 'https://www.facebook.com/compsci.adl/' },
 	{ icon: FaDiscord, link: 'https://discord.gg/UjvVxHA' },
 	{ icon: FaLinkedin, link: 'https://www.linkedin.com/company/compsci-adl/' },
+	{ icon: FaYoutube, link: 'https://www.youtube.com/@csclub-adl/' },
 ];
 
 export const Footer = () => {
