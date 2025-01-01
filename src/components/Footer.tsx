@@ -1,7 +1,5 @@
 import {
 	Divider,
-	link,
-	Link,
 	Modal,
 	ModalBody,
 	ModalContent,
