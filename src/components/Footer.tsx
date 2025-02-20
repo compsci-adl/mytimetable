@@ -4,7 +4,7 @@ import {
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import { useState } from 'react';
 import {
 	FaDiscord,

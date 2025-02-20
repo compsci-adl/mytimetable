@@ -11,7 +11,7 @@ import {
 	ModalFooter,
 	ModalHeader,
 	Tooltip,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 

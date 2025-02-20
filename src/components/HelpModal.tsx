@@ -9,7 +9,7 @@ import {
 	ModalHeader,
 	Tab,
 	Tabs,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';

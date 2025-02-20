@@ -9,7 +9,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 	Tooltip,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

@@ -1,4 +1,4 @@
-import { Button, Tooltip, useDisclosure } from '@nextui-org/react';
+import { Button, Tooltip, useDisclosure } from '@heroui/react';
 import clsx from 'clsx';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
