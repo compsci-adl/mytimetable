@@ -1,4 +1,4 @@
-import { Chip, useDisclosure } from '@nextui-org/react';
+import { Chip, useDisclosure } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';

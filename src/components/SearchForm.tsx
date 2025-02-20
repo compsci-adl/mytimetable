@@ -4,7 +4,7 @@ import {
 	Button,
 	Select,
 	SelectItem,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';

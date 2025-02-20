@@ -1,4 +1,4 @@
-import { Code, Link } from '@nextui-org/react';
+import { Code, Link } from '@heroui/react';
 import type { FallbackProps } from 'react-error-boundary';
 
 import { useMount } from '../utils/mount';
