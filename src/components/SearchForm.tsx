@@ -113,9 +113,7 @@ export const SearchForm = () => {
 				listboxProps={{ emptyContent: t('search.subject-not-found') }}
 			>
 				{(subject) => (
-					<AutocompleteItem key={subject.code} value={subject.code}>
-						{subject.name}
-					</AutocompleteItem>
+					<AutocompleteItem key={subject.code}>{subject.name}</AutocompleteItem>
 				)}
 			</Autocomplete>
 			<form
@@ -133,9 +131,7 @@ export const SearchForm = () => {
 					defaultFilter={courseSearchFilter}
 				>
 					{(course) => (
-						<AutocompleteItem key={course.id} value={course.id}>
-							{course.name}
-						</AutocompleteItem>
+						<AutocompleteItem key={course.id}>{course.name}</AutocompleteItem>
 					)}
 				</Autocomplete>
 				<Button
