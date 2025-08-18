@@ -376,9 +376,9 @@ const CalendarCourseOtherTimes = ({
 							height: calcHoursDuration(time.time) * blockHeight + 'rem',
 						}}
 					>
-						{time.classes.map((c) => (
+						{time.classes.map((c, index) => (
 							<CourseTimePlaceholderCard
-								key={c.number}
+								key={`${course.id}-${course.classTypeId}-${c.number}-${c.location}-${index}`}
 								courseId={course.id}
 								classNumber={c.number}
 								classTypeId={course.classTypeId}
