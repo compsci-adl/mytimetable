@@ -286,9 +286,9 @@ const CalendarCourses = ({
 							zIndex: j, // TODO: Remove zIndex after implementing course conflicts #5
 						}}
 					>
-						{time.courses.map((course) => (
+						{time.courses.map((course, index) => (
 							<CourseCard
-								key={course.id + course.classTypeId}
+								key={`${course.id}-${course.classTypeId}-${course.classNumber}-${course.location}-${index}`}
 								course={course}
 								time={time.time}
 								currentWeek={currentWeek}
@@ -376,9 +376,9 @@ const CalendarCourseOtherTimes = ({
 							height: calcHoursDuration(time.time) * blockHeight + 'rem',
 						}}
 					>
-						{time.classes.map((c) => (
+						{time.classes.map((c, index) => (
 							<CourseTimePlaceholderCard
-								key={c.number}
+								key={`${course.id}-${course.classTypeId}-${c.number}-${c.location}-${index}`}
 								courseId={course.id}
 								classNumber={c.number}
 								classTypeId={course.classTypeId}
