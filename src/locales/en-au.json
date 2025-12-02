@@ -18,7 +18,8 @@
 		"days": "Days",
 		"time": "Time",
 		"location": "Location",
-		"campus": "Campus"
+		"campus": "Campus",
+		"no-class-info": "No class information is currently available, please try again later in a couple of days."
 	},
 	"calendar": {
 		"first-week": "First week",
