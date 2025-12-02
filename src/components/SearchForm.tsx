@@ -36,7 +36,7 @@ export const SearchForm = () => {
 		queryFn: ({ queryKey }) => getSubjects(queryKey[1]),
 	});
 	const subjectList =
-		subjectsQuery.data?.subjects.map((s) => {
+		subjectsQuery.data?.map((s) => {
 			if (typeof s === 'string') {
 				return { key: s, code: s, name: s };
 			}
