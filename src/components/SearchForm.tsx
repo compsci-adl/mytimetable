@@ -58,7 +58,7 @@ export const SearchForm = () => {
 		courses?.map((c) => ({
 			key: c.id,
 			id: c.id,
-			name: `${c.name.subject} ${c.name.code} - ${c.name.title}`,
+			name: `${c.name.code} - ${c.name.title}`,
 		})) ?? [];
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
 
@@ -77,7 +77,7 @@ export const SearchForm = () => {
 		e.preventDefault();
 		const course = courses?.find((c) => c.id === selectedCourseId);
 		if (!course) return;
-		const name = `${course.name.subject} ${course.name.code}`;
+		const name = `$${course.name.code}`;
 		await umami.track('Add course', { subject: course.name.subject, name });
 		enrolledCourses.addCourse({
 			name,

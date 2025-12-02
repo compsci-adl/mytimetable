@@ -119,8 +119,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 				{() => (
 					<>
 						<ModalHeader className="flex flex-col gap-1">
-							{courseInfo.name.subject} {courseInfo.name.code} -{' '}
-							{courseInfo.name.title}
+							{courseInfo.name.code} - {courseInfo.name.title}
 						</ModalHeader>
 						<ModalBody className="mb-4">
 							{courseInfo.class_list.map((classType) => (

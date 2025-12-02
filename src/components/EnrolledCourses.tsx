@@ -54,17 +54,21 @@ export const EnrolledCourses = () => {
 	return (
 		<>
 			<div className="flex flex-wrap gap-2">
-				{courses.map((c) => (
-					<CourseChip
-						name={c.name}
-						id={c.id}
-						key={c.id}
-						onOpenModal={(id) => {
-							setCourseModalId(id);
-							courseModal.onOpen();
-						}}
-					/>
-				))}
+				{courses.map((c) => {
+					// Remove  `$` from names
+					const sanitizedName = c.name.replace(/\$/g, '');
+					return (
+						<CourseChip
+							name={sanitizedName}
+							id={c.id}
+							key={c.id}
+							onOpenModal={(id) => {
+								setCourseModalId(id);
+								courseModal.onOpen();
+							}}
+						/>
+					);
+				})}
 			</div>
 			{courseModalId && (
 				<CourseModal
