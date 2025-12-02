@@ -5,6 +5,7 @@ export type DateTimeRange = { start: string; end: string };
 type Meeting = {
 	day: WeekDay;
 	location: string;
+	campus: string;
 	date: DateTimeRange;
 	time: DateTimeRange;
 };

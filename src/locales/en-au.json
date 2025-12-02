@@ -17,7 +17,8 @@
 		"dates": "Dates",
 		"days": "Days",
 		"time": "Time",
-		"location": "Location"
+		"location": "Location",
+		"campus": "Campus"
 	},
 	"calendar": {
 		"first-week": "First week",

@@ -60,6 +60,7 @@ const MeetingsTime = ({
 				<TableColumn>{t('course-modal.days')}</TableColumn>
 				<TableColumn>{t('course-modal.time')}</TableColumn>
 				<TableColumn>{t('course-modal.location')}</TableColumn>
+				<TableColumn>{t('course-modal.campus')}</TableColumn>
 			</TableHeader>
 			<TableBody>
 				{meetings.map((meeting, i) => (
@@ -68,6 +69,7 @@ const MeetingsTime = ({
 						<TableCell>{meeting.day}</TableCell>
 						<TableCell>{getDisplayTime(meeting.time)}</TableCell>
 						<TableCell>{meeting.location}</TableCell>
+						<TableCell>{meeting.campus}</TableCell>
 					</TableRow>
 				))}
 			</TableBody>
