@@ -43,12 +43,12 @@ const FOOTER_SECTIONS = [
 	{
 		title: 'About',
 		content:
-			'MyTimetable, created by the CS Club Open Source Team, is a drag-and-drop timetable planner designed for University of Adelaide students. It allows students to easily organise, customise, and visualise their class timetables, helping them avoid clashes and optimise their weekly schedules.',
+			'MyTimetable, created by the CS Club Open Source Team, is a drag-and-drop timetable planner designed for Adelaide University students. It allows students to easily organise, customise, and visualise their class timetables, helping them avoid clashes and optimise their weekly schedules.',
 	},
 	{
 		title: 'Disclaimer',
 		content:
-			'MyTimetable is NOT an official University of Adelaide website. While we strive to provide accurate and up-to-date information, please be aware that the data may not always reflect the latest changes or updates.',
+			'MyTimetable is NOT an official Adelaide University website. While we strive to provide accurate and up-to-date information, please be aware that the data may not always reflect the latest changes or updates.',
 	},
 	{
 		title: 'Privacy',
@@ -104,7 +104,7 @@ export const Footer = () => {
 						target="_blank"
 						className="underline"
 					>
-						The University of Adelaide Computer Science Club
+						Adelaide University Computer Science Club
 					</a>
 				</div>
 
