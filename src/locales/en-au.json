@@ -45,7 +45,7 @@
 			"copy": "Copy to clipboard",
 			"ready": "Ready for Enrolment",
 			"copy-success": "Copied to clipboard!",
-			"enrolment-instruction": "Copy the numbers below and enter them on the enrolment page of Access Adelaide."
+			"enrolment-instruction": "Copy the numbers below and enter them on the myEnrolment page."
 		}
 	},
 	"help": {
@@ -59,7 +59,7 @@
 			"course-details": "Click your enrolled course to see details of your enrolled classes.",
 			"course-modal": "If you encounter any class clashes when using MyTimetable, you can open the modal to change the class.",
 			"ready-button": "Once you are satisfied with your class times, click the \"Ready for Enrolment\" button at the bottom of the calendar.",
-			"access-adelaide": "You can easily enroll in courses on Access Adelaide using the class numbers shown in the modal."
+			"access-adelaide": "You can easily enroll in courses on myEnrolment using the class numbers shown in the modal."
 		},
 		"actions": {
 			"next-step": "Next Step",

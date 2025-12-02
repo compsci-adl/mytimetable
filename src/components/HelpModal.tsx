@@ -75,15 +75,13 @@ export const HelpModal = () => {
 		},
 		{
 			content: t('help.steps.access-adelaide'),
-			image: {
-				path: '/help/access-adelaide.webp',
-				alt: 'Access Adelaide enrolment',
-			},
 		},
 	];
 
 	useMount(() => {
-		const imagePaths = STEPS.map((step) => step.image.path);
+		const imagePaths = STEPS.map((step) => step.image?.path).filter(
+			(p): p is string => Boolean(p),
+		);
 		prefetchImages(imagePaths);
 	});
 
@@ -153,11 +151,13 @@ export const HelpModal = () => {
 									<CardBody className="gap-2">
 										<div className="text-lg mobile:text-sm">{step.content}</div>
 										<div className="flex grow items-center justify-center">
-											<img
-												alt={step.image.alt}
-												src={step.image.path}
-												className="max-h-[28rem]"
-											/>
+											{step.image?.path ? (
+												<img
+													alt={step.image?.alt ?? step.content}
+													src={step.image.path}
+													className="max-h-[28rem]"
+												/>
+											) : null}
 										</div>
 									</CardBody>
 								</Card>
