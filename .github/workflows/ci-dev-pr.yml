@@ -8,3 +8,6 @@ jobs:
   lint-format:
     name: Linting and Formatting Checks
     uses: ./.github/workflows/lint-and-format.yml
+  unit-tests:
+    name: Unit tests
+    uses: ./.github/workflows/tests.yml
