@@ -60,6 +60,7 @@ const MeetingsTime = ({
 				<TableColumn>{t('course-modal.days')}</TableColumn>
 				<TableColumn>{t('course-modal.time')}</TableColumn>
 				<TableColumn>{t('course-modal.location')}</TableColumn>
+				<TableColumn>{t('course-modal.campus')}</TableColumn>
 			</TableHeader>
 			<TableBody>
 				{meetings.map((meeting, i) => (
@@ -68,6 +69,7 @@ const MeetingsTime = ({
 						<TableCell>{meeting.day}</TableCell>
 						<TableCell>{getDisplayTime(meeting.time)}</TableCell>
 						<TableCell>{meeting.location}</TableCell>
+						<TableCell>{meeting.campus}</TableCell>
 					</TableRow>
 				))}
 			</TableBody>
@@ -91,6 +93,7 @@ type CourseModalProps = {
 };
 export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 	const courseInfo = useGetCourseInfo(id);
+	const { t } = useTranslation();
 	const { course, updateClass } = useEnrolledCourse(id);
 	const getSelectedClassNumber = (classTypeId: string) => {
 		const selectedClass = course?.classes.find((c) => c.id === classTypeId);
@@ -117,45 +120,81 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 				{() => (
 					<>
 						<ModalHeader className="flex flex-col gap-1">
-							{courseInfo.name.subject} {courseInfo.name.code} -{' '}
-							{courseInfo.name.title}
+							{courseInfo.name.code} - {courseInfo.name.title}
 						</ModalHeader>
 						<ModalBody className="mb-4">
-							{courseInfo.class_list.map((classType) => (
-								<Fragment key={classType.id}>
-									<Select
-										label={`${classType.type} Time`}
-										renderValue={(value) => 'Class Number: ' + value[0].key}
-										selectedKeys={getKeys(getSelectedClassNumber(classType.id))}
-										// Prevent the selected class from being clicked again to avoid it becoming undefined
-										disabledKeys={getKeys(getSelectedClassNumber(classType.id))}
-										onSelectionChange={(selectedClassNumber) => {
-											updateClass({
-												classNumber: [...selectedClassNumber][0] as string,
-												classTypeId: classType.id,
-											});
-										}}
-									>
-										{classType.classes.map((classInfo) => (
-											<SelectItem
-												key={classInfo.number}
-												textValue={classInfo.number}
+							{(() => {
+								const hasClassInfo =
+									!!courseInfo.class_list &&
+									courseInfo.class_list.some(
+										(ct) => ct.classes && ct.classes.length > 0,
+									);
+								if (!hasClassInfo) {
+									return (
+										<div className="text-default-500">
+											{t('course-modal.no-class-info') ??
+												'No available class information for now, check back later.'}
+										</div>
+									);
+								}
+								return courseInfo.class_list.map((classType) => (
+									<Fragment key={classType.id}>
+										{classType.classes.length === 0 ? (
+											<div className="text-default-500">
+												{t('course-modal.no-class-info-class-type') ??
+													'No class information for this class type at the moment.'}
+											</div>
+										) : (
+											<Select
+												label={`${classType.type} Time`}
+												renderValue={(value) => {
+													const key = (value?.[0] as any)?.key;
+													return `Class Number: ${key}`;
+												}}
+												selectedKeys={getKeys(
+													getSelectedClassNumber(classType.id),
+												)}
+												// Prevent the selected class from being clicked again to avoid it becoming undefined
+												disabledKeys={getKeys(
+													getSelectedClassNumber(classType.id),
+												)}
+												onSelectionChange={(selectedClassNumber) => {
+													updateClass({
+														classNumber: [...selectedClassNumber][0] as string,
+														classTypeId: classType.id,
+													});
+												}}
 											>
-												<div>
-													<div>{classInfo.number}</div>
-													<div className="text-tiny text-default-500">
-														{getPreviewMeetingInfo(classInfo.meetings)}
-													</div>
-												</div>
-											</SelectItem>
-										))}
-									</Select>
-									<MeetingsTime
-										meetings={getMeetings(classType.id)}
-										classType={classType.type}
-									/>
-								</Fragment>
-							))}
+												{classType.classes.map((classInfo) => {
+													const campusList = deduplicateArray(
+														classInfo.meetings
+															.map((m) => m.campus ?? '')
+															.filter(Boolean),
+													).join(', ');
+													return (
+														<SelectItem
+															key={classInfo.number}
+															textValue={classInfo.number}
+														>
+															<div>
+																<div>{classInfo.number}</div>
+																<div className="text-tiny text-default-500">
+																	{getPreviewMeetingInfo(classInfo.meetings)}
+																	{campusList ? ` | ${campusList}` : ''}
+																</div>
+															</div>
+														</SelectItem>
+													);
+												})}
+											</Select>
+										)}
+										<MeetingsTime
+											meetings={getMeetings(classType.id)}
+											classType={classType.type}
+										/>
+									</Fragment>
+								));
+							})()}
 						</ModalBody>
 					</>
 				)}

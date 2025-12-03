@@ -36,10 +36,12 @@ export const SearchForm = () => {
 		queryFn: ({ queryKey }) => getSubjects(queryKey[1]),
 	});
 	const subjectList =
-		subjectsQuery.data?.subjects.map(({ code, name }) => ({
-			code,
-			name: `${code} - ${name}`,
-		})) ?? [];
+		subjectsQuery.data?.map((s) => {
+			if (typeof s === 'string') {
+				return { key: s, code: s, name: s };
+			}
+			return { key: s.code, code: s.code, name: `${s.code} - ${s.name}` };
+		}) ?? [];
 	const [subject, setSubject] = useState<string | null>(null);
 
 	const coursesQuery = useQuery({
@@ -54,8 +56,9 @@ export const SearchForm = () => {
 	const courses = coursesQuery.data?.courses;
 	const courseList =
 		courses?.map((c) => ({
+			key: c.id,
 			id: c.id,
-			name: `${c.name.subject} ${c.name.code} - ${c.name.title}`,
+			name: `${c.name.code} - ${c.name.title}`,
 		})) ?? [];
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
 
@@ -74,7 +77,7 @@ export const SearchForm = () => {
 		e.preventDefault();
 		const course = courses?.find((c) => c.id === selectedCourseId);
 		if (!course) return;
-		const name = `${course.name.subject} ${course.name.code}`;
+		const name = `$${course.name.code}`;
 		await umami.track('Add course', { subject: course.name.subject, name });
 		enrolledCourses.addCourse({
 			name,
@@ -100,7 +103,9 @@ export const SearchForm = () => {
 					disallowEmptySelection
 				>
 					{TERMS.map((term) => (
-						<SelectItem key={term.alias}>{term.name}</SelectItem>
+						<SelectItem key={term.alias} textValue={term.name}>
+							{term.name}
+						</SelectItem>
 					))}
 				</Select>
 			</div>
@@ -113,7 +118,9 @@ export const SearchForm = () => {
 				listboxProps={{ emptyContent: t('search.subject-not-found') }}
 			>
 				{(subject) => (
-					<AutocompleteItem key={subject.code}>{subject.name}</AutocompleteItem>
+					<AutocompleteItem key={subject.key} textValue={subject.name}>
+						{subject.name}
+					</AutocompleteItem>
 				)}
 			</Autocomplete>
 			<form
@@ -131,7 +138,9 @@ export const SearchForm = () => {
 					defaultFilter={courseSearchFilter}
 				>
 					{(course) => (
-						<AutocompleteItem key={course.id}>{course.name}</AutocompleteItem>
+						<AutocompleteItem key={course.key} textValue={course.name}>
+							{course.name}
+						</AutocompleteItem>
 					)}
 				</Autocomplete>
 				<Button

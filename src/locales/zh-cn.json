@@ -44,7 +44,7 @@
 			"copy": "复制到剪切板",
 			"ready": "准备选课",
 			"copy-success": "已成功复制到剪切板！",
-			"enrolment-instruction": "复制课程代号并前往 Access Adelaide 的 Enrolment 页面输入以正式选课"
+			"enrolment-instruction": "复制课程代号并前往 myEnrolment 的 Enrolment 页面输入以正式选课"
 		}
 	},
 	"help": {
@@ -58,7 +58,7 @@
 			"course-details": "点击你的选课查看详情",
 			"course-modal": "如果在使用 MyTimetable 时遇到任何课程冲突，可以随时打开详情弹窗来更改课程",
 			"ready-button": "课程调整完毕后，点击日历底部的“准备选课”按钮",
-			"access-adelaide": "你可以用弹窗中的 Class Number 在 Access Adelaide 中进行选课"
+			"access-adelaide": "你可以用弹窗中的 Class Number 在 myEnrolment 中进行选课"
 		},
 		"actions": {
 			"next-step": "下一步",

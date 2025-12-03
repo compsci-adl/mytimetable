@@ -24,10 +24,12 @@ export const getCourse = async ({ id }: { id: string }) => {
 	return fetcher.get<Course>(`courses/${id}`).json();
 };
 
-type SubjectsRes = {
-	subjects: Array<{ code: string; name: string }>;
-};
+export type SubjectsRes = Array<string | { code: string; name: string }>;
 
 export const getSubjects = async (params: { year: number; term: string }) => {
-	return fetcher.get<SubjectsRes>('subjects', { searchParams: params }).json();
+	// Fetch the endpoint and normalise the response to return an array.
+	const res = await fetcher
+		.get<unknown>('subjects', { searchParams: params })
+		.json();
+	return res as SubjectsRes;
 };

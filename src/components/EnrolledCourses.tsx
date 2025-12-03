@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { getCourse } from '../apis';
+import { useGetCourseInfo } from '../data/course-info';
 import { useCourseColor, useEnrolledCourses } from '../data/enrolled-courses';
 import { CourseModal } from './CourseModal';
 
@@ -14,6 +15,22 @@ type CourseChipProps = {
 };
 const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 	const color = useCourseColor(id);
+	const courseInfo = useGetCourseInfo(id);
+	const enrolledCourse = useEnrolledCourses((s) =>
+		s.courses.find((c) => c.id === id),
+	);
+
+	const hasPersistedNoClasses = Boolean(
+		enrolledCourse &&
+		Array.isArray(enrolledCourse.classes) &&
+		enrolledCourse.classes.length === 0,
+	);
+	const hasCourseInfo = courseInfo != null;
+	const classList = courseInfo?.class_list ?? [];
+	const hasAnyClass = classList.some(
+		(ct) => Array.isArray(ct.classes) && ct.classes.length > 0,
+	);
+	const isEmpty = hasPersistedNoClasses || (hasCourseInfo && !hasAnyClass);
 	const removeCourse = useEnrolledCourses((s) => s.removeCourse);
 
 	const { isFetching, isError } = useQuery({
@@ -41,6 +58,7 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 		>
 			{isFetching && '⏳ '}
 			{isError && '❌ '}
+			{isEmpty && '⚠️ '}
 			{name}
 		</Chip>
 	);
@@ -54,17 +72,21 @@ export const EnrolledCourses = () => {
 	return (
 		<>
 			<div className="flex flex-wrap gap-2">
-				{courses.map((c) => (
-					<CourseChip
-						name={c.name}
-						id={c.id}
-						key={c.id}
-						onOpenModal={(id) => {
-							setCourseModalId(id);
-							courseModal.onOpen();
-						}}
-					/>
-				))}
+				{courses.map((c) => {
+					// Remove `$` from names
+					const sanitizedName = c.name.replace(/\$/g, '');
+					return (
+						<CourseChip
+							name={sanitizedName}
+							id={c.id}
+							key={c.id}
+							onOpenModal={(id) => {
+								setCourseModalId(id);
+								courseModal.onOpen();
+							}}
+						/>
+					);
+				})}
 			</div>
 			{courseModalId && (
 				<CourseModal

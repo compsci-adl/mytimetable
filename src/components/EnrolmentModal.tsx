@@ -46,9 +46,7 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 					{enrolledCourses.map((c) => (
 						<Card key={c.id}>
 							<CardHeader className="flex-col text-center">
-								<p className="text-lg font-black">
-									{c.name.subject} {c.name.code}
-								</p>
+								<p className="text-lg font-black">{c.name.code}</p>
 								<p className="text-sm">{c.name.title}</p>
 							</CardHeader>
 							<Divider />
@@ -78,12 +76,12 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 						</Button>
 					</Tooltip>
 					<Button
-						href="https://access.adelaide.edu.au/"
+						href="https://apps.adelaide.edu.au/student/myenrolment/"
 						as={Link}
 						showAnchorIcon
 						target="_blank"
 					>
-						Access Adelaide
+						myEnrolment
 					</Button>
 				</ModalFooter>
 			</ModalContent>
