@@ -25,7 +25,7 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 		Array.isArray(enrolledCourse.classes) &&
 		enrolledCourse.classes.length === 0,
 	);
-	const hasCourseInfo = courseInfo != null;
+	const hasCourseInfo = courseInfo !== null;
 	const classList = courseInfo?.class_list ?? [];
 	const hasAnyClass = classList.some(
 		(ct) => Array.isArray(ct.classes) && ct.classes.length > 0,

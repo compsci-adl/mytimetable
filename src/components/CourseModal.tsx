@@ -148,7 +148,10 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 											<Select
 												label={`${classType.type} Time`}
 												renderValue={(value) => {
-													const key = (value?.[0] as any)?.key;
+													const items = value as unknown as
+														| Array<{ key?: Key }>
+														| undefined;
+													const key = items?.[0]?.key as string | undefined;
 													return `Class Number: ${key}`;
 												}}
 												selectedKeys={getKeys(

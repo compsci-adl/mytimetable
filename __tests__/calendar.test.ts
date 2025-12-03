@@ -28,6 +28,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'bragg',
+								campus: 'Adelaide City Campus East',
 								day: 'Tuesday',
 								date: { start: '09-09', end: '09-27' },
 								time: { start: '09:00', end: '10:00' },
@@ -47,6 +48,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'online',
+								campus: 'Online',
 								day: 'Monday',
 								date: { start: '09-09', end: '09-27' },
 								time: { start: '17:00', end: '18:00' },
@@ -60,6 +62,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'iw',
+								campus: 'Adelaide City Campus East',
 								day: 'Friday',
 								date: { start: '09-09', end: '09-27' },
 								time: { start: '09:00', end: '10:00' },
@@ -134,6 +137,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'bragg',
+								campus: 'Adelaide City Campus East',
 								day: 'Friday',
 								date: { start: '09-20', end: '10-04' },
 								time: { start: '09:00', end: '10:00' },
@@ -180,6 +184,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'bragg',
+								campus: 'Adelaide City Campus East',
 								day: 'Monday',
 								date: { start: '08-12', end: '09-16' },
 								time: { start: '09:00', end: '10:00' },
@@ -226,6 +231,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'online',
+								campus: 'Online',
 								day: 'Monday',
 								date: { start: '09-09', end: '09-27' },
 								time: { start: '17:00', end: '18:00' },
@@ -245,6 +251,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'bragg',
+								campus: 'Adelaide City Campus East',
 								day: 'Monday',
 								date: { start: '09-09', end: '09-27' },
 								time: { start: '09:00', end: '10:00' },
@@ -304,6 +311,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'online',
+								campus: 'Online',
 								day: 'Monday',
 								date: { start: '09-09', end: '09-27' },
 								time: { start: '09:00', end: '10:00' },
@@ -323,6 +331,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'bragg',
+								campus: 'Adelaide City Campus East',
 								day: 'Monday',
 								date: { start: '09-09', end: '09-27' },
 								time: { start: '09:00', end: '12:00' },
@@ -382,6 +391,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'online',
+								campus: 'Online',
 								day: 'Monday',
 								date: { start: '09-09', end: '09-27' },
 								time: { start: '09:00', end: '10:00' },
@@ -401,6 +411,7 @@ describe('getWeekCourses', () => {
 						meetings: [
 							{
 								location: 'bragg',
+								campus: 'Adelaide City Campus East',
 								day: 'Monday',
 								date: { start: '09-09', end: '09-27' },
 								time: { start: '09:00', end: '10:00' },
