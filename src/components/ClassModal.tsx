@@ -17,6 +17,7 @@ import { useGetCourseInfo, useGetCourseClasses } from '../data/course-info';
 import type dayjs from '../lib/dayjs';
 import type { Meetings } from '../types/course';
 import { dateToDayjs, timeToDayjs } from '../utils/date';
+import { deduplicateArray } from '../utils/deduplicate-array';
 
 const DATE_FORMAT = 'D MMM';
 const TIME_FORMAT = 'h:mm A';
@@ -54,6 +55,20 @@ const MeetingsTime = ({
 		return (
 			<div className="text-default-500">{t('class-modal.no-class-info')}</div>
 		);
+	// Group meetings by equality of day/time/location/campus, only date differs
+	const groupedMeetingsMap: Record<string, Meetings> = {};
+	const groupedOrder: string[] = [];
+	meetings.forEach((m) => {
+		const key = [m.day, m.time.start, m.time.end, m.location, m.campus].join(
+			'|',
+		);
+		if (!groupedMeetingsMap[key]) {
+			groupedMeetingsMap[key] = [];
+			groupedOrder.push(key);
+		}
+		groupedMeetingsMap[key].push(m);
+	});
+	const groupedMeetings = groupedOrder.map((k) => groupedMeetingsMap[k]);
 	return (
 		<Table aria-label={t('class-modal.meetings-table') as string}>
 			<TableHeader>
@@ -65,18 +80,24 @@ const MeetingsTime = ({
 				<TableColumn>{t('class-modal.availability')}</TableColumn>
 			</TableHeader>
 			<TableBody>
-				{meetings.map((meeting, i) => (
-					<TableRow key={i}>
-						<TableCell>{getDisplayDate(meeting.date)}</TableCell>
-						<TableCell>{meeting.day}</TableCell>
-						<TableCell>{getDisplayTime(meeting.time)}</TableCell>
-						<TableCell>{meeting.location}</TableCell>
-						<TableCell>{meeting.campus}</TableCell>
-						<TableCell>
-							{availableSeats && size ? `${availableSeats} / ${size}` : ''}
-						</TableCell>
-					</TableRow>
-				))}
+				{groupedMeetings.map((group, i) => {
+					const sample = group[0];
+					const dates = deduplicateArray(
+						group.map((m) => getDisplayDate(m.date)),
+					).join(' & ');
+					return (
+						<TableRow key={i}>
+							<TableCell>{dates}</TableCell>
+							<TableCell>{sample.day}</TableCell>
+							<TableCell>{getDisplayTime(sample.time)}</TableCell>
+							<TableCell>{sample.location}</TableCell>
+							<TableCell>{sample.campus}</TableCell>
+							<TableCell>
+								{availableSeats && size ? `${availableSeats} / ${size}` : ''}
+							</TableCell>
+						</TableRow>
+					);
+				})}
 			</TableBody>
 		</Table>
 	);
