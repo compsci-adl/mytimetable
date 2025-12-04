@@ -47,9 +47,13 @@ const getDisplayTime = (time: { start: string; end: string }) => {
 const MeetingsTime = ({
 	meetings,
 	classType,
+	size,
+	availableSeats,
 }: {
 	meetings: Meetings;
 	classType: string;
+	size?: string | undefined;
+	availableSeats?: string | undefined;
 }) => {
 	const { t } = useTranslation();
 
@@ -61,17 +65,47 @@ const MeetingsTime = ({
 				<TableColumn>{t('course-modal.time')}</TableColumn>
 				<TableColumn>{t('course-modal.location')}</TableColumn>
 				<TableColumn>{t('course-modal.campus')}</TableColumn>
+				<TableColumn>{t('course-modal.availability')}</TableColumn>
 			</TableHeader>
 			<TableBody>
-				{meetings.map((meeting, i) => (
-					<TableRow key={i}>
-						<TableCell>{getDisplayDate(meeting.date)}</TableCell>
-						<TableCell>{meeting.day}</TableCell>
-						<TableCell>{getDisplayTime(meeting.time)}</TableCell>
-						<TableCell>{meeting.location}</TableCell>
-						<TableCell>{meeting.campus}</TableCell>
-					</TableRow>
-				))}
+				{/* Group meetings that are identical except for the date */}
+				{(() => {
+					const grouped: Record<string, Meetings> = {};
+					const order: string[] = [];
+					meetings.forEach((m) => {
+						const key = [
+							m.day,
+							m.time.start,
+							m.time.end,
+							m.location,
+							m.campus,
+						].join('|');
+						if (!grouped[key]) {
+							grouped[key] = [];
+							order.push(key);
+						}
+						grouped[key].push(m);
+					});
+					return order.map((k, i) => {
+						const group = grouped[k];
+						const sample = group[0];
+						const dates = deduplicateArray(
+							group.map((m) => getDisplayDate(m.date)),
+						).join(', ');
+						return (
+							<TableRow key={i}>
+								<TableCell>{dates}</TableCell>
+								<TableCell>{sample.day}</TableCell>
+								<TableCell>{getDisplayTime(sample.time)}</TableCell>
+								<TableCell>{sample.location}</TableCell>
+								<TableCell>{sample.campus}</TableCell>
+								<TableCell>
+									{availableSeats && size ? `${availableSeats} / ${size}` : ''}
+								</TableCell>
+							</TableRow>
+						);
+					});
+				})()}
 			</TableBody>
 		</Table>
 	);
@@ -81,7 +115,7 @@ const getPreviewMeetingInfo = (meetings: Meetings) => {
 	const displayMeetings = meetings.map(
 		(m) => `${m.day} ${getDisplayTime(m.time)}`,
 	);
-	return deduplicateArray(displayMeetings).join(' & ');
+	return deduplicateArray(displayMeetings).join(', ');
 };
 const getKeys = (nullableKey: Key | undefined) => {
 	return nullableKey ? [nullableKey] : undefined;
@@ -107,13 +141,21 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 			?.classes.find((c) => c.number === selectedClassNumber);
 		return selectedClass?.meetings ?? [];
 	};
+	const getSelectedClass = (classTypeId: string) => {
+		const selectedClassNumber = getSelectedClassNumber(classTypeId);
+		if (!selectedClassNumber) return undefined;
+		const selectedClass = courseInfo?.class_list
+			.find((c) => c.id === classTypeId)
+			?.classes.find((c) => c.number === selectedClassNumber);
+		return selectedClass;
+	};
 
 	if (!courseInfo) return;
 	return (
 		<Modal
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			size="2xl"
+			size="3xl"
 			scrollBehavior="inside"
 		>
 			<ModalContent>
@@ -191,10 +233,23 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 												})}
 											</Select>
 										)}
-										<MeetingsTime
-											meetings={getMeetings(classType.id)}
-											classType={classType.type}
-										/>
+										{(() => {
+											const selectedClass = getSelectedClass(classType.id);
+											const size =
+												selectedClass?.size ??
+												selectedClass?.section ??
+												undefined;
+											const availableSeats =
+												selectedClass?.available_seats ?? undefined;
+											return (
+												<MeetingsTime
+													meetings={getMeetings(classType.id)}
+													classType={classType.type}
+													size={size}
+													availableSeats={availableSeats}
+												/>
+											);
+										})()}
 									</Fragment>
 								));
 							})()}

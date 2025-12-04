@@ -55,7 +55,7 @@ const MeetingsTime = ({
 		return (
 			<div className="text-default-500">{t('class-modal.no-class-info')}</div>
 		);
-	// Group meetings by equality of day/time/location/campus, only date differs
+	// Group meetings that are identical except for the date
 	const groupedMeetingsMap: Record<string, Meetings> = {};
 	const groupedOrder: string[] = [];
 	meetings.forEach((m) => {
@@ -84,7 +84,7 @@ const MeetingsTime = ({
 					const sample = group[0];
 					const dates = deduplicateArray(
 						group.map((m) => getDisplayDate(m.date)),
-					).join(' & ');
+					).join(', ');
 					return (
 						<TableRow key={i}>
 							<TableCell>{dates}</TableCell>

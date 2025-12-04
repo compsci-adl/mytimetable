@@ -19,6 +19,7 @@
 		"time": "Time",
 		"location": "Location",
 		"campus": "Campus",
+		"availability": "Availability",
 		"no-class-info": "No class information is currently available, please try again later in a couple of days."
 	},
 	"class-modal": {
