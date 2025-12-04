@@ -216,6 +216,10 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 															.map((m) => m.campus ?? '')
 															.filter(Boolean),
 													).join(', ');
+													const availability =
+														classInfo.available_seats && classInfo.size
+															? `${classInfo.available_seats} / ${classInfo.size}`
+															: undefined;
 													return (
 														<SelectItem
 															key={classInfo.number}
@@ -226,6 +230,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 																<div className="text-tiny text-default-500">
 																	{getPreviewMeetingInfo(classInfo.meetings)}
 																	{campusList ? ` | ${campusList}` : ''}
+																	{availability ? ` | ${availability}` : ''}
 																</div>
 															</div>
 														</SelectItem>
