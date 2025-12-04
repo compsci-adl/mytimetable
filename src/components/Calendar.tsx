@@ -333,12 +333,14 @@ type CourseTimePlaceholderCardProps = {
 	classNumber: string;
 	classTypeId: string;
 	location: string;
+	campus: string;
 };
 const CourseTimePlaceholderCard = ({
 	courseId,
 	classNumber,
 	classTypeId,
 	location,
+	campus,
 }: CourseTimePlaceholderCardProps) => {
 	const color = useCourseColor(courseId);
 
@@ -366,7 +368,7 @@ const CourseTimePlaceholderCard = ({
 		>
 			{/* FIXME: Remove placeholder and center the location text by flex */}
 			<div className="absolute top-1/2 w-full -translate-y-1/2 text-center">
-				{location}
+				{location + ' | ' + campus}
 			</div>
 			<InvisiblePlaceholder />
 		</div>
@@ -409,6 +411,7 @@ const CalendarCourseOtherTimes = ({
 								classNumber={c.number}
 								classTypeId={course.classTypeId}
 								location={c.location}
+								campus={c.campus}
 							/>
 						))}
 					</div>

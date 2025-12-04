@@ -64,7 +64,7 @@ export type WeekCourses = Array<
 >;
 
 export type OtherWeekCourseTime = {
-	classes: Array<{ number: string; location: string }>;
+	classes: Array<{ number: string; location: string; campus: string }>;
 	time: DateTimeRange;
 };
 export type OtherWeekCoursesTimes = Array<Array<OtherWeekCourseTime>>;

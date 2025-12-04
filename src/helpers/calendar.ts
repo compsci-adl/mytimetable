@@ -204,7 +204,11 @@ export const useOtherWeekCourseTimes = ({
 			const existingTime = time.find(
 				(t) => t.time.start === m.time.start && t.time.end === m.time.end,
 			);
-			const newClass = { number: cls.number, location: m.location };
+			const newClass = {
+				number: cls.number,
+				location: m.location,
+				campus: m.campus,
+			};
 			if (existingTime) {
 				existingTime.classes.push(newClass);
 				return;
