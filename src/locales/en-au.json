@@ -29,7 +29,7 @@
 		"location": "Location",
 		"campus": "Campus",
 		"meetings-table": "Class meetings table",
-		"class": "Class",
+		"number": "Class Number",
 		"size": "Class Size",
 		"available-seats": "Available Seats",
 		"availability": "Availability",

@@ -171,7 +171,7 @@ export const ClassModal = ({
 												<span aria-hidden>⚠️</span>
 											</Tooltip>
 										)}
-									<span>{`${classTypeName} | ${t('class-modal.class')} ${classNumber}`}</span>
+									<span>{`${classTypeName} | ${t('class-modal.number')} ${classNumber}`}</span>
 								</span>
 							</div>
 						</ModalHeader>

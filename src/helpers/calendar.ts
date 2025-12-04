@@ -76,16 +76,23 @@ export const getWeekCourses = (
 				const isMeetingInWeek = checkDateRangeInWeek(weekStart, m.date);
 				if (!isMeetingInWeek) return;
 				const course = courses[WEEK_DAYS.indexOf(m.day)];
+
 				const newCourse: WeekCourse = {
 					id: c.id,
 					name: c.name,
 					classTypeId: cls.typeId,
 					classType: cls.type,
 					location: m.location,
+					campus: m.campus,
 					classNumber: cls.classNumber,
-					size: cls.size,
-					available_seats: cls.available_seats,
 				};
+
+				if (cls.size !== undefined) {
+					newCourse.size = cls.size;
+				}
+				if (cls.available_seats !== undefined) {
+					newCourse.available_seats = cls.available_seats;
+				}
 				const existingTime = course.find(
 					(t) => t.time.start === m.time.start && t.time.end === m.time.end,
 				);

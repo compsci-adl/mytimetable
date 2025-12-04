@@ -33,8 +33,8 @@ export type Course = {
 		classes: Array<{
 			number: string;
 			section?: string;
-			size: string;
-			available_seats: string;
+			size?: string;
+			available_seats?: string;
 			meetings: Meetings;
 		}>;
 	}>;
@@ -48,8 +48,8 @@ export type DetailedEnrolledCourse = {
 		type: string;
 		classNumber: string;
 		meetings: Meetings;
-		size: string;
-		available_seats: string;
+		size?: string;
+		available_seats?: string;
 	}>;
 };
 
@@ -59,9 +59,10 @@ export type WeekCourse = {
 	classTypeId: string;
 	classType: string;
 	location: string;
+	campus: string;
 	classNumber: string;
-	size: string;
-	available_seats: string;
+	size?: string;
+	available_seats?: string;
 };
 export type WeekCourses = Array<
 	Array<{ time: DateTimeRange; courses: Array<WeekCourse> }>

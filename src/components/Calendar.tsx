@@ -141,9 +141,11 @@ const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 						<span aria-label="full">⚠️ </span>
 					</Tooltip>
 				)}
-				[{course.classType}] {course.name.title}{' '}
+				{course.name.code} - {course.classType}{' '}
 			</div>
-			<div className="pr-6 text-2xs">{course.location}</div>
+			<div className="pr-6 text-2xs">
+				{course.location} | {course.campus}
+			</div>
 			<InvisiblePlaceholder />
 		</div>
 	);
