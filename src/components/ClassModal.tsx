@@ -1,0 +1,145 @@
+import {
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
+	Table,
+	TableHeader,
+	TableColumn,
+	TableBody,
+	TableRow,
+	TableCell,
+	Spacer,
+} from '@heroui/react';
+import { useTranslation } from 'react-i18next';
+
+import { useGetCourseInfo, useGetCourseClasses } from '../data/course-info';
+import type dayjs from '../lib/dayjs';
+import type { Meetings } from '../types/course';
+import { dateToDayjs, timeToDayjs } from '../utils/date';
+
+const DATE_FORMAT = 'D MMM';
+const TIME_FORMAT = 'h:mm A';
+const TIME_FORMAT_SHORT = 'h A';
+const getDisplayDate = (date: { start: string; end: string }) => {
+	const start = dateToDayjs(date.start);
+	const end = dateToDayjs(date.end);
+	if (start.isSame(end, 'day')) {
+		return start.format(DATE_FORMAT);
+	}
+	return `${start.format(DATE_FORMAT)} - ${end.format(DATE_FORMAT)}`;
+};
+const formatTime = (time: dayjs.Dayjs) => {
+	return time.minute() === 0
+		? time.format(TIME_FORMAT_SHORT)
+		: time.format(TIME_FORMAT);
+};
+const getDisplayTime = (time: { start: string; end: string }) => {
+	const start = timeToDayjs(time.start);
+	const end = timeToDayjs(time.end);
+	return `${formatTime(start)} - ${formatTime(end)}`;
+};
+
+const MeetingsTime = ({
+	meetings,
+	size,
+	availableSeats,
+}: {
+	meetings: Meetings;
+	size?: string | undefined;
+	availableSeats?: string | undefined;
+}) => {
+	const { t } = useTranslation();
+	if (!meetings || meetings.length === 0)
+		return (
+			<div className="text-default-500">{t('class-modal.no-class-info')}</div>
+		);
+	return (
+		<Table aria-label={t('class-modal.meetings-table') as string}>
+			<TableHeader>
+				<TableColumn>{t('class-modal.dates')}</TableColumn>
+				<TableColumn>{t('class-modal.days')}</TableColumn>
+				<TableColumn>{t('class-modal.time')}</TableColumn>
+				<TableColumn>{t('class-modal.location')}</TableColumn>
+				<TableColumn>{t('class-modal.campus')}</TableColumn>
+				<TableColumn>{t('class-modal.availability')}</TableColumn>
+			</TableHeader>
+			<TableBody>
+				{meetings.map((meeting, i) => (
+					<TableRow key={i}>
+						<TableCell>{getDisplayDate(meeting.date)}</TableCell>
+						<TableCell>{meeting.day}</TableCell>
+						<TableCell>{getDisplayTime(meeting.time)}</TableCell>
+						<TableCell>{meeting.location}</TableCell>
+						<TableCell>{meeting.campus}</TableCell>
+						<TableCell>
+							{availableSeats && size ? `${availableSeats} / ${size}` : ''}
+						</TableCell>
+					</TableRow>
+				))}
+			</TableBody>
+		</Table>
+	);
+};
+
+type ClassModalProps = {
+	isOpen: boolean;
+	onOpenChange: (isOpen: boolean) => void;
+	courseId: string;
+	classTypeId: string;
+	classNumber: string;
+};
+
+export const ClassModal = ({
+	isOpen,
+	onOpenChange,
+	courseId,
+	classTypeId,
+	classNumber,
+}: ClassModalProps) => {
+	const { t } = useTranslation();
+	const courseInfo = useGetCourseInfo(courseId);
+	const classList = useGetCourseClasses(courseId, classTypeId);
+	if (!courseInfo || !classList) return null;
+	const selected = classList.find((c) => c.number === classNumber);
+	const meetings = selected?.meetings ?? [];
+	const classTypeName =
+		courseInfo.class_list.find((ct) => ct.id === classTypeId)?.type ??
+		classTypeId;
+	const size = selected?.size ?? selected?.section ?? undefined;
+	const availableSeats = selected?.available_seats ?? undefined;
+
+	return (
+		<Modal
+			isOpen={isOpen}
+			onOpenChange={onOpenChange}
+			size="3xl"
+			scrollBehavior="inside"
+		>
+			<ModalContent>
+				{() => (
+					<>
+						<ModalHeader className="flex flex-col">
+							{courseInfo.name.code} - {courseInfo.name.title}
+							<div className="text-sm text-default-500">
+								<span>{`${classTypeName} | ${t('class-modal.class')} ${classNumber}`}</span>
+							</div>
+						</ModalHeader>
+						<ModalBody>
+							<MeetingsTime
+								meetings={meetings}
+								size={size}
+								availableSeats={availableSeats}
+							/>
+						</ModalBody>
+						<Spacer />
+						<Spacer />
+						<Spacer />
+					</>
+				)}
+			</ModalContent>
+		</Modal>
+	);
+};
+
+export default ClassModal;

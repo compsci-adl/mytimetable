@@ -1,6 +1,6 @@
 import { Button, Tooltip, useDisclosure } from '@heroui/react';
 import clsx from 'clsx';
-import { useRef, useState } from 'react';
+import { useRef, useState, type MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { create } from 'zustand';
 
@@ -19,6 +19,7 @@ import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
 import { timeToDayjs } from '../utils/date';
 import { useDrag, useDrop } from '../utils/dnd';
+import { ClassModal } from './ClassModal';
 import { EnrolmentModal } from './EnrolmentModal';
 
 type DraggingCourseState = {
@@ -47,8 +48,9 @@ type CourseCardProps = {
 	course: WeekCourse;
 	time: DateTimeRange;
 	currentWeek: dayjs.Dayjs;
+	onOpen?: (course: WeekCourse) => void;
 };
-const CourseCard = ({ course, time, currentWeek }: CourseCardProps) => {
+const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 	const { t } = useTranslation();
 
 	const otherTimes = useOtherWeekCourseTimes({
@@ -87,6 +89,7 @@ const CourseCard = ({ course, time, currentWeek }: CourseCardProps) => {
 			ref={ref}
 			className={clsx(
 				'h-full overflow-hidden rounded-md border-l-3 p-1 text-xs',
+				'relative',
 				color.border,
 				color.bg,
 				color.text,
@@ -95,16 +98,37 @@ const CourseCard = ({ course, time, currentWeek }: CourseCardProps) => {
 		>
 			<div className="flex justify-between text-2xs">
 				<div>{time.start}</div>
-				{isOnlyTime && (
-					<Tooltip content={t('calendar.immoveable-course')} size="sm">
-						<div>📌</div>
-					</Tooltip>
-				)}
+				<div className="flex items-center gap-1">
+					{isOnlyTime && (
+						<Tooltip content={t('calendar.immoveable-course')} size="sm">
+							<div>📌</div>
+						</Tooltip>
+					)}
+				</div>
 			</div>
-			<div className="font-bold">
+			<div className="absolute right-1 top-1 z-30">
+				<Tooltip content={t('calendar.open-class') as string} size="sm">
+					<Button
+						isIconOnly
+						variant="light"
+						size="sm"
+						className="p-0.5 text-xs font-bold"
+						onPointerDown={(e) => e.stopPropagation()}
+						onMouseDown={(e: MouseEvent<HTMLButtonElement>) => {
+							e.stopPropagation();
+						}}
+						onPress={() => {
+							if (onOpen) onOpen(course);
+						}}
+					>
+						+
+					</Button>
+				</Tooltip>
+			</div>
+			<div className="pr-6 font-bold">
 				[{course.classType}] {course.name.title}
 			</div>
-			<div>{course.location}</div>
+			<div className="pr-6 text-2xs">{course.location}</div>
 			<InvisiblePlaceholder />
 		</div>
 	);
@@ -265,9 +289,11 @@ const getGridRow = (time: string) => {
 const CalendarCourses = ({
 	courses: day,
 	currentWeek,
+	onCourseClick,
 }: {
 	courses: WeekCourses;
 	currentWeek: dayjs.Dayjs;
+	onCourseClick?: (course: WeekCourse) => void;
 }) => {
 	const blockHeight = useCalendarHourHeight((s) => s.height);
 
@@ -292,6 +318,7 @@ const CalendarCourses = ({
 								course={course}
 								time={time.time}
 								currentWeek={currentWeek}
+								onOpen={onCourseClick}
 							/>
 						))}
 					</div>
@@ -316,7 +343,6 @@ const CourseTimePlaceholderCard = ({
 	const color = useCourseColor(courseId);
 
 	const { updateClass } = useEnrolledCourse(courseId);
-
 	const [isDraggedOver, setIsDraggedOver] = useState(false);
 	const ref = useRef<HTMLDivElement | null>(null);
 	useDrop(ref, {
@@ -412,6 +438,23 @@ export const Calendar = () => {
 
 	const noCourses = useEnrolledCourses((s) => s.courses.length === 0);
 
+	const classModal = useDisclosure();
+	type SelectedClassState = {
+		courseId: string;
+		classTypeId: string;
+		classNumber: string;
+	} | null;
+	const [selectedClass, setSelectedClass] = useState<SelectedClassState>(null);
+
+	const onOpenClass = (course: WeekCourse) => {
+		setSelectedClass({
+			courseId: course.id,
+			classTypeId: course.classTypeId,
+			classNumber: course.classNumber,
+		});
+		classModal.onOpen();
+	};
+
 	return (
 		<div ref={ref} className="touch-pan-y">
 			<CalendarHeader
@@ -421,10 +464,30 @@ export const Calendar = () => {
 			/>
 			<div className="relative">
 				<CalendarBg currentWeek={currentWeek} />
-				<CalendarCourses courses={courses} currentWeek={currentWeek} />
+				<CalendarCourses
+					courses={courses}
+					currentWeek={currentWeek}
+					onCourseClick={onOpenClass}
+				/>
 				{isDragging && <CalendarCourseOtherTimes currentWeek={currentWeek} />}
 				{!noCourses && <EndActions />}
 			</div>
+			{selectedClass && (
+				<ClassModal
+					isOpen={classModal.isOpen}
+					onOpenChange={(isOpen) => {
+						if (isOpen) {
+							classModal.onOpen();
+						} else {
+							classModal.onClose();
+						}
+						if (!isOpen) setSelectedClass(null);
+					}}
+					courseId={selectedClass.courseId}
+					classTypeId={selectedClass.classTypeId}
+					classNumber={selectedClass.classNumber}
+				/>
+			)}
 		</div>
 	);
 };

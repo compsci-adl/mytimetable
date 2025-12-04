@@ -32,6 +32,9 @@ export type Course = {
 		type: string;
 		classes: Array<{
 			number: string;
+			section?: string;
+			size?: string;
+			available_seats?: string;
 			meetings: Meetings;
 		}>;
 	}>;
