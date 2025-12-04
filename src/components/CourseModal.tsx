@@ -11,6 +11,7 @@ import {
 	TableColumn,
 	TableHeader,
 	TableRow,
+	Tooltip,
 } from '@heroui/react';
 import { useTranslation } from 'react-i18next';
 import { Fragment } from 'react/jsx-runtime';
@@ -56,6 +57,8 @@ const MeetingsTime = ({
 	availableSeats?: string | undefined;
 }) => {
 	const { t } = useTranslation();
+	const isFullValue =
+		availableSeats !== undefined && parseInt(availableSeats, 10) === 0;
 
 	return (
 		<Table aria-label={`${classType} Meetings Table`}>
@@ -100,7 +103,13 @@ const MeetingsTime = ({
 								<TableCell>{sample.location}</TableCell>
 								<TableCell>{sample.campus}</TableCell>
 								<TableCell>
-									{availableSeats && size ? `${availableSeats} / ${size}` : ''}
+									{availableSeats && size ? (
+										<span className={isFullValue ? 'text-danger' : ''}>
+											{`${availableSeats} / ${size}`}
+										</span>
+									) : (
+										''
+									)}
 								</TableCell>
 							</TableRow>
 						);
@@ -194,7 +203,27 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 														| Array<{ key?: Key }>
 														| undefined;
 													const key = items?.[0]?.key as string | undefined;
-													return `Class Number: ${key}`;
+													const selectedClass = getSelectedClass(classType.id);
+													const isFullSelected =
+														selectedClass?.available_seats !== undefined &&
+														parseInt(selectedClass.available_seats, 10) === 0;
+													return (
+														<div className="flex items-center gap-2">
+															{isFullSelected && (
+																<Tooltip
+																	content={
+																		t('calendar.no-available-seats', {
+																			defaultValue: 'Class full',
+																		}) as string
+																	}
+																	size="sm"
+																>
+																	<span aria-hidden>⚠️</span>
+																</Tooltip>
+															)}
+															<div>{`Class Number: ${key}`}</div>
+														</div>
+													);
 												}}
 												selectedKeys={getKeys(
 													getSelectedClassNumber(classType.id),
@@ -220,17 +249,46 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 														classInfo.available_seats && classInfo.size
 															? `${classInfo.available_seats} / ${classInfo.size}`
 															: undefined;
+													const isFull =
+														classInfo.available_seats !== undefined &&
+														parseInt(classInfo.available_seats, 10) === 0;
 													return (
 														<SelectItem
 															key={classInfo.number}
 															textValue={classInfo.number}
 														>
 															<div>
-																<div>{classInfo.number}</div>
+																<div className="flex items-center gap-2">
+																	{isFull && (
+																		<Tooltip
+																			content={
+																				t('calendar.no-available-seats', {
+																					defaultValue: 'Class full',
+																				}) as string
+																			}
+																			size="sm"
+																		>
+																			<span aria-hidden>⚠️</span>
+																		</Tooltip>
+																	)}
+																	<div>{classInfo.number}</div>
+																</div>
 																<div className="text-tiny text-default-500">
 																	{getPreviewMeetingInfo(classInfo.meetings)}
 																	{campusList ? ` | ${campusList}` : ''}
-																	{availability ? ` | ${availability}` : ''}
+																	{availability ? (
+																		<>
+																			{' '}
+																			|{' '}
+																			<span
+																				className={isFull ? 'text-danger' : ''}
+																			>
+																				{availability}
+																			</span>
+																		</>
+																	) : (
+																		''
+																	)}
 																</div>
 															</div>
 														</SelectItem>

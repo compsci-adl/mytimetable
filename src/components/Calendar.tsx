@@ -84,6 +84,9 @@ const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 		[isOnlyTime],
 	);
 
+	const isFull =
+		course.available_seats !== undefined &&
+		parseInt(course.available_seats, 10) === 0;
 	return (
 		<div
 			ref={ref}
@@ -126,7 +129,19 @@ const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 				</Tooltip>
 			</div>
 			<div className="pr-6 font-bold">
-				[{course.classType}] {course.name.title}
+				{isFull && (
+					<Tooltip
+						content={
+							t('calendar.no-available-seats', {
+								defaultValue: 'Class full',
+							}) as string
+						}
+						size="sm"
+					>
+						<span aria-label="full">⚠️ </span>
+					</Tooltip>
+				)}
+				[{course.classType}] {course.name.title}{' '}
 			</div>
 			<div className="pr-6 text-2xs">{course.location}</div>
 			<InvisiblePlaceholder />

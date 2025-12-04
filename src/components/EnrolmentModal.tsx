@@ -51,15 +51,38 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 							</CardHeader>
 							<Divider />
 							<CardBody className="grid grid-cols-2 items-center justify-center gap-2">
-								{c.classes.map((cls) => (
-									<div
-										key={cls.typeId}
-										className="rounded-lg border *:p-1 *:text-center"
-									>
-										<div className="border-b font-bold">{cls.type}</div>
-										<div>{cls.classNumber}</div>
-									</div>
-								))}
+								{c.classes.map((cls) => {
+									const isFull =
+										cls.available_seats !== undefined &&
+										parseInt(cls.available_seats, 10) === 0;
+									return (
+										<div
+											key={cls.typeId}
+											className="rounded-lg border *:p-1 *:text-center"
+										>
+											<div className="border-b font-bold">
+												<span className="flex items-center justify-center gap-2">
+													{isFull && (
+														<Tooltip
+															content={
+																t('calendar.no-available-seats', {
+																	defaultValue: 'No available seats',
+																}) as string
+															}
+															size="sm"
+														>
+															<span aria-hidden className="text-danger">
+																⚠️
+															</span>
+														</Tooltip>
+													)}
+													<span>{cls.type}</span>
+												</span>
+											</div>
+											<div>{cls.classNumber}</div>
+										</div>
+									);
+								})}
 							</CardBody>
 						</Card>
 					))}

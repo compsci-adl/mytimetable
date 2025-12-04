@@ -123,15 +123,23 @@ export const useDetailedEnrolledCourses = (): Array<DetailedEnrolledCourse> => {
 					type: 'NOT_FOUND',
 					classNumber: '66666',
 					meetings: [],
+					size: '',
+					available_seats: '',
 				};
 				const classInfo = courseInfo.class_list.find((c) => c.id === cls.id);
 				if (!classInfo) return notFound;
 				const { type, classes } = classInfo;
-				const meetings = classes.find(
-					(c) => c.number === cls.classNumber,
-				)?.meetings;
+				const found = classes.find((c) => c.number === cls.classNumber);
+				const meetings = found?.meetings;
 				if (!meetings) return notFound;
-				return { typeId: cls.id, type, classNumber: cls.classNumber, meetings };
+				return {
+					typeId: cls.id,
+					type,
+					classNumber: cls.classNumber,
+					meetings,
+					size: found.size,
+					available_seats: found.available_seats,
+				};
 			}),
 		};
 	});

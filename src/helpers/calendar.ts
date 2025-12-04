@@ -83,6 +83,8 @@ export const getWeekCourses = (
 					classType: cls.type,
 					location: m.location,
 					classNumber: cls.classNumber,
+					size: cls.size,
+					available_seats: cls.available_seats,
 				};
 				const existingTime = course.find(
 					(t) => t.time.start === m.time.start && t.time.end === m.time.end,

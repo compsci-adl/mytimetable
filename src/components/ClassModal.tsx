@@ -10,6 +10,7 @@ import {
 	TableRow,
 	TableCell,
 	Spacer,
+	Tooltip,
 } from '@heroui/react';
 import { useTranslation } from 'react-i18next';
 
@@ -93,7 +94,20 @@ const MeetingsTime = ({
 							<TableCell>{sample.location}</TableCell>
 							<TableCell>{sample.campus}</TableCell>
 							<TableCell>
-								{availableSeats && size ? `${availableSeats} / ${size}` : ''}
+								{availableSeats && size ? (
+									<span
+										className={
+											availableSeats !== undefined &&
+											parseInt(availableSeats, 10) === 0
+												? 'text-danger'
+												: ''
+										}
+									>
+										{`${availableSeats} / ${size}`}
+									</span>
+								) : (
+									''
+								)}
 							</TableCell>
 						</TableRow>
 					);
@@ -143,7 +157,22 @@ export const ClassModal = ({
 						<ModalHeader className="flex flex-col">
 							{courseInfo.name.code} - {courseInfo.name.title}
 							<div className="text-sm text-default-500">
-								<span>{`${classTypeName} | ${t('class-modal.class')} ${classNumber}`}</span>
+								<span className="flex items-center gap-2">
+									{availableSeats !== undefined &&
+										parseInt(availableSeats, 10) === 0 && (
+											<Tooltip
+												content={
+													t('calendar.no-available-seats', {
+														defaultValue: 'Class full',
+													}) as string
+												}
+												size="sm"
+											>
+												<span aria-hidden>⚠️</span>
+											</Tooltip>
+										)}
+									<span>{`${classTypeName} | ${t('class-modal.class')} ${classNumber}`}</span>
+								</span>
 							</div>
 						</ModalHeader>
 						<ModalBody>
