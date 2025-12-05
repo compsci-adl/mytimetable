@@ -115,6 +115,7 @@ const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 						isIconOnly
 						variant="light"
 						size="sm"
+						className="text-lg font-semibold"
 						onPointerDown={(e) => e.stopPropagation()}
 						onMouseDown={(e: MouseEvent<HTMLButtonElement>) => {
 							e.stopPropagation();
@@ -123,7 +124,7 @@ const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 							if (onOpen) onOpen(course);
 						}}
 					>
-						➕
+						+
 					</Button>
 				</Tooltip>
 			</div>
