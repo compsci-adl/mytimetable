@@ -11,6 +11,7 @@ import {
 	TableColumn,
 	TableHeader,
 	TableRow,
+	Tooltip,
 } from '@heroui/react';
 import { useTranslation } from 'react-i18next';
 import { Fragment } from 'react/jsx-runtime';
@@ -47,11 +48,17 @@ const getDisplayTime = (time: { start: string; end: string }) => {
 const MeetingsTime = ({
 	meetings,
 	classType,
+	size,
+	availableSeats,
 }: {
 	meetings: Meetings;
 	classType: string;
+	size?: string | undefined;
+	availableSeats?: string | undefined;
 }) => {
 	const { t } = useTranslation();
+	const isFullValue =
+		availableSeats !== undefined && parseInt(availableSeats, 10) === 0;
 
 	return (
 		<Table aria-label={`${classType} Meetings Table`}>
@@ -61,17 +68,53 @@ const MeetingsTime = ({
 				<TableColumn>{t('course-modal.time')}</TableColumn>
 				<TableColumn>{t('course-modal.location')}</TableColumn>
 				<TableColumn>{t('course-modal.campus')}</TableColumn>
+				<TableColumn>{t('course-modal.availability')}</TableColumn>
 			</TableHeader>
 			<TableBody>
-				{meetings.map((meeting, i) => (
-					<TableRow key={i}>
-						<TableCell>{getDisplayDate(meeting.date)}</TableCell>
-						<TableCell>{meeting.day}</TableCell>
-						<TableCell>{getDisplayTime(meeting.time)}</TableCell>
-						<TableCell>{meeting.location}</TableCell>
-						<TableCell>{meeting.campus}</TableCell>
-					</TableRow>
-				))}
+				{/* Group meetings that are identical except for the date */}
+				{(() => {
+					const grouped: Record<string, Meetings> = {};
+					const order: string[] = [];
+					meetings.forEach((m) => {
+						const key = [
+							m.day,
+							m.time.start,
+							m.time.end,
+							m.location,
+							m.campus,
+						].join('|');
+						if (!grouped[key]) {
+							grouped[key] = [];
+							order.push(key);
+						}
+						grouped[key].push(m);
+					});
+					return order.map((k, i) => {
+						const group = grouped[k];
+						const sample = group[0];
+						const dates = deduplicateArray(
+							group.map((m) => getDisplayDate(m.date)),
+						).join(', ');
+						return (
+							<TableRow key={i}>
+								<TableCell>{dates}</TableCell>
+								<TableCell>{sample.day}</TableCell>
+								<TableCell>{getDisplayTime(sample.time)}</TableCell>
+								<TableCell>{sample.location}</TableCell>
+								<TableCell>{sample.campus}</TableCell>
+								<TableCell>
+									{availableSeats && size ? (
+										<span className={isFullValue ? 'text-danger' : ''}>
+											{`${availableSeats} / ${size}`}
+										</span>
+									) : (
+										''
+									)}
+								</TableCell>
+							</TableRow>
+						);
+					});
+				})()}
 			</TableBody>
 		</Table>
 	);
@@ -81,7 +124,7 @@ const getPreviewMeetingInfo = (meetings: Meetings) => {
 	const displayMeetings = meetings.map(
 		(m) => `${m.day} ${getDisplayTime(m.time)}`,
 	);
-	return deduplicateArray(displayMeetings).join(' & ');
+	return deduplicateArray(displayMeetings).join(', ');
 };
 const getKeys = (nullableKey: Key | undefined) => {
 	return nullableKey ? [nullableKey] : undefined;
@@ -107,13 +150,21 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 			?.classes.find((c) => c.number === selectedClassNumber);
 		return selectedClass?.meetings ?? [];
 	};
+	const getSelectedClass = (classTypeId: string) => {
+		const selectedClassNumber = getSelectedClassNumber(classTypeId);
+		if (!selectedClassNumber) return undefined;
+		const selectedClass = courseInfo?.class_list
+			.find((c) => c.id === classTypeId)
+			?.classes.find((c) => c.number === selectedClassNumber);
+		return selectedClass;
+	};
 
 	if (!courseInfo) return;
 	return (
 		<Modal
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			size="2xl"
+			size="3xl"
 			scrollBehavior="inside"
 		>
 			<ModalContent>
@@ -152,7 +203,27 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 														| Array<{ key?: Key }>
 														| undefined;
 													const key = items?.[0]?.key as string | undefined;
-													return `Class Number: ${key}`;
+													const selectedClass = getSelectedClass(classType.id);
+													const isFullSelected =
+														selectedClass?.available_seats !== undefined &&
+														parseInt(selectedClass.available_seats, 10) === 0;
+													return (
+														<div className="flex items-center gap-2">
+															{isFullSelected && (
+																<Tooltip
+																	content={
+																		t('calendar.no-available-seats', {
+																			defaultValue: 'Class full',
+																		}) as string
+																	}
+																	size="sm"
+																>
+																	<span aria-hidden>⚠️</span>
+																</Tooltip>
+															)}
+															<div>{`Class Number: ${key}`}</div>
+														</div>
+													);
 												}}
 												selectedKeys={getKeys(
 													getSelectedClassNumber(classType.id),
@@ -174,16 +245,50 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 															.map((m) => m.campus ?? '')
 															.filter(Boolean),
 													).join(', ');
+													const availability =
+														classInfo.available_seats && classInfo.size
+															? `${classInfo.available_seats} / ${classInfo.size}`
+															: undefined;
+													const isFull =
+														classInfo.available_seats !== undefined &&
+														parseInt(classInfo.available_seats, 10) === 0;
 													return (
 														<SelectItem
 															key={classInfo.number}
 															textValue={classInfo.number}
 														>
 															<div>
-																<div>{classInfo.number}</div>
+																<div className="flex items-center gap-2">
+																	{isFull && (
+																		<Tooltip
+																			content={
+																				t('calendar.no-available-seats', {
+																					defaultValue: 'Class full',
+																				}) as string
+																			}
+																			size="sm"
+																		>
+																			<span aria-hidden>⚠️</span>
+																		</Tooltip>
+																	)}
+																	<div>{classInfo.number}</div>
+																</div>
 																<div className="text-tiny text-default-500">
 																	{getPreviewMeetingInfo(classInfo.meetings)}
 																	{campusList ? ` | ${campusList}` : ''}
+																	{availability ? (
+																		<>
+																			{' '}
+																			|{' '}
+																			<span
+																				className={isFull ? 'text-danger' : ''}
+																			>
+																				{availability}
+																			</span>
+																		</>
+																	) : (
+																		''
+																	)}
 																</div>
 															</div>
 														</SelectItem>
@@ -191,10 +296,23 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 												})}
 											</Select>
 										)}
-										<MeetingsTime
-											meetings={getMeetings(classType.id)}
-											classType={classType.type}
-										/>
+										{(() => {
+											const selectedClass = getSelectedClass(classType.id);
+											const size =
+												selectedClass?.size ??
+												selectedClass?.section ??
+												undefined;
+											const availableSeats =
+												selectedClass?.available_seats ?? undefined;
+											return (
+												<MeetingsTime
+													meetings={getMeetings(classType.id)}
+													classType={classType.type}
+													size={size}
+													availableSeats={availableSeats}
+												/>
+											);
+										})()}
 									</Fragment>
 								));
 							})()}

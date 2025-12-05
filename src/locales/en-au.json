@@ -19,7 +19,22 @@
 		"time": "Time",
 		"location": "Location",
 		"campus": "Campus",
+		"availability": "Availability",
 		"no-class-info": "No class information is currently available, please try again later in a couple of days."
+	},
+	"class-modal": {
+		"dates": "Dates",
+		"days": "Days",
+		"time": "Time",
+		"location": "Location",
+		"campus": "Campus",
+		"meetings-table": "Class meetings table",
+		"number": "Class Number",
+		"section": "Section",
+		"size": "Class Size",
+		"available-seats": "Available Seats",
+		"availability": "Availability",
+		"no-class-info": "No class information is currently available for this class."
 	},
 	"calendar": {
 		"first-week": "First week",
@@ -42,6 +57,7 @@
 			"December"
 		],
 		"immoveable-course": "Immoveable course",
+		"open-class": "Open class details",
 		"end-actions": {
 			"copy": "Copy to clipboard",
 			"ready": "Ready for Enrolment",
