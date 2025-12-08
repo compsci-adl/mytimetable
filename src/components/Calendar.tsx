@@ -11,8 +11,10 @@ import {
 	useEnrolledCourse,
 	useEnrolledCourses,
 } from '../data/enrolled-courses';
+import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
+import { findConflicts } from '../helpers/conflicts';
 import { calcHoursDuration } from '../helpers/hours-duration';
 import { useZoom } from '../helpers/zoom';
 import type dayjs from '../lib/dayjs';
@@ -49,8 +51,15 @@ type CourseCardProps = {
 	time: DateTimeRange;
 	currentWeek: dayjs.Dayjs;
 	onOpen?: (course: WeekCourse) => void;
+	hasConflict?: boolean;
 };
-const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
+const CourseCard = ({
+	course,
+	time,
+	currentWeek,
+	onOpen,
+	hasConflict,
+}: CourseCardProps) => {
 	const { t } = useTranslation();
 
 	const otherTimes = useOtherWeekCourseTimes({
@@ -97,7 +106,12 @@ const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 				color.bg,
 				color.text,
 				isDragging ? 'opacity-30' : 'opacity-85',
+				hasConflict && 'relative',
 			)}
+			style={{
+				outline: hasConflict ? '3px solid #f59e0b' : undefined,
+				outlineOffset: hasConflict ? '-3px' : undefined,
+			}}
 		>
 			<div className="flex justify-between text-2xs">
 				<div>{time.start}</div>
@@ -129,6 +143,14 @@ const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 				</Tooltip>
 			</div>
 			<div className="pr-6 font-bold">
+				{hasConflict && (
+					<Tooltip
+						content={t('calendar.conflict') ?? 'Conflict with another class'}
+						size="sm"
+					>
+						<span aria-label="full">⚠️ </span>
+					</Tooltip>
+				)}
 				{isFull && (
 					<Tooltip
 						content={
@@ -401,6 +423,9 @@ const CalendarCourses = ({
 }) => {
 	const blockHeight = useCalendarHourHeight((s) => s.height);
 
+	const detailed = useDetailedEnrolledCourses();
+	const { conflictsByClassKey } = findConflicts(detailed);
+
 	// Flatten events so we can handle overlaps between different time ranges
 	type Event = {
 		course: WeekCourse;
@@ -494,6 +519,10 @@ const CalendarCourses = ({
 									time={evt.time}
 									currentWeek={currentWeek}
 									onOpen={onCourseClick}
+									hasConflict={(() => {
+										const key = `${evt.course.id}|${evt.course.classTypeId}|${evt.course.classNumber}`;
+										return (conflictsByClassKey[key] ?? []).length > 0;
+									})()}
 								/>
 							</div>
 						</div>

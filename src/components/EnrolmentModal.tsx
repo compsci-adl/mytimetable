@@ -16,6 +16,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
+import { findConflicts } from '../helpers/conflicts';
 import { useExportCalendar } from '../helpers/export-calendar';
 
 type ReadyModalProps = {
@@ -28,6 +29,7 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 
 	const enrolledCourses = useDetailedEnrolledCourses();
 	const isOnlyCourse = enrolledCourses.length === 1;
+	const { conflictsByClassKey } = findConflicts(enrolledCourses);
 
 	return (
 		<Modal
@@ -50,15 +52,22 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 								<p className="text-sm">{c.name.title}</p>
 							</CardHeader>
 							<Divider />
-							<CardBody className="grid grid-cols-2 items-center justify-center gap-2">
+							<CardBody
+								className={clsx(
+									c.classes.length === 1 ? 'grid-cols-1' : 'grid-cols-2',
+									'grid items-center justify-items-center gap-4 p-4',
+								)}
+							>
 								{c.classes.map((cls) => {
 									const isFull =
 										cls.available_seats !== undefined &&
 										parseInt(cls.available_seats, 10) === 0;
+									const classKey = `${c.id}|${cls.typeId}|${cls.classNumber}`;
+									const classConflicts = conflictsByClassKey[classKey] ?? [];
 									return (
 										<div
 											key={cls.typeId}
-											className="rounded-lg border *:p-1 *:text-center"
+											className={clsx('rounded-lg border p-2 text-center')}
 										>
 											<div className="border-b font-bold">
 												<span className="flex items-center justify-center gap-2">
@@ -66,12 +75,25 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 														<Tooltip
 															content={
 																t('calendar.no-available-seats', {
-																	defaultValue: 'No available seats',
+																	defaultValue: 'Class full',
 																}) as string
 															}
 															size="sm"
 														>
 															<span aria-hidden className="text-danger">
+																⚠️
+															</span>
+														</Tooltip>
+													)}
+													{classConflicts.length > 0 && (
+														<Tooltip
+															content={
+																t('calendar.conflict') ??
+																'Conflicts with another class'
+															}
+															size="sm"
+														>
+															<span aria-hidden className="">
 																⚠️
 															</span>
 														</Tooltip>

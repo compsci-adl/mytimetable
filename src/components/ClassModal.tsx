@@ -15,6 +15,8 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { useGetCourseInfo, useGetCourseClasses } from '../data/course-info';
+import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
+import { findConflicts } from '../helpers/conflicts';
 import type dayjs from '../lib/dayjs';
 import type { Meetings } from '../types/course';
 import { dateToDayjs, timeToDayjs } from '../utils/date';
@@ -135,6 +137,8 @@ export const ClassModal = ({
 	const { t } = useTranslation();
 	const courseInfo = useGetCourseInfo(courseId);
 	const classList = useGetCourseClasses(courseId, classTypeId);
+	const detailed = useDetailedEnrolledCourses();
+	const { conflictsByClassKey } = findConflicts(detailed);
 	if (!courseInfo || !classList) return null;
 	const selected = classList.find((c) => c.number === classNumber);
 	const meetings = selected?.meetings ?? [];
@@ -176,6 +180,37 @@ export const ClassModal = ({
 							</div>
 						</ModalHeader>
 						<ModalBody>
+							{(() => {
+								const classKey = `${courseId}|${classTypeId}|${classNumber}`;
+								const classConflicts = conflictsByClassKey[classKey] ?? [];
+								if (classConflicts.length === 0) return null;
+								const unique: typeof classConflicts = [];
+								const seen = new Set<string>();
+								for (const c of classConflicts) {
+									const k = `${c.otherCourseId}|${c.otherClassNumber}|${c.otherMeeting.time.start}|${c.otherMeeting.time.end}|${c.otherMeeting.location}|${c.otherMeeting.campus}`;
+									if (!seen.has(k)) {
+										seen.add(k);
+										unique.push(c);
+									}
+								}
+								return (
+									<div className="mb-4 rounded-md border border-yellow-300 bg-yellow-50 p-4">
+										<div className="mb-2 font-semibold">
+											<span aria-hidden className="mr-2">
+												⚠️
+											</span>
+											{t('class-modal.conflicts') ?? 'Conflicts'}
+										</div>
+										<ul className="list-disc pl-5">
+											{unique.map((c, i) => (
+												<li
+													key={i}
+												>{`${c.otherCourseCode} (${c.otherClassNumber}) — ${c.otherMeeting.time.start} - ${c.otherMeeting.time.end} @ ${c.otherMeeting.location}`}</li>
+											))}
+										</ul>
+									</div>
+								);
+							})()}
 							<MeetingsTime
 								meetings={meetings}
 								size={size}
