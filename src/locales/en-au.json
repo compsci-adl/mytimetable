@@ -64,9 +64,12 @@
 		"open-class": "Open class details",
 		"end-actions": {
 			"copy": "Copy to clipboard",
+			"export": "Export to calendar",
+			"export-success": "Calendar file exported",
+			"no-courses": "No courses to export",
 			"ready": "Ready for Enrolment",
 			"copy-success": "Copied to clipboard!",
-			"enrolment-instruction": "Copy the numbers below and enter them on the myEnrolment page."
+			"enrolment-instruction": "Copy the numbers below and enter them on the myEnrolment page. You can also export your classes to a calendar file."
 		}
 	},
 	"help": {

@@ -25,7 +25,7 @@ type ReadyModalProps = {
 };
 export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 	const { t } = useTranslation();
-	const { copyText } = useExportCalendar();
+	const { copyText, exportIcs } = useExportCalendar();
 
 	const enrolledCourses = useDetailedEnrolledCourses();
 	const isOnlyCourse = enrolledCourses.length === 1;
@@ -110,16 +110,28 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 					))}
 				</ModalBody>
 				<ModalFooter className="justify-between">
-					<Tooltip content={t('calendar.end-actions.copy')} size="sm">
-						<Button
-							isIconOnly
-							className="text-xl"
-							onPress={copyText}
-							variant="flat"
-						>
-							📋
-						</Button>
-					</Tooltip>
+					<div className="flex items-center gap-4">
+						<Tooltip content={t('calendar.end-actions.export')} size="sm">
+							<Button
+								isIconOnly
+								className="text-xl"
+								onPress={exportIcs}
+								variant="flat"
+							>
+								📅
+							</Button>
+						</Tooltip>
+						<Tooltip content={t('calendar.end-actions.copy')} size="sm">
+							<Button
+								isIconOnly
+								className="text-xl"
+								onPress={copyText}
+								variant="flat"
+							>
+								📋
+							</Button>
+						</Tooltip>
+					</div>
 					<Button
 						href="https://apps.adelaide.edu.au/student/myenrolment/"
 						as={Link}
