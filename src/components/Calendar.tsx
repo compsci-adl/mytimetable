@@ -11,8 +11,10 @@ import {
 	useEnrolledCourse,
 	useEnrolledCourses,
 } from '../data/enrolled-courses';
+import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
+import { findConflicts } from '../helpers/conflicts';
 import { calcHoursDuration } from '../helpers/hours-duration';
 import { useZoom } from '../helpers/zoom';
 import type dayjs from '../lib/dayjs';
@@ -49,8 +51,15 @@ type CourseCardProps = {
 	time: DateTimeRange;
 	currentWeek: dayjs.Dayjs;
 	onOpen?: (course: WeekCourse) => void;
+	hasConflict?: boolean;
 };
-const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
+const CourseCard = ({
+	course,
+	time,
+	currentWeek,
+	onOpen,
+	hasConflict,
+}: CourseCardProps) => {
 	const { t } = useTranslation();
 
 	const otherTimes = useOtherWeekCourseTimes({
@@ -97,7 +106,12 @@ const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 				color.bg,
 				color.text,
 				isDragging ? 'opacity-30' : 'opacity-85',
+				hasConflict && 'relative',
 			)}
+			style={{
+				outline: hasConflict ? '3px solid #f59e0b' : undefined,
+				outlineOffset: hasConflict ? '-3px' : undefined,
+			}}
 		>
 			<div className="flex justify-between text-2xs">
 				<div>{time.start}</div>
@@ -109,7 +123,7 @@ const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 					)}
 				</div>
 			</div>
-			<div className="absolute right-1 top-1 z-30">
+			<div className="absolute bottom-1 right-1 z-30">
 				<Tooltip content={t('calendar.open-class') as string} size="sm">
 					<Button
 						isIconOnly
@@ -129,6 +143,14 @@ const CourseCard = ({ course, time, currentWeek, onOpen }: CourseCardProps) => {
 				</Tooltip>
 			</div>
 			<div className="pr-6 font-bold">
+				{hasConflict && (
+					<Tooltip
+						content={t('calendar.conflict') ?? 'Conflict with another class'}
+						size="sm"
+					>
+						<span aria-label="full">⚠️ </span>
+					</Tooltip>
+				)}
 				{isFull && (
 					<Tooltip
 						content={
@@ -303,6 +325,93 @@ const getGridRow = (time: string) => {
 	const t = timeToDayjs(time);
 	return t.hour() * 2 + (t.minute() >= 30 ? 1 : 0) - 13;
 };
+// Compute column assignments for classes (to render overlapping classes side-by-side)
+const computeEventColumns = (
+	events: Array<{ time: DateTimeRange; key: string }>,
+) => {
+	const n = events.length;
+	const clusters: Array<Array<{ time: DateTimeRange; key: string }>> = [];
+	const visited = new Array(n).fill(false);
+	const adj: boolean[][] = Array.from({ length: n }, () =>
+		new Array(n).fill(false),
+	);
+	for (let a = 0; a < n; a++) {
+		for (let b = a + 1; b < n; b++) {
+			if (
+				timeToDayjs(events[a].time.start).isBefore(
+					timeToDayjs(events[b].time.end),
+				) &&
+				timeToDayjs(events[b].time.start).isBefore(
+					timeToDayjs(events[a].time.end),
+				)
+			) {
+				adj[a][b] = true;
+				adj[b][a] = true;
+			}
+		}
+	}
+	for (let i = 0; i < n; i++) {
+		if (visited[i]) continue;
+		const stack = [i];
+		const comp: Array<{ time: DateTimeRange; key: string }> = [];
+		visited[i] = true;
+		while (stack.length > 0) {
+			const cur = stack.pop() as number;
+			comp.push(events[cur]);
+			for (let j = 0; j < n; j++) {
+				if (!visited[j] && adj[cur][j]) {
+					visited[j] = true;
+					stack.push(j);
+				}
+			}
+		}
+		clusters.push(comp);
+	}
+
+	const result: Record<string, { column: number; columns: number }> = {};
+	clusters.forEach((comp) => {
+		const sorted = comp.slice().sort((a, b) => {
+			const aStart = timeToDayjs(a.time.start);
+			const bStart = timeToDayjs(b.time.start);
+			if (aStart.isBefore(bStart)) return -1;
+			if (aStart.isAfter(bStart)) return 1;
+			const aEnd = timeToDayjs(a.time.end);
+			const bEnd = timeToDayjs(b.time.end);
+			if (aEnd.isBefore(bEnd)) return -1;
+			if (aEnd.isAfter(bEnd)) return 1;
+			return 0;
+		});
+
+		const columnEnds: Array<{ end: string } | null> = [];
+		const assignedPerKey: Record<string, number> = {};
+		for (const e of sorted) {
+			let assigned = -1;
+			for (let c = 0; c < columnEnds.length; c++) {
+				const end = columnEnds[c]?.end;
+				if (
+					!end ||
+					timeToDayjs(end).isSameOrBefore(timeToDayjs(e.time.start))
+				) {
+					assigned = c;
+					columnEnds[c] = { end: e.time.end };
+					break;
+				}
+			}
+			if (assigned === -1) {
+				assigned = columnEnds.length;
+				columnEnds.push({ end: e.time.end });
+			}
+			assignedPerKey[e.key] = assigned;
+		}
+		const columnsCount = columnEnds.length;
+		// Ensure every event in the cluster uses the same columnsCount
+		Object.entries(assignedPerKey).forEach(([k, assigned]) => {
+			result[k] = { column: assigned, columns: columnsCount };
+		});
+	});
+	return result;
+};
+
 const CalendarCourses = ({
 	courses: day,
 	currentWeek,
@@ -314,33 +423,112 @@ const CalendarCourses = ({
 }) => {
 	const blockHeight = useCalendarHourHeight((s) => s.height);
 
+	const detailed = useDetailedEnrolledCourses();
+	const { conflictsByClassKey } = findConflicts(detailed);
+
+	// Flatten events so we can handle overlaps between different time ranges
+	type Event = {
+		course: WeekCourse;
+		time: DateTimeRange;
+		key: string;
+		dayIndex: number;
+		j: number;
+	};
+
+	const eventsPerDay: Array<Array<Event>> = day.map((times, i) =>
+		times.flatMap((time, j) =>
+			time.courses.map((course, index) => ({
+				course,
+				time: time.time,
+				key: `${course.id}-${course.classTypeId}-${course.classNumber}-${course.location}-${index}`,
+				dayIndex: i,
+				j,
+			})),
+		),
+	);
+
+	const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+	const courseRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
 	return (
-		<div className="absolute left-10 top-10 z-0 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]">
-			{day.map((times, i) =>
-				times.map((time, j) => (
-					<div
-						className="flex gap-[1px] p-[1px]"
-						key={`${i}${j}`}
-						style={{
-							gridColumnStart: i + 1,
-							gridRowStart: getGridRow(time.time.start),
-							gridRowEnd: getGridRow(time.time.end),
-							height: calcHoursDuration(time.time) * blockHeight + 'rem',
-							zIndex: j, // TODO: Remove zIndex after implementing course conflicts #5
-						}}
-					>
-						{time.courses.map((course, index) => (
-							<CourseCard
-								key={`${course.id}-${course.classTypeId}-${course.classNumber}-${course.location}-${index}`}
-								course={course}
-								time={time.time}
-								currentWeek={currentWeek}
-								onOpen={onCourseClick}
-							/>
-						))}
-					</div>
-				)),
-			)}
+		<div
+			className="absolute left-10 top-10 z-0 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]"
+			style={{ width: 'calc(100% - 2.5rem)' }}
+			onPointerMove={(e) => {
+				const { clientX, clientY } = e;
+				for (const key of Object.keys(courseRefs.current)) {
+					const el = courseRefs.current[key];
+					if (!el) continue;
+					const r = el.getBoundingClientRect();
+					if (
+						clientX >= r.left &&
+						clientX <= r.right &&
+						clientY >= r.top &&
+						clientY <= r.bottom
+					) {
+						if (hoveredKey !== key) setHoveredKey(key);
+						return;
+					}
+				}
+				if (hoveredKey !== null) setHoveredKey(null);
+			}}
+			onPointerLeave={() => setHoveredKey(null)}
+		>
+			{eventsPerDay.map((events, i) => {
+				if (events.length === 0) return null;
+				const columnsMap = computeEventColumns(
+					events.map((e) => ({ time: e.time, key: e.key })),
+				);
+				return events.map((evt) => {
+					const cols = columnsMap[evt.key] ?? { column: 0, columns: 1 };
+					const widthPercent = 100 / cols.columns;
+					const leftPercent = cols.column * widthPercent;
+					const height = calcHoursDuration(evt.time) * blockHeight + 'rem';
+					const baseZ = evt.j ?? 0;
+					const z = hoveredKey === evt.key ? 1000 : baseZ;
+					return (
+						<div
+							className="relative w-full p-[1px]"
+							key={evt.key}
+							onPointerEnter={() => setHoveredKey(evt.key)}
+							onPointerLeave={() =>
+								setHoveredKey((k) => (k === evt.key ? null : k))
+							}
+							style={{
+								gridColumnStart: i + 1,
+								gridRowStart: getGridRow(evt.time.start),
+								gridRowEnd: getGridRow(evt.time.end),
+								height,
+								zIndex: z,
+								pointerEvents: 'none',
+							}}
+						>
+							<div
+								ref={(el) => (courseRefs.current[evt.key] = el)}
+								style={{
+									position: 'absolute',
+									top: 0,
+									left: `${leftPercent}%`,
+									width: `calc(${widthPercent}% - 1px)`,
+									height: '100%',
+									pointerEvents: 'auto',
+								}}
+							>
+								<CourseCard
+									course={evt.course}
+									time={evt.time}
+									currentWeek={currentWeek}
+									onOpen={onCourseClick}
+									hasConflict={(() => {
+										const key = `${evt.course.id}|${evt.course.classTypeId}|${evt.course.classNumber}`;
+										return (conflictsByClassKey[key] ?? []).length > 0;
+									})()}
+								/>
+							</div>
+						</div>
+					);
+				});
+			})}
 		</div>
 	);
 };
@@ -406,34 +594,97 @@ const CalendarCourseOtherTimes = ({
 		currentWeek,
 	});
 
+	const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+	const placeholderRefs = useRef<Record<string, HTMLDivElement | null>>({});
 	if (times.length === 0) return;
+	// Flatten classes per day to handle overlapping placeholders side-by-side
+	const eventsPerDay = times.map((dayTimes) =>
+		dayTimes.flatMap((t, j) =>
+			t.classes.map((c, index) => ({
+				key: `${course.id}-${course.classTypeId}-${c.number}-${c.location}-${index}`,
+				time: t.time,
+				classInfo: c,
+				j,
+			})),
+		),
+	);
+
 	return (
-		<div className="absolute left-10 top-10 z-40 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]">
-			{times.map((dayTimes, i) =>
-				dayTimes.map((time, j) => (
-					<div
-						className="flex gap-[1px] p-[1px]"
-						key={`${i}${j}`}
-						style={{
-							gridColumnStart: i + 1,
-							gridRowStart: getGridRow(time.time.start),
-							gridRowEnd: getGridRow(time.time.end),
-							height: calcHoursDuration(time.time) * blockHeight + 'rem',
-						}}
-					>
-						{time.classes.map((c, index) => (
-							<CourseTimePlaceholderCard
-								key={`${course.id}-${course.classTypeId}-${c.number}-${c.location}-${index}`}
-								courseId={course.id}
-								classNumber={c.number}
-								classTypeId={course.classTypeId}
-								location={c.location}
-								campus={c.campus}
-							/>
-						))}
-					</div>
-				)),
-			)}
+		<div
+			className="absolute left-10 top-10 z-40 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]"
+			style={{ width: 'calc(100% - 2.5rem)' }}
+			onPointerMove={(e) => {
+				const { clientX, clientY } = e;
+				for (const key of Object.keys(placeholderRefs.current)) {
+					const el = placeholderRefs.current[key];
+					if (!el) continue;
+					const r = el.getBoundingClientRect();
+					if (
+						clientX >= r.left &&
+						clientX <= r.right &&
+						clientY >= r.top &&
+						clientY <= r.bottom
+					) {
+						if (hoveredKey !== key) setHoveredKey(key);
+						return;
+					}
+				}
+				if (hoveredKey !== null) setHoveredKey(null);
+			}}
+			onPointerLeave={() => setHoveredKey(null)}
+		>
+			{eventsPerDay.map((events, i) => {
+				if (events.length === 0) return null;
+				const columnsMap = computeEventColumns(
+					events.map((e) => ({ time: e.time, key: e.key })),
+				);
+				return events.map((evt) => {
+					const cols = columnsMap[evt.key] ?? { column: 0, columns: 1 };
+					const widthPercent = 100 / cols.columns;
+					const leftPercent = cols.column * widthPercent;
+					const height = calcHoursDuration(evt.time) * blockHeight + 'rem';
+					const baseZ = evt.j ?? 0;
+					const z = hoveredKey === evt.key ? 1000 : baseZ;
+					return (
+						<div
+							key={evt.key}
+							className="relative w-full p-[1px]"
+							onPointerEnter={() => setHoveredKey(evt.key)}
+							onPointerLeave={() =>
+								setHoveredKey((k) => (k === evt.key ? null : k))
+							}
+							style={{
+								gridColumnStart: i + 1,
+								gridRowStart: getGridRow(evt.time.start),
+								gridRowEnd: getGridRow(evt.time.end),
+								height,
+								zIndex: z,
+								pointerEvents: 'none',
+							}}
+						>
+							<div
+								ref={(el) => (placeholderRefs.current[evt.key] = el)}
+								style={{
+									position: 'absolute',
+									top: 0,
+									left: `${leftPercent}%`,
+									width: `calc(${widthPercent}% - 1px)`,
+									height: '100%',
+									pointerEvents: 'auto',
+								}}
+							>
+								<CourseTimePlaceholderCard
+									courseId={course.id}
+									classNumber={evt.classInfo.number}
+									classTypeId={course.classTypeId}
+									location={evt.classInfo.location}
+									campus={evt.classInfo.campus}
+								/>
+							</div>
+						</div>
+					);
+				});
+			})}
 		</div>
 	);
 };

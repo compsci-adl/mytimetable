@@ -17,12 +17,18 @@ import { useTranslation } from 'react-i18next';
 import { Fragment } from 'react/jsx-runtime';
 
 import { useGetCourseInfo } from '../data/course-info';
-import { useEnrolledCourse } from '../data/enrolled-courses';
+import {
+	useEnrolledCourse,
+	useDetailedEnrolledCourses,
+} from '../data/enrolled-courses';
+import { findConflicts } from '../helpers/conflicts';
+import type { ConflictDetail } from '../helpers/conflicts';
 import type dayjs from '../lib/dayjs';
 import type { Meetings } from '../types/course';
 import type { Key } from '../types/key';
 import { dateToDayjs, timeToDayjs } from '../utils/date';
 import { deduplicateArray } from '../utils/deduplicate-array';
+import { timeOverlap } from '../utils/time-overlap';
 
 const DATE_FORMAT = 'D MMM';
 const TIME_FORMAT = 'h:mm A';
@@ -138,6 +144,8 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 	const courseInfo = useGetCourseInfo(id);
 	const { t } = useTranslation();
 	const { course, updateClass } = useEnrolledCourse(id);
+	const detailed = useDetailedEnrolledCourses();
+	const { conflictsByClassKey } = findConflicts(detailed);
 	const getSelectedClassNumber = (classTypeId: string) => {
 		const selectedClass = course?.classes.find((c) => c.id === classTypeId);
 		return selectedClass?.classNumber;
@@ -160,6 +168,22 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 	};
 
 	if (!courseInfo) return;
+	const detailedCourses = detailed; // Alias for clarity
+
+	const classConflictsWithEnrolled = (meetings: Meetings) => {
+		for (const ec of detailedCourses) {
+			for (const cl of ec.classes) {
+				for (const m1 of meetings) {
+					for (const m2 of cl.meetings) {
+						if (m1.day === m2.day && timeOverlap(m1.time, m2.time)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	};
 	return (
 		<Modal
 			isOpen={isOpen}
@@ -174,6 +198,45 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 							{courseInfo.name.code} - {courseInfo.name.title}
 						</ModalHeader>
 						<ModalBody className="mb-4">
+							{(() => {
+								// Gather conflicts for all selected classes in this course
+								const aggregated: ConflictDetail[] = [];
+								const seen = new Set<string>();
+								for (const ct of courseInfo.class_list) {
+									const selectedNumber = course?.classes.find(
+										(c) => c.id === ct.id,
+									)?.classNumber;
+									if (!selectedNumber) continue;
+									const key = `${id}|${ct.id}|${selectedNumber}`;
+									const items = conflictsByClassKey[key] ?? [];
+									for (const it of items) {
+										const k = `${it.otherCourseId}|${it.otherClassNumber}|${it.otherMeeting.time.start}|${it.otherMeeting.time.end}|${it.otherMeeting.location}|${it.otherMeeting.campus}`;
+										if (!seen.has(k)) {
+											seen.add(k);
+											aggregated.push(it);
+										}
+									}
+								}
+								if (aggregated.length === 0) return null;
+								return (
+									<div className="mb-4 rounded-md border border-yellow-300 bg-yellow-50 p-4">
+										<div className="mb-2 font-semibold">
+											<span aria-hidden className="mr-2">
+												⚠️
+											</span>
+											{t('course-modal.conflicts-with-other-classes') ??
+												'Conflicts with other classes'}
+										</div>
+										<ul className="list-disc pl-5">
+											{aggregated.map((c, i) => (
+												<li
+													key={i}
+												>{`${c.otherCourseCode} (${c.otherClassNumber}) — ${c.otherMeeting.time.start} - ${c.otherMeeting.time.end} @ ${c.otherMeeting.location}`}</li>
+											))}
+										</ul>
+									</div>
+								);
+							})()}
 							{(() => {
 								const hasClassInfo =
 									!!courseInfo.class_list &&
@@ -221,6 +284,36 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 																	<span aria-hidden>⚠️</span>
 																</Tooltip>
 															)}
+															{(() => {
+																const selKey = key
+																	? `${id}|${classType.id}|${key}`
+																	: undefined;
+																const selConf =
+																	(selKey
+																		? (conflictsByClassKey[selKey] ?? [])
+																				.length > 0
+																		: false) ||
+																	(selectedClass
+																		? classConflictsWithEnrolled(
+																				selectedClass.meetings,
+																			)
+																		: false);
+																return (
+																	selConf && (
+																		<Tooltip
+																			content={
+																				t('calendar.conflict') ??
+																				'Conflict with another class'
+																			}
+																			size="sm"
+																		>
+																			<span aria-hidden className="">
+																				⚠️
+																			</span>
+																		</Tooltip>
+																	)
+																);
+															})()}
 															<div>{`Class Number: ${key}`}</div>
 														</div>
 													);
@@ -240,6 +333,10 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 												}}
 											>
 												{classType.classes.map((classInfo) => {
+													const itemKey = `${id}|${classType.id}|${classInfo.number}`;
+													const itemConflicted =
+														(conflictsByClassKey[itemKey] ?? []).length > 0 ||
+														classConflictsWithEnrolled(classInfo.meetings);
 													const campusList = deduplicateArray(
 														classInfo.meetings
 															.map((m) => m.campus ?? '')
@@ -258,7 +355,20 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 															textValue={classInfo.number}
 														>
 															<div>
-																<div className="flex items-center gap-2">
+																<div className="flex items-center">
+																	{itemConflicted && (
+																		<Tooltip
+																			content={
+																				t('calendar.conflict') ??
+																				'Conflict with another class'
+																			}
+																			size="sm"
+																		>
+																			<span aria-hidden className="mr-2">
+																				⚠️
+																			</span>
+																		</Tooltip>
+																	)}
 																	{isFull && (
 																		<Tooltip
 																			content={
@@ -304,13 +414,34 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 												undefined;
 											const availableSeats =
 												selectedClass?.available_seats ?? undefined;
+											const selectedClassNumber = getSelectedClassNumber(
+												classType.id,
+											);
+											const classKey = selectedClassNumber
+												? `${id}|${classType.id}|${selectedClassNumber}`
+												: undefined;
+											const classConflicts = classKey
+												? (conflictsByClassKey[classKey] ?? [])
+												: [];
+											// Dedupe again defensively by serialised key
+											const unique = [] as typeof classConflicts;
+											const seen = new Set<string>();
+											for (const c of classConflicts) {
+												const k = `${c.otherCourseId}|${c.otherClassNumber}|${c.otherMeeting.time.start}|${c.otherMeeting.time.end}|${c.otherMeeting.location}|${c.otherMeeting.campus}`;
+												if (!seen.has(k)) {
+													seen.add(k);
+													unique.push(c);
+												}
+											}
 											return (
-												<MeetingsTime
-													meetings={getMeetings(classType.id)}
-													classType={classType.type}
-													size={size}
-													availableSeats={availableSeats}
-												/>
+												<>
+													<MeetingsTime
+														meetings={getMeetings(classType.id)}
+														classType={classType.type}
+														size={size}
+														availableSeats={availableSeats}
+													/>
+												</>
 											);
 										})()}
 									</Fragment>

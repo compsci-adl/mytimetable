@@ -20,7 +20,8 @@
 		"location": "Location",
 		"campus": "Campus",
 		"availability": "Availability",
-		"no-class-info": "No class information is currently available, please try again later in a couple of days."
+		"no-class-info": "No class information is currently available, please try again later in a couple of days.",
+		"conflicts-with-other-classes": "Conflicts with other classes"
 	},
 	"class-modal": {
 		"dates": "Dates",
@@ -34,7 +35,8 @@
 		"size": "Class Size",
 		"available-seats": "Available Seats",
 		"availability": "Availability",
-		"no-class-info": "No class information is currently available for this class."
+		"no-class-info": "No class information is currently available for this class.",
+		"conflicts": "Conflicts with other classes"
 	},
 	"calendar": {
 		"first-week": "First week",
@@ -57,6 +59,8 @@
 			"December"
 		],
 		"immoveable-course": "Immoveable course",
+		"no-available-seats": "Class full",
+		"conflict": "Conflict with another class",
 		"open-class": "Open class details",
 		"end-actions": {
 			"copy": "Copy to clipboard",

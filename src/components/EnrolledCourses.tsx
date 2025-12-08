@@ -1,4 +1,4 @@
-import { Chip, useDisclosure } from '@heroui/react';
+import { Chip, useDisclosure, Tooltip } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -6,6 +6,8 @@ import { useState } from 'react';
 import { getCourse } from '../apis';
 import { useGetCourseInfo } from '../data/course-info';
 import { useCourseColor, useEnrolledCourses } from '../data/enrolled-courses';
+import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
+import { findConflicts } from '../helpers/conflicts';
 import { CourseModal } from './CourseModal';
 
 type CourseChipProps = {
@@ -19,6 +21,9 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 	const enrolledCourse = useEnrolledCourses((s) =>
 		s.courses.find((c) => c.id === id),
 	);
+
+	const detailed = useDetailedEnrolledCourses();
+	const { courseHasConflict } = findConflicts(detailed);
 
 	const hasPersistedNoClasses = Boolean(
 		enrolledCourse &&
@@ -59,6 +64,16 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 			{isFetching && '⏳ '}
 			{isError && '❌ '}
 			{isEmpty && '⚠️ '}
+			{courseHasConflict[id] && (
+				<Tooltip
+					content="This course conflicts with another enrolled course"
+					size="sm"
+				>
+					<span aria-hidden className="mr-1">
+						⚠️
+					</span>
+				</Tooltip>
+			)}
 			{name}
 		</Chip>
 	);
