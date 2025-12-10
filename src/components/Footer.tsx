@@ -53,7 +53,7 @@ const FOOTER_SECTIONS = [
 	{
 		title: 'Privacy',
 		content:
-			'MyTimetable collects anonymous analytics data to help improve user experience and enhance the functionality of the website. We may share collective data with relevant third parties to provide insights into user engagement and improve our services. We are committed to protecting your privacy and will not share any personally identifiable information.',
+			'MyTimetable collects anonymous analytics data to help improve user experience and enhance the functionality of the website. This includes, selected courses, site views, view duration, browser, OS, device type, country and referrer. We may share collective data with relevant third parties to provide insights into user engagement and improve our services. We are committed to protecting your privacy and will not share any personally identifiable information.',
 	},
 ];
 
