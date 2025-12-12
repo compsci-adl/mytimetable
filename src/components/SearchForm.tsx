@@ -14,25 +14,20 @@ import { getCourses, getSubjects } from '../apis';
 import { LocalStorageKey } from '../constants/local-storage-keys';
 import { TERMS } from '../constants/terms';
 import { YEAR } from '../constants/year';
-import { useEnrolledCourses } from '../data/enrolled-courses';
+import { useEnrolledCourses, useTermCourses } from '../data/enrolled-courses';
+import { useSelectedTerm } from '../helpers/term';
 import type { Key } from '../types/key';
 
 export const SearchForm = () => {
 	const { t } = useTranslation();
 
 	const enrolledCourses = useEnrolledCourses();
+	const termCourses = useTermCourses();
 
-	const [selectedTerm, setSelectedTerm] = useState(
-		localStorage.getItem(LocalStorageKey.Term) ?? 'sem1',
-	);
-	const changeTerm = (term: string) => {
-		setSelectedTerm(term);
-		localStorage.setItem(LocalStorageKey.Term, term);
-	};
-	const isTermSelectDisabled = enrolledCourses.courses.length > 0;
+	const selectedTerm = useSelectedTerm();
 
 	const subjectsQuery = useQuery({
-		queryKey: ['subjects', { year: YEAR, term: selectedTerm }] as const,
+		queryKey: ['subjects', { year: YEAR, term: selectedTerm.term }] as const,
 		queryFn: ({ queryKey }) => getSubjects(queryKey[1]),
 	});
 	const subjectList =
@@ -48,7 +43,7 @@ export const SearchForm = () => {
 		// TODO: Replace params with config data
 		queryKey: [
 			'courses',
-			{ year: YEAR, term: selectedTerm, subject: subject! },
+			{ year: YEAR, term: selectedTerm.term, subject: subject! },
 		] as const,
 		queryFn: ({ queryKey }) => getCourses(queryKey[1]),
 		enabled: subject !== null,
@@ -82,24 +77,20 @@ export const SearchForm = () => {
 		enrolledCourses.addCourse({
 			name,
 			id: course.id,
+			year: YEAR,
+			term: selectedTerm.term,
 		});
 		setSelectedCourseId(null);
 	};
 
 	return (
 		<div className="flex gap-2 mobile:flex-col">
-			<div
-				onClick={() => {
-					if (!isTermSelectDisabled) return;
-					toast.warning(t('toast.drop-to-change-term'));
-				}}
-			>
+			<div>
 				<Select
 					label={t('search.select-term')}
-					selectedKeys={[selectedTerm]}
-					onSelectionChange={(keys) => changeTerm(keys.currentKey!)}
+					selectedKeys={[selectedTerm.term]}
+					onSelectionChange={(keys) => selectedTerm.set(keys.currentKey!)}
 					className="w-56 mobile:w-full"
-					isDisabled={isTermSelectDisabled}
 					disallowEmptySelection
 				>
 					{TERMS.map((term) => (
@@ -133,7 +124,7 @@ export const SearchForm = () => {
 					defaultItems={courseList}
 					selectedKey={selectedCourseId}
 					onSelectionChange={setSelectedCourseId}
-					disabledKeys={enrolledCourses.courses.map((c) => c.id)}
+					disabledKeys={termCourses.map((c) => c.id)}
 					listboxProps={{ emptyContent: t('search.course-not-found') }}
 					defaultFilter={courseSearchFilter}
 				>
