@@ -3,20 +3,15 @@ import { useEffect, useState } from 'react';
 import { getCourses } from '../apis';
 import { LocalStorageKey } from '../constants/local-storage-keys';
 import { YEAR } from '../constants/year';
-import { useEnrolledCourses } from '../data/enrolled-courses';
 import { CourseSelector } from './search/CourseSelector';
 import { DesktopFilters } from './search/DesktopFilters';
 import { MobileFilters } from './search/MobileFilters';
 import { SubjectSelector } from './search/SubjectSelector';
 import { TermSelector } from './search/TermSelector';
+import { useSelectedTerm } from '../helpers/term';
 
 export const SearchForm = () => {
-	const enrolledCourses = useEnrolledCourses();
-
-	const [selectedTerm, setSelectedTerm] = useState(
-		localStorage.getItem(LocalStorageKey.Term) ?? 'sem1',
-	);
-	const isTermSelectDisabled = enrolledCourses.courses.length > 0;
+	const selectedTerm = useSelectedTerm();
 
 	const [subject, setSubject] = useState<string | null>(null);
 	const [onlyUniversityWide, setOnlyUniversityWide] = useState<
@@ -68,7 +63,7 @@ export const SearchForm = () => {
 	useEffect(() => {
 		if (!subject) return;
 		let mounted = true;
-		getCourses({ year: YEAR, term: selectedTerm, subject }).then((res) => {
+		getCourses({ year: YEAR, term: selectedTerm.term, subject }).then((res) => {
 			if (!mounted) return;
 			const allCourses = res?.courses ?? [];
 			const availableLevels = new Set(
@@ -127,17 +122,16 @@ export const SearchForm = () => {
 		<div>
 			<div className="mobile:flex-col flex gap-2">
 				<TermSelector
-					selectedTerm={selectedTerm}
-					onTermChange={setSelectedTerm}
-					isDisabled={isTermSelectDisabled}
+					selectedTerm={selectedTerm.term}
+					onTermChange={selectedTerm.set}
 				/>
 				<SubjectSelector
-					selectedTerm={selectedTerm}
+					selectedTerm={selectedTerm.term}
 					subject={subject}
 					onSubjectChange={setSubject}
 				/>
 				<CourseSelector
-					selectedTerm={selectedTerm}
+					selectedTerm={selectedTerm.term}
 					subject={subject}
 					onlyUniversityWide={onlyUniversityWide}
 					levelOfStudy={levelOfStudy}
@@ -146,7 +140,7 @@ export const SearchForm = () => {
 			</div>
 			{isMobile ? (
 				<MobileFilters
-					selectedTerm={selectedTerm}
+					selectedTerm={selectedTerm.term}
 					subject={subject}
 					levelOfStudy={levelOfStudy}
 					onlyUniversityWide={onlyUniversityWide}
@@ -166,7 +160,7 @@ export const SearchForm = () => {
 				/>
 			) : (
 				<DesktopFilters
-					selectedTerm={selectedTerm}
+					selectedTerm={selectedTerm.term}
 					subject={subject}
 					levelOfStudy={levelOfStudy}
 					onlyUniversityWide={onlyUniversityWide}

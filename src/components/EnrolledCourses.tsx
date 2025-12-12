@@ -5,7 +5,11 @@ import { useState } from 'react';
 
 import { getCourse } from '../apis';
 import { useGetCourseInfo } from '../data/course-info';
-import { useCourseColor, useEnrolledCourses } from '../data/enrolled-courses';
+import {
+	useCourseColor,
+	useEnrolledCourses,
+	useTermCourses,
+} from '../data/enrolled-courses';
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import { findConflicts } from '../helpers/conflicts';
 import { CourseModal } from './CourseModal';
@@ -80,7 +84,7 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 };
 
 export const EnrolledCourses = () => {
-	const courses = useEnrolledCourses((s) => s.courses);
+	const courses = useTermCourses();
 	const [courseModalId, setCourseModalId] = useState<string | null>(null);
 	const courseModal = useDisclosure();
 

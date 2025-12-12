@@ -9,7 +9,7 @@ import { YEAR } from '../constants/year';
 import {
 	useCourseColor,
 	useEnrolledCourse,
-	useEnrolledCourses,
+	useTermCourses,
 } from '../data/enrolled-courses';
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
@@ -711,7 +711,7 @@ export const Calendar = () => {
 		},
 	});
 
-	const noCourses = useEnrolledCourses((s) => s.courses.length === 0);
+	const noCourses = useTermCourses().length === 0;
 
 	const classModal = useDisclosure();
 	type SelectedClassState = {
