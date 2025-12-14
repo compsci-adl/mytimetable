@@ -78,12 +78,14 @@ export const SearchForm = () => {
 		const course = courses?.find((c) => c.id === selectedCourseId);
 		if (!course) return;
 		const name = `$${course.name.code}`;
-		await umami.track('Add course', { subject: course.name.subject, name });
 		enrolledCourses.addCourse({
 			name,
 			id: course.id,
 		});
 		setSelectedCourseId(null);
+		if (typeof umami !== 'undefined') {
+			await umami.track('Add course', { subject: course.name.subject, name });
+		}
 	};
 
 	return (
