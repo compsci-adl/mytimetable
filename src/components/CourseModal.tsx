@@ -219,7 +219,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 								}
 								if (aggregated.length === 0) return null;
 								return (
-									<div className="mb-4 rounded-md border border-yellow-300 bg-yellow-50 p-4">
+									<div className="mb-4 rounded-md border border-yellow-300 bg-yellow-50 p-4 dark:bg-yellow-600 dark:text-slate-100">
 										<div className="mb-2 font-semibold">
 											<span aria-hidden className="mr-2">
 												⚠️
