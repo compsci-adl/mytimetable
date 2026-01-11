@@ -8,7 +8,12 @@ import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
 import i18n from '../i18n';
 import { queryClient } from '../lib/query';
-import type { DetailedEnrolledCourse } from '../types/course';
+import type {
+	DetailedEnrolledCourse,
+	Meetings,
+	Course as CourseInfo,
+} from '../types/course';
+import { dateToDayjs } from '../utils/date';
 import { useCoursesInfo } from './course-info';
 
 type Course = {
@@ -58,14 +63,71 @@ export const useEnrolledCourses = create<CoursesState>()(
 					queryKey: ['course', course.id] as const,
 					queryFn: ({ queryKey }) => getCourse({ id: queryKey[1] }),
 				});
-				// Initialize course classes to default
+				// Initialise course classes to default, preferring classes that
+				// have meetings overlapping the currently selected term
 				set((state) => {
 					const enrolledCourse = state.courses.find((c) => c.id === course.id);
 					if (!enrolledCourse) return;
-					enrolledCourse.classes = data.class_list.map((c) => ({
-						id: c.id,
-						classNumber: c.classes[0].number,
-					}));
+
+					// Derive a month range from courses' meetings
+					const months = new Set<number>();
+					for (const ec of currentCourses) {
+						const cached = queryClient.getQueryData([
+							'course',
+							ec.id,
+						] as const) as CourseInfo | undefined;
+						if (!cached) continue;
+						for (const cl of ec.classes) {
+							const info = cached.class_list.find((x) => x.id === cl.id);
+							if (!info) continue;
+							const found = info.classes.find(
+								(x) => x.number === cl.classNumber,
+							);
+							if (!found) continue;
+							for (const m of found.meetings) {
+								const d = dateToDayjs(m.date.start);
+								months.add(d.month() + 1);
+							}
+						}
+					}
+
+					const monthRange =
+						months.size > 0
+							? (() => {
+									const arr = Array.from(months).sort((a, b) => a - b);
+									return [arr[0], arr[arr.length - 1]] as [number, number];
+								})()
+							: null;
+
+					const inMonthRange = (month: number, range: [number, number]) => {
+						const [start, end] = range;
+						if (start <= end) return month >= start && month <= end;
+						return month >= start || month <= end;
+					};
+
+					enrolledCourse.classes = data.class_list.map((c) => {
+						const pick = () => {
+							if (!monthRange) return c.classes[0];
+							const found = c.classes.find((cls) =>
+								cls.meetings.some((m: Meetings[number]) => {
+									try {
+										const d = dateToDayjs(m.date.start);
+										const month = d.month() + 1; // dayjs months are 0-based
+										return inMonthRange(month, monthRange);
+									} catch {
+										return false;
+									}
+								}),
+							);
+							return found ?? c.classes[0];
+						};
+
+						const chosen = pick();
+						return {
+							id: c.id,
+							classNumber: chosen.number,
+						};
+					});
 				});
 			},
 			removeCourse: (courseId) => {
