@@ -6,6 +6,7 @@ import { persist } from 'zustand/middleware';
 import { getCourse } from '../apis';
 import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
+import { useSelectedTerm } from '../helpers/term';
 import i18n from '../i18n';
 import { queryClient } from '../lib/query';
 import type {
@@ -24,6 +25,8 @@ type Course = {
 		classNumber: string; // Meeting time number (ID)
 	}>;
 	color: number; // Color index in COURSE_COLORS
+	year: number;
+	term: string;
 };
 type Courses = Array<Course>;
 type CoursesState = {
@@ -149,6 +152,13 @@ export const useEnrolledCourses = create<CoursesState>()(
 	),
 );
 
+export const useTermCourses = (): Array<Course> => {
+	const courses = useEnrolledCourses((c) => c.courses);
+	const selectedTerm = useSelectedTerm((t) => t.term);
+
+	return courses.filter((c) => c.term == selectedTerm);
+};
+
 export const useEnrolledCourse = (id: string) => {
 	const course = useEnrolledCourses((s) => s.courses.find((c) => c.id === id));
 	const updateCourseClass = useEnrolledCourses((s) => s.updateCourseClass);
@@ -172,7 +182,7 @@ export const useEnrolledCourseClassNumber = (
 export const useDetailedEnrolledCourses = (): Array<DetailedEnrolledCourse> => {
 	const coursesInfo = useCoursesInfo();
 
-	const courses = useEnrolledCourses((s) => s.courses);
+	const courses = useTermCourses();
 	const detailedCourses = courses.map((course) => {
 		const courseInfo = coursesInfo.find((c) => c.id === course.id);
 		if (!courseInfo) return null;
