@@ -8,7 +8,8 @@ import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
 import i18n from '../i18n';
 import { queryClient } from '../lib/query';
-import type { DetailedEnrolledCourse } from '../types/course';
+import type { DetailedEnrolledCourse, Meetings } from '../types/course';
+import { dateToDayjs } from '../utils/date';
 import { useCoursesInfo } from './course-info';
 
 type Course = {
@@ -58,14 +59,51 @@ export const useEnrolledCourses = create<CoursesState>()(
 					queryKey: ['course', course.id] as const,
 					queryFn: ({ queryKey }) => getCourse({ id: queryKey[1] }),
 				});
-				// Initialize course classes to default
+				// Initialise course classes to default, preferring classes that
+				// have meetings overlapping the currently selected term
 				set((state) => {
 					const enrolledCourse = state.courses.find((c) => c.id === course.id);
 					if (!enrolledCourse) return;
-					enrolledCourse.classes = data.class_list.map((c) => ({
-						id: c.id,
-						classNumber: c.classes[0].number,
-					}));
+
+					const selectedTerm =
+						localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
+
+					const termMonthRange = (term: string): [number, number] | null => {
+						if (term.startsWith('sem')) {
+							const n = Number(term.replace('sem', ''));
+							if (n === 1) return [2, 6];
+							if (n === 2) return [7, 10];
+						}
+						return null;
+					};
+
+					const monthRange = termMonthRange(selectedTerm);
+
+					enrolledCourse.classes = data.class_list.map((c) => {
+						const pick = () => {
+							if (!monthRange) return c.classes[0];
+							const [startMonth, endMonth] = monthRange;
+							// Find a class whose meetings have a start month in the term range
+							const found = c.classes.find((cls) =>
+								cls.meetings.some((m: Meetings[number]) => {
+									try {
+										const d = dateToDayjs(m.date.start);
+										const month = d.month() + 1; // dayjs months are 0-based
+										return month >= startMonth && month <= endMonth;
+									} catch {
+										return false;
+									}
+								}),
+							);
+							return found ?? c.classes[0];
+						};
+
+						const chosen = pick();
+						return {
+							id: c.id,
+							classNumber: chosen.number,
+						};
+					});
 				});
 			},
 			removeCourse: (courseId) => {
