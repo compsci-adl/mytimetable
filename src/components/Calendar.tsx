@@ -113,7 +113,7 @@ const CourseCard = ({
 				outlineOffset: hasConflict ? '-3px' : undefined,
 			}}
 		>
-			<div className="flex justify-between text-2xs">
+			<div className="text-2xs flex justify-between">
 				<div>{time.start}</div>
 				<div className="flex items-center gap-1">
 					{isOnlyTime && (
@@ -123,7 +123,7 @@ const CourseCard = ({
 					)}
 				</div>
 			</div>
-			<div className="absolute bottom-1 right-1 z-30">
+			<div className="absolute right-1 bottom-1 z-30">
 				<Tooltip content={t('calendar.open-class') as string} size="sm">
 					<Button
 						isIconOnly
@@ -165,7 +165,7 @@ const CourseCard = ({
 				)}
 				{course.name.code} - {course.classType}{' '}
 			</div>
-			<div className="pr-6 text-2xs">
+			<div className="text-2xs pr-6">
 				{course.location} | {course.campus}
 			</div>
 			<InvisiblePlaceholder />
@@ -212,8 +212,8 @@ const CalendarHeader = ({
 		},
 	];
 	return (
-		<div className="sticky top-0 z-50 flex items-center justify-between bg-background py-1">
-			<h2 className="text-3xl mobile:text-2xl">
+		<div className="bg-background sticky top-0 z-50 flex items-center justify-between py-1">
+			<h2 className="mobile:text-2xl text-3xl">
 				<span className="mr-2 font-bold">
 					{/* Month for Wednesday in the week is more accurate than Monday */}
 					{
@@ -255,7 +255,7 @@ const EndActions = () => {
 	} = useDisclosure();
 	return (
 		<div
-			className="absolute -bottom-[0.5rem] left-0 flex w-full items-center justify-center gap-4"
+			className="absolute -bottom-2 left-0 flex w-full items-center justify-center gap-4"
 			style={{ height: blockHeight + 'rem' }}
 		>
 			{/* TODO: Share Button */}
@@ -281,8 +281,8 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 	const blockHeight = useCalendarHourHeight((s) => s.height);
 
 	return (
-		<div className="-z-50 grid grid-cols-[2.5rem_repeat(5,_minmax(0,_1fr))] grid-rows-[2.5rem_repeat(30,_minmax(0,_1fr))]">
-			<div className="sticky top-12 z-50 col-span-full col-start-2 grid grid-cols-subgrid border-b-1 border-apple-gray-300 bg-background">
+		<div className="-z-50 grid grid-cols-[2.5rem_repeat(5,minmax(0,1fr))] grid-rows-[2.5rem_repeat(30,minmax(0,1fr))]">
+			<div className="border-apple-gray-300 bg-background sticky top-12 z-50 col-span-full col-start-2 grid grid-cols-subgrid border-b-1">
 				{WEEK_DAYS.map((day, i) => (
 					<div
 						key={day}
@@ -300,17 +300,17 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 				))}
 			</div>
 			{/* FIXME: Remove the last two grid rows for 21:00 */}
-			<div className="relative -top-[0.35rem] row-span-full row-start-2 grid grid-cols-subgrid grid-rows-[repeat(15,_minmax(0,_1fr))] pr-2 text-end text-2xs text-apple-gray-500">
+			<div className="text-2xs text-apple-gray-500 relative -top-[0.35rem] row-span-full row-start-2 grid grid-cols-subgrid grid-rows-15 pr-2 text-end">
 				{Array.from({ length: 15 }, (_, i) => (
 					<div key={i}>{String(7 + i).padStart(2, '0')}:00</div>
 				))}
 			</div>
-			<div className="col-span-full col-start-2 row-start-2 row-end-[30] grid grid-cols-subgrid grid-rows-subgrid">
+			<div className="col-span-full col-start-2 row-start-2 row-end-30 grid grid-cols-subgrid grid-rows-subgrid">
 				{Array.from({ length: 5 * 28 }, (_, i) => (
 					<div
 						key={i}
 						className={clsx(
-							'border-r-1 border-apple-gray-300',
+							'border-apple-gray-300 border-r-1',
 							[5, 6, 7, 8, 9].includes(i % 10) && 'border-b-1',
 						)}
 						style={{ height: blockHeight / 2 + 'rem' }}
@@ -452,7 +452,7 @@ const CalendarCourses = ({
 
 	return (
 		<div
-			className="absolute left-10 top-10 z-0 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]"
+			className="absolute top-10 left-10 z-0 grid grid-cols-5 grid-rows-28"
 			style={{ width: 'calc(100% - 2.5rem)' }}
 			onPointerMove={(e) => {
 				const { clientX, clientY } = e;
@@ -488,7 +488,7 @@ const CalendarCourses = ({
 					const z = hoveredKey === evt.key ? 1000 : baseZ;
 					return (
 						<div
-							className="relative w-full p-[1px]"
+							className="relative w-full p-px"
 							key={evt.key}
 							onPointerEnter={() => setHoveredKey(evt.key)}
 							onPointerLeave={() =>
@@ -611,7 +611,7 @@ const CalendarCourseOtherTimes = ({
 
 	return (
 		<div
-			className="absolute left-10 top-10 z-40 grid grid-cols-5 grid-rows-[repeat(28,_minmax(0,_1fr))]"
+			className="absolute top-10 left-10 z-40 grid grid-cols-5 grid-rows-28"
 			style={{ width: 'calc(100% - 2.5rem)' }}
 			onPointerMove={(e) => {
 				const { clientX, clientY } = e;
@@ -648,7 +648,7 @@ const CalendarCourseOtherTimes = ({
 					return (
 						<div
 							key={evt.key}
-							className="relative w-full p-[1px]"
+							className="relative w-full p-px"
 							onPointerEnter={() => setHoveredKey(evt.key)}
 							onPointerLeave={() =>
 								setHoveredKey((k) => (k === evt.key ? null : k))
