@@ -4,13 +4,13 @@ permissions:
 on:
   workflow_call:
 env:
-  PNPM_VERSION: 9
+  PNPM_VERSION: 10
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [24]
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c #v4
