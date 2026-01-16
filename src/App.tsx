@@ -15,7 +15,7 @@ export const App = () => {
 	return (
 		<>
 			<Header />
-			<main className="mx-auto max-w-screen-xl space-y-4 px-2 py-4">
+			<main className="mx-auto max-w-(--breakpoint-xl) space-y-4 px-2 py-4">
 				<HelpModal />
 				<ZoomButtons />
 				<SearchForm />

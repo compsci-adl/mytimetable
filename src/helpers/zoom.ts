@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 
 type UseZoomProps = {
-	ref: React.RefObject<HTMLElement>;
+	ref: React.RefObject<HTMLElement | null>;
 	onWheelZoom: (deltaY: number) => void;
 	onPinchZoom: (distanceDiff: number) => void;
 };

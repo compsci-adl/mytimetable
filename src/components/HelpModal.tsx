@@ -135,7 +135,7 @@ export const HelpModal = () => {
 							<Tab key={i} title={i + 1} />
 						))}
 					</Tabs>
-					<div className="relative h-[38rem] w-full overflow-x-hidden">
+					<div className="relative h-152 w-full overflow-x-hidden">
 						<AnimatePresence initial={false} custom={direction}>
 							<motion.div
 								key={stepIndexKey}
@@ -145,17 +145,17 @@ export const HelpModal = () => {
 								animate="center"
 								exit="exit"
 								transition={{ ease: 'easeInOut', duration: 0.3 }}
-								className="absolute h-full w-full p-4 mobile:p-1"
+								className="mobile:p-1 absolute h-full w-full p-4"
 							>
-								<Card className="h-full p-2 mobile:p-1">
+								<Card className="mobile:p-1 h-full p-2">
 									<CardBody className="gap-2">
-										<div className="text-lg mobile:text-sm">{step.content}</div>
+										<div className="mobile:text-sm text-lg">{step.content}</div>
 										<div className="flex grow items-center justify-center">
 											{step.image?.path ? (
 												<img
 													alt={step.image?.alt ?? step.content}
 													src={step.image.path}
-													className="max-h-[28rem]"
+													className="max-h-112"
 												/>
 											) : null}
 										</div>

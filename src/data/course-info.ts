@@ -7,11 +7,31 @@ import { useEnrolledCourses } from './enrolled-courses';
 
 export const useGetCourseInfo = (id: string) => {
 	const queryClient = useQueryClient();
-	const [course, setCourse] = useState<Course | null>(null);
+	const [course, setCourse] = useState<Course | null>(
+		() => queryClient.getQueryData<Course>(['course', id]) ?? null,
+	);
 
 	useEffect(() => {
-		const data = queryClient.getQueryData<Course>(['course', id]);
-		setCourse(data ?? null);
+		const cache = queryClient.getQueryCache();
+		const key = ['course', id];
+		let lastJson: string | null = null;
+		const unsubscribe = cache.subscribe(
+			(e: { query?: { queryKey?: unknown[]; state?: { data?: unknown } } }) => {
+				try {
+					const q = e.query;
+					if (!q) return;
+					if (JSON.stringify(q.queryKey) !== JSON.stringify(key)) return;
+					const data = q.state?.data as Course | undefined;
+					const json = JSON.stringify(data ?? null);
+					if (json === lastJson) return;
+					lastJson = json;
+					setCourse(data ?? null);
+				} catch {
+					// Ignore malformed events
+				}
+			},
+		);
+		return unsubscribe;
 	}, [id, queryClient]);
 
 	return course;

@@ -72,24 +72,24 @@ export const Footer = () => {
 	const [openModal, setOpenModal] = useState<string | null>(null);
 
 	return (
-		<footer className="space-y-4 text-apple-gray-700">
+		<footer className="text-apple-gray-700 space-y-4">
 			<div className="text-center text-sm">
 				<Tips />
 			</div>
 			<Divider />
-			<div className="grid grid-cols-2 items-center gap-2 mobile:grid-cols-1 mobile:justify-items-center mobile:gap-4">
+			<div className="mobile:grid-cols-1 mobile:justify-items-center mobile:gap-4 grid grid-cols-2 items-center gap-2">
 				<div className="flex items-center gap-2">
 					<img src="/favicon.svg" alt="Logo" className="w-10" />
-					<h1 className="ml-1 text-xl font-bold text-foreground">
+					<h1 className="text-foreground ml-1 text-xl font-bold">
 						MyTimetable
 					</h1>
 				</div>
 
-				<div className="mt-0 flex gap-6 justify-self-end mobile:justify-self-auto">
+				<div className="mobile:justify-self-auto mt-0 flex gap-6 justify-self-end">
 					{FOOTER_SECTIONS.map((section, i) => (
 						<h3
 							key={i}
-							className="cursor-pointer text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary"
+							className="hover:text-primary cursor-pointer text-sm font-semibold tracking-wider uppercase transition-colors"
 							onClick={() => setOpenModal(section.title)}
 						>
 							{section.title}
@@ -108,12 +108,12 @@ export const Footer = () => {
 					</a>
 				</div>
 
-				<div className="flex gap-5 justify-self-end text-2xl mobile:justify-self-auto">
+				<div className="mobile:justify-self-auto flex gap-5 justify-self-end text-2xl">
 					{LINKS.map(({ icon: Icon, link }, i) => (
 						<a
 							href={link}
 							key={i}
-							className="transition-colors duration-300 hover:text-primary"
+							className="hover:text-primary transition-colors duration-300"
 							target="_blank"
 						>
 							<Icon />
