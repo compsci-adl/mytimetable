@@ -1,3 +1,5 @@
 import { heroui } from '@heroui/react';
 
-export default heroui();
+const hero: unknown = heroui();
+
+export default hero;

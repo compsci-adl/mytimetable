@@ -504,7 +504,9 @@ const CalendarCourses = ({
 							}}
 						>
 							<div
-								ref={(el) => (courseRefs.current[evt.key] = el)}
+								ref={(el) => {
+									courseRefs.current[evt.key] = el;
+								}}
 								style={{
 									position: 'absolute',
 									top: 0,
@@ -663,7 +665,9 @@ const CalendarCourseOtherTimes = ({
 							}}
 						>
 							<div
-								ref={(el) => (placeholderRefs.current[evt.key] = el)}
+								ref={(el) => {
+									placeholderRefs.current[evt.key] = el;
+								}}
 								style={{
 									position: 'absolute',
 									top: 0,

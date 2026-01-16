@@ -67,9 +67,11 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 									return (
 										<div
 											key={cls.typeId}
-											className={clsx('rounded-lg border p-2 text-center')}
+											className={clsx(
+												'border-apple-gray-300 rounded-lg border p-2 text-center',
+											)}
 										>
-											<div className="border-b font-bold">
+											<div className="border-apple-gray-300 border-b font-bold">
 												<span className="flex items-center justify-center gap-2">
 													{isFull && (
 														<Tooltip
