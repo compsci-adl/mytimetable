@@ -14,12 +14,21 @@ export const useGetCourseInfo = (id: string) => {
 	useEffect(() => {
 		const cache = queryClient.getQueryCache();
 		const key = ['course', id];
+		let lastJson: string | null = null;
 		const unsubscribe = cache.subscribe(
 			(e: { query?: { queryKey?: unknown[]; state?: { data?: unknown } } }) => {
-				const q = e.query;
-				if (!q) return;
-				if (JSON.stringify(q.queryKey) !== JSON.stringify(key)) return;
-				setCourse((q.state?.data as Course | undefined) ?? null);
+				try {
+					const q = e.query;
+					if (!q) return;
+					if (JSON.stringify(q.queryKey) !== JSON.stringify(key)) return;
+					const data = q.state?.data as Course | undefined;
+					const json = JSON.stringify(data ?? null);
+					if (json === lastJson) return;
+					lastJson = json;
+					setCourse(data ?? null);
+				} catch {
+					// Ignore malformed events
+				}
 			},
 		);
 		return unsubscribe;
