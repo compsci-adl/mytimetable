@@ -99,7 +99,7 @@ const subjects = [
 
 export const handlers = [
 	http.get('/mock/subjects', async () => {
-		return HttpResponse.json({ subjects });
+		return HttpResponse.json(subjects);
 	}),
 	http.get('/mock/courses', async ({ request }) => {
 		const url = new URL(request.url);

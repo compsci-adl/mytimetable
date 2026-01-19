@@ -160,7 +160,7 @@ export const ClassModal = ({
 					<>
 						<ModalHeader className="flex flex-col">
 							{courseInfo.name.code} - {courseInfo.name.title}
-							<div className="text-sm text-default-500">
+							<div className="text-default-500 text-sm">
 								<span className="flex items-center gap-2">
 									{availableSeats !== undefined &&
 										parseInt(availableSeats, 10) === 0 && (

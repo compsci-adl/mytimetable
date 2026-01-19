@@ -89,7 +89,7 @@ export const SearchForm = () => {
 	};
 
 	return (
-		<div className="flex gap-2 mobile:flex-col">
+		<div className="mobile:flex-col flex gap-2">
 			<div
 				onClick={() => {
 					if (!isTermSelectDisabled) return;
@@ -100,7 +100,7 @@ export const SearchForm = () => {
 					label={t('search.select-term')}
 					selectedKeys={[selectedTerm]}
 					onSelectionChange={(keys) => changeTerm(keys.currentKey!)}
-					className="w-56 mobile:w-full"
+					className="mobile:w-full w-56"
 					isDisabled={isTermSelectDisabled}
 					disallowEmptySelection
 				>
@@ -114,7 +114,7 @@ export const SearchForm = () => {
 			<Autocomplete
 				defaultItems={subjectList}
 				label={t('search.choose-subject')}
-				className="w-96 mobile:w-full"
+				className="mobile:w-full w-96"
 				selectedKey={subject}
 				onSelectionChange={(key) => setSubject(key as string)}
 				listboxProps={{ emptyContent: t('search.subject-not-found') }}
@@ -126,7 +126,7 @@ export const SearchForm = () => {
 				)}
 			</Autocomplete>
 			<form
-				className="flex grow items-center gap-2 mobile:flex-col"
+				className="mobile:flex-col flex grow items-center gap-2"
 				onSubmit={handleSubmit}
 			>
 				<Autocomplete
