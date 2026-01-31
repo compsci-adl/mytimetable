@@ -12,6 +12,9 @@
 	"campus": "North Terrace",
 	"units": 3,
 	"university_wide_elective": true,
+	"course_coordinator": "Prof Ben Turner",
+	"course_overview": "A course that explores grand challenges and interdisciplinary problems in computing and their societal impact.",
+	"level_of_study": "postgraduate",
 	"requirement": {
 		"restriction": "Available to B.Comp Sc (Advanced) students only, or by permission of the Head of School. Non-B.Comp Sc (Advanced) students must achieve a GPA of at least 6 in Computer Science courses before being considered for entry",
 		"prerequisite": [],

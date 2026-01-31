@@ -44,17 +44,22 @@ export const SearchForm = () => {
 			return { key: s.code, code: s.code, name: `${s.code} - ${s.name}` };
 		}) ?? [];
 	const [subject, setSubject] = useState<string | null>(null);
-	const [onlyUniversityWide, setOnlyUniversityWide] = useState(false);
+	const [onlyUniversityWide, setOnlyUniversityWide] = useState<
+		boolean | undefined
+	>(undefined);
+	const [levelOfStudy, setLevelOfStudy] = useState<string | undefined>(
+		'Undergraduate',
+	);
 
 	const coursesQuery = useQuery({
-		// TODO: Replace params with config data
 		queryKey: [
 			'courses',
 			{
 				year: YEAR,
 				term: selectedTerm,
 				subject: subject!,
-				university_wide_elective: onlyUniversityWide ? true : undefined,
+				university_wide_elective: onlyUniversityWide,
+				level_of_study: levelOfStudy,
 			},
 		] as const,
 		queryFn: ({ queryKey }) => getCourses(queryKey[1]),
@@ -67,6 +72,9 @@ export const SearchForm = () => {
 			id: c.id,
 			name: `${c.name.code} - ${c.name.title}`,
 			university_wide_elective: c.university_wide_elective ?? false,
+			course_coordinator: c.course_coordinator ?? '',
+			course_overview: c.course_overview ?? '',
+			level_of_study: c.level_of_study ?? '',
 		})) ?? [];
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
 
@@ -171,13 +179,47 @@ export const SearchForm = () => {
 					</Button>
 				</form>
 			</div>
-			<div className="my-4 flex gap-4">
-				<Checkbox
-					defaultSelected
-					onChange={(e) => setOnlyUniversityWide(e.target.checked)}
-				>
-					{t('search.only-university-wide-electives')}
-				</Checkbox>
+			<div className="flex gap-4">
+				<div className="my-4">
+					<div className="mb-2 text-sm font-semibold">
+						{t('search.level-of-study')}
+					</div>
+					<div className="flex flex-col gap-2">
+						<Checkbox
+							checked={levelOfStudy === 'Undergraduate'}
+							isDisabled={levelOfStudy === 'Postgraduate'}
+							onChange={(e) =>
+								setLevelOfStudy(e.target.checked ? 'Undergraduate' : undefined)
+							}
+						>
+							{t('search.level.undergraduate')}
+						</Checkbox>
+						<Checkbox
+							checked={levelOfStudy === 'Postgraduate'}
+							isDisabled={levelOfStudy === 'Undergraduate'}
+							onChange={(e) =>
+								setLevelOfStudy(e.target.checked ? 'Postgraduate' : undefined)
+							}
+						>
+							{t('search.level.postgraduate')}
+						</Checkbox>
+					</div>
+				</div>
+				<div className="my-4">
+					<div className="mb-2 text-sm font-semibold">
+						{t('search.courses-availability')}
+					</div>
+					<div className="flex flex-col gap-2">
+						<Checkbox
+							checked={onlyUniversityWide === true}
+							onChange={(e) =>
+								setOnlyUniversityWide(e.target.checked ? true : undefined)
+							}
+						>
+							{t('search.university-wide-elective')}
+						</Checkbox>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

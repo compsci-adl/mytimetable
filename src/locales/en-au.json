@@ -27,7 +27,10 @@
 		"availability": "Availability",
 		"no-class-info": "No class information is currently available, please try again later in a couple of days.",
 		"conflicts-with-other-classes": "Conflicts with other classes",
-		"university-wide-elective": "University-wide elective"
+		"university-wide-elective": "University-wide elective",
+		"course_coordinator": "Course Coordinator",
+		"level_of_study": "Level of Study",
+		"course_overview": "Course Overview"
 	},
 	"course": {
 		"overview": {

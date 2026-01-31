@@ -13,6 +13,7 @@ import {
 	TableRow,
 	Tooltip,
 } from '@heroui/react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Fragment } from 'react/jsx-runtime';
 
@@ -167,8 +168,21 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 		return selectedClass;
 	};
 
+	const detailedCourses = detailed;
+
+	const [overviewExpanded, setOverviewExpanded] = useState(false);
+	const [charLimit, setCharLimit] = useState(220);
+
+	useEffect(() => {
+		const updateLimit = () => {
+			setCharLimit(window.innerWidth < 768 ? 160 : 220);
+		};
+		updateLimit();
+		window.addEventListener('resize', updateLimit);
+		return () => window.removeEventListener('resize', updateLimit);
+	}, []);
+
 	if (!courseInfo) return;
-	const detailedCourses = detailed; // Alias for clarity
 
 	const classConflictsWithEnrolled = (meetings: Meetings) => {
 		for (const ec of detailedCourses) {
@@ -196,11 +210,55 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 					<>
 						<ModalHeader className="flex flex-col gap-1">
 							{courseInfo.name.code} - {courseInfo.name.title}{' '}
-							{courseInfo.university_wide_elective && (
-								<div className="text-sm font-normal">
-									{t('course-modal.university-wide-elective')}
+							<div className="text-sm">
+								{t('course-modal.level_of_study')}:{' '}
+								<span className="font-normal">
+									{courseInfo.level_of_study
+										? courseInfo.level_of_study
+										: 'None listed'}
+								</span>
+							</div>
+							<div className="text-sm">
+								{t('course-modal.course_coordinator')}:{' '}
+								<span className="font-normal">
+									{courseInfo.course_coordinator
+										? courseInfo.course_coordinator
+										: 'None listed'}
+								</span>
+							</div>
+							<div className="text-sm">
+								{t('course-modal.university-wide-elective')}:{' '}
+								<span className="font-normal">
+									{courseInfo.university_wide_elective ? 'True' : 'False'}
+								</span>
+							</div>
+							<div className="text-sm">
+								{t('course-modal.course_overview')}:{' '}
+								<div
+									className={`font-normal transition-all duration-300 ease-in-out ${overviewExpanded ? 'max-h-96' : 'max-h-10 overflow-hidden'}`}
+								>
+									{overviewExpanded
+										? courseInfo.course_overview
+											? courseInfo.course_overview
+											: 'None listed'
+										: courseInfo.course_overview
+											? courseInfo.course_overview.length > charLimit
+												? `${courseInfo.course_overview.slice(0, charLimit)}...`
+												: courseInfo.course_overview
+											: 'None listed'}
 								</div>
-							)}
+								{courseInfo.course_overview &&
+									courseInfo.course_overview.length > charLimit && (
+										<button
+											className="text-primary underline"
+											onClick={() => setOverviewExpanded(!overviewExpanded)}
+										>
+											{overviewExpanded
+												? t('course.overview.show-less')
+												: t('course.overview.show-more')}
+										</button>
+									)}
+							</div>
 						</ModalHeader>
 						<ModalBody className="mb-4">
 							{(() => {
