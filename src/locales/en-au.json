@@ -8,8 +8,10 @@
 		"subject-not-found": "No subject found",
 		"university-wide-elective": "University-wide elective",
 		"level-of-study": "Level of study",
+		"level.non-award": "Non-award",
 		"level.undergraduate": "Undergraduate",
 		"level.postgraduate": "Postgraduate",
+		"level.research": "Research",
 		"courses-availability": "Courses availability"
 	},
 	"header": {

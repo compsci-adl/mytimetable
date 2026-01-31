@@ -48,7 +48,7 @@ export const SearchForm = () => {
 		boolean | undefined
 	>(undefined);
 	const [levelOfStudy, setLevelOfStudy] = useState<string | undefined>(
-		'Undergraduate',
+		undefined,
 	);
 
 	const coursesQuery = useQuery({
@@ -186,8 +186,21 @@ export const SearchForm = () => {
 					</div>
 					<div className="flex flex-col gap-2">
 						<Checkbox
+							checked={levelOfStudy === 'Non-award'}
+							isDisabled={
+								levelOfStudy !== undefined && levelOfStudy !== 'Non-award'
+							}
+							onChange={(e) =>
+								setLevelOfStudy(e.target.checked ? 'Non-award' : undefined)
+							}
+						>
+							{t('search.level.non-award')}
+						</Checkbox>
+						<Checkbox
 							checked={levelOfStudy === 'Undergraduate'}
-							isDisabled={levelOfStudy === 'Postgraduate'}
+							isDisabled={
+								levelOfStudy !== undefined && levelOfStudy !== 'Undergraduate'
+							}
 							onChange={(e) =>
 								setLevelOfStudy(e.target.checked ? 'Undergraduate' : undefined)
 							}
@@ -196,12 +209,25 @@ export const SearchForm = () => {
 						</Checkbox>
 						<Checkbox
 							checked={levelOfStudy === 'Postgraduate'}
-							isDisabled={levelOfStudy === 'Undergraduate'}
+							isDisabled={
+								levelOfStudy !== undefined && levelOfStudy !== 'Postgraduate'
+							}
 							onChange={(e) =>
 								setLevelOfStudy(e.target.checked ? 'Postgraduate' : undefined)
 							}
 						>
 							{t('search.level.postgraduate')}
+						</Checkbox>
+						<Checkbox
+							checked={levelOfStudy === 'Research'}
+							isDisabled={
+								levelOfStudy !== undefined && levelOfStudy !== 'Research'
+							}
+							onChange={(e) =>
+								setLevelOfStudy(e.target.checked ? 'Research' : undefined)
+							}
+						>
+							{t('search.level.research')}
 						</Checkbox>
 					</div>
 				</div>

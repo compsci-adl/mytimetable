@@ -92,7 +92,7 @@ const COURSES = [
 		university_wide_elective: false,
 		course_coordinator: 'Dr Error',
 		course_overview: 'Error course III',
-		level_of_study: 'undergraduate',
+		level_of_study: 'Non-award',
 	},
 	{
 		id: CourseId.ERROR4,
@@ -104,7 +104,7 @@ const COURSES = [
 		university_wide_elective: false,
 		course_coordinator: 'Dr Error',
 		course_overview: 'Error course IV',
-		level_of_study: 'undergraduate',
+		level_of_study: 'Research',
 	},
 	{
 		id: CourseId.ERROR5,
