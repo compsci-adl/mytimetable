@@ -6,7 +6,11 @@
 		"course-not-found": "No course found",
 		"choose-subject": "Choose a subject area",
 		"subject-not-found": "No subject found",
-		"only-university-wide-electives": "Only university-wide electives"
+		"university-wide-elective": "University-wide elective",
+		"level-of-study": "Level of study",
+		"level.undergraduate": "Undergraduate",
+		"level.postgraduate": "Postgraduate",
+		"courses-availability": "Courses availability"
 	},
 	"header": {
 		"help": "Help",
@@ -24,6 +28,12 @@
 		"no-class-info": "No class information is currently available, please try again later in a couple of days.",
 		"conflicts-with-other-classes": "Conflicts with other classes",
 		"university-wide-elective": "University-wide elective"
+	},
+	"course": {
+		"overview": {
+			"show-more": "Show more",
+			"show-less": "Show less"
+		}
 	},
 	"class-modal": {
 		"dates": "Dates",

@@ -26,6 +26,9 @@ export type Course = {
 	campus: string;
 	units: number;
 	university_wide_elective?: boolean;
+	course_coordinator?: string;
+	course_overview: string;
+	level_of_study: 'undergraduate' | 'postgraduate';
 	requirements: unknown;
 	class_list: Array<{
 		id: string;

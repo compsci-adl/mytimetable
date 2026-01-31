@@ -9,7 +9,10 @@ type CoursesRes = {
 			code: string;
 			title: string;
 		};
-		university_wide_elective?: boolean;
+		university_wide_elective: boolean;
+		course_coordinator?: string;
+		course_overview: string;
+		level_of_study: string;
 	}>;
 };
 
@@ -18,6 +21,7 @@ export const getCourses = async (params: {
 	term: string;
 	subject: string;
 	university_wide_elective?: boolean;
+	level_of_study?: string;
 }) => {
 	return fetcher.get<CoursesRes>('courses', { searchParams: params }).json();
 };
