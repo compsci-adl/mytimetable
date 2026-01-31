@@ -25,6 +25,7 @@ export type Course = {
 	term: string;
 	campus: string;
 	units: number;
+	university_wide_elective?: boolean;
 	requirements: unknown;
 	class_list: Array<{
 		id: string;

@@ -11,6 +11,7 @@
 	"term": "Semester 2",
 	"campus": "North Terrace",
 	"units": 3,
+	"university_wide_elective": false,
 	"requirement": {
 		"restriction": "Not available for BMaSc or BMaSc(Adv) students or BMaSc (Hons) [Direct Entry]",
 		"prerequisite": [

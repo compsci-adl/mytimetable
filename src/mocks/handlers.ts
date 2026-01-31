@@ -26,6 +26,7 @@ const COURSES = [
 			code: '2103',
 			title: 'Algorithm Design & Data Structures',
 		},
+		university_wide_elective: false,
 	},
 	{
 		id: CourseId.GCCS,
@@ -34,6 +35,7 @@ const COURSES = [
 			code: '1104',
 			title: 'Grand Challenges in Computer Science',
 		},
+		university_wide_elective: true,
 	},
 	{
 		id: CourseId.MFDS,
@@ -42,6 +44,7 @@ const COURSES = [
 			code: '1004',
 			title: 'Mathematics for Data Science I',
 		},
+		university_wide_elective: false,
 	},
 	{
 		id: CourseId.ERROR1,
@@ -50,6 +53,7 @@ const COURSES = [
 			code: '2333',
 			title: 'Web & Database Computing',
 		},
+		university_wide_elective: false,
 	},
 	{
 		id: CourseId.ERROR2,
@@ -58,6 +62,7 @@ const COURSES = [
 			code: '1145',
 			title: 'Web & Database Computing II',
 		},
+		university_wide_elective: false,
 	},
 	{
 		id: CourseId.ERROR3,
@@ -66,6 +71,7 @@ const COURSES = [
 			code: '1419',
 			title: 'Web & Database Computing III',
 		},
+		university_wide_elective: false,
 	},
 	{
 		id: CourseId.ERROR4,
@@ -74,6 +80,7 @@ const COURSES = [
 			code: '1981',
 			title: 'Web & Database Computing IV',
 		},
+		university_wide_elective: false,
 	},
 	{
 		id: CourseId.ERROR5,
@@ -82,6 +89,7 @@ const COURSES = [
 			code: '0000',
 			title: 'Web & Database Computing V',
 		},
+		university_wide_elective: false,
 	},
 ] as const;
 
@@ -104,9 +112,12 @@ export const handlers = [
 	http.get('/mock/courses', async ({ request }) => {
 		const url = new URL(request.url);
 		const subject = url.searchParams.get('subject');
-		return HttpResponse.json({
-			courses: COURSES.filter((c) => c.name.subject === subject),
-		});
+		const uwe = url.searchParams.get('university_wide_elective');
+		let results = COURSES.filter((c) => c.name.subject === subject);
+		if (uwe === 'true') {
+			results = results.filter((c) => c.university_wide_elective);
+		}
+		return HttpResponse.json({ courses: results });
 	}),
 	http.get('/mock/courses/:id', async ({ params }) => {
 		const { id } = params as { id: CourseId };

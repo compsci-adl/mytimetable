@@ -195,7 +195,12 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 				{() => (
 					<>
 						<ModalHeader className="flex flex-col gap-1">
-							{courseInfo.name.code} - {courseInfo.name.title}
+							{courseInfo.name.code} - {courseInfo.name.title}{' '}
+							{courseInfo.university_wide_elective && (
+								<div className="text-sm font-normal">
+									{t('course-modal.university-wide-elective')}
+								</div>
+							)}
 						</ModalHeader>
 						<ModalBody className="mb-4">
 							{(() => {
