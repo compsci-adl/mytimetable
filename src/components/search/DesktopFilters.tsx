@@ -68,8 +68,6 @@ export const DesktopFilters = ({
 					<FaFilter className="mr-1" />
 					Filters
 				</Button>
-
-				{/* Filter Chips */}
 				<div className="flex flex-wrap gap-2">
 					{levelOfStudy && (
 						<Chip
@@ -84,7 +82,7 @@ export const DesktopFilters = ({
 							onClose={() => onOnlyUniversityWideChange(undefined)}
 							variant="flat"
 						>
-							University Wide Elective
+							University-wide elective
 						</Chip>
 					)}
 					{campuses &&

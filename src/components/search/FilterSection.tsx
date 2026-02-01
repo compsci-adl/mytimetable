@@ -119,16 +119,15 @@ export const FilterSection = ({
 		allCoursesQuery.isPending ||
 		showAllLevelOptions ||
 		subject === null;
-	const visibleLevelCount = levelOptions.filter((l) => canShowLevel(l)).length;
 
 	const hideLevelOfStudySection =
 		subject !== null && availableLevels.size === 0 && !showAllLevelOptions;
 	const hideCampusSection = subject !== null && availableCampuses.size === 0;
 
 	return (
-		<div className="flex flex-col items-start gap-4 md:grid md:grid-cols-[260px_1fr] md:items-start">
+		<div className="flex flex-col items-start gap-4 md:grid md:grid-cols-[320px_1fr] md:items-start">
 			<div
-				className={`overflow-hidden transition-all duration-300 ease-in-out ${
+				className={`min-w-0 overflow-x-visible overflow-y-hidden transition-all duration-300 ease-in-out ${
 					hideLevelOfStudySection
 						? 'order-1 max-h-0 max-w-0 opacity-0'
 						: 'order-0 max-h-249.75 w-full opacity-100'
@@ -137,110 +136,41 @@ export const FilterSection = ({
 				<div className="mb-2 text-sm font-semibold">
 					{t('search.level-of-study')}
 				</div>
-				<div
-					className={`grid grid-cols-2 gap-2 ${visibleLevelCount <= 1 ? 'grid-cols-1' : ''}`}
-				>
-					<div
-						className={`transition-all duration-200 ease-in-out ${
-							!(
-								availableLevels.has('Non-award') ||
-								allCoursesQuery.isPending ||
-								showAllLevelOptions ||
-								subject === null
-							)
-								? 'max-h-0 overflow-hidden opacity-0'
-								: 'max-h-20 opacity-100'
-						}`}
-					>
-						<Checkbox
-							isSelected={currentLevelOfStudy === 'Non-award'}
-							isDisabled={
-								currentLevelOfStudy !== undefined &&
-								currentLevelOfStudy !== 'Non-award'
-							}
-							onValueChange={(isSelected) =>
-								setLevelOfStudy(isSelected ? 'Non-award' : undefined)
-							}
-						>
-							{t('search.level.non-award')}
-						</Checkbox>
-					</div>
-					<div
-						className={`transition-all duration-200 ease-in-out ${
-							!(
-								availableLevels.has('Undergraduate') ||
-								allCoursesQuery.isPending ||
-								showAllLevelOptions ||
-								subject === null
-							)
-								? 'max-h-0 overflow-hidden opacity-0'
-								: 'max-h-20 opacity-100'
-						}`}
-					>
-						<Checkbox
-							isSelected={currentLevelOfStudy === 'Undergraduate'}
-							isDisabled={
-								currentLevelOfStudy !== undefined &&
-								currentLevelOfStudy !== 'Undergraduate'
-							}
-							onValueChange={(isSelected) =>
-								setLevelOfStudy(isSelected ? 'Undergraduate' : undefined)
-							}
-						>
-							{t('search.level.undergraduate')}
-						</Checkbox>
-					</div>
-					<div
-						className={`transition-all duration-200 ease-in-out ${
-							!(
-								availableLevels.has('Postgraduate') ||
-								allCoursesQuery.isPending ||
-								showAllLevelOptions ||
-								subject === null
-							)
-								? 'max-h-0 overflow-hidden opacity-0'
-								: 'max-h-20 opacity-100'
-						}`}
-					>
-						<Checkbox
-							isSelected={currentLevelOfStudy === 'Postgraduate'}
-							isDisabled={
-								currentLevelOfStudy !== undefined &&
-								currentLevelOfStudy !== 'Postgraduate'
-							}
-							onValueChange={(isSelected) =>
-								setLevelOfStudy(isSelected ? 'Postgraduate' : undefined)
-							}
-						>
-							{t('search.level.postgraduate')}
-						</Checkbox>
-					</div>
-					<div
-						className={`transition-all duration-200 ease-in-out ${
-							!(
-								availableLevels.has('Research') ||
-								allCoursesQuery.isPending ||
-								showAllLevelOptions ||
-								subject === null
-							)
-								? 'max-h-0 overflow-hidden opacity-0'
-								: 'max-h-20 opacity-100'
-						}`}
-					>
-						<Checkbox
-							isSelected={currentLevelOfStudy === 'Research'}
-							isDisabled={
-								currentLevelOfStudy !== undefined &&
-								currentLevelOfStudy !== 'Research'
-							}
-							onValueChange={(isSelected) =>
-								setLevelOfStudy(isSelected ? 'Research' : undefined)
-							}
-						>
-							{t('search.level.research')}
-						</Checkbox>
-					</div>
-				</div>
+				{(() => {
+					const visibleLevels = levelOptions.filter(canShowLevel);
+					const colsClass =
+						visibleLevels.length <= 1 ? 'grid-cols-1' : 'grid-cols-2';
+					const labelKey: Record<string, string> = {
+						'Non-award': 'search.level.non-award',
+						Undergraduate: 'search.level.undergraduate',
+						Postgraduate: 'search.level.postgraduate',
+						Research: 'search.level.research',
+					};
+
+					return (
+						<div className={`grid gap-2 ${colsClass}`}>
+							{visibleLevels.map((lvl) => (
+								<div
+									key={lvl}
+									className={`max-h-20 w-auto opacity-100 transition-all duration-200 ease-in-out`}
+								>
+									<Checkbox
+										isSelected={currentLevelOfStudy === lvl}
+										isDisabled={
+											currentLevelOfStudy !== undefined &&
+											currentLevelOfStudy !== lvl
+										}
+										onValueChange={(isSelected) =>
+											setLevelOfStudy(isSelected ? lvl : undefined)
+										}
+									>
+										{t(labelKey[lvl])}
+									</Checkbox>
+								</div>
+							))}
+						</div>
+					);
+				})()}
 				<div className="mt-4">
 					<div className="mb-2 text-sm font-semibold">
 						{t('search.courses-availability')}

@@ -133,7 +133,7 @@ export const MobileFilters = ({
 							}}
 							variant="flat"
 						>
-							University Wide Elective
+							University-wide elective
 						</Chip>
 					)}
 				</div>
