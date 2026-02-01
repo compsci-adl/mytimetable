@@ -25,6 +25,7 @@ export const SearchForm = () => {
 	const [levelOfStudy, setLevelOfStudy] = useState<string | undefined>(
 		undefined,
 	);
+	const [campuses, setCampuses] = useState<string[] | undefined>(undefined);
 	const [isMobile, setIsMobile] = useState(false);
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [tempLevelOfStudy, setTempLevelOfStudy] = useState<string | undefined>(
@@ -33,6 +34,9 @@ export const SearchForm = () => {
 	const [tempOnlyUniversityWide, setTempOnlyUniversityWide] = useState<
 		boolean | undefined
 	>(undefined);
+	const [tempCampuses, setTempCampuses] = useState<string[] | undefined>(
+		undefined,
+	);
 
 	useEffect(() => {
 		const updateIsMobile = () => {
@@ -57,11 +61,13 @@ export const SearchForm = () => {
 	const clearFilters = () => {
 		setLevelOfStudy(undefined);
 		setOnlyUniversityWide(undefined);
+		setCampuses(undefined);
 	};
 
 	const applyFilters = () => {
 		setLevelOfStudy(tempLevelOfStudy);
 		setOnlyUniversityWide(tempOnlyUniversityWide);
+		setCampuses(tempCampuses);
 		setIsDrawerOpen(false);
 	};
 
@@ -98,6 +104,24 @@ export const SearchForm = () => {
 				setOnlyUniversityWide(undefined);
 				setTempOnlyUniversityWide(undefined);
 			}
+
+			const availableCampuses = new Set<string>();
+			allCourses.forEach((c) => {
+				const courseWithCampus = c as { campus?: string };
+				const campusField = courseWithCampus.campus;
+				if (!campusField) return;
+				campusField.split(',').forEach((p: string) => {
+					availableCampuses.add(p.trim());
+				});
+			});
+
+			if (campuses && campuses.length > 0) {
+				const filtered = campuses.filter((c) => availableCampuses.has(c));
+				if (filtered.length !== campuses.length) {
+					setCampuses(filtered.length > 0 ? filtered : undefined);
+					setTempCampuses(filtered.length > 0 ? filtered : undefined);
+				}
+			}
 		});
 
 		return () => {
@@ -133,12 +157,16 @@ export const SearchForm = () => {
 					onlyUniversityWide={onlyUniversityWide}
 					tempLevelOfStudy={tempLevelOfStudy}
 					tempOnlyUniversityWide={tempOnlyUniversityWide}
+					campuses={campuses}
+					tempCampuses={tempCampuses}
 					isDrawerOpen={isDrawerOpen}
 					onDrawerChange={handleDrawerChange}
 					onTempLevelOfStudyChange={setTempLevelOfStudy}
 					onTempOnlyUniversityWideChange={setTempOnlyUniversityWide}
 					onLevelOfStudyChange={setLevelOfStudy}
 					onOnlyUniversityWideChange={setOnlyUniversityWide}
+					onTempCampusesChange={setTempCampuses}
+					onCampusChange={setCampuses}
 					onApplyFilters={applyFilters}
 				/>
 			) : (
@@ -147,6 +175,7 @@ export const SearchForm = () => {
 					subject={subject}
 					levelOfStudy={levelOfStudy}
 					onlyUniversityWide={onlyUniversityWide}
+					campuses={campuses}
 					onLevelOfStudyChange={setLevelOfStudy}
 					onOnlyUniversityWideChange={setOnlyUniversityWide}
 					onClearFilters={clearFilters}

@@ -10,10 +10,13 @@ interface FilterSectionProps {
 	subject: string | null;
 	levelOfStudy: string | undefined;
 	onlyUniversityWide: boolean | undefined;
+	campuses: string[] | undefined;
 	tempLevelOfStudy: string | undefined;
 	tempOnlyUniversityWide: boolean | undefined;
+	tempCampuses: string[] | undefined;
 	onLevelOfStudyChange: (value: string | undefined) => void;
 	onOnlyUniversityWideChange: (value: boolean | undefined) => void;
+	onCampusChange: (value: string[] | undefined) => void;
 	isTemp?: boolean;
 }
 
@@ -22,10 +25,13 @@ export const FilterSection = ({
 	subject,
 	levelOfStudy,
 	onlyUniversityWide,
+	campuses,
 	tempLevelOfStudy,
 	tempOnlyUniversityWide,
+	tempCampuses,
 	onLevelOfStudyChange,
 	onOnlyUniversityWideChange,
+	onCampusChange,
 	isTemp = false,
 }: FilterSectionProps) => {
 	const { t } = useTranslation();
@@ -40,6 +46,10 @@ export const FilterSection = ({
 	const setOnlyUniversityWide = isTemp
 		? (value: boolean | undefined) => onOnlyUniversityWideChange(value)
 		: onOnlyUniversityWideChange;
+	const currentCampuses = isTemp ? tempCampuses : campuses;
+	const setCampuses = isTemp
+		? (value: string[] | undefined) => onCampusChange(value)
+		: onCampusChange;
 
 	const allCoursesQuery = useQuery({
 		queryKey: [
@@ -62,6 +72,37 @@ export const FilterSection = ({
 	);
 	const hasUniversityWide = allCourses.some((c) => c.university_wide_elective);
 
+	const campusSet = new Set<string>();
+	allCourses.forEach((c) => {
+		const courseWithCampus = c as { campus?: string };
+		const campusField = courseWithCampus.campus;
+		if (!campusField) return;
+		campusField.split(',').forEach((p: string) => campusSet.add(p.trim()));
+	});
+
+	const DEFAULT_CAMPUSES = [
+		'Adelaide City Campus',
+		'Adelaide City Campus East',
+		'Adelaide City Campus West',
+		'Brisbane - Rising Sun Pictures',
+		'Ceduna',
+		'Magill',
+		'Mawson Lakes',
+		'Melbourne Campus',
+		'Mt Gambier',
+		'Offshore',
+		'Online',
+		'Port Lincoln',
+		'Regency Park',
+		'Roseworthy Campus',
+		'Waite Campus',
+		'Whyalla',
+	];
+
+	DEFAULT_CAMPUSES.forEach((d) => campusSet.add(d));
+
+	const availableCampuses = campusSet;
+
 	const showAllLevelOptions =
 		availableLevels.size === 0 && allCourses.length > 0;
 	const showAllUniversityWideOptions =
@@ -82,11 +123,10 @@ export const FilterSection = ({
 
 	const hideLevelOfStudySection =
 		subject !== null && availableLevels.size === 0 && !showAllLevelOptions;
-	const hideUniversityWideSection =
-		subject !== null && !hasUniversityWide && !showAllUniversityWideOptions;
+	const hideCampusSection = subject !== null && availableCampuses.size === 0;
 
 	return (
-		<div className="flex items-start gap-4">
+		<div className="flex flex-col items-start gap-4 md:flex-row">
 			<div
 				className={`flex-none overflow-hidden transition-all duration-300 ease-in-out ${
 					hideLevelOfStudySection
@@ -98,7 +138,7 @@ export const FilterSection = ({
 					{t('search.level-of-study')}
 				</div>
 				<div
-					className={`flex flex-col ${visibleLevelCount <= 1 ? '' : 'gap-2'}`}
+					className={`grid grid-cols-2 gap-2 ${visibleLevelCount <= 1 ? 'grid-cols-1' : ''}`}
 				>
 					<div
 						className={`transition-all duration-200 ease-in-out ${
@@ -201,41 +241,61 @@ export const FilterSection = ({
 						</Checkbox>
 					</div>
 				</div>
-			</div>
-			<div
-				className={`flex-none overflow-hidden transition-all duration-300 ease-in-out ${
-					hideUniversityWideSection
-						? 'order-1 max-h-0 max-w-0 opacity-0'
-						: 'max-h-249.75px order-0 max-w-xl opacity-100'
-				}`}
-			>
-				<div className="mb-2 text-sm font-semibold">
-					{t('search.courses-availability')}
-				</div>
-				<div className="flex flex-col gap-2">
-					<div
-						className={`transition-all duration-200 ease-in-out ${
-							!(
-								hasUniversityWide ||
-								allCoursesQuery.isPending ||
-								showAllUniversityWideOptions ||
-								subject === null
-							)
-								? 'max-h-0 overflow-hidden opacity-0'
-								: 'max-h-20 opacity-100'
-						}`}
-					>
-						<Checkbox
-							isSelected={currentOnlyUniversityWide === true}
-							onValueChange={(isSelected) =>
-								setOnlyUniversityWide(isSelected ? true : undefined)
-							}
+				<div className="mt-4">
+					<div className="mb-2 text-sm font-semibold">
+						{t('search.courses-availability')}
+					</div>
+					<div className="flex flex-col gap-2">
+						<div
+							className={`transition-all duration-200 ease-in-out ${
+								!(
+									hasUniversityWide ||
+									allCoursesQuery.isPending ||
+									showAllUniversityWideOptions ||
+									subject === null
+								)
+									? 'max-h-0 overflow-hidden opacity-0'
+									: 'max-h-20 opacity-100'
+							}`}
 						>
-							{t('search.university-wide-elective')}
-						</Checkbox>
+							<Checkbox
+								isSelected={currentOnlyUniversityWide === true}
+								onValueChange={(isSelected) =>
+									setOnlyUniversityWide(isSelected ? true : undefined)
+								}
+							>
+								{t('search.university-wide-elective')}
+							</Checkbox>
+						</div>
 					</div>
 				</div>
 			</div>
+
+			{!hideCampusSection && (
+				<div className="max-h-249.75px order-0 max-w-xl flex-none overflow-hidden opacity-100 transition-all duration-300 ease-in-out">
+					<div className="mb-2 text-sm font-semibold">{t('search.campus')}</div>
+					<div className="grid grid-cols-2 gap-2 md:grid-cols-2 lg:grid-cols-3">
+						{Array.from(availableCampuses).map((campus) => (
+							<Checkbox
+								key={campus}
+								isSelected={currentCampuses?.includes(campus) ?? false}
+								onValueChange={(isSelected) => {
+									if (!isSelected) {
+										setCampuses(
+											currentCampuses?.filter((s: string) => s !== campus) ??
+												[],
+										);
+										return;
+									}
+									setCampuses([...(currentCampuses ?? []), campus]);
+								}}
+							>
+								{campus}
+							</Checkbox>
+						))}
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

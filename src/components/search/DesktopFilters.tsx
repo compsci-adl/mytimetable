@@ -7,6 +7,7 @@ interface DesktopFiltersProps {
 	subject: string | null;
 	levelOfStudy: string | undefined;
 	onlyUniversityWide: boolean | undefined;
+	campuses: string[] | undefined;
 	onLevelOfStudyChange: (value: string | undefined) => void;
 	onOnlyUniversityWideChange: (value: boolean | undefined) => void;
 	onClearFilters: () => void;
@@ -17,6 +18,7 @@ export const DesktopFilters = ({
 	subject,
 	levelOfStudy,
 	onlyUniversityWide,
+	campuses,
 	onLevelOfStudyChange,
 	onOnlyUniversityWideChange,
 	onClearFilters,
@@ -24,19 +26,22 @@ export const DesktopFilters = ({
 	return (
 		<div className="my-2">
 			<h2 className="text-lg font-semibold">Filters</h2>
-			<div className="flex gap-4">
-				<FilterSection
-					selectedTerm={selectedTerm}
-					subject={subject}
-					levelOfStudy={levelOfStudy}
-					onlyUniversityWide={onlyUniversityWide}
-					tempLevelOfStudy={levelOfStudy}
-					tempOnlyUniversityWide={onlyUniversityWide}
-					onLevelOfStudyChange={onLevelOfStudyChange}
-					onOnlyUniversityWideChange={onOnlyUniversityWideChange}
-				/>
-			</div>
-			<div className="mt-2">
+			<div className="flex items-start justify-between">
+				<div className="flex gap-4">
+					<FilterSection
+						selectedTerm={selectedTerm}
+						subject={subject}
+						levelOfStudy={levelOfStudy}
+						onlyUniversityWide={onlyUniversityWide}
+						campuses={campuses}
+						tempLevelOfStudy={levelOfStudy}
+						tempOnlyUniversityWide={onlyUniversityWide}
+						tempCampuses={campuses}
+						onLevelOfStudyChange={onLevelOfStudyChange}
+						onOnlyUniversityWideChange={onOnlyUniversityWideChange}
+						onCampusChange={() => {}}
+					/>
+				</div>
 				<Button size="sm" onClick={onClearFilters}>
 					Reset
 				</Button>

@@ -13,7 +13,8 @@
 		"level.postgraduate": "Postgraduate",
 		"level.research": "Research",
 		"courses-availability": "Courses availability",
-		"filters": "Filters"
+		"filters": "Filters",
+		"campus": "Campus"
 	},
 	"header": {
 		"help": "Help",

@@ -17,14 +17,18 @@ interface MobileFiltersProps {
 	subject: string | null;
 	levelOfStudy: string | undefined;
 	onlyUniversityWide: boolean | undefined;
+	campuses: string[] | undefined;
 	tempLevelOfStudy: string | undefined;
 	tempOnlyUniversityWide: boolean | undefined;
+	tempCampuses: string[] | undefined;
 	isDrawerOpen: boolean;
 	onDrawerChange: (open: boolean) => void;
 	onTempLevelOfStudyChange: (value: string | undefined) => void;
 	onTempOnlyUniversityWideChange: (value: boolean | undefined) => void;
+	onTempCampusesChange: (value: string[] | undefined) => void;
 	onLevelOfStudyChange: (value: string | undefined) => void;
 	onOnlyUniversityWideChange: (value: boolean | undefined) => void;
+	onCampusChange: (value: string[] | undefined) => void;
 	onApplyFilters: () => void;
 }
 
@@ -33,14 +37,18 @@ export const MobileFilters = ({
 	subject,
 	levelOfStudy,
 	onlyUniversityWide,
+	campuses,
 	tempLevelOfStudy,
 	tempOnlyUniversityWide,
+	tempCampuses,
 	isDrawerOpen,
 	onDrawerChange,
 	onTempLevelOfStudyChange,
 	onTempOnlyUniversityWideChange,
+	onTempCampusesChange,
 	onLevelOfStudyChange,
 	onOnlyUniversityWideChange,
+	onCampusChange,
 	onApplyFilters,
 }: MobileFiltersProps) => {
 	const { t } = useTranslation();
@@ -64,9 +72,11 @@ export const MobileFilters = ({
 		if (open) {
 			onTempLevelOfStudyChange(levelOfStudy);
 			onTempOnlyUniversityWideChange(onlyUniversityWide);
+			onTempCampusesChange(campuses);
 		} else {
 			onTempLevelOfStudyChange(levelOfStudy);
 			onTempOnlyUniversityWideChange(onlyUniversityWide);
+			onTempCampusesChange(campuses);
 		}
 	};
 
@@ -125,6 +135,22 @@ export const MobileFilters = ({
 						</Chip>
 					)}
 				</div>
+				{campuses && campuses.length > 0 && (
+					<>
+						{campuses.map((c) => (
+							<Chip
+								key={c}
+								onClose={() => {
+									const next = campuses.filter((x) => x !== c);
+									onCampusChange(next.length > 0 ? next : undefined);
+								}}
+								variant="flat"
+							>
+								{c}
+							</Chip>
+						))}
+					</>
+				)}
 			</div>
 			<Drawer
 				className="z-100"
@@ -140,10 +166,13 @@ export const MobileFilters = ({
 							subject={subject}
 							levelOfStudy={levelOfStudy}
 							onlyUniversityWide={onlyUniversityWide}
+							campuses={campuses}
 							tempLevelOfStudy={tempLevelOfStudy}
 							tempOnlyUniversityWide={tempOnlyUniversityWide}
+							tempCampuses={tempCampuses}
 							onLevelOfStudyChange={onTempLevelOfStudyChange}
 							onOnlyUniversityWideChange={onTempOnlyUniversityWideChange}
+							onCampusChange={onTempCampusesChange}
 							isTemp={true}
 						/>
 					</DrawerBody>
@@ -153,6 +182,7 @@ export const MobileFilters = ({
 							onClick={() => {
 								onTempLevelOfStudyChange(undefined);
 								onTempOnlyUniversityWideChange(undefined);
+								onTempCampusesChange(undefined);
 							}}
 						>
 							Reset
