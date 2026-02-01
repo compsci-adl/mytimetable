@@ -9,6 +9,7 @@ import {
 } from '@heroui/react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaFilter } from 'react-icons/fa';
 
 import { FilterSection } from './FilterSection';
 
@@ -83,6 +84,7 @@ export const MobileFilters = ({
 	return (
 		<div className="my-4">
 			<Button className="w-full" onClick={() => onDrawerChange(true)}>
+				<FaFilter className="mr-1" />
 				{t('search.filters')}
 			</Button>
 			<div className="mt-2 flex flex-wrap gap-2">

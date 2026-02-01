@@ -126,12 +126,12 @@ export const FilterSection = ({
 	const hideCampusSection = subject !== null && availableCampuses.size === 0;
 
 	return (
-		<div className="flex flex-col items-start gap-4 md:flex-row">
+		<div className="flex flex-col items-start gap-4 md:grid md:grid-cols-[260px_1fr] md:items-start">
 			<div
-				className={`flex-none overflow-hidden transition-all duration-300 ease-in-out ${
+				className={`overflow-hidden transition-all duration-300 ease-in-out ${
 					hideLevelOfStudySection
 						? 'order-1 max-h-0 max-w-0 opacity-0'
-						: 'order-0 max-h-249.75 max-w-xl opacity-100'
+						: 'order-0 max-h-249.75 w-full opacity-100'
 				}`}
 			>
 				<div className="mb-2 text-sm font-semibold">
@@ -272,9 +272,9 @@ export const FilterSection = ({
 			</div>
 
 			{!hideCampusSection && (
-				<div className="max-h-249.75px order-0 max-w-xl flex-none overflow-hidden opacity-100 transition-all duration-300 ease-in-out">
+				<div className="max-h-249.75px order-0 w-full overflow-hidden opacity-100 transition-all duration-300 ease-in-out md:col-start-2">
 					<div className="mb-2 text-sm font-semibold">{t('search.campus')}</div>
-					<div className="grid grid-cols-2 gap-2 md:grid-cols-2 lg:grid-cols-3">
+					<div className="grid grid-cols-2 gap-2">
 						{Array.from(availableCampuses).map((campus) => (
 							<Checkbox
 								key={campus}

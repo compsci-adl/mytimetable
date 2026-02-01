@@ -58,12 +58,6 @@ export const SearchForm = () => {
 		}
 	};
 
-	const clearFilters = () => {
-		setLevelOfStudy(undefined);
-		setOnlyUniversityWide(undefined);
-		setCampuses(undefined);
-	};
-
 	const applyFilters = () => {
 		setLevelOfStudy(tempLevelOfStudy);
 		setOnlyUniversityWide(tempOnlyUniversityWide);
@@ -176,9 +170,16 @@ export const SearchForm = () => {
 					levelOfStudy={levelOfStudy}
 					onlyUniversityWide={onlyUniversityWide}
 					campuses={campuses}
+					tempLevelOfStudy={tempLevelOfStudy}
+					tempOnlyUniversityWide={tempOnlyUniversityWide}
+					tempCampuses={tempCampuses}
 					onLevelOfStudyChange={setLevelOfStudy}
 					onOnlyUniversityWideChange={setOnlyUniversityWide}
-					onClearFilters={clearFilters}
+					onCampusChange={setCampuses}
+					onTempLevelOfStudyChange={setTempLevelOfStudy}
+					onTempOnlyUniversityWideChange={setTempOnlyUniversityWide}
+					onTempCampusesChange={setTempCampuses}
+					onApplyFilters={applyFilters}
 				/>
 			)}
 		</div>
