@@ -262,20 +262,7 @@ export const SearchForm = () => {
 						placement="bottom"
 					>
 						<DrawerContent>
-							<DrawerHeader>
-								<div className="flex flex-col gap-2">
-									{t('search.filters')}{' '}
-									<Button
-										size="sm"
-										onClick={() => {
-											setTempLevelOfStudy(undefined);
-											setTempOnlyUniversityWide(undefined);
-										}}
-									>
-										Reset
-									</Button>
-								</div>
-							</DrawerHeader>
+							<DrawerHeader>{t('search.filters')} </DrawerHeader>
 							<DrawerBody>
 								<div className="flex flex-col gap-4">
 									<div>
@@ -363,6 +350,15 @@ export const SearchForm = () => {
 							<DrawerFooter>
 								<Button
 									className="w-full"
+									onClick={() => {
+										setTempLevelOfStudy(undefined);
+										setTempOnlyUniversityWide(undefined);
+									}}
+								>
+									Reset
+								</Button>
+								<Button
+									className="w-full"
 									color="primary"
 									onClick={applyFilters}
 								>
@@ -374,12 +370,7 @@ export const SearchForm = () => {
 				</div>
 			) : (
 				<div className="my-2">
-					<div className="flex items-center gap-4">
-						<h2 className="text-lg font-semibold">Filters</h2>
-						<Button size="sm" onClick={clearFilters}>
-							Reset
-						</Button>
-					</div>
+					<h2 className="text-lg font-semibold">Filters</h2>
 					<div className="flex gap-4">
 						<div className="my-4">
 							<div className="mb-2 text-sm font-semibold">
@@ -450,6 +441,9 @@ export const SearchForm = () => {
 							</div>
 						</div>
 					</div>
+					<Button size="sm" onClick={clearFilters}>
+						Reset
+					</Button>
 				</div>
 			)}
 		</div>
