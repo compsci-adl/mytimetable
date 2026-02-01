@@ -12,7 +12,8 @@
 		"level.undergraduate": "Undergraduate",
 		"level.postgraduate": "Postgraduate",
 		"level.research": "Research",
-		"courses-availability": "Courses availability"
+		"courses-availability": "Courses availability",
+		"filters": "Filters"
 	},
 	"header": {
 		"help": "Help",

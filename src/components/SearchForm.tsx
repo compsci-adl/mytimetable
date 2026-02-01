@@ -3,11 +3,16 @@ import {
 	AutocompleteItem,
 	Button,
 	Checkbox,
+	Drawer,
+	DrawerContent,
+	DrawerHeader,
+	DrawerBody,
+	DrawerFooter,
 	Select,
 	SelectItem,
 } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -50,6 +55,17 @@ export const SearchForm = () => {
 	const [levelOfStudy, setLevelOfStudy] = useState<string | undefined>(
 		undefined,
 	);
+	const [isMobile, setIsMobile] = useState(false);
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+	useEffect(() => {
+		const updateIsMobile = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+		updateIsMobile();
+		window.addEventListener('resize', updateIsMobile);
+		return () => window.removeEventListener('resize', updateIsMobile);
+	}, []);
 
 	const coursesQuery = useQuery({
 		queryKey: [
@@ -179,74 +195,185 @@ export const SearchForm = () => {
 					</Button>
 				</form>
 			</div>
-			<div className="flex gap-4">
+			{isMobile ? (
 				<div className="my-4">
-					<div className="mb-2 text-sm font-semibold">
-						{t('search.level-of-study')}
+					<Button className="w-full" onClick={() => setIsDrawerOpen(true)}>
+						{t('search.filters')}
+					</Button>
+					<Drawer
+						isOpen={isDrawerOpen}
+						onOpenChange={setIsDrawerOpen}
+						placement="bottom"
+					>
+						<DrawerContent>
+							<DrawerHeader>{t('search.filters')}</DrawerHeader>
+							<DrawerBody>
+								<div className="flex flex-col gap-4">
+									<div>
+										<div className="mb-2 text-sm font-semibold">
+											{t('search.level-of-study')}
+										</div>
+										<div className="flex flex-col gap-2">
+											<Checkbox
+												checked={levelOfStudy === 'Non-award'}
+												isDisabled={
+													levelOfStudy !== undefined &&
+													levelOfStudy !== 'Non-award'
+												}
+												onChange={(e) =>
+													setLevelOfStudy(
+														e.target.checked ? 'Non-award' : undefined,
+													)
+												}
+											>
+												{t('search.level.non-award')}
+											</Checkbox>
+											<Checkbox
+												checked={levelOfStudy === 'Undergraduate'}
+												isDisabled={
+													levelOfStudy !== undefined &&
+													levelOfStudy !== 'Undergraduate'
+												}
+												onChange={(e) =>
+													setLevelOfStudy(
+														e.target.checked ? 'Undergraduate' : undefined,
+													)
+												}
+											>
+												{t('search.level.undergraduate')}
+											</Checkbox>
+											<Checkbox
+												checked={levelOfStudy === 'Postgraduate'}
+												isDisabled={
+													levelOfStudy !== undefined &&
+													levelOfStudy !== 'Postgraduate'
+												}
+												onChange={(e) =>
+													setLevelOfStudy(
+														e.target.checked ? 'Postgraduate' : undefined,
+													)
+												}
+											>
+												{t('search.level.postgraduate')}
+											</Checkbox>
+											<Checkbox
+												checked={levelOfStudy === 'Research'}
+												isDisabled={
+													levelOfStudy !== undefined &&
+													levelOfStudy !== 'Research'
+												}
+												onChange={(e) =>
+													setLevelOfStudy(
+														e.target.checked ? 'Research' : undefined,
+													)
+												}
+											>
+												{t('search.level.research')}
+											</Checkbox>
+										</div>
+									</div>
+									<div>
+										<div className="mb-2 text-sm font-semibold">
+											{t('search.courses-availability')}
+										</div>
+										<div className="flex flex-col gap-2">
+											<Checkbox
+												checked={onlyUniversityWide === true}
+												onChange={(e) =>
+													setOnlyUniversityWide(
+														e.target.checked ? true : undefined,
+													)
+												}
+											>
+												{t('search.university-wide-elective')}
+											</Checkbox>
+										</div>
+									</div>
+								</div>
+							</DrawerBody>
+							<DrawerFooter>
+								<Button
+									className="w-full"
+									onClick={() => setIsDrawerOpen(false)}
+								>
+									Close
+								</Button>
+							</DrawerFooter>
+						</DrawerContent>
+					</Drawer>
+				</div>
+			) : (
+				<div className="flex gap-4">
+					<div className="my-4">
+						<div className="mb-2 text-sm font-semibold">
+							{t('search.level-of-study')}
+						</div>
+						<div className="flex flex-col gap-2">
+							<Checkbox
+								checked={levelOfStudy === 'Non-award'}
+								isDisabled={
+									levelOfStudy !== undefined && levelOfStudy !== 'Non-award'
+								}
+								onChange={(e) =>
+									setLevelOfStudy(e.target.checked ? 'Non-award' : undefined)
+								}
+							>
+								{t('search.level.non-award')}
+							</Checkbox>
+							<Checkbox
+								checked={levelOfStudy === 'Undergraduate'}
+								isDisabled={
+									levelOfStudy !== undefined && levelOfStudy !== 'Undergraduate'
+								}
+								onChange={(e) =>
+									setLevelOfStudy(
+										e.target.checked ? 'Undergraduate' : undefined,
+									)
+								}
+							>
+								{t('search.level.undergraduate')}
+							</Checkbox>
+							<Checkbox
+								checked={levelOfStudy === 'Postgraduate'}
+								isDisabled={
+									levelOfStudy !== undefined && levelOfStudy !== 'Postgraduate'
+								}
+								onChange={(e) =>
+									setLevelOfStudy(e.target.checked ? 'Postgraduate' : undefined)
+								}
+							>
+								{t('search.level.postgraduate')}
+							</Checkbox>
+							<Checkbox
+								checked={levelOfStudy === 'Research'}
+								isDisabled={
+									levelOfStudy !== undefined && levelOfStudy !== 'Research'
+								}
+								onChange={(e) =>
+									setLevelOfStudy(e.target.checked ? 'Research' : undefined)
+								}
+							>
+								{t('search.level.research')}
+							</Checkbox>
+						</div>
 					</div>
-					<div className="flex flex-col gap-2">
-						<Checkbox
-							checked={levelOfStudy === 'Non-award'}
-							isDisabled={
-								levelOfStudy !== undefined && levelOfStudy !== 'Non-award'
-							}
-							onChange={(e) =>
-								setLevelOfStudy(e.target.checked ? 'Non-award' : undefined)
-							}
-						>
-							{t('search.level.non-award')}
-						</Checkbox>
-						<Checkbox
-							checked={levelOfStudy === 'Undergraduate'}
-							isDisabled={
-								levelOfStudy !== undefined && levelOfStudy !== 'Undergraduate'
-							}
-							onChange={(e) =>
-								setLevelOfStudy(e.target.checked ? 'Undergraduate' : undefined)
-							}
-						>
-							{t('search.level.undergraduate')}
-						</Checkbox>
-						<Checkbox
-							checked={levelOfStudy === 'Postgraduate'}
-							isDisabled={
-								levelOfStudy !== undefined && levelOfStudy !== 'Postgraduate'
-							}
-							onChange={(e) =>
-								setLevelOfStudy(e.target.checked ? 'Postgraduate' : undefined)
-							}
-						>
-							{t('search.level.postgraduate')}
-						</Checkbox>
-						<Checkbox
-							checked={levelOfStudy === 'Research'}
-							isDisabled={
-								levelOfStudy !== undefined && levelOfStudy !== 'Research'
-							}
-							onChange={(e) =>
-								setLevelOfStudy(e.target.checked ? 'Research' : undefined)
-							}
-						>
-							{t('search.level.research')}
-						</Checkbox>
+					<div className="my-4">
+						<div className="mb-2 text-sm font-semibold">
+							{t('search.courses-availability')}
+						</div>
+						<div className="flex flex-col gap-2">
+							<Checkbox
+								checked={onlyUniversityWide === true}
+								onChange={(e) =>
+									setOnlyUniversityWide(e.target.checked ? true : undefined)
+								}
+							>
+								{t('search.university-wide-elective')}
+							</Checkbox>
+						</div>
 					</div>
 				</div>
-				<div className="my-4">
-					<div className="mb-2 text-sm font-semibold">
-						{t('search.courses-availability')}
-					</div>
-					<div className="flex flex-col gap-2">
-						<Checkbox
-							checked={onlyUniversityWide === true}
-							onChange={(e) =>
-								setOnlyUniversityWide(e.target.checked ? true : undefined)
-							}
-						>
-							{t('search.university-wide-elective')}
-						</Checkbox>
-					</div>
-				</div>
-			</div>
+			)}
 		</div>
 	);
 };
