@@ -141,6 +141,7 @@ export const SearchForm = () => {
 					subject={subject}
 					onlyUniversityWide={onlyUniversityWide}
 					levelOfStudy={levelOfStudy}
+					campuses={campuses}
 				/>
 			</div>
 			{isMobile ? (

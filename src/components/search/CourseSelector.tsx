@@ -13,6 +13,7 @@ interface CourseSelectorProps {
 	subject: string | null;
 	onlyUniversityWide: boolean | undefined;
 	levelOfStudy: string | undefined;
+	campuses?: string[] | undefined;
 }
 
 export const CourseSelector = ({
@@ -20,6 +21,7 @@ export const CourseSelector = ({
 	subject,
 	onlyUniversityWide,
 	levelOfStudy,
+	campuses,
 }: CourseSelectorProps) => {
 	const { t } = useTranslation();
 	const enrolledCourses = useEnrolledCourses();
@@ -41,8 +43,18 @@ export const CourseSelector = ({
 	});
 
 	const courses = coursesQuery.data?.courses;
+	const filteredByCampus =
+		campuses && campuses.length > 0 && courses
+			? courses.filter((c) => {
+					const courseWithCampus = c as { campus?: string };
+					const campusField = courseWithCampus.campus;
+					if (!campusField) return false;
+					const courseCampuses = campusField.split(',').map((s) => s.trim());
+					return courseCampuses.some((cc) => campuses.includes(cc));
+				})
+			: courses;
 	const courseList =
-		courses?.map((c) => ({
+		filteredByCampus?.map((c) => ({
 			key: c.id,
 			id: c.id,
 			name: `${c.name.code} - ${c.name.title}`,

@@ -99,7 +99,9 @@ export const FilterSection = ({
 		'Whyalla',
 	];
 
-	DEFAULT_CAMPUSES.forEach((d) => campusSet.add(d));
+	if (subject === null) {
+		DEFAULT_CAMPUSES.forEach((d) => campusSet.add(d));
+	}
 
 	const availableCampuses = campusSet;
 
