@@ -11,6 +11,10 @@
 	"term": "Semester 2",
 	"campus": "North Terrace",
 	"units": 3,
+	"university_wide_elective": false,
+	"course_coordinator": "Dr Alice Smith",
+	"course_overview": "Algorithm design and data structures: algorithmic techniques for solving problems, fundamental data structures and their use in real-world problems.",
+	"level_of_study": "undergraduate",
 	"requirement": {
 		"restriction": "Not available to B. Information Technology students",
 		"prerequisite": ["COMP SCI 1102"],

@@ -5,7 +5,16 @@
 		"add": "Add",
 		"course-not-found": "No course found",
 		"choose-subject": "Choose a subject area",
-		"subject-not-found": "No subject found"
+		"subject-not-found": "No subject found",
+		"university-wide-elective": "University-wide elective",
+		"level-of-study": "Level of study",
+		"level.non-award": "Non-award",
+		"level.undergraduate": "Undergraduate",
+		"level.postgraduate": "Postgraduate",
+		"level.research": "Research",
+		"courses-availability": "Courses availability",
+		"filters": "Filters",
+		"campus": "Campus"
 	},
 	"header": {
 		"help": "Help",
@@ -21,7 +30,17 @@
 		"campus": "Campus",
 		"availability": "Availability",
 		"no-class-info": "No class information is currently available, please try again later in a couple of days.",
-		"conflicts-with-other-classes": "Conflicts with other classes"
+		"conflicts-with-other-classes": "Conflicts with other classes",
+		"university-wide-elective": "University-wide elective",
+		"course_coordinator": "Course Coordinator",
+		"level_of_study": "Level of Study",
+		"course_overview": "Course Overview"
+	},
+	"course": {
+		"overview": {
+			"show-more": "Show more",
+			"show-less": "Show less"
+		}
 	},
 	"class-modal": {
 		"dates": "Dates",

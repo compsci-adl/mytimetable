@@ -212,7 +212,7 @@ const CalendarHeader = ({
 		},
 	];
 	return (
-		<div className="bg-background sticky top-0 z-50 flex items-center justify-between py-1">
+		<div className="bg-background sticky top-0 z-50 flex items-center justify-between">
 			<h2 className="mobile:text-2xl text-3xl">
 				<span className="mr-2 font-bold">
 					{/* Month for Wednesday in the week is more accurate than Monday */}

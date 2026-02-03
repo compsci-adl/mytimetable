@@ -14,7 +14,7 @@ export const ZoomButtons = () => {
 	const { height, setHeight } = useCalendarHourHeight();
 
 	return (
-		<div className="mobile:bottom-3 mobile:right-3 fixed right-8 bottom-8 z-100 flex flex-col gap-2">
+		<div className="mobile:bottom-3 mobile:right-3 fixed right-8 bottom-8 z-50 flex flex-col gap-2">
 			<Tooltip content={t('zoom.zoom-in')} placement="left">
 				<Button
 					onClick={() => setHeight((h) => h + 0.5)}

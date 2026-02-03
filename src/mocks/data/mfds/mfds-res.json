@@ -11,6 +11,10 @@
 	"term": "Semester 2",
 	"campus": "North Terrace",
 	"units": 3,
+	"university_wide_elective": false,
+	"course_coordinator": "Dr Cathy Lee",
+	"course_overview": "Foundations in calculus and linear algebra tailored for data science applications.",
+	"level_of_study": "undergraduate",
 	"requirement": {
 		"restriction": "Not available for BMaSc or BMaSc(Adv) students or BMaSc (Hons) [Direct Entry]",
 		"prerequisite": [

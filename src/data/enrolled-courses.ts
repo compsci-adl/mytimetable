@@ -28,7 +28,11 @@ type Course = {
 type Courses = Array<Course>;
 type CoursesState = {
 	courses: Courses;
-	addCourse: (course: Omit<Course, 'classes' | 'color'>) => void;
+	addCourse: (
+		course: Omit<Course, 'classes' | 'color'> & {
+			preferredCampuses?: string[];
+		},
+	) => void;
 	removeCourse: (courseId: string) => void;
 	updateCourseClass: (props: {
 		courseId: string;
@@ -41,7 +45,11 @@ export const useEnrolledCourses = create<CoursesState>()(
 	persist(
 		mutative((set, get) => ({
 			courses: [],
-			addCourse: async (course) => {
+			addCourse: async (
+				course: Omit<Course, 'classes' | 'color'> & {
+					preferredCampuses?: string[];
+				},
+			) => {
 				// Limit to 7 courses
 				const currentCourses = get().courses;
 				if (currentCourses.length >= 7) {
@@ -58,6 +66,8 @@ export const useEnrolledCourses = create<CoursesState>()(
 				set((state) => {
 					state.courses.push({ ...course, classes: [], color });
 				});
+				const preferredCampuses = course.preferredCampuses;
+
 				// Fetch course data
 				const data = await queryClient.ensureQueryData({
 					queryKey: ['course', course.id] as const,
@@ -107,6 +117,15 @@ export const useEnrolledCourses = create<CoursesState>()(
 
 					enrolledCourse.classes = data.class_list.map((c) => {
 						const pick = () => {
+							if (preferredCampuses && preferredCampuses.length > 0) {
+								const foundByCampus = c.classes.find((cls) =>
+									cls.meetings.some((m: Meetings[number]) =>
+										preferredCampuses.includes(m.campus),
+									),
+								);
+								if (foundByCampus) return foundByCampus;
+							}
+
 							if (!monthRange) return c.classes[0];
 							const found = c.classes.find((cls) =>
 								cls.meetings.some((m: Meetings[number]) => {
