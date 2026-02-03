@@ -81,6 +81,7 @@ export const CourseSelector = ({
 		enrolledCourses.addCourse({
 			name,
 			id: course.id,
+			preferredCampuses: campuses,
 		});
 		setSelectedCourseId(null);
 		if (typeof umami !== 'undefined') {
