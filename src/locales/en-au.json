@@ -116,6 +116,6 @@
 	},
 	"toast": {
 		"drop-to-change-term": "You need to drop all courses to change the term",
-		"too-many-courses": "8 courses for a term is crazy! 💀"
+		"too-many-courses": "More than 10 courses for a term is crazy! 💀"
 	}
 }

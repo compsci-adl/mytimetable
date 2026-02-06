@@ -50,9 +50,9 @@ export const useEnrolledCourses = create<CoursesState>()(
 					preferredCampuses?: string[];
 				},
 			) => {
-				// Limit to 7 courses
+				// Limit to max 10 courses
 				const currentCourses = get().courses;
-				if (currentCourses.length >= 7) {
+				if (currentCourses.length > 10) {
 					toast.error(i18n.t('toast.too-many-courses'));
 					return currentCourses;
 				}
