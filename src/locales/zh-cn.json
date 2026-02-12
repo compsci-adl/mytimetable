@@ -39,13 +39,19 @@
 			"十一月",
 			"十二月"
 		],
+		"shared": "共享时间表",
 		"immoveable-course": "此课程无法移动",
 		"end-actions": {
 			"copy": "复制到剪切板",
 			"ready": "准备选课",
+			"share": "分享课程表",
 			"copy-success": "已成功复制到剪切板！",
 			"enrolment-instruction": "复制课程代号并前往 myEnrolment 的 Enrolment 页面输入以正式选课"
 		}
+	},
+	"shared-timetable": {
+		"tooltip": "开放共享时间表",
+		"title": "共享时间表"
 	},
 	"help": {
 		"title": "如何使用 MyTimetable",
