@@ -77,6 +77,7 @@
 			"November",
 			"December"
 		],
+		"shared": "Shared Timetable",
 		"immoveable-course": "Immoveable course",
 		"no-available-seats": "Class full",
 		"conflict": "Conflict with another class",
@@ -85,11 +86,16 @@
 			"copy": "Copy to clipboard",
 			"export": "Export to calendar",
 			"export-success": "Calendar file exported",
+			"share": "Share timetable",
 			"no-courses": "No courses to export",
 			"ready": "Ready for Enrolment",
 			"copy-success": "Copied to clipboard!",
 			"enrolment-instruction": "Copy the numbers below and enter them on the myEnrolment page. You can also export your classes to a calendar file."
 		}
+	},
+	"shared-timetable": {
+		"tooltip": "Open Shared Timetable",
+		"title": "Shared Timetable"
 	},
 	"help": {
 		"title": "How to use MyTimetable",
