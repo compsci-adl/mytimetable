@@ -6,6 +6,8 @@ import { persist } from 'zustand/middleware';
 import { getCourse } from '../apis';
 import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
+import { YEAR } from '../constants/year';
+import { useSelectedTerm } from '../helpers/term';
 import i18n from '../i18n';
 import { queryClient } from '../lib/query';
 import type {
@@ -24,6 +26,8 @@ type Course = {
 		classNumber: string; // Meeting time number (ID)
 	}>;
 	color: number; // Color index in COURSE_COLORS
+	year: number;
+	term: string;
 };
 type Courses = Array<Course>;
 type CoursesState = {
@@ -39,6 +43,7 @@ type CoursesState = {
 		classTypeId: string;
 		classNumber: string;
 	}) => void;
+	updateCourses: (term: string) => void;
 };
 
 export const useEnrolledCourses = create<CoursesState>()(
@@ -163,10 +168,32 @@ export const useEnrolledCourses = create<CoursesState>()(
 					classType.classNumber = classNumber;
 				});
 			},
+			updateCourses: (term) => {
+				set((state) => {
+					// Assign year and term to all subjects that are missing these properties.
+					state.courses.forEach((course: Course, index: number) => {
+						if (course.term === undefined) {
+							course.term = term;
+							course.year = YEAR;
+							state.courses[index] = course;
+						}
+					});
+				});
+			},
 		})),
 		{ name: LocalStorageKey.EnrolledCourses, version: 0 },
 	),
 );
+
+export const useTermCourses = (): Array<Course> => {
+	const courses = useEnrolledCourses((c) => c.courses);
+	const selectedTerm = useSelectedTerm((t) => t.term);
+	const termCourses = courses.filter(
+		(c) => c.term === selectedTerm || c.term === undefined,
+	);
+
+	return termCourses;
+};
 
 export const useEnrolledCourse = (id: string) => {
 	const course = useEnrolledCourses((s) => s.courses.find((c) => c.id === id));
@@ -191,7 +218,7 @@ export const useEnrolledCourseClassNumber = (
 export const useDetailedEnrolledCourses = (): Array<DetailedEnrolledCourse> => {
 	const coursesInfo = useCoursesInfo();
 
-	const courses = useEnrolledCourses((s) => s.courses);
+	const courses = useTermCourses();
 	const detailedCourses = courses.map((course) => {
 		const courseInfo = coursesInfo.find((c) => c.id === course.id);
 		if (!courseInfo) return null;
