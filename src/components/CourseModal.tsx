@@ -304,7 +304,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 								<div className="relative">
 									<motion.div
 										initial={false}
-										animate={{ height: overviewExpanded ? 'auto' : 50 }} // Increased collapsed height slightly
+										animate={{ height: overviewExpanded ? 'auto' : 50 }}
 										transition={{ duration: 0.3, ease: 'easeInOut' }}
 										className="overflow-hidden font-normal"
 									>
