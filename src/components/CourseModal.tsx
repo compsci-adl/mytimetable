@@ -64,6 +64,16 @@ const MeetingsTime = ({
 	availableSeats?: string | undefined;
 }) => {
 	const { t } = useTranslation();
+
+	if (meetings.length === 0) {
+		return (
+			<div className="text-danger">
+				{t('course-modal.no-class-times-available') ??
+					'No class times available'}
+			</div>
+		);
+	}
+
 	const isFullValue =
 		availableSeats !== undefined && parseInt(availableSeats, 10) === 0;
 

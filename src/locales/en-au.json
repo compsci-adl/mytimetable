@@ -34,7 +34,8 @@
 		"university-wide-elective": "University-wide elective",
 		"course_coordinator": "Course Coordinator",
 		"level_of_study": "Level of Study",
-		"course_overview": "Course Overview"
+		"course_overview": "Course Overview",
+		"no-class-times-available": "No class times available"
 	},
 	"course": {
 		"overview": {
