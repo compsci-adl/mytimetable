@@ -35,7 +35,15 @@
 		"course_coordinator": "Course Coordinator",
 		"level_of_study": "Level of Study",
 		"course_overview": "Course Overview",
-		"no-class-times-available": "No class times available"
+		"no-class-times-available": "No class times available",
+		"learning-outcomes": "Learning Outcomes",
+		"textbooks": "Textbooks",
+		"assessments": "Assessments",
+		"assessment-name": "Name",
+		"assessment-weight": "Weight",
+		"assessment-due-date": "Due Date",
+		"assessment-hurdle": "Hurdle",
+		"assessment-learning-outcomes": "Learning Outcomes"
 	},
 	"course": {
 		"overview": {
