@@ -13,8 +13,10 @@ import {
 	TableRow,
 	Tooltip,
 } from '@heroui/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaChevronDown } from 'react-icons/fa';
 import { Fragment } from 'react/jsx-runtime';
 
 import { useGetCourseInfo } from '../data/course-info';
@@ -64,6 +66,16 @@ const MeetingsTime = ({
 	availableSeats?: string | undefined;
 }) => {
 	const { t } = useTranslation();
+
+	if (meetings.length === 0) {
+		return (
+			<div className="text-danger">
+				{t('course-modal.no-class-times-available') ??
+					'No class times available'}
+			</div>
+		);
+	}
+
 	const isFullValue =
 		availableSeats !== undefined && parseInt(availableSeats, 10) === 0;
 
@@ -136,6 +148,48 @@ const getPreviewMeetingInfo = (meetings: Meetings) => {
 const getKeys = (nullableKey: Key | undefined) => {
 	return nullableKey ? [nullableKey] : undefined;
 };
+const CollapsibleSection = ({
+	title,
+	children,
+	defaultExpanded = false,
+}: {
+	title: string;
+	children: React.ReactNode;
+	defaultExpanded?: boolean;
+}) => {
+	const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+
+	return (
+		<div className="mt-2 text-sm">
+			<button
+				className="flex w-full items-center justify-between py-1 text-left font-semibold"
+				onClick={() => setIsExpanded(!isExpanded)}
+			>
+				<span>{title}</span>
+				<motion.span
+					animate={{ rotate: isExpanded ? 180 : 0 }}
+					transition={{ duration: 0.3 }}
+				>
+					<FaChevronDown />
+				</motion.span>
+			</button>
+			<AnimatePresence initial={false}>
+				{isExpanded && (
+					<motion.div
+						initial={{ height: 0, opacity: 0 }}
+						animate={{ height: 'auto', opacity: 1 }}
+						exit={{ height: 0, opacity: 0 }}
+						transition={{ duration: 0.3 }}
+						className="overflow-hidden"
+					>
+						<div className="pt-1 pb-2">{children}</div>
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</div>
+	);
+};
+
 type CourseModalProps = {
 	isOpen: boolean;
 	onOpenChange: (isOpen: boolean) => void;
@@ -209,7 +263,20 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 				{() => (
 					<>
 						<ModalHeader className="flex flex-col gap-1">
-							{courseInfo.name.code} - {courseInfo.name.title}{' '}
+							{courseInfo.url || courseInfo.course_url ? (
+								<a
+									href={courseInfo.url || courseInfo.course_url}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex w-fit underline"
+								>
+									{courseInfo.name.code} - {courseInfo.name.title}
+								</a>
+							) : (
+								<div className="flex w-fit">
+									{courseInfo.name.code} - {courseInfo.name.title}
+								</div>
+							)}{' '}
 							<div className="text-sm">
 								{t('course-modal.level_of_study')}:{' '}
 								<span className="font-normal">
@@ -234,18 +301,28 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 							</div>
 							<div className="text-sm">
 								{t('course-modal.course_overview')}:{' '}
-								<div
-									className={`font-normal transition-all duration-300 ease-in-out ${overviewExpanded ? 'max-h-96' : 'max-h-10 overflow-hidden'}`}
-								>
-									{overviewExpanded
-										? courseInfo.course_overview
-											? courseInfo.course_overview
-											: 'None listed'
-										: courseInfo.course_overview
-											? courseInfo.course_overview.length > charLimit
-												? `${courseInfo.course_overview.slice(0, charLimit)}...`
-												: courseInfo.course_overview
-											: 'None listed'}
+								<div className="relative">
+									<motion.div
+										initial={false}
+										animate={{ height: overviewExpanded ? 'auto' : 50 }}
+										transition={{ duration: 0.3, ease: 'easeInOut' }}
+										className="overflow-hidden font-normal"
+									>
+										{courseInfo.course_overview || 'None listed'}
+									</motion.div>
+									<AnimatePresence>
+										{!overviewExpanded &&
+											courseInfo.course_overview &&
+											courseInfo.course_overview.length > charLimit && (
+												<motion.div
+													initial={{ opacity: 0 }}
+													animate={{ opacity: 1 }}
+													exit={{ opacity: 0 }}
+													transition={{ duration: 0.2 }}
+													className="from-background absolute bottom-0 left-0 h-8 w-full bg-gradient-to-t to-transparent"
+												/>
+											)}
+									</AnimatePresence>
 								</div>
 								{courseInfo.course_overview &&
 									courseInfo.course_overview.length > charLimit && (
@@ -259,6 +336,133 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 										</button>
 									)}
 							</div>
+							{(() => {
+								const outcomes =
+									courseInfo.learning_outcomes &&
+									Array.isArray(courseInfo.learning_outcomes)
+										? courseInfo.learning_outcomes.filter(
+												(o: { description: string; outcome_index: number }) =>
+													o.description && o.description.trim() !== '',
+											)
+										: [];
+
+								if (outcomes.length === 0) return null;
+
+								return (
+									<CollapsibleSection
+										title={
+											t('course-modal.learning-outcomes') ?? 'Learning Outcomes'
+										}
+									>
+										<ul className="mt-1 list-disc pl-5">
+											{outcomes.map(
+												(
+													outcome: {
+														description: string;
+														outcome_index: number;
+													},
+													index: number,
+												) => (
+													<li key={index} className="font-normal">
+														{outcome.description}
+													</li>
+												),
+											)}
+										</ul>
+									</CollapsibleSection>
+								);
+							})()}
+							{courseInfo.textbooks &&
+								Array.isArray(courseInfo.textbooks) &&
+								courseInfo.textbooks.length > 0 && (
+									<div className="mt-2 text-sm">
+										<div className="font-semibold">
+											{t('course-modal.textbooks') ?? 'Textbooks'}:
+										</div>
+										<ul className="list-disc pl-5">
+											{courseInfo.textbooks.map(
+												(textbook: string, index: number) => (
+													<li key={index} className="font-normal">
+														{textbook}
+													</li>
+												),
+											)}
+										</ul>
+									</div>
+								)}
+							{(() => {
+								const assessments =
+									courseInfo.assessments &&
+									Array.isArray(courseInfo.assessments)
+										? courseInfo.assessments
+										: [];
+
+								if (assessments.length === 0) return null;
+
+								return (
+									<CollapsibleSection
+										title={t('course-modal.assessments') ?? 'Assessments'}
+									>
+										<div className="mt-1 overflow-x-auto">
+											<table className="w-full text-left">
+												<thead>
+													<tr>
+														<th className="px-2 py-1 font-semibold">
+															{t('course-modal.assessment-name') ?? 'Name'}
+														</th>
+														<th className="px-2 py-1 font-semibold">
+															{t('course-modal.assessment-weight') ?? 'Weight'}
+														</th>
+														<th className="px-2 py-1 font-semibold">
+															{t('course-modal.assessment-hurdle') ?? 'Hurdle'}
+														</th>
+														<th className="px-2 py-1 font-semibold">
+															{t('course-modal.assessment-learning-outcomes') ??
+																'Learning Outcomes'}
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													{assessments.map(
+														(
+															assessment: {
+																name?: string;
+																title?: string;
+																weight?: string;
+																weighting?: string;
+																due_date?: string;
+																hurdle?: string;
+																learning_outcomes?: string;
+															},
+															index: number,
+														) => (
+															<tr
+																key={index}
+																className="border-default-200 border-b"
+															>
+																<td className="px-2 py-1 font-normal">
+																	{assessment.name || assessment.title || '-'}
+																</td>
+																<td className="px-2 py-1 font-normal">
+																	{assessment.weight ||
+																		assessment.weighting ||
+																		'-'}
+																</td>
+																<td className="px-2 py-1 font-normal">
+																	{assessment.hurdle || '-'}
+																</td>
+																<td className="px-2 py-1 font-normal">
+																	{assessment.learning_outcomes || '-'}
+																</td>
+															</tr>
+														),
+													)}
+												</tbody>
+											</table>
+										</div>
+									</CollapsibleSection>
+								);
+							})()}
 						</ModalHeader>
 						<ModalBody className="mb-4">
 							{(() => {

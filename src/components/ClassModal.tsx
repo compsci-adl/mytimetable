@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useGetCourseInfo, useGetCourseClasses } from '../data/course-info';
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import { findConflicts } from '../helpers/conflicts';
+import type { ConflictDetail } from '../helpers/conflicts';
 import type dayjs from '../lib/dayjs';
 import type { Meetings } from '../types/course';
 import { dateToDayjs, timeToDayjs } from '../utils/date';
@@ -148,6 +149,19 @@ export const ClassModal = ({
 	const size = selected?.size ?? selected?.section ?? undefined;
 	const availableSeats = selected?.available_seats ?? undefined;
 
+	const meetingInstructors = Array.from(
+		new Set(
+			selected?.meetings
+				?.map((m) => m.instructor)
+				.filter((i) => i && i.trim() !== '') ?? [],
+		),
+	);
+	const instructor =
+		selected?.instructor ||
+		(meetingInstructors.length > 0 ? meetingInstructors.join(', ') : undefined);
+
+	const courseUrl = courseInfo.course_url;
+
 	return (
 		<Modal
 			isOpen={isOpen}
@@ -159,7 +173,20 @@ export const ClassModal = ({
 				{() => (
 					<>
 						<ModalHeader className="flex flex-col">
-							{courseInfo.name.code} - {courseInfo.name.title}
+							{courseUrl ? (
+								<a
+									href={courseUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex w-fit underline"
+								>
+									{courseInfo.name.code} - {courseInfo.name.title}
+								</a>
+							) : (
+								<div className="flex w-fit">
+									{courseInfo.name.code} - {courseInfo.name.title}
+								</div>
+							)}
 							<div className="text-default-500 text-sm">
 								<span className="flex items-center gap-2">
 									{availableSeats !== undefined &&
@@ -175,7 +202,12 @@ export const ClassModal = ({
 												<span aria-hidden>⚠️</span>
 											</Tooltip>
 										)}
-									<span>{`${classTypeName} | ${t('class-modal.number')} ${classNumber} | ${t('class-modal.section')} ${selected?.section}`}</span>
+									<span>
+										{`${classTypeName} | ${t('class-modal.number')} ${classNumber} | ${t('class-modal.section')} ${selected?.section}`}
+										{instructor
+											? ` | ${Array.isArray(instructor) ? instructor.join(', ') : instructor}`
+											: ''}
+									</span>
 								</span>
 							</div>
 						</ModalHeader>
@@ -202,7 +234,7 @@ export const ClassModal = ({
 											{t('class-modal.conflicts') ?? 'Conflicts'}
 										</div>
 										<ul className="list-disc pl-5">
-											{unique.map((c, i) => (
+											{unique.map((c: ConflictDetail, i: number) => (
 												<li
 													key={i}
 												>{`${c.otherCourseCode} (${c.otherClassNumber}) — ${c.otherMeeting.time.start} - ${c.otherMeeting.time.end} @ ${c.otherMeeting.location}`}</li>
