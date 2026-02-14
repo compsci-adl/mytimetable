@@ -6,8 +6,8 @@ import { persist } from 'zustand/middleware';
 import { getCourse } from '../apis';
 import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
-import { useSelectedTerm } from '../helpers/term';
 import { YEAR } from '../constants/year';
+import { useSelectedTerm } from '../helpers/term';
 import i18n from '../i18n';
 import { queryClient } from '../lib/query';
 import type {
@@ -172,8 +172,7 @@ export const useEnrolledCourses = create<CoursesState>()(
 				set((state) => {
 					// Assign year and term to all subjects that are missing these properties.
 					state.courses.forEach((course: Course, index: number) => {
-						if (course.term == undefined) {
-							console.log('Assigning course ' + course.name + ' to term: ' + term);
+						if (course.term === undefined) {
 							course.term = term;
 							course.year = YEAR;
 							state.courses[index] = course;
@@ -189,7 +188,9 @@ export const useEnrolledCourses = create<CoursesState>()(
 export const useTermCourses = (): Array<Course> => {
 	const courses = useEnrolledCourses((c) => c.courses);
 	const selectedTerm = useSelectedTerm((t) => t.term);
-	const termCourses = courses.filter((c) => c.term == selectedTerm || c.term == undefined);
+	const termCourses = courses.filter(
+		(c) => c.term === selectedTerm || c.term === undefined,
+	);
 
 	return termCourses;
 };

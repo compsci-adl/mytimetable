@@ -1,6 +1,5 @@
 import { Select, SelectItem } from '@heroui/react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
 
 import { LocalStorageKey } from '../../constants/local-storage-keys';
 import { TERMS } from '../../constants/terms';

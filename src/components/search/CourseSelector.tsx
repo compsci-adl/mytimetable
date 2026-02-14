@@ -7,7 +7,6 @@ import { getCourses } from '../../apis';
 import { YEAR } from '../../constants/year';
 import { useEnrolledCourses } from '../../data/enrolled-courses';
 import type { Key } from '../../types/key';
-import { useSelectedTerm } from '../../helpers/term';
 
 interface CourseSelectorProps {
 	selectedTerm: string;
@@ -26,11 +25,12 @@ export const CourseSelector = ({
 }: CourseSelectorProps) => {
 	const { t } = useTranslation();
 	const enrolledCourses = useEnrolledCourses();
-	
+
 	useEffect(() => {
 		enrolledCourses.updateCourses(selectedTerm);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	
+
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
 
 	const coursesQuery = useQuery({

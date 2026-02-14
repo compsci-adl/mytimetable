@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 
 import { getCourses } from '../apis';
-import { LocalStorageKey } from '../constants/local-storage-keys';
 import { YEAR } from '../constants/year';
+import { useSelectedTerm } from '../helpers/term';
 import { CourseSelector } from './search/CourseSelector';
 import { DesktopFilters } from './search/DesktopFilters';
 import { MobileFilters } from './search/MobileFilters';
 import { SubjectSelector } from './search/SubjectSelector';
 import { TermSelector } from './search/TermSelector';
-import { useSelectedTerm } from '../helpers/term';
 
 export const SearchForm = () => {
 	const selectedTerm = useSelectedTerm();
@@ -116,7 +115,7 @@ export const SearchForm = () => {
 		return () => {
 			mounted = false;
 		};
-	}, [subject, selectedTerm, levelOfStudy, onlyUniversityWide]);
+	}, [subject, selectedTerm, levelOfStudy, onlyUniversityWide, campuses]);
 
 	return (
 		<div>

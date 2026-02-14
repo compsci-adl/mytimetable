@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { mutative } from 'zustand-mutative';
-import { persist } from 'zustand/middleware';
 
 import { LocalStorageKey } from '../constants/local-storage-keys';
 
