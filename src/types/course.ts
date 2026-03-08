@@ -8,8 +8,10 @@ type Meeting = {
 	campus: string;
 	date: DateTimeRange;
 	time: DateTimeRange;
+	instructor?: string;
 };
 export type Meetings = Array<Meeting>;
+
 export type CourseName = {
 	subject: string;
 	code: string;
@@ -30,6 +32,19 @@ export type Course = {
 	course_overview: string;
 	level_of_study: string;
 	requirements: unknown;
+	url?: string;
+	course_url?: string;
+	learning_outcomes?: Array<{ description: string; outcome_index: number }>;
+	textbooks?: Array<string>;
+	assessments?: Array<{
+		name?: string;
+		title?: string;
+		weight?: string;
+		weighting?: string;
+		due_date?: string;
+		hurdle?: string;
+		learning_outcomes?: string;
+	}>;
 	class_list: Array<{
 		id: string;
 		category: 'enrolment' | 'related';
@@ -39,6 +54,7 @@ export type Course = {
 			section?: string;
 			size?: string;
 			available_seats?: string;
+			instructor?: string;
 			meetings: Meetings;
 		}>;
 	}>;

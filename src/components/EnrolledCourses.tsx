@@ -75,6 +75,25 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 				</Tooltip>
 			)}
 			{name}
+			{courseInfo?.url && (
+				<div
+					role="button"
+					tabIndex={0}
+					className="ml-2 cursor-pointer transition-opacity hover:opacity-70"
+					onClick={(e) => {
+						e.stopPropagation();
+						window.open(courseInfo.url, '_blank', 'noopener,noreferrer');
+					}}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							e.stopPropagation();
+							window.open(courseInfo.url, '_blank', 'noopener,noreferrer');
+						}
+					}}
+				>
+					🔗
+				</div>
+			)}
 		</Chip>
 	);
 };

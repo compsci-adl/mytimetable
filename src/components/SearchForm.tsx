@@ -121,7 +121,7 @@ export const SearchForm = () => {
 		return () => {
 			mounted = false;
 		};
-	}, [subject, selectedTerm, levelOfStudy, onlyUniversityWide]);
+	}, [subject, selectedTerm, levelOfStudy, onlyUniversityWide, campuses]);
 
 	return (
 		<div>
