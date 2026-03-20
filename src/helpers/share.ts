@@ -1,4 +1,14 @@
+import dayjs from 'dayjs';
+
+import { COURSE_COLORS } from '../constants/course-colors';
 import type { useDetailedEnrolledCourses } from '../data/enrolled-courses';
+
+type ColorOptions = {
+	bg: string;
+	border: string;
+	text: string;
+	dot: string;
+};
 
 export type SharedCalendarMeeting = {
 	available_seats: string;
@@ -14,26 +24,27 @@ export type SharedCalendarMeeting = {
 	subject: string;
 	time: { start: string; end: string };
 	title: string;
+	color: ColorOptions;
 };
 
 type SharedCalendarMeetingInternal = SharedCalendarMeeting & { _key: string };
 
-const encodeTimetabletoBase64 = (
+const encodeTimetableToBase64 = (
 	courses: ReturnType<typeof useDetailedEnrolledCourses>,
 ): string => {
 	const shareData = {
 		courses,
 	};
 	const jsonString = JSON.stringify(shareData);
-	const base64 = btoa(jsonString);
+	const base64 = btoa(encodeURIComponent(jsonString));
 	return base64;
 };
 
-export const decodeTimetablefromBase64 = (
+export const decodeTimetableFromBase64 = (
 	encodedBase64: string,
 ): { courses: ReturnType<typeof useDetailedEnrolledCourses> } | null => {
 	try {
-		const jsonString = atob(encodedBase64);
+		const jsonString = decodeURIComponent(atob(encodedBase64));
 		const shareData = JSON.parse(jsonString);
 		return shareData;
 	} catch {
@@ -44,10 +55,10 @@ export const decodeTimetablefromBase64 = (
 export const generateShareURL = (
 	courses: ReturnType<typeof useDetailedEnrolledCourses>,
 ): string => {
-	const encoded = encodeTimetabletoBase64(courses);
+	const encoded = encodeTimetableToBase64(courses);
 	const url: URL = new URL(window.location.href);
 	url.searchParams.set('share', 'true');
-	url.searchParams.set('ed', encoded);
+	url.hash = `ed=${encoded}`;
 	return url.toString();
 };
 
@@ -57,6 +68,8 @@ export const getMeetingsByDay = (
 	const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 	const meetingsByDay: Record<string, SharedCalendarMeetingInternal[]> = {};
 	days.forEach((day) => (meetingsByDay[day] = []));
+	const clrTracker: Map<string, ColorOptions> = new Map([]);
+	let clrIndex: number = 0;
 
 	courses.forEach((course) => {
 		course.classes.forEach((cls) => {
@@ -76,9 +89,18 @@ export const getMeetingsByDay = (
 
 					let group = meetingsByDay[day].find((m) => m._key === key);
 
+					if (!clrTracker.has(course.id)) {
+						clrTracker.set(course.id, COURSE_COLORS[clrIndex]);
+						clrIndex++;
+					}
+
 					if (!group) {
 						group = {
 							...meeting,
+							time: {
+								start: dayjs(meeting.time.start, 'HH:mm').format('h:mm A'),
+								end: dayjs(meeting.time.end, 'HH:mm').format('h:mm A'),
+							},
 							courseName: course.name.code ?? '',
 							classType: cls.type ?? '',
 							classNumber: cls.classNumber ?? '',
@@ -87,6 +109,7 @@ export const getMeetingsByDay = (
 							available_seats: cls.available_seats ?? '',
 							size: cls.size ?? '',
 							dateRanges: [],
+							color: clrTracker.get(course.id)!,
 							_key: key,
 						};
 						meetingsByDay[day].push(group);
@@ -102,7 +125,13 @@ export const getMeetingsByDay = (
 
 	const result: Record<string, SharedCalendarMeeting[]> = {};
 	Object.keys(meetingsByDay).forEach((day) => {
-		result[day] = meetingsByDay[day].map(({ _key, ...rest }) => rest);
+		result[day] = meetingsByDay[day]
+			.sort(
+				(a, b) =>
+					dayjs(a.time.start, 'h:mm A').valueOf() -
+					dayjs(b.time.start, 'h:mm A').valueOf(),
+			)
+			.map(({ _key, ...rest }) => rest);
 	});
 
 	return result;

@@ -1,9 +1,9 @@
 import { Button } from '@heroui/react';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaPlus, FaTimes } from 'react-icons/fa';
 
-import { COURSE_COLORS } from '../constants/course-colors';
 import { useSharedTimetable } from '../data/shared-timetable';
 import type { SharedCalendarMeeting } from '../helpers/share';
 import { getMeetingsByDay } from '../helpers/share';
@@ -15,39 +15,6 @@ type ClassInfoModalProps = {
 };
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
-function formatDateRange(range: { start: string; end: string }) {
-	const [startMonth, startDay] = range.start.split('-');
-	const [endMonth, endDay] = range.end.split('-');
-	const months = [
-		'',
-		'Jan',
-		'Feb',
-		'Mar',
-		'Apr',
-		'May',
-		'Jun',
-		'Jul',
-		'Aug',
-		'Sep',
-		'Oct',
-		'Nov',
-		'Dec',
-	];
-	const startStr = `${parseInt(startDay)} ${months[parseInt(startMonth)]}`;
-	const endStr = `${parseInt(endDay)} ${months[parseInt(endMonth)]}`;
-	return range.start === range.end ? startStr : `${startStr} - ${endStr}`;
-}
-
-function formatTime(time: { start: string; end: string }) {
-	const to12hr = (t: string) => {
-		const [h, m] = t.split(':').map(Number);
-		const ampm = h >= 12 ? 'PM' : 'AM';
-		const hour = h % 12 === 0 ? 12 : h % 12;
-		return `${hour}:${m.toString().padStart(2, '0')} ${ampm}`;
-	};
-	return `${to12hr(time.start)} - ${to12hr(time.end)}`;
-}
 
 function ClassInfoModal({
 	meeting,
@@ -90,9 +57,15 @@ function ClassInfoModal({
 									key={idx}
 									className="text-sm text-slate-800 dark:text-slate-100"
 								>
-									<td className="px-2 py-2">{formatDateRange(range)}</td>
+									<td className="px-2 py-2">
+										{dayjs(range.start).format('D MMM') +
+											' - ' +
+											dayjs(range.end).format('D MMM')}
+									</td>
 									<td className="px-2 py-2">{meeting.day || '-'}</td>
-									<td className="px-2 py-2">{formatTime(meeting.time)}</td>
+									<td className="px-2 py-2">
+										{meeting.time.start + ' - ' + meeting.time.end}
+									</td>
 									<td className="px-2 py-2">{meeting.location}</td>
 									<td className="px-2 py-2">{meeting.campus}</td>
 									<td className="px-2 py-2 font-semibold">
@@ -117,10 +90,6 @@ function ClassInfoModal({
 export default function SharedCalendar() {
 	const { sharedTimetableData, showSharedTimetable, setShowSharedTimetable } =
 		useSharedTimetable();
-	const [meetingsByDay, setMeetingsByDay] = useState<Record<
-		string,
-		SharedCalendarMeeting[]
-	> | null>(null);
 
 	const [showClassModal, setShowClassModal] = useState(false);
 	const [selectedClassInfo, setSelectedClassInfo] =
@@ -131,17 +100,8 @@ export default function SharedCalendar() {
 		returnObjects: true,
 	}) as string[];
 
-	let currentColorIndex: number = 0;
-
-	const sharedClassesColors: Map<
-		string,
-		{
-			bg: string;
-			border: string;
-			text: string;
-			dot: string;
-		}
-	> = new Map([]);
+	const meetingsByDay: Record<string, SharedCalendarMeeting[]> | null =
+		sharedTimetableData ? getMeetingsByDay(sharedTimetableData) : null;
 
 	const handleShowClassModal = (classInfo: SharedCalendarMeeting) => {
 		setSelectedClassInfo(classInfo);
@@ -149,19 +109,8 @@ export default function SharedCalendar() {
 	};
 
 	useEffect(() => {
-		if (showSharedTimetable) {
-			document.body.style.overflow = 'hidden';
-		} else {
-			document.body.style.overflow = 'unset';
-		}
+		document.body.style.overflow = showSharedTimetable ? 'hidden' : 'unset';
 	}, [showSharedTimetable]);
-
-	useEffect(() => {
-		if (sharedTimetableData) {
-			// eslint-disable-next-line react-hooks/set-state-in-effect
-			setMeetingsByDay(getMeetingsByDay(sharedTimetableData));
-		}
-	}, [sharedTimetableData]);
 
 	if (!showSharedTimetable) return null;
 
@@ -203,26 +152,10 @@ export default function SharedCalendar() {
 											) : (
 												meetingsByDay[day]?.map(
 													(m: SharedCalendarMeeting, i: number) => {
-														if (
-															!sharedClassesColors.has(
-																`${m.subject}-${m.title}`,
-															)
-														) {
-															sharedClassesColors.set(
-																`${m.subject}-${m.title}`,
-																COURSE_COLORS[currentColorIndex],
-															);
-															currentColorIndex =
-																(currentColorIndex + 1) % COURSE_COLORS.length;
-														}
-														const color = sharedClassesColors.get(
-															`${m.subject}-${m.title}`,
-														)!;
-
 														return (
 															<div
 																key={i}
-																className={`relative rounded-lg border p-2 pb-6 text-xs font-medium shadow-sm ${color.bg} ${color.border} ${color.text} flex flex-col gap-0.5`}
+																className={`relative rounded-lg border p-2 pb-6 text-xs font-medium shadow-sm ${m.color.bg} ${m.color.border} ${m.color.text} flex flex-col gap-0.5`}
 																style={{ borderLeftWidth: 6 }}
 															>
 																<div className="text-sm font-bold">
@@ -232,7 +165,7 @@ export default function SharedCalendar() {
 																	</span>
 																</div>
 																<div>{m.title}</div>
-																<div>{formatTime(m.time)}</div>
+																<div>{m.time.start + ' - ' + m.time.end}</div>
 																<Button
 																	isIconOnly
 																	onPress={() => handleShowClassModal(m)}

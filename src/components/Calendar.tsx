@@ -2,25 +2,24 @@ import { Button, Tooltip, useDisclosure } from '@heroui/react';
 import clsx from 'clsx';
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaShare } from 'react-icons/fa';
 import { toast } from 'sonner';
 import { create } from 'zustand';
 
+import { LocalStorageKey } from '../constants/local-storage-keys';
 import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
 import {
 	useCourseColor,
 	useEnrolledCourse,
 	useEnrolledCourses,
+	useDetailedEnrolledCourses,
 } from '../data/enrolled-courses';
-import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import { useSharedTimetable } from '../data/shared-timetable';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
 import { findConflicts } from '../helpers/conflicts';
-import { useHelpModal } from '../helpers/help-modal';
 import { calcHoursDuration } from '../helpers/hours-duration';
-import { decodeTimetablefromBase64, generateShareURL } from '../helpers/share';
+import { decodeTimetableFromBase64, generateShareURL } from '../helpers/share';
 import { useZoom } from '../helpers/zoom';
 import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
@@ -196,7 +195,7 @@ const CalendarHeader = ({
 		sharedTimetableAvailable,
 		setSharedTimetableAvailable,
 	} = useSharedTimetable();
-	const firstTime = useHelpModal().isOpen;
+	const firstTime = localStorage.getItem(LocalStorageKey.FirstTime) === 'true';
 
 	const actionButtons = [
 		{
@@ -226,17 +225,30 @@ const CalendarHeader = ({
 	];
 
 	useEffect(() => {
+		const readDataEncodedInHash = (): void => {
+			const hash = window.location.hash.slice(1);
+			const hashParams = new URLSearchParams(hash);
+			const encodedData = hashParams.get('ed') ?? null;
+			if (!encodedData) return;
+			const decoded = decodeTimetableFromBase64(encodedData);
+			setSharedTimetableData(decoded?.courses ?? null);
+			setSharedTimetableAvailable(decoded ? true : false);
+		};
+
 		const urlParams: URLSearchParams = new URLSearchParams(
 			window.location.search,
 		);
 		const sharedCalendar = urlParams.get('share') === 'true';
+
+		// sets data on mount
 		if (sharedCalendar) {
-			const encodedData = urlParams.get('ed') ?? null;
-			if (!encodedData) return;
-			const decoded = decodeTimetablefromBase64(encodedData);
-			setSharedTimetableData(decoded?.courses ?? null);
-			setSharedTimetableAvailable(decoded ? true : false);
+			readDataEncodedInHash();
 		}
+
+		// when encoded data changes, data is reset
+		window.addEventListener('hashchange', readDataEncodedInHash);
+		return () =>
+			window.removeEventListener('hashchange', readDataEncodedInHash);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -341,8 +353,7 @@ const EndActions = () => {
 				className="font-semibold"
 				onPress={handleShare}
 			>
-				{t('calendar.end-actions.share')}
-				<FaShare />
+				{t('calendar.end-actions.share') + ' 🔗'}
 			</Button>
 			<EnrolmentModal
 				isOpen={isReadyModalOpen}
