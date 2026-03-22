@@ -1,21 +1,25 @@
 import { Button, Tooltip, useDisclosure } from '@heroui/react';
 import clsx from 'clsx';
-import { useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { create } from 'zustand';
 
+import { LocalStorageKey } from '../constants/local-storage-keys';
 import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
 import {
 	useCourseColor,
 	useEnrolledCourse,
 	useEnrolledCourses,
+	useDetailedEnrolledCourses,
 } from '../data/enrolled-courses';
-import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
+import { useSharedTimetable } from '../data/shared-timetable';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
 import { findConflicts } from '../helpers/conflicts';
 import { calcHoursDuration } from '../helpers/hours-duration';
+import { decodeTimetableFromBase64, generateShareURL } from '../helpers/share';
 import { useZoom } from '../helpers/zoom';
 import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
@@ -184,6 +188,14 @@ const CalendarHeader = ({
 	status,
 }: CalendarHeaderProps) => {
 	const { t } = useTranslation();
+	const {
+		setSharedTimetableData,
+		showSharedTimetable,
+		setShowSharedTimetable,
+		sharedTimetableAvailable,
+		setSharedTimetableAvailable,
+	} = useSharedTimetable();
+	const firstTime = localStorage.getItem(LocalStorageKey.FirstTime) === 'true';
 
 	const actionButtons = [
 		{
@@ -211,9 +223,46 @@ const CalendarHeader = ({
 			disabled: status.isEndWeek,
 		},
 	];
+
+	useEffect(() => {
+		const readDataEncodedInHash = (): void => {
+			const hash = window.location.hash.slice(1);
+			const hashParams = new URLSearchParams(hash);
+			const encodedData = hashParams.get('ed') ?? null;
+			if (!encodedData) return;
+			const decoded = decodeTimetableFromBase64(encodedData);
+			setSharedTimetableData(decoded?.courses ?? null);
+			setSharedTimetableAvailable(decoded ? true : false);
+		};
+
+		const urlParams: URLSearchParams = new URLSearchParams(
+			window.location.search,
+		);
+		const sharedCalendar = urlParams.get('share') === 'true';
+
+		// sets data on mount
+		if (sharedCalendar) {
+			readDataEncodedInHash();
+		}
+
+		// when encoded data changes, data is reset
+		window.addEventListener('hashchange', readDataEncodedInHash);
+		return () =>
+			window.removeEventListener('hashchange', readDataEncodedInHash);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	// show shared timetable on first mount if available, and not first time
+	useEffect(() => {
+		if (sharedTimetableAvailable && !firstTime) {
+			setShowSharedTimetable(true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sharedTimetableAvailable]);
+
 	return (
-		<div className="bg-background sticky top-0 z-50 flex items-center justify-between">
-			<h2 className="mobile:text-2xl text-3xl">
+		<div className="bg-background sticky top-0 z-50 flex items-center justify-between py-1">
+			<h2 className="mobile:text-[1.35rem] text-3xl">
 				<span className="mr-2 font-bold">
 					{/* Month for Wednesday in the week is more accurate than Monday */}
 					{
@@ -224,20 +273,39 @@ const CalendarHeader = ({
 				</span>
 				<span className="font-light">{YEAR}</span>
 			</h2>
-			<div className="flex">
-				{actionButtons.map((a) => (
-					<Tooltip content={a.description} key={a.description}>
-						<Button
-							isIconOnly
-							variant="light"
-							onClick={a.action}
-							disabled={a.disabled}
-							className="text-3xl disabled:opacity-50"
+			<div className="mobile:gap-1 flex flex-row gap-4">
+				{sharedTimetableAvailable && (
+					<Tooltip
+						content={t('shared-timetable.tooltip')}
+						key={t('shared-timetable.tooltip')}
+					>
+						<button
+							disabled={showSharedTimetable}
+							className="bg-primary text-primary-foreground mobile:rounded-lg mobile:p-1.5 hover:opacity-hover h-fit translate-y-1 rounded-xl px-4 py-1.5 text-sm disabled:pointer-events-none disabled:opacity-50"
+							onClick={() => setShowSharedTimetable(true)}
 						>
-							{a.icon}
-						</Button>
+							<span className="mobile:hidden inline">
+								{t('calendar.shared')}
+							</span>
+							<span className="mobile:block hidden px-[3px]">🗓️</span>
+						</button>
 					</Tooltip>
-				))}
+				)}
+				<div className="flex">
+					{actionButtons.map((a) => (
+						<Tooltip content={a.description} key={a.description}>
+							<Button
+								isIconOnly
+								variant="light"
+								onClick={a.action}
+								disabled={a.disabled}
+								className="text-3xl disabled:opacity-50"
+							>
+								{a.icon}
+							</Button>
+						</Tooltip>
+					))}
+				</div>
 			</div>
 		</div>
 	);
@@ -253,12 +321,24 @@ const EndActions = () => {
 		onOpen: onReadyModalOpen,
 		onOpenChange: onReadyModalOpenChange,
 	} = useDisclosure();
+
+	const coursesData = useDetailedEnrolledCourses();
+
+	const handleShare = async () => {
+		try {
+			const shareUrl = generateShareURL(coursesData);
+			await navigator.clipboard.writeText(shareUrl);
+			toast.success('Copied Share Link To Clipboard!');
+		} catch {
+			toast.error('Failed To Share');
+		}
+	};
+
 	return (
 		<div
 			className="absolute -bottom-2 left-0 flex w-full items-center justify-center gap-4"
 			style={{ height: blockHeight + 'rem' }}
 		>
-			{/* TODO: Share Button */}
 			<Button
 				color="primary"
 				size="lg"
@@ -266,6 +346,14 @@ const EndActions = () => {
 				onPress={onReadyModalOpen}
 			>
 				{t('calendar.end-actions.ready')} 🚀
+			</Button>
+			<Button
+				color="secondary"
+				size="lg"
+				className="font-semibold"
+				onPress={handleShare}
+			>
+				{t('calendar.end-actions.share') + ' 🔗'}
 			</Button>
 			<EnrolmentModal
 				isOpen={isReadyModalOpen}
