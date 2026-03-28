@@ -1,6 +1,6 @@
 import { Autocomplete, AutocompleteItem, Button } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getCourses } from '../../apis';
@@ -25,6 +25,12 @@ export const CourseSelector = ({
 }: CourseSelectorProps) => {
 	const { t } = useTranslation();
 	const enrolledCourses = useEnrolledCourses();
+
+	useEffect(() => {
+		enrolledCourses.updateCourses(selectedTerm);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
 
 	const coursesQuery = useQuery({
@@ -81,6 +87,8 @@ export const CourseSelector = ({
 		enrolledCourses.addCourse({
 			name,
 			id: course.id,
+			year: YEAR,
+			term: selectedTerm,
 			preferredCampuses: campuses,
 		});
 		setSelectedCourseId(null);
