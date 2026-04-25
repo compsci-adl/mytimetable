@@ -12,7 +12,7 @@ import {
 } from '@heroui/react';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useHelpModal } from '../helpers/help-modal';
@@ -104,12 +104,10 @@ export const HelpModal = () => {
 		}),
 	};
 
-	useEffect(() => {
-		if (!helpModal.isOpen) {
-			setStepIndex(0);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [helpModal.isOpen]);
+	const handleClose = () => {
+		setStepIndex(0);
+		helpModal.close();
+	};
 
 	const step = STEPS[stepIndex];
 
@@ -117,7 +115,7 @@ export const HelpModal = () => {
 		<Modal
 			size="3xl"
 			isOpen={helpModal.isOpen}
-			onClose={helpModal.close}
+			onClose={handleClose}
 			scrollBehavior="inside"
 		>
 			<ModalContent>

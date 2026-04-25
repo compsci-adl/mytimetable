@@ -144,13 +144,13 @@ export const useCalendar = () => {
 	// Every time enrolled courses change, reset the current week to the start week
 	useEffect(() => {
 		if (enrolledCourses.length === 0) return;
-		setCurrentWeek(startWeek);
+		queueMicrotask(() => setCurrentWeek(startWeek));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [enrolledCourses.length]);
 
 	useEffect(() => {
 		if (currentWeek.isBefore(startWeek) || currentWeek.isAfter(endWeek)) {
-			setCurrentWeek(startWeek);
+			queueMicrotask(() => setCurrentWeek(startWeek));
 		}
 		/* eslint-disable react-hooks/exhaustive-deps */
 	}, [
