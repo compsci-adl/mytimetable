@@ -1,4 +1,5 @@
 import type { Course, Meetings } from '../types/course';
+import { dateRangesOverlap } from '../utils/date';
 
 export interface Preferences {
 	earliestStart: string;
@@ -55,6 +56,7 @@ const evaluateAssignment = (
 		isFull: boolean;
 		day: string;
 		time: { start: string; end: string };
+		date: { start: string; end: string };
 		location: string;
 		campus: string;
 	};
@@ -82,6 +84,7 @@ const evaluateAssignment = (
 				isFull,
 				day: m.day,
 				time: m.time,
+				date: m.date,
 				location: m.location,
 				campus: m.campus,
 			});
@@ -106,7 +109,10 @@ const evaluateAssignment = (
 				continue;
 			}
 
-			if (timeRangesOverlap(m1.time, m2.time)) {
+			if (
+				dateRangesOverlap(m1.date, m2.date) &&
+				timeRangesOverlap(m1.time, m2.time)
+			) {
 				score -= 200000; // Massive penalty for conflicts
 			}
 		}
@@ -218,6 +224,7 @@ const hasPartialConflict = (
 	const meetings: {
 		day: string;
 		time: { start: string; end: string };
+		date: { start: string; end: string };
 		classTypeName: string;
 	}[] = [];
 	for (let i = 0; i <= varIdx; i++) {
@@ -230,6 +237,7 @@ const hasPartialConflict = (
 			meetings.push({
 				day: m.day,
 				time: m.time,
+				date: m.date,
 				classTypeName: v.classTypeName,
 			});
 		}
@@ -250,7 +258,10 @@ const hasPartialConflict = (
 				m2.classTypeName.toLowerCase().startsWith('lec');
 			if (preferences.ignoreLectures && (isLec1 || isLec2)) continue;
 
-			if (timeRangesOverlap(m1.time, m2.time)) {
+			if (
+				dateRangesOverlap(m1.date, m2.date) &&
+				timeRangesOverlap(m1.time, m2.time)
+			) {
 				return true;
 			}
 		}
@@ -403,6 +414,7 @@ export const checkViolations = (
 	type ScheduledMeeting = {
 		day: string;
 		time: { start: string; end: string };
+		date: { start: string; end: string };
 		classTypeName: string;
 		isFull: boolean;
 		location: string;
@@ -430,6 +442,7 @@ export const checkViolations = (
 				isFull,
 				day: m.day,
 				time: m.time,
+				date: m.date,
 				location: m.location,
 				campus: m.campus,
 			});
@@ -459,7 +472,10 @@ export const checkViolations = (
 				continue;
 			}
 
-			if (timeRangesOverlap(m1.time, m2.time)) {
+			if (
+				dateRangesOverlap(m1.date, m2.date) &&
+				timeRangesOverlap(m1.time, m2.time)
+			) {
 				hasConflict = true;
 				break;
 			}

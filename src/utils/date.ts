@@ -4,6 +4,27 @@ import dayjs from '../lib/dayjs';
 export const dateToDayjs = (date: string) => {
 	return dayjs(date, 'MM-DD').year(YEAR);
 };
+export const dateRangesOverlap = (
+	a?: { start: string; end: string },
+	b?: { start: string; end: string },
+): boolean => {
+	if (!a || !b || !a.start || !a.end || !b.start || !b.end) {
+		return true;
+	}
+	try {
+		const startA = dateToDayjs(a.start);
+		const endA = dateToDayjs(a.end);
+		const startB = dateToDayjs(b.start);
+		const endB = dateToDayjs(b.end);
+
+		return (
+			(startA.isBefore(endB) || startA.isSame(endB)) &&
+			(startB.isBefore(endA) || startB.isSame(endA))
+		);
+	} catch {
+		return true;
+	}
+};
 export const timeToDayjs = (time: string) => {
 	return dayjs(time, 'HH:mm');
 };

@@ -1,4 +1,5 @@
 import type { DateTimeRange } from '../src/types/course';
+import { dateRangesOverlap } from '../src/utils/date';
 import { timeOverlap } from '../src/utils/time-overlap';
 
 describe('timeOverlap', () => {
@@ -26,5 +27,29 @@ describe('timeOverlap', () => {
 		const b: DateTimeRange = { start: '01:00', end: '03:00' };
 		const a: DateTimeRange = { start: '02:00', end: '04:00' };
 		expect(timeOverlap(a, b)).toBe(true);
+	});
+});
+
+describe('dateRangesOverlap', () => {
+	it('should return true if two date ranges overlap', () => {
+		const a = { start: '07-01', end: '07-10' };
+		const b = { start: '07-05', end: '07-15' };
+		expect(dateRangesOverlap(a, b)).toBe(true);
+	});
+
+	it('should return false if two date ranges do not overlap', () => {
+		const a = { start: '07-01', end: '07-10' };
+		const b = { start: '07-11', end: '07-15' };
+		expect(dateRangesOverlap(a, b)).toBe(false);
+	});
+
+	it('should return true if they overlap on exactly one day', () => {
+		const a = { start: '07-01', end: '07-10' };
+		const b = { start: '07-10', end: '07-15' };
+		expect(dateRangesOverlap(a, b)).toBe(true);
+	});
+
+	it('should return true if dates are missing or invalid', () => {
+		expect(dateRangesOverlap(undefined, undefined)).toBe(true);
 	});
 });

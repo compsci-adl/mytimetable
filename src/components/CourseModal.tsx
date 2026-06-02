@@ -30,7 +30,12 @@ import type { ConflictDetail } from '../helpers/conflicts';
 import type dayjs from '../lib/dayjs';
 import type { Meetings } from '../types/course';
 import type { Key } from '../types/key';
-import { dateToDayjs, timeToDayjs, isMeetingInTerm } from '../utils/date';
+import {
+	dateToDayjs,
+	timeToDayjs,
+	isMeetingInTerm,
+	dateRangesOverlap,
+} from '../utils/date';
 import { deduplicateArray } from '../utils/deduplicate-array';
 import { timeOverlap } from '../utils/time-overlap';
 
@@ -239,12 +244,20 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 
 	if (!courseInfo) return;
 
-	const classConflictsWithEnrolled = (meetings: Meetings) => {
+	const classConflictsWithEnrolled = (
+		meetings: Meetings,
+		classTypeId: string,
+	) => {
 		for (const ec of detailedCourses) {
 			for (const cl of ec.classes) {
+				if (ec.id === id && cl.typeId === classTypeId) continue;
 				for (const m1 of meetings) {
 					for (const m2 of cl.meetings) {
-						if (m1.day === m2.day && timeOverlap(m1.time, m2.time)) {
+						if (
+							m1.day === m2.day &&
+							dateRangesOverlap(m1.date, m2.date) &&
+							timeOverlap(m1.time, m2.time)
+						) {
 							return true;
 						}
 					}
@@ -574,6 +587,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 																		(selectedClass
 																			? classConflictsWithEnrolled(
 																					selectedClass.meetings,
+																					classType.id,
 																				)
 																			: false);
 																	return (
@@ -616,7 +630,10 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 														const itemKey = `${id}|${classType.id}|${classInfo.number}`;
 														const itemConflicted =
 															(conflictsByClassKey[itemKey] ?? []).length > 0 ||
-															classConflictsWithEnrolled(classInfo.meetings);
+															classConflictsWithEnrolled(
+																classInfo.meetings,
+																classType.id,
+															);
 														const campusList = deduplicateArray(
 															classInfo.meetings
 																.map((m) => m.campus ?? '')
