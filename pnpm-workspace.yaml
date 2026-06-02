@@ -1,0 +1,7 @@
+shamefullyHoist: true
+allowBuilds:
+  '@heroui/shared-utils': true
+  esbuild: true
+  msw: true
+  simple-git-hooks: true
+
