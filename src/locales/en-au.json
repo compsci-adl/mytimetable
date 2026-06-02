@@ -36,6 +36,7 @@
 		"level_of_study": "Level of Study",
 		"course_overview": "Course Overview",
 		"no-class-times-available": "No class times available",
+		"not-available": "Not available",
 		"learning-outcomes": "Learning Outcomes",
 		"textbooks": "Textbooks",
 		"assessments": "Assessments",
@@ -125,6 +126,19 @@
 	},
 	"toast": {
 		"drop-to-change-term": "You need to drop all courses to change the term",
-		"too-many-courses": "More than 10 courses for a term is crazy! 💀"
+		"too-many-courses": "More than 10 courses for a term is crazy! 💀",
+		"auto-timetable-warning-full-classes": "Includes full classes (no open seats available)",
+		"auto-timetable-warning-conflicts": "Contains class time conflicts (overlaps)",
+		"auto-timetable-warning-outside-hours": "Some classes are outside your preferred start/end times",
+		"auto-timetable-warning-unpreferred-days": "Some classes are on your unpreferred days",
+		"auto-timetable-warning-max-days": "Attends university on {{count}} days (preferred max: {{max}})",
+		"auto-timetable-warning-mode-mismatch": "Includes classes not matching your preferred mode ({{mode}})",
+		"auto-timetable-warning-lunch-overlap": "Some classes overlap with your preferred lunch break"
+	},
+	"auto-timetable": {
+		"allow-lecture-clashes": "Allow lecture clashes",
+		"online": "Online",
+		"in-person": "In-person",
+		"title": "Auto-Timetable Preferences"
 	}
 }

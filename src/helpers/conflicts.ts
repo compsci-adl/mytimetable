@@ -1,4 +1,5 @@
 import type { DetailedEnrolledCourse } from '../types/course';
+import { dateRangesOverlap } from '../utils/date';
 import { timeOverlap } from '../utils/time-overlap';
 
 type ConflictDetail = {
@@ -42,7 +43,10 @@ export const findConflicts = (courses: DetailedEnrolledCourse[]) => {
 						for (const bMeet of bCls.meetings) {
 							// Only consider same day
 							if (aMeet.day !== bMeet.day) continue;
-							if (timeOverlap(aMeet.time, bMeet.time)) {
+							if (
+								dateRangesOverlap(aMeet.date, bMeet.date) &&
+								timeOverlap(aMeet.time, bMeet.time)
+							) {
 								const keyA = getClassKey(a.id, aCls.typeId, aCls.classNumber);
 								const detail: ConflictDetail = {
 									otherCourseId: b.id,

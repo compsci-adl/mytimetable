@@ -8,6 +8,7 @@ import { useGetCourseInfo } from '../data/course-info';
 import { useCourseColor, useEnrolledCourses } from '../data/enrolled-courses';
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import { findConflicts } from '../helpers/conflicts';
+import { AutoTimetable } from './AutoTimetable';
 import { CourseModal } from './CourseModal';
 
 type CourseChipProps = {
@@ -105,22 +106,25 @@ export const EnrolledCourses = () => {
 
 	return (
 		<>
-			<div className="flex flex-wrap gap-2">
-				{courses.map((c) => {
-					// Remove `$` from names
-					const sanitizedName = c.name.replace(/\$/g, '');
-					return (
-						<CourseChip
-							name={sanitizedName}
-							id={c.id}
-							key={c.id}
-							onOpenModal={(id) => {
-								setCourseModalId(id);
-								courseModal.onOpen();
-							}}
-						/>
-					);
-				})}
+			<div className="flex flex-wrap items-center justify-between gap-4">
+				<div className="flex flex-wrap gap-2">
+					{courses.map((c) => {
+						// Remove `$` from names
+						const sanitizedName = c.name.replace(/\$/g, '');
+						return (
+							<CourseChip
+								name={sanitizedName}
+								id={c.id}
+								key={c.id}
+								onOpenModal={(id) => {
+									setCourseModalId(id);
+									courseModal.onOpen();
+								}}
+							/>
+						);
+					})}
+				</div>
+				{courses.length > 0 && <AutoTimetable />}
 			</div>
 			{courseModalId && (
 				<CourseModal
