@@ -8,12 +8,8 @@ import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
 import i18n from '../i18n';
 import { queryClient } from '../lib/query';
-import type {
-	DetailedEnrolledCourse,
-	Meetings,
-	Course as CourseInfo,
-} from '../types/course';
-import { dateToDayjs } from '../utils/date';
+import type { DetailedEnrolledCourse, Meetings } from '../types/course';
+import { isMeetingInTerm } from '../utils/date';
 import { useCoursesInfo } from './course-info';
 
 type Course = {
@@ -79,46 +75,21 @@ export const useEnrolledCourses = create<CoursesState>()(
 					const enrolledCourse = state.courses.find((c) => c.id === course.id);
 					if (!enrolledCourse) return;
 
-					// Derive a month range from courses' meetings
-					const months = new Set<number>();
-					for (const ec of currentCourses) {
-						const cached = queryClient.getQueryData([
-							'course',
-							ec.id,
-						] as const) as CourseInfo | undefined;
-						if (!cached) continue;
-						for (const cl of ec.classes) {
-							const info = cached.class_list.find((x) => x.id === cl.id);
-							if (!info) continue;
-							const found = info.classes.find(
-								(x) => x.number === cl.classNumber,
-							);
-							if (!found) continue;
-							for (const m of found.meetings) {
-								const d = dateToDayjs(m.date.start);
-								months.add(d.month() + 1);
-							}
-						}
-					}
-
-					const monthRange =
-						months.size > 0
-							? (() => {
-									const arr = Array.from(months).sort((a, b) => a - b);
-									return [arr[0], arr[arr.length - 1]] as [number, number];
-								})()
-							: null;
-
-					const inMonthRange = (month: number, range: [number, number]) => {
-						const [start, end] = range;
-						if (start <= end) return month >= start && month <= end;
-						return month >= start || month <= end;
-					};
+					const selectedTermAlias =
+						localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
 
 					enrolledCourse.classes = data.class_list.map((c) => {
 						const pick = () => {
+							const termClasses = c.classes.filter((cls) =>
+								cls.meetings.some((m) =>
+									isMeetingInTerm(m.date, selectedTermAlias),
+								),
+							);
+							const candidates =
+								termClasses.length > 0 ? termClasses : c.classes;
+
 							if (preferredCampuses && preferredCampuses.length > 0) {
-								const foundByCampus = c.classes.find((cls) =>
+								const foundByCampus = candidates.find((cls) =>
 									cls.meetings.some((m: Meetings[number]) =>
 										preferredCampuses.includes(m.campus),
 									),
@@ -126,19 +97,7 @@ export const useEnrolledCourses = create<CoursesState>()(
 								if (foundByCampus) return foundByCampus;
 							}
 
-							if (!monthRange) return c.classes[0];
-							const found = c.classes.find((cls) =>
-								cls.meetings.some((m: Meetings[number]) => {
-									try {
-										const d = dateToDayjs(m.date.start);
-										const month = d.month() + 1; // dayjs months are 0-based
-										return inMonthRange(month, monthRange);
-									} catch {
-										return false;
-									}
-								}),
-							);
-							return found ?? c.classes[0];
+							return candidates[0];
 						};
 
 						const chosen = pick();
