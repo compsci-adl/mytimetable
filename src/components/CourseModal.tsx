@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
 import { Fragment } from 'react/jsx-runtime';
 
+import { LocalStorageKey } from '../constants/local-storage-keys';
 import { useGetCourseInfo } from '../data/course-info';
 import {
 	useEnrolledCourse,
@@ -29,7 +30,7 @@ import type { ConflictDetail } from '../helpers/conflicts';
 import type dayjs from '../lib/dayjs';
 import type { Meetings } from '../types/course';
 import type { Key } from '../types/key';
-import { dateToDayjs, timeToDayjs } from '../utils/date';
+import { dateToDayjs, timeToDayjs, isMeetingInTerm } from '../utils/date';
 import { deduplicateArray } from '../utils/deduplicate-array';
 import { timeOverlap } from '../utils/time-overlap';
 
@@ -518,201 +519,216 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 										</div>
 									);
 								}
-								return courseInfo.class_list.map((classType) => (
-									<Fragment key={classType.id}>
-										{classType.classes.length === 0 ? (
-											<div className="text-default-500">
-												{t('course-modal.no-class-info-class-type') ??
-													'No class information for this class type at the moment.'}
-											</div>
-										) : (
-											<Select
-												label={`${classType.type} Time`}
-												renderValue={(value) => {
-													const items = value as unknown as
-														| Array<{ key?: Key }>
-														| undefined;
-													const key = items?.[0]?.key as string | undefined;
-													const selectedClass = getSelectedClass(classType.id);
-													const isFullSelected =
-														selectedClass?.available_seats !== undefined &&
-														parseInt(selectedClass.available_seats, 10) === 0;
-													return (
-														<div className="flex items-center gap-2">
-															{isFullSelected && (
-																<Tooltip
-																	content={
-																		t('calendar.no-available-seats', {
-																			defaultValue: 'Class full',
-																		}) as string
-																	}
-																	size="sm"
-																>
-																	<span aria-hidden>⚠️</span>
-																</Tooltip>
-															)}
-															{(() => {
-																const selKey = key
-																	? `${id}|${classType.id}|${key}`
-																	: undefined;
-																const selConf =
-																	(selKey
-																		? (conflictsByClassKey[selKey] ?? [])
-																				.length > 0
-																		: false) ||
-																	(selectedClass
-																		? classConflictsWithEnrolled(
-																				selectedClass.meetings,
-																			)
-																		: false);
-																return (
-																	selConf && (
-																		<Tooltip
-																			content={
-																				t('calendar.conflict') ??
-																				'Conflict with another class'
-																			}
-																			size="sm"
-																		>
-																			<span aria-hidden className="">
-																				⚠️
-																			</span>
-																		</Tooltip>
-																	)
-																);
-															})()}
-															<div>{`Class Number: ${key}`}</div>
-														</div>
-													);
-												}}
-												selectedKeys={getKeys(
-													getSelectedClassNumber(classType.id),
-												)}
-												// Prevent the selected class from being clicked again to avoid it becoming undefined
-												disabledKeys={getKeys(
-													getSelectedClassNumber(classType.id),
-												)}
-												onSelectionChange={(selectedClassNumber) => {
-													updateClass({
-														classNumber: [...selectedClassNumber][0] as string,
-														classTypeId: classType.id,
-													});
-												}}
-											>
-												{classType.classes.map((classInfo) => {
-													const itemKey = `${id}|${classType.id}|${classInfo.number}`;
-													const itemConflicted =
-														(conflictsByClassKey[itemKey] ?? []).length > 0 ||
-														classConflictsWithEnrolled(classInfo.meetings);
-													const campusList = deduplicateArray(
-														classInfo.meetings
-															.map((m) => m.campus ?? '')
-															.filter(Boolean),
-													).join(', ');
-													const availability =
-														classInfo.available_seats && classInfo.size
-															? `${classInfo.available_seats} / ${classInfo.size}`
-															: undefined;
-													const isFull =
-														classInfo.available_seats !== undefined &&
-														parseInt(classInfo.available_seats, 10) === 0;
-													return (
-														<SelectItem
-															key={classInfo.number}
-															textValue={classInfo.number}
-														>
-															<div>
-																<div className="flex items-center">
-																	{itemConflicted && (
-																		<Tooltip
-																			content={
-																				t('calendar.conflict') ??
-																				'Conflict with another class'
-																			}
-																			size="sm"
-																		>
-																			<span aria-hidden className="mr-2">
-																				⚠️
-																			</span>
-																		</Tooltip>
-																	)}
-																	{isFull && (
-																		<Tooltip
-																			content={
-																				t('calendar.no-available-seats', {
-																					defaultValue: 'Class full',
-																				}) as string
-																			}
-																			size="sm"
-																		>
-																			<span aria-hidden>⚠️</span>
-																		</Tooltip>
-																	)}
-																	<div>{classInfo.number}</div>
-																</div>
-																<div className="text-tiny text-default-500">
-																	{getPreviewMeetingInfo(classInfo.meetings)}
-																	{campusList ? ` | ${campusList}` : ''}
-																	{availability ? (
-																		<>
-																			{' '}
-																			|{' '}
-																			<span
-																				className={isFull ? 'text-danger' : ''}
+								return courseInfo.class_list.map((classType) => {
+									const selectedTermAlias =
+										localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
+									const classesToShow = classType.classes.filter((classInfo) =>
+										classInfo.meetings.some((m) =>
+											isMeetingInTerm(m.date, selectedTermAlias),
+										),
+									);
+									return (
+										<Fragment key={classType.id}>
+											{classesToShow.length === 0 ? (
+												<div className="text-default-500">
+													{t('course-modal.no-class-info-class-type') ??
+														'No class information for this class type at the moment.'}
+												</div>
+											) : (
+												<Select
+													label={`${classType.type} Time`}
+													renderValue={(value) => {
+														const items = value as unknown as
+															| Array<{ key?: Key }>
+															| undefined;
+														const key = items?.[0]?.key as string | undefined;
+														const selectedClass = getSelectedClass(
+															classType.id,
+														);
+														const isFullSelected =
+															selectedClass?.available_seats !== undefined &&
+															parseInt(selectedClass.available_seats, 10) === 0;
+														return (
+															<div className="flex items-center gap-2">
+																{isFullSelected && (
+																	<Tooltip
+																		content={
+																			t('calendar.no-available-seats', {
+																				defaultValue: 'Class full',
+																			}) as string
+																		}
+																		size="sm"
+																	>
+																		<span aria-hidden>⚠️</span>
+																	</Tooltip>
+																)}
+																{(() => {
+																	const selKey = key
+																		? `${id}|${classType.id}|${key}`
+																		: undefined;
+																	const selConf =
+																		(selKey
+																			? (conflictsByClassKey[selKey] ?? [])
+																					.length > 0
+																			: false) ||
+																		(selectedClass
+																			? classConflictsWithEnrolled(
+																					selectedClass.meetings,
+																				)
+																			: false);
+																	return (
+																		selConf && (
+																			<Tooltip
+																				content={
+																					t('calendar.conflict') ??
+																					'Conflict with another class'
+																				}
+																				size="sm"
 																			>
-																				{availability}
-																			</span>
-																		</>
-																	) : (
-																		''
-																	)}
-																</div>
+																				<span aria-hidden className="">
+																					⚠️
+																				</span>
+																			</Tooltip>
+																		)
+																	);
+																})()}
+																<div>{`Class Number: ${key}`}</div>
 															</div>
-														</SelectItem>
-													);
-												})}
-											</Select>
-										)}
-										{(() => {
-											const selectedClass = getSelectedClass(classType.id);
-											const size =
-												selectedClass?.size ??
-												selectedClass?.section ??
-												undefined;
-											const availableSeats =
-												selectedClass?.available_seats ?? undefined;
-											const selectedClassNumber = getSelectedClassNumber(
-												classType.id,
-											);
-											const classKey = selectedClassNumber
-												? `${id}|${classType.id}|${selectedClassNumber}`
-												: undefined;
-											const classConflicts = classKey
-												? (conflictsByClassKey[classKey] ?? [])
-												: [];
-											// Dedupe again defensively by serialised key
-											const unique = [] as typeof classConflicts;
-											const seen = new Set<string>();
-											for (const c of classConflicts) {
-												const k = `${c.otherCourseId}|${c.otherClassNumber}|${c.otherMeeting.time.start}|${c.otherMeeting.time.end}|${c.otherMeeting.location}|${c.otherMeeting.campus}`;
-												if (!seen.has(k)) {
-													seen.add(k);
-													unique.push(c);
+														);
+													}}
+													selectedKeys={getKeys(
+														getSelectedClassNumber(classType.id),
+													)}
+													// Prevent the selected class from being clicked again to avoid it becoming undefined
+													disabledKeys={getKeys(
+														getSelectedClassNumber(classType.id),
+													)}
+													onSelectionChange={(selectedClassNumber) => {
+														updateClass({
+															classNumber: [
+																...selectedClassNumber,
+															][0] as string,
+															classTypeId: classType.id,
+														});
+													}}
+												>
+													{classesToShow.map((classInfo) => {
+														const itemKey = `${id}|${classType.id}|${classInfo.number}`;
+														const itemConflicted =
+															(conflictsByClassKey[itemKey] ?? []).length > 0 ||
+															classConflictsWithEnrolled(classInfo.meetings);
+														const campusList = deduplicateArray(
+															classInfo.meetings
+																.map((m) => m.campus ?? '')
+																.filter(Boolean),
+														).join(', ');
+														const availability =
+															classInfo.available_seats && classInfo.size
+																? `${classInfo.available_seats} / ${classInfo.size}`
+																: undefined;
+														const isFull =
+															classInfo.available_seats !== undefined &&
+															parseInt(classInfo.available_seats, 10) === 0;
+														return (
+															<SelectItem
+																key={classInfo.number}
+																textValue={classInfo.number}
+															>
+																<div>
+																	<div className="flex items-center">
+																		{itemConflicted && (
+																			<Tooltip
+																				content={
+																					t('calendar.conflict') ??
+																					'Conflict with another class'
+																				}
+																				size="sm"
+																			>
+																				<span aria-hidden className="mr-2">
+																					⚠️
+																				</span>
+																			</Tooltip>
+																		)}
+																		{isFull && (
+																			<Tooltip
+																				content={
+																					t('calendar.no-available-seats', {
+																						defaultValue: 'Class full',
+																					}) as string
+																				}
+																				size="sm"
+																			>
+																				<span aria-hidden>⚠️</span>
+																			</Tooltip>
+																		)}
+																		<div>{classInfo.number}</div>
+																	</div>
+																	<div className="text-tiny text-default-500">
+																		{getPreviewMeetingInfo(classInfo.meetings)}
+																		{campusList ? ` | ${campusList}` : ''}
+																		{availability ? (
+																			<>
+																				{' '}
+																				|{' '}
+																				<span
+																					className={
+																						isFull ? 'text-danger' : ''
+																					}
+																				>
+																					{availability}
+																				</span>
+																			</>
+																		) : (
+																			''
+																		)}
+																	</div>
+																</div>
+															</SelectItem>
+														);
+													})}
+												</Select>
+											)}
+											{(() => {
+												const selectedClass = getSelectedClass(classType.id);
+												const size =
+													selectedClass?.size ??
+													selectedClass?.section ??
+													undefined;
+												const availableSeats =
+													selectedClass?.available_seats ?? undefined;
+												const selectedClassNumber = getSelectedClassNumber(
+													classType.id,
+												);
+												const classKey = selectedClassNumber
+													? `${id}|${classType.id}|${selectedClassNumber}`
+													: undefined;
+												const classConflicts = classKey
+													? (conflictsByClassKey[classKey] ?? [])
+													: [];
+												// Dedupe again defensively by serialised key
+												const unique = [] as typeof classConflicts;
+												const seen = new Set<string>();
+												for (const c of classConflicts) {
+													const k = `${c.otherCourseId}|${c.otherClassNumber}|${c.otherMeeting.time.start}|${c.otherMeeting.time.end}|${c.otherMeeting.location}|${c.otherMeeting.campus}`;
+													if (!seen.has(k)) {
+														seen.add(k);
+														unique.push(c);
+													}
 												}
-											}
-											return (
-												<>
-													<MeetingsTime
-														meetings={getMeetings(classType.id)}
-														classType={classType.type}
-														size={size}
-														availableSeats={availableSeats}
-													/>
-												</>
-											);
-										})()}
-									</Fragment>
-								));
+												return (
+													<>
+														<MeetingsTime
+															meetings={getMeetings(classType.id)}
+															classType={classType.type}
+															size={size}
+															availableSeats={availableSeats}
+														/>
+													</>
+												);
+											})()}
+										</Fragment>
+									);
+								});
 							})()}
 						</ModalBody>
 					</>
