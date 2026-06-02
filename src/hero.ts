@@ -16,7 +16,7 @@ const hero: unknown = heroui({
 				'apple-brown': { 300: '#DFD8CF', 500: '#7D5E3B', 700: '#5E4D39' },
 				'apple-red': { 300: '#FEBFD1', 500: '#F50445', 700: '#BB1644' },
 				'not-found': { 300: '#D3D3D3', 500: '#000000', 700: '#000000' },
-			} as any,
+			},
 		},
 		dark: {
 			colors: {
@@ -32,9 +32,9 @@ const hero: unknown = heroui({
 				'apple-brown': { 300: '#292621', 500: '#9B7C55', 700: '#9B7C55' },
 				'apple-red': { 300: '#391A21', 500: '#E51167', 700: '#E51166' },
 				'not-found': { 300: '#404040', 500: '#FFFFFF', 700: '#FFFFFF' },
-			} as any,
+			},
 		},
 	},
-});
+} as unknown as Parameters<typeof heroui>[0]);
 
 export default hero;
