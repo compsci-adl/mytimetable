@@ -122,6 +122,9 @@ describe('solveAutoTimetable solver', () => {
 		maxDays: 5,
 		mode: 'HYBRID',
 		ignoreLectures: false,
+		enableLunch: false,
+		lunchStart: '12:00',
+		lunchEnd: '13:00',
 	};
 
 	it('should find a conflict-free solution when one exists', () => {
@@ -230,6 +233,9 @@ describe('checkViolations utility', () => {
 		maxDays: 5,
 		mode: 'HYBRID',
 		ignoreLectures: false,
+		enableLunch: false,
+		lunchStart: '12:00',
+		lunchEnd: '13:00',
 	};
 
 	it('should return violations when preferences are not met', () => {
@@ -256,5 +262,24 @@ describe('checkViolations utility', () => {
 			defaultPreferences,
 		);
 		expect(violations.length).toBe(0);
+	});
+
+	it('should report violation and score penalty when class overlaps with lunch break', () => {
+		const preferencesWithLunch: Preferences = {
+			...defaultPreferences,
+			enableLunch: true,
+			lunchStart: '10:00',
+			lunchEnd: '11:00',
+		};
+		// Class '102' is from 10:00 to 12:00 on Tuesday, which overlaps with lunch break (10:00-11:00)
+		const assignment = { 'type-1': '102' };
+		const violations = checkViolations(
+			assignment,
+			mockVariables,
+			preferencesWithLunch,
+		);
+		expect(violations).toContain(
+			'Some classes overlap with your preferred lunch break',
+		);
 	});
 });

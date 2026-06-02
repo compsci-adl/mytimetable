@@ -1,5 +1,6 @@
+import { LocalStorageKey } from '../constants/local-storage-keys';
 import type { Course, Meetings } from '../types/course';
-import { dateRangesOverlap } from '../utils/date';
+import { dateRangesOverlap, isMeetingInTerm } from '../utils/date';
 
 export interface Preferences {
 	earliestStart: string;
@@ -9,6 +10,9 @@ export interface Preferences {
 	maxDays: number;
 	mode: 'HYBRID' | 'IN_PERSON' | 'ONLINE';
 	ignoreLectures: boolean;
+	enableLunch: boolean;
+	lunchStart: string;
+	lunchEnd: string;
 }
 
 export type Variable = {
@@ -105,15 +109,16 @@ const evaluateAssignment = (
 			const isLec2 =
 				m2.classTypeName.toLowerCase().startsWith('lecture') ||
 				m2.classTypeName.toLowerCase().startsWith('lec');
-			if (preferences.ignoreLectures && (isLec1 || isLec2)) {
-				continue;
-			}
 
 			if (
 				dateRangesOverlap(m1.date, m2.date) &&
 				timeRangesOverlap(m1.time, m2.time)
 			) {
-				score -= 200000; // Massive penalty for conflicts
+				if (preferences.ignoreLectures && (isLec1 || isLec2)) {
+					score -= 1000; // Soft penalty to avoid lecture conflicts if possible
+				} else {
+					score -= 200000; // Massive penalty for conflicts
+				}
 			}
 		}
 	}
@@ -209,6 +214,28 @@ const evaluateAssignment = (
 		}
 		if (preferences.mode === 'IN_PERSON' && isOnline) {
 			score -= 1000;
+		}
+	}
+
+	// 7. Lunch Break constraints
+	if (preferences.enableLunch) {
+		const lunchStartMinutes = timeToMinutes(preferences.lunchStart);
+		const lunchEndMinutes = timeToMinutes(preferences.lunchEnd);
+
+		for (const m of meetings) {
+			const isLec =
+				m.classTypeName.toLowerCase().startsWith('lecture') ||
+				m.classTypeName.toLowerCase().startsWith('lec');
+			if (preferences.ignoreLectures && isLec) continue;
+
+			const mStart = timeToMinutes(m.time.start);
+			const mEnd = timeToMinutes(m.time.end);
+
+			const overlapsLunch =
+				mEnd > lunchStartMinutes && mStart < lunchEndMinutes;
+			if (overlapsLunch) {
+				score -= 1500; // Soft penalty for violating preferred lunch break
+			}
 		}
 	}
 
@@ -384,16 +411,23 @@ export const solveAutoTimetable = (
 };
 
 export const coursesToVariables = (courses: Course[]): Variable[] => {
+	const selectedTermAlias =
+		localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
 	const variables: Variable[] = [];
 	for (const course of courses) {
 		for (const ct of course.class_list) {
-			if (ct.classes.length === 0) continue;
+			const classesInTerm = ct.classes.filter((classInfo) =>
+				classInfo.meetings.some((m) =>
+					isMeetingInTerm(m.date, selectedTermAlias),
+				),
+			);
+			if (classesInTerm.length === 0) continue;
 			variables.push({
 				courseId: course.id,
 				courseCode: course.name.code,
 				classTypeId: ct.id,
 				classTypeName: ct.type,
-				options: ct.classes.map((c) => ({
+				options: classesInTerm.map((c) => ({
 					number: c.number,
 					available_seats: c.available_seats,
 					meetings: c.meetings,
@@ -408,8 +442,25 @@ export const checkViolations = (
 	assignment: Assignment,
 	variables: Variable[],
 	preferences: Preferences,
+	t?: (key: string, options?: Record<string, string | number>) => string,
 ): string[] => {
 	const violations: string[] = [];
+	const tr = (
+		key: string,
+		fallback: string,
+		options?: Record<string, string | number>,
+	) => {
+		if (t) {
+			return t(key, { defaultValue: fallback, ...options });
+		}
+		let text = fallback;
+		if (options) {
+			Object.entries(options).forEach(([k, v]) => {
+				text = text.replace(`{{${k}}}`, String(v));
+			});
+		}
+		return text;
+	};
 
 	type ScheduledMeeting = {
 		day: string;
@@ -450,7 +501,12 @@ export const checkViolations = (
 	}
 
 	if (hasFullClass) {
-		violations.push('Includes full classes (no open seats available)');
+		violations.push(
+			tr(
+				'toast.auto-timetable-warning-full-classes',
+				'Includes full classes (no open seats available)',
+			),
+		);
 	}
 
 	// 1. Conflict check
@@ -483,7 +539,12 @@ export const checkViolations = (
 		if (hasConflict) break;
 	}
 	if (hasConflict) {
-		violations.push('Contains class time conflicts (overlaps)');
+		violations.push(
+			tr(
+				'toast.auto-timetable-warning-conflicts',
+				'Contains class time conflicts (overlaps)',
+			),
+		);
 	}
 
 	// 2. Time limits
@@ -506,7 +567,12 @@ export const checkViolations = (
 		}
 	}
 	if (hasTimeViolation) {
-		violations.push('Some classes are outside your preferred start/end times');
+		violations.push(
+			tr(
+				'toast.auto-timetable-warning-outside-hours',
+				'Some classes are outside your preferred start/end times',
+			),
+		);
 	}
 
 	// 3. Preferred days
@@ -523,7 +589,12 @@ export const checkViolations = (
 		}
 	}
 	if (hasDayViolation) {
-		violations.push('Some classes are on your unpreferred days');
+		violations.push(
+			tr(
+				'toast.auto-timetable-warning-unpreferred-days',
+				'Some classes are on your unpreferred days',
+			),
+		);
 	}
 
 	// 4. Max days
@@ -540,7 +611,11 @@ export const checkViolations = (
 	const daysAtUni = Object.keys(meetingsByDay).length;
 	if (daysAtUni > preferences.maxDays) {
 		violations.push(
-			`Attends university on ${daysAtUni} days (preferred max: ${preferences.maxDays})`,
+			tr(
+				'toast.auto-timetable-warning-max-days',
+				'Attends university on {{count}} days (preferred max: {{max}})',
+				{ count: daysAtUni, max: preferences.maxDays },
+			),
 		);
 	}
 
@@ -568,8 +643,47 @@ export const checkViolations = (
 	}
 	if (hasModeViolation) {
 		violations.push(
-			`Includes classes not matching your preferred mode (${preferences.mode === 'ONLINE' ? 'Online' : 'In-person'})`,
+			tr(
+				'toast.auto-timetable-warning-mode-mismatch',
+				'Includes classes not matching your preferred mode ({{mode}})',
+				{
+					mode:
+						preferences.mode === 'ONLINE'
+							? tr('auto-timetable.online', 'Online')
+							: tr('auto-timetable.in-person', 'In-person'),
+				},
+			),
 		);
+	}
+
+	// 6. Lunch Break
+	if (preferences.enableLunch) {
+		const lunchStartMinutes = timeToMinutes(preferences.lunchStart);
+		const lunchEndMinutes = timeToMinutes(preferences.lunchEnd);
+		let hasLunchViolation = false;
+
+		for (const m of meetings) {
+			const isLec =
+				m.classTypeName.toLowerCase().startsWith('lecture') ||
+				m.classTypeName.toLowerCase().startsWith('lec');
+			if (preferences.ignoreLectures && isLec) continue;
+
+			const mStart = timeToMinutes(m.time.start);
+			const mEnd = timeToMinutes(m.time.end);
+
+			if (mEnd > lunchStartMinutes && mStart < lunchEndMinutes) {
+				hasLunchViolation = true;
+				break;
+			}
+		}
+		if (hasLunchViolation) {
+			violations.push(
+				tr(
+					'toast.auto-timetable-warning-lunch-overlap',
+					'Some classes overlap with your preferred lunch break',
+				),
+			);
+		}
 	}
 
 	return violations;
