@@ -65,22 +65,15 @@ const MeetingsTime = ({
 	classType,
 	size,
 	availableSeats,
+	courseCampus,
 }: {
 	meetings: Meetings;
 	classType: string;
 	size?: string | undefined;
 	availableSeats?: string | undefined;
+	courseCampus?: string | undefined;
 }) => {
 	const { t } = useTranslation();
-
-	if (meetings.length === 0) {
-		return (
-			<div className="text-danger">
-				{t('course-modal.no-class-times-available') ??
-					'No class times available'}
-			</div>
-		);
-	}
 
 	const isFullValue =
 		availableSeats !== undefined && parseInt(availableSeats, 10) === 0;
@@ -98,6 +91,50 @@ const MeetingsTime = ({
 			<TableBody>
 				{/* Group meetings that are identical except for the date */}
 				{(() => {
+					if (meetings.length === 0) {
+						return (
+							<TableRow key="no-meetings">
+								<TableCell>
+									{t('course-modal.not-available', {
+										defaultValue: 'Not available',
+									})}
+								</TableCell>
+								<TableCell>
+									{t('course-modal.not-available', {
+										defaultValue: 'Not available',
+									})}
+								</TableCell>
+								<TableCell>
+									{t('course-modal.not-available', {
+										defaultValue: 'Not available',
+									})}
+								</TableCell>
+								<TableCell>
+									{t('course-modal.not-available', {
+										defaultValue: 'Not available',
+									})}
+								</TableCell>
+								<TableCell>
+									{courseCampus ||
+										t('course-modal.not-available', {
+											defaultValue: 'Not available',
+										})}
+								</TableCell>
+								<TableCell>
+									{availableSeats && size ? (
+										<span className={isFullValue ? 'text-danger' : ''}>
+											{`${availableSeats} / ${size}`}
+										</span>
+									) : (
+										t('course-modal.not-available', {
+											defaultValue: 'Not available',
+										})
+									)}
+								</TableCell>
+							</TableRow>
+						);
+					}
+
 					const grouped: Record<string, Meetings> = {};
 					const order: string[] = [];
 					meetings.forEach((m) => {
@@ -540,93 +577,111 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 											isMeetingInTerm(m.date, selectedTermAlias),
 										),
 									);
+									const isEmpty = classesToShow.length === 0;
 									return (
 										<Fragment key={classType.id}>
-											{classesToShow.length === 0 ? (
-												<div className="text-default-500">
-													{t('course-modal.no-class-info-class-type') ??
-														'No class information for this class type at the moment.'}
-												</div>
-											) : (
-												<Select
-													label={`${classType.type} Time`}
-													renderValue={(value) => {
-														const items = value as unknown as
-															| Array<{ key?: Key }>
-															| undefined;
-														const key = items?.[0]?.key as string | undefined;
-														const selectedClass = getSelectedClass(
-															classType.id,
-														);
-														const isFullSelected =
-															selectedClass?.available_seats !== undefined &&
-															parseInt(selectedClass.available_seats, 10) === 0;
+											<Select
+												label={`${classType.type} Time`}
+												isDisabled={isEmpty}
+												renderValue={(value) => {
+													if (isEmpty) {
 														return (
-															<div className="flex items-center gap-2">
-																{isFullSelected && (
-																	<Tooltip
-																		content={
-																			t('calendar.no-available-seats', {
-																				defaultValue: 'Class full',
-																			}) as string
-																		}
-																		size="sm"
-																	>
-																		<span aria-hidden>⚠️</span>
-																	</Tooltip>
-																)}
-																{(() => {
-																	const selKey = key
-																		? `${id}|${classType.id}|${key}`
-																		: undefined;
-																	const selConf =
-																		(selKey
-																			? (conflictsByClassKey[selKey] ?? [])
-																					.length > 0
-																			: false) ||
-																		(selectedClass
-																			? classConflictsWithEnrolled(
-																					selectedClass.meetings,
-																					classType.id,
-																				)
-																			: false);
-																	return (
-																		selConf && (
-																			<Tooltip
-																				content={
-																					t('calendar.conflict') ??
-																					'Conflict with another class'
-																				}
-																				size="sm"
-																			>
-																				<span aria-hidden className="">
-																					⚠️
-																				</span>
-																			</Tooltip>
-																		)
-																	);
-																})()}
-																<div>{`Class Number: ${key}`}</div>
+															<div>
+																{t('course-modal.not-available', {
+																	defaultValue: 'Not available',
+																})}
 															</div>
 														);
-													}}
-													selectedKeys={getKeys(
-														getSelectedClassNumber(classType.id),
-													)}
-													// Prevent the selected class from being clicked again to avoid it becoming undefined
-													disabledKeys={getKeys(
-														getSelectedClassNumber(classType.id),
-													)}
-													onSelectionChange={(selectedClassNumber) => {
-														updateClass({
-															classNumber: [
-																...selectedClassNumber,
-															][0] as string,
-															classTypeId: classType.id,
-														});
-													}}
-												>
-													{classesToShow.map((classInfo) => {
+													}
+													const items = value as unknown as
+														| Array<{ key?: Key }>
+														| undefined;
+													const key = items?.[0]?.key as string | undefined;
+													const selectedClass = getSelectedClass(classType.id);
+													const isFullSelected =
+														selectedClass?.available_seats !== undefined &&
+														parseInt(selectedClass.available_seats, 10) === 0;
+													return (
+														<div className="flex items-center gap-2">
+															{isFullSelected && (
+																<Tooltip
+																	content={
+																		t('calendar.no-available-seats', {
+																			defaultValue: 'Class full',
+																		}) as string
+																	}
+																	size="sm"
+																>
+																	<span aria-hidden>⚠️</span>
+																</Tooltip>
+															)}
+															{(() => {
+																const selKey = key
+																	? `${id}|${classType.id}|${key}`
+																	: undefined;
+																const selConf =
+																	(selKey
+																		? (conflictsByClassKey[selKey] ?? [])
+																				.length > 0
+																		: false) ||
+																	(selectedClass
+																		? classConflictsWithEnrolled(
+																				selectedClass.meetings,
+																				classType.id,
+																			)
+																		: false);
+																return (
+																	selConf && (
+																		<Tooltip
+																			content={
+																				t('calendar.conflict') ??
+																				'Conflict with another class'
+																			}
+																			size="sm"
+																		>
+																			<span aria-hidden className="">
+																				⚠️
+																			</span>
+																		</Tooltip>
+																	)
+																);
+															})()}
+															<div>{`Class Number: ${key}`}</div>
+														</div>
+													);
+												}}
+												selectedKeys={
+													isEmpty
+														? ['not-available']
+														: getKeys(getSelectedClassNumber(classType.id))
+												}
+												// Prevent the selected class from being clicked again to avoid it becoming undefined
+												disabledKeys={
+													isEmpty
+														? ['not-available']
+														: getKeys(getSelectedClassNumber(classType.id))
+												}
+												onSelectionChange={(selectedClassNumber) => {
+													if (isEmpty) return;
+													updateClass({
+														classNumber: [...selectedClassNumber][0] as string,
+														classTypeId: classType.id,
+													});
+												}}
+											>
+												{isEmpty ? (
+													<SelectItem
+														key="not-available"
+														textValue={t('course-modal.not-available', {
+															defaultValue: 'Not available',
+														})}
+													>
+														{t('course-modal.not-available', {
+															defaultValue: 'Not available',
+														})}
+													</SelectItem>
+												) : (
+													classesToShow.map((classInfo) => {
 														const itemKey = `${id}|${classType.id}|${classInfo.number}`;
 														const itemConflicted =
 															(conflictsByClassKey[itemKey] ?? []).length > 0 ||
@@ -702,9 +757,9 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 																</div>
 															</SelectItem>
 														);
-													})}
-												</Select>
-											)}
+													})
+												)}
+											</Select>
 											{(() => {
 												const selectedClass = getSelectedClass(classType.id);
 												const size =
@@ -713,34 +768,14 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 													undefined;
 												const availableSeats =
 													selectedClass?.available_seats ?? undefined;
-												const selectedClassNumber = getSelectedClassNumber(
-													classType.id,
-												);
-												const classKey = selectedClassNumber
-													? `${id}|${classType.id}|${selectedClassNumber}`
-													: undefined;
-												const classConflicts = classKey
-													? (conflictsByClassKey[classKey] ?? [])
-													: [];
-												// Dedupe again defensively by serialised key
-												const unique = [] as typeof classConflicts;
-												const seen = new Set<string>();
-												for (const c of classConflicts) {
-													const k = `${c.otherCourseId}|${c.otherClassNumber}|${c.otherMeeting.time.start}|${c.otherMeeting.time.end}|${c.otherMeeting.location}|${c.otherMeeting.campus}`;
-													if (!seen.has(k)) {
-														seen.add(k);
-														unique.push(c);
-													}
-												}
 												return (
-													<>
-														<MeetingsTime
-															meetings={getMeetings(classType.id)}
-															classType={classType.type}
-															size={size}
-															availableSeats={availableSeats}
-														/>
-													</>
+													<MeetingsTime
+														meetings={getMeetings(classType.id)}
+														classType={classType.type}
+														size={size}
+														availableSeats={availableSeats}
+														courseCampus={courseInfo?.campus}
+													/>
 												);
 											})()}
 										</Fragment>
