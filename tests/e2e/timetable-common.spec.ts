@@ -49,11 +49,23 @@ test.describe('MyTimetable App Common End-to-End Tests', () => {
 		await expect(practicalSelect).toBeVisible();
 
 		if (!isMobile) {
-			await practicalSelect.focus();
-			await practicalSelect.click();
-			await page.waitForTimeout(1000);
-
 			const listbox = page.locator('[role="listbox"]');
+			// Open the select dropdown. We retry clicking if it fails to open
+			let opened = false;
+			for (let attempt = 1; attempt <= 3; attempt++) {
+				await practicalSelect.click();
+				await page.waitForTimeout(500);
+				if (await listbox.isVisible()) {
+					opened = true;
+					break;
+				}
+			}
+			if (!opened) {
+				await practicalSelect.focus();
+				await practicalSelect.click();
+				await page.waitForTimeout(1000);
+			}
+
 			await expect(listbox).toBeVisible({ timeout: 5000 });
 			const class25026Option = listbox
 				.locator('[role="option"]')
