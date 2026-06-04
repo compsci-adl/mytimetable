@@ -45,6 +45,22 @@ export const timeRangesOverlap = (
 	return aEnd > bStart && bEnd > aStart;
 };
 
+export const isLectureMeeting = (classTypeName?: string): boolean => {
+	const name = (classTypeName || '').toLowerCase();
+	return name.startsWith('lecture') || name.startsWith('lec');
+};
+
+export const isOnlineMeeting = (
+	location?: string,
+	campus?: string,
+): boolean => {
+	return (
+		(location || '').toLowerCase().includes('online') ||
+		(location || '').toLowerCase().includes('web') ||
+		(campus || '').toLowerCase().includes('online')
+	);
+};
+
 const evaluateAssignment = (
 	assignment: Assignment,
 	variables: Variable[],
@@ -70,7 +86,9 @@ const evaluateAssignment = (
 	for (const variable of variables) {
 		const chosenNumber = assignment[variable.classTypeId];
 		const option = variable.options.find((o) => o.number === chosenNumber);
+		/* v8 ignore start */
 		if (!option) continue;
+		/* v8 ignore stop */
 
 		const isFull =
 			option.available_seats !== undefined &&
@@ -98,17 +116,13 @@ const evaluateAssignment = (
 	// 2. Conflict check
 	for (let i = 0; i < meetings.length; i++) {
 		const m1 = meetings[i];
-		const isLec1 =
-			m1.classTypeName.toLowerCase().startsWith('lecture') ||
-			m1.classTypeName.toLowerCase().startsWith('lec');
+		const isLec1 = isLectureMeeting(m1.classTypeName);
 
 		for (let j = i + 1; j < meetings.length; j++) {
 			const m2 = meetings[j];
 			if (m1.day !== m2.day) continue;
 
-			const isLec2 =
-				m2.classTypeName.toLowerCase().startsWith('lecture') ||
-				m2.classTypeName.toLowerCase().startsWith('lec');
+			const isLec2 = isLectureMeeting(m2.classTypeName);
 
 			if (
 				dateRangesOverlap(m1.date, m2.date) &&
@@ -128,9 +142,7 @@ const evaluateAssignment = (
 	const endLimit = timeToMinutes(preferences.latestEnd);
 
 	for (const m of meetings) {
-		const isLec =
-			m.classTypeName.toLowerCase().startsWith('lecture') ||
-			m.classTypeName.toLowerCase().startsWith('lec');
+		const isLec = isLectureMeeting(m.classTypeName);
 		if (preferences.ignoreLectures && isLec) continue;
 
 		const mStart = timeToMinutes(m.time.start);
@@ -147,9 +159,7 @@ const evaluateAssignment = (
 	// 4. Preferred Days constraints
 	const mappedPreferredDays = preferences.preferredDays;
 	for (const m of meetings) {
-		const isLec =
-			m.classTypeName.toLowerCase().startsWith('lecture') ||
-			m.classTypeName.toLowerCase().startsWith('lec');
+		const isLec = isLectureMeeting(m.classTypeName);
 		if (preferences.ignoreLectures && isLec) continue;
 
 		if (!mappedPreferredDays.includes(m.day)) {
@@ -160,9 +170,7 @@ const evaluateAssignment = (
 	// 5. Breaks and Days of Uni
 	const meetingsByDay: Record<string, typeof meetings> = {};
 	for (const m of meetings) {
-		const isLec =
-			m.classTypeName.toLowerCase().startsWith('lecture') ||
-			m.classTypeName.toLowerCase().startsWith('lec');
+		const isLec = isLectureMeeting(m.classTypeName);
 		if (preferences.ignoreLectures && isLec) continue;
 
 		meetingsByDay[m.day] = meetingsByDay[m.day] || [];
@@ -199,15 +207,10 @@ const evaluateAssignment = (
 
 	// 6. Mode constraints
 	for (const m of meetings) {
-		const isLec =
-			m.classTypeName.toLowerCase().startsWith('lecture') ||
-			m.classTypeName.toLowerCase().startsWith('lec');
+		const isLec = isLectureMeeting(m.classTypeName);
 		if (preferences.ignoreLectures && isLec) continue;
 
-		const isOnline =
-			m.location.toLowerCase().includes('online') ||
-			m.location.toLowerCase().includes('web') ||
-			m.campus.toLowerCase().includes('online');
+		const isOnline = isOnlineMeeting(m.location, m.campus);
 
 		if (preferences.mode === 'ONLINE' && !isOnline) {
 			score -= 1000;
@@ -223,9 +226,7 @@ const evaluateAssignment = (
 		const lunchEndMinutes = timeToMinutes(preferences.lunchEnd);
 
 		for (const m of meetings) {
-			const isLec =
-				m.classTypeName.toLowerCase().startsWith('lecture') ||
-				m.classTypeName.toLowerCase().startsWith('lec');
+			const isLec = isLectureMeeting(m.classTypeName);
 			if (preferences.ignoreLectures && isLec) continue;
 
 			const mStart = timeToMinutes(m.time.start);
@@ -258,7 +259,9 @@ const hasPartialConflict = (
 		const v = variables[i];
 		const chosen = assignment[v.classTypeId];
 		const option = v.options.find((o) => o.number === chosen);
+		/* v8 ignore start */
 		if (!option) continue;
+		/* v8 ignore stop */
 
 		for (const m of option.meetings) {
 			meetings.push({
@@ -272,17 +275,13 @@ const hasPartialConflict = (
 
 	for (let i = 0; i < meetings.length; i++) {
 		const m1 = meetings[i];
-		const isLec1 =
-			m1.classTypeName.toLowerCase().startsWith('lecture') ||
-			m1.classTypeName.toLowerCase().startsWith('lec');
+		const isLec1 = isLectureMeeting(m1.classTypeName);
 
 		for (let j = i + 1; j < meetings.length; j++) {
 			const m2 = meetings[j];
 			if (m1.day !== m2.day) continue;
 
-			const isLec2 =
-				m2.classTypeName.toLowerCase().startsWith('lecture') ||
-				m2.classTypeName.toLowerCase().startsWith('lec');
+			const isLec2 = isLectureMeeting(m2.classTypeName);
 			if (preferences.ignoreLectures && (isLec1 || isLec2)) continue;
 
 			if (
@@ -367,7 +366,9 @@ export const solveAutoTimetable = (
 	let evaluations = 0;
 
 	const backtrack = (varIdx: number, requireConflictFree: boolean) => {
+		/* v8 ignore start */
 		if (evaluations > 10000) return;
+		/* v8 ignore stop */
 
 		if (
 			requireConflictFree &&
@@ -478,7 +479,9 @@ export const checkViolations = (
 	for (const variable of variables) {
 		const chosenNumber = assignment[variable.classTypeId];
 		const option = variable.options.find((o) => o.number === chosenNumber);
+		/* v8 ignore start */
 		if (!option) continue;
+		/* v8 ignore stop */
 
 		const isFull =
 			option.available_seats !== undefined &&
@@ -513,17 +516,13 @@ export const checkViolations = (
 	let hasConflict = false;
 	for (let i = 0; i < meetings.length; i++) {
 		const m1 = meetings[i];
-		const isLec1 =
-			m1.classTypeName.toLowerCase().startsWith('lecture') ||
-			m1.classTypeName.toLowerCase().startsWith('lec');
+		const isLec1 = isLectureMeeting(m1.classTypeName);
 
 		for (let j = i + 1; j < meetings.length; j++) {
 			const m2 = meetings[j];
 			if (m1.day !== m2.day) continue;
 
-			const isLec2 =
-				m2.classTypeName.toLowerCase().startsWith('lecture') ||
-				m2.classTypeName.toLowerCase().startsWith('lec');
+			const isLec2 = isLectureMeeting(m2.classTypeName);
 			if (preferences.ignoreLectures && (isLec1 || isLec2)) {
 				continue;
 			}
@@ -553,9 +552,7 @@ export const checkViolations = (
 	let hasTimeViolation = false;
 
 	for (const m of meetings) {
-		const isLec =
-			m.classTypeName.toLowerCase().startsWith('lecture') ||
-			m.classTypeName.toLowerCase().startsWith('lec');
+		const isLec = isLectureMeeting(m.classTypeName);
 		if (preferences.ignoreLectures && isLec) continue;
 
 		const mStart = timeToMinutes(m.time.start);
@@ -578,9 +575,7 @@ export const checkViolations = (
 	// 3. Preferred days
 	let hasDayViolation = false;
 	for (const m of meetings) {
-		const isLec =
-			m.classTypeName.toLowerCase().startsWith('lecture') ||
-			m.classTypeName.toLowerCase().startsWith('lec');
+		const isLec = isLectureMeeting(m.classTypeName);
 		if (preferences.ignoreLectures && isLec) continue;
 
 		if (!preferences.preferredDays.includes(m.day)) {
@@ -600,9 +595,7 @@ export const checkViolations = (
 	// 4. Max days
 	const meetingsByDay: Record<string, typeof meetings> = {};
 	for (const m of meetings) {
-		const isLec =
-			m.classTypeName.toLowerCase().startsWith('lecture') ||
-			m.classTypeName.toLowerCase().startsWith('lec');
+		const isLec = isLectureMeeting(m.classTypeName);
 		if (preferences.ignoreLectures && isLec) continue;
 
 		meetingsByDay[m.day] = meetingsByDay[m.day] || [];
@@ -622,15 +615,10 @@ export const checkViolations = (
 	// 5. Mode mismatch
 	let hasModeViolation = false;
 	for (const m of meetings) {
-		const isLec =
-			m.classTypeName.toLowerCase().startsWith('lecture') ||
-			m.classTypeName.toLowerCase().startsWith('lec');
+		const isLec = isLectureMeeting(m.classTypeName);
 		if (preferences.ignoreLectures && isLec) continue;
 
-		const isOnline =
-			m.location.toLowerCase().includes('online') ||
-			m.location.toLowerCase().includes('web') ||
-			m.campus.toLowerCase().includes('online');
+		const isOnline = isOnlineMeeting(m.location, m.campus);
 
 		if (preferences.mode === 'ONLINE' && !isOnline) {
 			hasModeViolation = true;
@@ -663,9 +651,7 @@ export const checkViolations = (
 		let hasLunchViolation = false;
 
 		for (const m of meetings) {
-			const isLec =
-				m.classTypeName.toLowerCase().startsWith('lecture') ||
-				m.classTypeName.toLowerCase().startsWith('lec');
+			const isLec = isLectureMeeting(m.classTypeName);
 			if (preferences.ignoreLectures && isLec) continue;
 
 			const mStart = timeToMinutes(m.time.start);

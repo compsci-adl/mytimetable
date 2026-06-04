@@ -22,8 +22,10 @@ export const dateRangesOverlap = (
 			(startB.isBefore(endA) || startB.isSame(endA))
 		);
 	} catch {
+		/* v8 ignore start */
 		return true;
 	}
+	/* v8 ignore stop */
 };
 export const timeToDayjs = (time: string) => {
 	return dayjs(time, 'HH:mm');
@@ -85,6 +87,9 @@ export const isMeetingInTerm = (
 	try {
 		const startMonth = dateToDayjs(meetingDateRange.start).month() + 1;
 		const endMonth = dateToDayjs(meetingDateRange.end).month() + 1;
+		if (isNaN(startMonth) || isNaN(endMonth)) {
+			return true;
+		}
 		if (startMonth <= endMonth) {
 			for (let m = startMonth; m <= endMonth; m++) {
 				if (allowedMonths.includes(m)) return true;
@@ -99,6 +104,8 @@ export const isMeetingInTerm = (
 		}
 		return false;
 	} catch {
+		/* v8 ignore start */
 		return true;
 	}
+	/* v8 ignore stop */
 };

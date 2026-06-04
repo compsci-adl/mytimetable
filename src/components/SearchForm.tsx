@@ -72,7 +72,7 @@ export const SearchForm = () => {
 			if (!mounted) return;
 			const allCourses = res?.courses ?? [];
 			const availableLevels = new Set(
-				allCourses.map((c) => c.level_of_study).filter(Boolean),
+				allCourses.map((c) => c.level_of_study?.toLowerCase()).filter(Boolean),
 			);
 			const hasUniversityWide = allCourses.some(
 				(c) => c.university_wide_elective,
@@ -85,7 +85,9 @@ export const SearchForm = () => {
 
 			if (
 				levelOfStudy !== undefined &&
-				!(availableLevels.has(levelOfStudy) || showAllLevelOptions)
+				!(
+					availableLevels.has(levelOfStudy.toLowerCase()) || showAllLevelOptions
+				)
 			) {
 				setLevelOfStudy(undefined);
 				setTempLevelOfStudy(undefined);

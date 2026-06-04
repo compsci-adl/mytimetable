@@ -663,8 +663,56 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 												}
 												onSelectionChange={(selectedClassNumber) => {
 													if (isEmpty) return;
+													let classNumber = '';
+													if (typeof selectedClassNumber === 'string') {
+														classNumber = selectedClassNumber;
+													} else if (selectedClassNumber instanceof Set) {
+														classNumber = [...selectedClassNumber][0] as string;
+													} else if (
+														selectedClassNumber &&
+														typeof selectedClassNumber === 'object'
+													) {
+														const arr = Array.from(
+															selectedClassNumber as Iterable<unknown>,
+														);
+														classNumber = arr[0] as string;
+													}
+
+													// On mobile devices, React Aria/NextUI can sometimes pass option indices
+													// (like "2") instead of collection keys (like "25026").
+													// Let's resolve the index back to the actual option value.
+													const classNumbersToShow = classesToShow.map(
+														(c) => c.number,
+													);
+													if (
+														classNumber &&
+														!classNumbersToShow.includes(classNumber)
+													) {
+														const selectEl =
+															(document.querySelector(
+																`select[aria-label*="${classType.type}"]`,
+															) as HTMLSelectElement) ||
+															(document.querySelector(
+																`select[name*="${classType.type}"]`,
+															) as HTMLSelectElement) ||
+															document.querySelectorAll('select')[2]; // Fallback to index 2 (Practical Select)
+														if (selectEl && selectEl.options) {
+															const idx = Number(classNumber);
+															if (
+																!isNaN(idx) &&
+																idx >= 0 &&
+																idx < selectEl.options.length
+															) {
+																const mappedVal = selectEl.options[idx].value;
+																if (mappedVal) {
+																	classNumber = mappedVal;
+																}
+															}
+														}
+													}
+
 													updateClass({
-														classNumber: [...selectedClassNumber][0] as string,
+														classNumber,
 														classTypeId: classType.id,
 													});
 												}}

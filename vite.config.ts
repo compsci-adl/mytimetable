@@ -50,6 +50,32 @@ export default defineConfig({
 	],
 	test: {
 		globals: true,
+		include: ['tests/unit/**/*.test.ts'],
 		env: { VITE_YEAR: '2024' },
+		coverage: {
+			provider: 'v8',
+			reporter: ['text', 'json', 'html'],
+			thresholds: {
+				lines: 100,
+				statements: 100,
+				functions: 100,
+				branches: 100,
+			},
+			exclude: [
+				'node_modules/**',
+				'dist/**',
+				'tests/unit/**',
+				'vite.config.ts',
+				'eslint.config.js',
+				'tailwind.config.js',
+				'src/mocks/**',
+				'src/main.tsx',
+				'src/vite-env.d.ts',
+				'src/components/**',
+				'src/locales/**',
+				'src/data/course-info.ts',
+				'**/*.json',
+			],
+		},
 	},
 });

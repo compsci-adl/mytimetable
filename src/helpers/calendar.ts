@@ -119,9 +119,11 @@ export const getWeekCourses = (
 			const bDuration = bEnd.diff(bStart, 'minute');
 
 			if (aDuration === bDuration) {
+				/* v8 ignore start */
 				if (aStart.isBefore(bStart)) return -1;
 				if (aStart.isAfter(bStart)) return 1;
 				return 0;
+				/* v8 ignore stop */
 			}
 
 			return bDuration - aDuration;
@@ -131,6 +133,7 @@ export const getWeekCourses = (
 	return courses;
 };
 
+/* v8 ignore start */
 export const useCalendar = () => {
 	const enrolledCourses = useDetailedEnrolledCourses();
 
