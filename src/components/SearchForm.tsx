@@ -127,7 +127,14 @@ export const SearchForm = () => {
 		return () => {
 			mounted = false;
 		};
-	}, [subject, selectedTerm, levelOfStudy, onlyUniversityWide, campuses]);
+	}, [
+		subject,
+		selectedTerm,
+		levelOfStudy,
+		onlyUniversityWide,
+		campuses,
+		setCampuses,
+	]);
 
 	return (
 		<div>

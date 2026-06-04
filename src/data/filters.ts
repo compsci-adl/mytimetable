@@ -21,6 +21,7 @@ export const useFilters = create<FiltersState>()(
 			}
 		} catch (e) {
 			/* v8 ignore start */
+			// eslint-disable-next-line no-console
 			console.error('Failed to read term from localStorage:', e);
 			/* v8 ignore stop */
 		}
@@ -33,6 +34,7 @@ export const useFilters = create<FiltersState>()(
 			}
 		} catch (e) {
 			/* v8 ignore start */
+			// eslint-disable-next-line no-console
 			console.error('Failed to read campuses from localStorage:', e);
 			/* v8 ignore stop */
 		}
@@ -48,6 +50,7 @@ export const useFilters = create<FiltersState>()(
 					localStorage.setItem(LocalStorageKey.Term, term);
 				} catch (e) {
 					/* v8 ignore start */
+					// eslint-disable-next-line no-console
 					console.error('Failed to save term to localStorage:', e);
 					/* v8 ignore stop */
 				}
@@ -67,6 +70,7 @@ export const useFilters = create<FiltersState>()(
 					}
 				} catch (e) {
 					/* v8 ignore start */
+					// eslint-disable-next-line no-console
 					console.error('Failed to save campuses to localStorage:', e);
 					/* v8 ignore stop */
 				}

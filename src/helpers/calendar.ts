@@ -206,15 +206,15 @@ export const useOtherWeekCourseTimes = ({
 	classTypeId: string;
 	currentWeek: dayjs.Dayjs;
 }) => {
+	const selectedTermAlias = useFilters((s) => s.term);
+	const selectedCampuses = useFilters((s) => s.campuses);
+
 	const classes = useGetCourseClasses(courseId, classTypeId);
 	const currentClassNumber = useEnrolledCourseClassNumber(
 		courseId,
 		classTypeId,
 	);
 	if (!classes) return [];
-
-	const selectedTermAlias = useFilters((s) => s.term);
-	const selectedCampuses = useFilters((s) => s.campuses);
 
 	const times: OtherWeekCoursesTimes = [[], [], [], [], []];
 	classes.forEach((cls) => {

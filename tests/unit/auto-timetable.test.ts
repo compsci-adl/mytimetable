@@ -1,4 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 import { useFilters } from '../../src/data/filters';
 import {
@@ -14,6 +15,34 @@ import {
 	type Assignment,
 } from '../../src/helpers/auto-timetable';
 import type { Course } from '../../src/types/course';
+
+vi.hoisted(() => {
+	const localStorageStoreGlobal: Record<string, string> = {};
+	const localStorageMockGlobal = {
+		getItem: (key: string) => localStorageStoreGlobal[key] || null,
+		setItem: (key: string, value: string) => {
+			localStorageStoreGlobal[key] = String(value);
+		},
+		removeItem: (key: string) => {
+			delete localStorageStoreGlobal[key];
+		},
+		clear: () => {
+			Object.keys(localStorageStoreGlobal).forEach((key) => {
+				delete localStorageStoreGlobal[key];
+			});
+		},
+	};
+	Object.defineProperty(globalThis, 'localStorage', {
+		value: localStorageMockGlobal,
+		writable: true,
+	});
+	if (typeof window !== 'undefined') {
+		Object.defineProperty(window, 'localStorage', {
+			value: localStorageMockGlobal,
+			writable: true,
+		});
+	}
+});
 
 // ---------------------------------------------------------------------------
 // Shared helpers
@@ -435,6 +464,12 @@ describe('coursesToVariables', () => {
 			value: localStorageMock,
 			writable: true,
 		});
+		if (typeof window !== 'undefined') {
+			Object.defineProperty(window, 'localStorage', {
+				value: localStorageMock,
+				writable: true,
+			});
+		}
 		localStorageMock.setItem('MTT.term', 'sem2'); // months [7..12]
 		localStorageMock.removeItem('MTT.campuses');
 		useFilters.setState({ term: 'sem2', campuses: undefined });

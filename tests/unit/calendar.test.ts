@@ -1,9 +1,39 @@
+import { vi } from 'vitest';
+
 import { getStartEndWeek, getWeekCourses } from '../../src/helpers/calendar';
 import dayjs from '../../src/lib/dayjs';
 import type {
 	DetailedEnrolledCourse,
 	WeekCourses,
 } from '../../src/types/course';
+
+vi.hoisted(() => {
+	const localStorageStore: Record<string, string> = {};
+	const localStorageMock = {
+		getItem: (key: string) => localStorageStore[key] || null,
+		setItem: (key: string, value: string) => {
+			localStorageStore[key] = String(value);
+		},
+		removeItem: (key: string) => {
+			delete localStorageStore[key];
+		},
+		clear: () => {
+			Object.keys(localStorageStore).forEach((key) => {
+				delete localStorageStore[key];
+			});
+		},
+	};
+	Object.defineProperty(globalThis, 'localStorage', {
+		value: localStorageMock,
+		writable: true,
+	});
+	if (typeof window !== 'undefined') {
+		Object.defineProperty(window, 'localStorage', {
+			value: localStorageMock,
+			writable: true,
+		});
+	}
+});
 
 describe('getStartEndWeek', () => {
 	it('should return the first date (Monday) of the start and end week', () => {
