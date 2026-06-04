@@ -435,6 +435,7 @@ describe('coursesToVariables', () => {
 			writable: true,
 		});
 		localStorageMock.setItem('MTT.term', 'sem2'); // months [7..12]
+		localStorageMock.removeItem('MTT.campuses');
 	});
 
 	const makeCourse = (classesForTerm: boolean) =>
@@ -503,6 +504,27 @@ describe('coursesToVariables', () => {
 		localStorageMock.removeItem('MTT.term');
 		const result = coursesToVariables([makeCourse(false)]);
 		// sem1 = [2..7], course has Mar-May so it qualifies
+		expect(result.length).toBe(1);
+	});
+
+	it('should filter by selected campuses when specified in localStorage', () => {
+		localStorageMock.setItem('MTT.campuses', JSON.stringify(['North Terrace']));
+		const result = coursesToVariables([makeCourse(true)]);
+		expect(result.length).toBe(1);
+	});
+
+	it('should exclude classes that do not match the selected campuses', () => {
+		localStorageMock.setItem(
+			'MTT.campuses',
+			JSON.stringify(['Roseworthy Campus']),
+		);
+		const result = coursesToVariables([makeCourse(true)]);
+		expect(result.length).toBe(0);
+	});
+
+	it('should handle empty campus list in localStorage as no filter', () => {
+		localStorageMock.setItem('MTT.campuses', JSON.stringify([]));
+		const result = coursesToVariables([makeCourse(true)]);
 		expect(result.length).toBe(1);
 	});
 });

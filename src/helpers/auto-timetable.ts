@@ -414,12 +414,29 @@ export const solveAutoTimetable = (
 export const coursesToVariables = (courses: Course[]): Variable[] => {
 	const selectedTermAlias =
 		localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
+	const storedCampuses = localStorage.getItem(LocalStorageKey.Campuses);
+	let selectedCampuses: string[] | undefined = undefined;
+	try {
+		selectedCampuses =
+			storedCampuses && storedCampuses !== 'undefined'
+				? JSON.parse(storedCampuses)
+				: undefined;
+	} catch (e) {
+		/* v8 ignore start */
+		console.error('Failed to parse campuses in coursesToVariables:', e);
+		/* v8 ignore stop */
+	}
+
 	const variables: Variable[] = [];
 	for (const course of courses) {
 		for (const ct of course.class_list) {
 			const classesInTerm = ct.classes.filter((classInfo) =>
-				classInfo.meetings.some((m) =>
-					isMeetingInTerm(m.date, selectedTermAlias),
+				classInfo.meetings.some(
+					(m) =>
+						isMeetingInTerm(m.date, selectedTermAlias) &&
+						(!selectedCampuses ||
+							selectedCampuses.length === 0 ||
+							selectedCampuses.includes(m.campus)),
 				),
 			);
 			if (classesInTerm.length === 0) continue;

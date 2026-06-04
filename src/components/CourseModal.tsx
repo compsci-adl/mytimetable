@@ -572,9 +572,29 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 								return courseInfo.class_list.map((classType) => {
 									const selectedTermAlias =
 										localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
+									const storedCampuses = localStorage.getItem(
+										LocalStorageKey.Campuses,
+									);
+									let selectedCampuses: string[] | undefined = undefined;
+									try {
+										selectedCampuses =
+											storedCampuses && storedCampuses !== 'undefined'
+												? JSON.parse(storedCampuses)
+												: undefined;
+									} catch (e) {
+										console.error(
+											'Failed to parse campuses in CourseModal:',
+											e,
+										);
+									}
+
 									const classesToShow = classType.classes.filter((classInfo) =>
-										classInfo.meetings.some((m) =>
-											isMeetingInTerm(m.date, selectedTermAlias),
+										classInfo.meetings.some(
+											(m) =>
+												isMeetingInTerm(m.date, selectedTermAlias) &&
+												(!selectedCampuses ||
+													selectedCampuses.length === 0 ||
+													selectedCampuses.includes(m.campus)),
 										),
 									);
 									const isEmpty = classesToShow.length === 0;

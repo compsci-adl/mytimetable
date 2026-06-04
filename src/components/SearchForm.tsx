@@ -25,7 +25,18 @@ export const SearchForm = () => {
 	const [levelOfStudy, setLevelOfStudy] = useState<string | undefined>(
 		undefined,
 	);
-	const [campuses, setCampuses] = useState<string[] | undefined>(undefined);
+	const [campuses, setCampuses] = useState<string[] | undefined>(() => {
+		const stored = localStorage.getItem(LocalStorageKey.Campuses);
+		try {
+			return stored && stored !== 'undefined' ? JSON.parse(stored) : undefined;
+		} catch (e) {
+			console.error(
+				'Failed to parse campuses in SearchForm initialization:',
+				e,
+			);
+			return undefined;
+		}
+	});
 	const [isMobile, setIsMobile] = useState(false);
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [tempLevelOfStudy, setTempLevelOfStudy] = useState<string | undefined>(
@@ -35,7 +46,7 @@ export const SearchForm = () => {
 		boolean | undefined
 	>(undefined);
 	const [tempCampuses, setTempCampuses] = useState<string[] | undefined>(
-		undefined,
+		campuses,
 	);
 
 	useEffect(() => {
@@ -47,14 +58,24 @@ export const SearchForm = () => {
 		return () => window.removeEventListener('resize', updateIsMobile);
 	}, []);
 
+	useEffect(() => {
+		if (campuses === undefined) {
+			localStorage.removeItem(LocalStorageKey.Campuses);
+		} else {
+			localStorage.setItem(LocalStorageKey.Campuses, JSON.stringify(campuses));
+		}
+	}, [campuses]);
+
 	const handleDrawerChange = (open: boolean) => {
 		setIsDrawerOpen(open);
 		if (open) {
 			setTempLevelOfStudy(levelOfStudy);
 			setTempOnlyUniversityWide(onlyUniversityWide);
+			setTempCampuses(campuses);
 		} else {
 			setTempLevelOfStudy(levelOfStudy);
 			setTempOnlyUniversityWide(onlyUniversityWide);
+			setTempCampuses(campuses);
 		}
 	};
 
