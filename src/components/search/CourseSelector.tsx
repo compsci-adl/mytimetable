@@ -35,7 +35,7 @@ export const CourseSelector = ({
 				term: selectedTerm,
 				subject: subject!,
 				university_wide_elective: onlyUniversityWide,
-				level_of_study: levelOfStudy,
+				level_of_study: levelOfStudy?.toLowerCase(),
 			},
 		] as const,
 		queryFn: ({ queryKey }) => getCourses(queryKey[1]),

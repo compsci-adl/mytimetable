@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import { getCourses } from '../apis';
-import { LocalStorageKey } from '../constants/local-storage-keys';
 import { YEAR } from '../constants/year';
 import { useEnrolledCourses } from '../data/enrolled-courses';
+import { useFilters } from '../data/filters';
 import { CourseSelector } from './search/CourseSelector';
 import { DesktopFilters } from './search/DesktopFilters';
 import { MobileFilters } from './search/MobileFilters';
@@ -13,9 +13,11 @@ import { TermSelector } from './search/TermSelector';
 export const SearchForm = () => {
 	const enrolledCourses = useEnrolledCourses();
 
-	const [selectedTerm, setSelectedTerm] = useState(
-		localStorage.getItem(LocalStorageKey.Term) ?? 'sem1',
-	);
+	const selectedTerm = useFilters((s) => s.term);
+	const setSelectedTerm = useFilters((s) => s.setTerm);
+	const campuses = useFilters((s) => s.campuses);
+	const setCampuses = useFilters((s) => s.setCampuses);
+
 	const isTermSelectDisabled = enrolledCourses.courses.length > 0;
 
 	const [subject, setSubject] = useState<string | null>(null);
@@ -25,7 +27,7 @@ export const SearchForm = () => {
 	const [levelOfStudy, setLevelOfStudy] = useState<string | undefined>(
 		undefined,
 	);
-	const [campuses, setCampuses] = useState<string[] | undefined>(undefined);
+
 	const [isMobile, setIsMobile] = useState(false);
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [tempLevelOfStudy, setTempLevelOfStudy] = useState<string | undefined>(
@@ -35,7 +37,7 @@ export const SearchForm = () => {
 		boolean | undefined
 	>(undefined);
 	const [tempCampuses, setTempCampuses] = useState<string[] | undefined>(
-		undefined,
+		campuses,
 	);
 
 	useEffect(() => {
@@ -52,9 +54,11 @@ export const SearchForm = () => {
 		if (open) {
 			setTempLevelOfStudy(levelOfStudy);
 			setTempOnlyUniversityWide(onlyUniversityWide);
+			setTempCampuses(campuses);
 		} else {
 			setTempLevelOfStudy(levelOfStudy);
 			setTempOnlyUniversityWide(onlyUniversityWide);
+			setTempCampuses(campuses);
 		}
 	};
 
@@ -72,7 +76,7 @@ export const SearchForm = () => {
 			if (!mounted) return;
 			const allCourses = res?.courses ?? [];
 			const availableLevels = new Set(
-				allCourses.map((c) => c.level_of_study).filter(Boolean),
+				allCourses.map((c) => c.level_of_study?.toLowerCase()).filter(Boolean),
 			);
 			const hasUniversityWide = allCourses.some(
 				(c) => c.university_wide_elective,
@@ -85,7 +89,9 @@ export const SearchForm = () => {
 
 			if (
 				levelOfStudy !== undefined &&
-				!(availableLevels.has(levelOfStudy) || showAllLevelOptions)
+				!(
+					availableLevels.has(levelOfStudy.toLowerCase()) || showAllLevelOptions
+				)
 			) {
 				setLevelOfStudy(undefined);
 				setTempLevelOfStudy(undefined);
@@ -121,7 +127,14 @@ export const SearchForm = () => {
 		return () => {
 			mounted = false;
 		};
-	}, [subject, selectedTerm, levelOfStudy, onlyUniversityWide, campuses]);
+	}, [
+		subject,
+		selectedTerm,
+		levelOfStudy,
+		onlyUniversityWide,
+		campuses,
+		setCampuses,
+	]);
 
 	return (
 		<div>

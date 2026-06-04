@@ -3,4 +3,5 @@ export const enum LocalStorageKey {
 	EnrolledCourses = 'MTT.enrolled-courses',
 	FirstTime = 'MTT.first-time',
 	CalendarHeight = 'MTT.calendar-height',
+	Campuses = 'MTT.campuses',
 }

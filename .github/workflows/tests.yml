@@ -1,4 +1,4 @@
-name: Unit tests
+name: Tests
 permissions:
   contents: read
 on:
@@ -6,7 +6,8 @@ on:
 env:
   PNPM_VERSION: 11
 jobs:
-  build:
+  unit-tests:
+    name: Unit tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,5 +24,28 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
-      - name: Run tests
-        run: pnpm run test
+      - name: Run unit tests
+        run: pnpm run test:coverage
+
+  e2e-tests:
+    name: E2E Integration tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24]
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Install Playwright Browsers & OS Deps
+        run: pnpm exec playwright install --with-deps
+      - name: Run Playwright tests
+        run: pnpm run test:e2e

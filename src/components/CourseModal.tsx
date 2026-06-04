@@ -19,12 +19,12 @@ import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
 import { Fragment } from 'react/jsx-runtime';
 
-import { LocalStorageKey } from '../constants/local-storage-keys';
 import { useGetCourseInfo } from '../data/course-info';
 import {
 	useEnrolledCourse,
 	useDetailedEnrolledCourses,
 } from '../data/enrolled-courses';
+import { useFilters } from '../data/filters';
 import { findConflicts } from '../helpers/conflicts';
 import type { ConflictDetail } from '../helpers/conflicts';
 import type dayjs from '../lib/dayjs';
@@ -243,6 +243,8 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 	const { t } = useTranslation();
 	const { course, updateClass } = useEnrolledCourse(id);
 	const detailed = useDetailedEnrolledCourses();
+	const selectedTermAlias = useFilters((s) => s.term);
+	const selectedCampuses = useFilters((s) => s.campuses);
 	const { conflictsByClassKey } = findConflicts(detailed);
 	const getSelectedClassNumber = (classTypeId: string) => {
 		const selectedClass = course?.classes.find((c) => c.id === classTypeId);
@@ -570,11 +572,15 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 									);
 								}
 								return courseInfo.class_list.map((classType) => {
-									const selectedTermAlias =
-										localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
+									// Using selectedTermAlias and selectedCampuses from component closure
+
 									const classesToShow = classType.classes.filter((classInfo) =>
-										classInfo.meetings.some((m) =>
-											isMeetingInTerm(m.date, selectedTermAlias),
+										classInfo.meetings.some(
+											(m) =>
+												isMeetingInTerm(m.date, selectedTermAlias) &&
+												(!selectedCampuses ||
+													selectedCampuses.length === 0 ||
+													selectedCampuses.includes(m.campus)),
 										),
 									);
 									const isEmpty = classesToShow.length === 0;
@@ -663,8 +669,56 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 												}
 												onSelectionChange={(selectedClassNumber) => {
 													if (isEmpty) return;
+													let classNumber = '';
+													if (typeof selectedClassNumber === 'string') {
+														classNumber = selectedClassNumber;
+													} else if (selectedClassNumber instanceof Set) {
+														classNumber = [...selectedClassNumber][0] as string;
+													} else if (
+														selectedClassNumber &&
+														typeof selectedClassNumber === 'object'
+													) {
+														const arr = Array.from(
+															selectedClassNumber as Iterable<unknown>,
+														);
+														classNumber = arr[0] as string;
+													}
+
+													// On mobile devices, React Aria/NextUI can sometimes pass option indices
+													// (like "2") instead of collection keys (like "25026").
+													// Let's resolve the index back to the actual option value.
+													const classNumbersToShow = classesToShow.map(
+														(c) => c.number,
+													);
+													if (
+														classNumber &&
+														!classNumbersToShow.includes(classNumber)
+													) {
+														const selectEl =
+															(document.querySelector(
+																`select[aria-label*="${classType.type}"]`,
+															) as HTMLSelectElement) ||
+															(document.querySelector(
+																`select[name*="${classType.type}"]`,
+															) as HTMLSelectElement) ||
+															document.querySelectorAll('select')[2]; // Fallback to index 2 (Practical Select)
+														if (selectEl && selectEl.options) {
+															const idx = Number(classNumber);
+															if (
+																!isNaN(idx) &&
+																idx >= 0 &&
+																idx < selectEl.options.length
+															) {
+																const mappedVal = selectEl.options[idx].value;
+																if (mappedVal) {
+																	classNumber = mappedVal;
+																}
+															}
+														}
+													}
+
 													updateClass({
-														classNumber: [...selectedClassNumber][0] as string,
+														classNumber,
 														classTypeId: classType.id,
 													});
 												}}

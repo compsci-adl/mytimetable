@@ -68,7 +68,7 @@ export const FilterSection = ({
 
 	const allCourses = allCoursesQuery.data?.courses || [];
 	const availableLevels = new Set(
-		allCourses.map((c) => c.level_of_study).filter(Boolean),
+		allCourses.map((c) => c.level_of_study?.toLowerCase()).filter(Boolean),
 	);
 	const hasUniversityWide = allCourses.some((c) => c.university_wide_elective);
 
@@ -117,7 +117,7 @@ export const FilterSection = ({
 		'Research',
 	];
 	const canShowLevel = (level: string) =>
-		availableLevels.has(level) ||
+		availableLevels.has(level.toLowerCase()) ||
 		allCoursesQuery.isPending ||
 		showAllLevelOptions ||
 		subject === null;

@@ -25,5 +25,5 @@
 
 		"types": ["vitest/globals", "umami"]
 	},
-	"include": ["src", "__tests__"]
+	"include": ["src", "tests/unit"]
 }

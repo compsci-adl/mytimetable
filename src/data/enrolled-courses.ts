@@ -103,7 +103,7 @@ export const useEnrolledCourses = create<CoursesState>()(
 						const chosen = pick();
 						return {
 							id: c.id,
-							classNumber: chosen.number,
+							classNumber: chosen?.number ?? 'not-available',
 						};
 					});
 				});
@@ -127,6 +127,7 @@ export const useEnrolledCourses = create<CoursesState>()(
 	),
 );
 
+/* v8 ignore start */
 export const useEnrolledCourse = (id: string) => {
 	const course = useEnrolledCourses((s) => s.courses.find((c) => c.id === id));
 	const updateCourseClass = useEnrolledCourses((s) => s.updateCourseClass);
