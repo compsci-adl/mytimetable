@@ -19,12 +19,12 @@ import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
 import { Fragment } from 'react/jsx-runtime';
 
-import { LocalStorageKey } from '../constants/local-storage-keys';
 import { useGetCourseInfo } from '../data/course-info';
 import {
 	useEnrolledCourse,
 	useDetailedEnrolledCourses,
 } from '../data/enrolled-courses';
+import { useFilters } from '../data/filters';
 import { findConflicts } from '../helpers/conflicts';
 import type { ConflictDetail } from '../helpers/conflicts';
 import type dayjs from '../lib/dayjs';
@@ -243,6 +243,8 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 	const { t } = useTranslation();
 	const { course, updateClass } = useEnrolledCourse(id);
 	const detailed = useDetailedEnrolledCourses();
+	const selectedTermAlias = useFilters((s) => s.term);
+	const selectedCampuses = useFilters((s) => s.campuses);
 	const { conflictsByClassKey } = findConflicts(detailed);
 	const getSelectedClassNumber = (classTypeId: string) => {
 		const selectedClass = course?.classes.find((c) => c.id === classTypeId);
@@ -570,23 +572,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 									);
 								}
 								return courseInfo.class_list.map((classType) => {
-									const selectedTermAlias =
-										localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
-									const storedCampuses = localStorage.getItem(
-										LocalStorageKey.Campuses,
-									);
-									let selectedCampuses: string[] | undefined = undefined;
-									try {
-										selectedCampuses =
-											storedCampuses && storedCampuses !== 'undefined'
-												? JSON.parse(storedCampuses)
-												: undefined;
-									} catch (e) {
-										console.error(
-											'Failed to parse campuses in CourseModal:',
-											e,
-										);
-									}
+									// Using selectedTermAlias and selectedCampuses from component closure
 
 									const classesToShow = classType.classes.filter((classInfo) =>
 										classInfo.meetings.some(

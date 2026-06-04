@@ -1,4 +1,4 @@
-import { LocalStorageKey } from '../constants/local-storage-keys';
+import { useFilters } from '../data/filters';
 import type { Course, Meetings } from '../types/course';
 import { dateRangesOverlap, isMeetingInTerm } from '../utils/date';
 
@@ -47,7 +47,12 @@ export const timeRangesOverlap = (
 
 export const isLectureMeeting = (classTypeName?: string): boolean => {
 	const name = (classTypeName || '').toLowerCase();
-	return name.startsWith('lecture') || name.startsWith('lec');
+	return (
+		name.startsWith('lecture') ||
+		name.startsWith('lec') ||
+		name.startsWith('seminar') ||
+		name.startsWith('sem')
+	);
 };
 
 export const isOnlineMeeting = (
@@ -193,8 +198,18 @@ const evaluateAssignment = (
 		);
 
 		for (let idx = 0; idx < dayMeetings.length - 1; idx++) {
-			const endCurrent = timeToMinutes(dayMeetings[idx].time.end);
-			const startNext = timeToMinutes(dayMeetings[idx + 1].time.start);
+			const m1 = dayMeetings[idx];
+			let m2 = null;
+			for (let j = idx + 1; j < dayMeetings.length; j++) {
+				if (dateRangesOverlap(m1.date, dayMeetings[j].date)) {
+					m2 = dayMeetings[j];
+					break;
+				}
+			}
+			if (!m2) continue;
+
+			const endCurrent = timeToMinutes(m1.time.end);
+			const startNext = timeToMinutes(m2.time.start);
 			const breakDuration = startNext - endCurrent;
 
 			if (breakDuration > preferredBreakMinutes) {
@@ -412,20 +427,8 @@ export const solveAutoTimetable = (
 };
 
 export const coursesToVariables = (courses: Course[]): Variable[] => {
-	const selectedTermAlias =
-		localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
-	const storedCampuses = localStorage.getItem(LocalStorageKey.Campuses);
-	let selectedCampuses: string[] | undefined = undefined;
-	try {
-		selectedCampuses =
-			storedCampuses && storedCampuses !== 'undefined'
-				? JSON.parse(storedCampuses)
-				: undefined;
-	} catch (e) {
-		/* v8 ignore start */
-		console.error('Failed to parse campuses in coursesToVariables:', e);
-		/* v8 ignore stop */
-	}
+	const selectedTermAlias = useFilters.getState().term;
+	const selectedCampuses = useFilters.getState().campuses;
 
 	const variables: Variable[] = [];
 	for (const course of courses) {

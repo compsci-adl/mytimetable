@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import { getCourses } from '../apis';
-import { LocalStorageKey } from '../constants/local-storage-keys';
 import { YEAR } from '../constants/year';
 import { useEnrolledCourses } from '../data/enrolled-courses';
+import { useFilters } from '../data/filters';
 import { CourseSelector } from './search/CourseSelector';
 import { DesktopFilters } from './search/DesktopFilters';
 import { MobileFilters } from './search/MobileFilters';
@@ -13,9 +13,11 @@ import { TermSelector } from './search/TermSelector';
 export const SearchForm = () => {
 	const enrolledCourses = useEnrolledCourses();
 
-	const [selectedTerm, setSelectedTerm] = useState(
-		localStorage.getItem(LocalStorageKey.Term) ?? 'sem1',
-	);
+	const selectedTerm = useFilters((s) => s.term);
+	const setSelectedTerm = useFilters((s) => s.setTerm);
+	const campuses = useFilters((s) => s.campuses);
+	const setCampuses = useFilters((s) => s.setCampuses);
+
 	const isTermSelectDisabled = enrolledCourses.courses.length > 0;
 
 	const [subject, setSubject] = useState<string | null>(null);
@@ -25,18 +27,7 @@ export const SearchForm = () => {
 	const [levelOfStudy, setLevelOfStudy] = useState<string | undefined>(
 		undefined,
 	);
-	const [campuses, setCampuses] = useState<string[] | undefined>(() => {
-		const stored = localStorage.getItem(LocalStorageKey.Campuses);
-		try {
-			return stored && stored !== 'undefined' ? JSON.parse(stored) : undefined;
-		} catch (e) {
-			console.error(
-				'Failed to parse campuses in SearchForm initialization:',
-				e,
-			);
-			return undefined;
-		}
-	});
+
 	const [isMobile, setIsMobile] = useState(false);
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [tempLevelOfStudy, setTempLevelOfStudy] = useState<string | undefined>(
@@ -57,14 +48,6 @@ export const SearchForm = () => {
 		window.addEventListener('resize', updateIsMobile);
 		return () => window.removeEventListener('resize', updateIsMobile);
 	}, []);
-
-	useEffect(() => {
-		if (campuses === undefined) {
-			localStorage.removeItem(LocalStorageKey.Campuses);
-		} else {
-			localStorage.setItem(LocalStorageKey.Campuses, JSON.stringify(campuses));
-		}
-	}, [campuses]);
 
 	const handleDrawerChange = (open: boolean) => {
 		setIsDrawerOpen(open);

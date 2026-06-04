@@ -6,6 +6,7 @@ import {
 	useDetailedEnrolledCourses,
 	useEnrolledCourseClassNumber,
 } from '../data/enrolled-courses';
+import { useFilters } from '../data/filters';
 import dayjs from '../lib/dayjs';
 import type {
 	DateTimeRange,
@@ -15,7 +16,12 @@ import type {
 	WeekCourse,
 	WeekCourses,
 } from '../types/course';
-import { dateToDayjs, getMonday, timeToDayjs } from '../utils/date';
+import {
+	isMeetingInTerm,
+	dateToDayjs,
+	getMonday,
+	timeToDayjs,
+} from '../utils/date';
 
 const MAX_DATE = dayjs('2900-12-12');
 const MIN_DATE = dayjs('1900-01-01');
@@ -206,12 +212,38 @@ export const useOtherWeekCourseTimes = ({
 		classTypeId,
 	);
 	if (!classes) return [];
+
+	const selectedTermAlias = useFilters((s) => s.term);
+	const selectedCampuses = useFilters((s) => s.campuses);
+
 	const times: OtherWeekCoursesTimes = [[], [], [], [], []];
 	classes.forEach((cls) => {
+		// Verify if the class option runs in the selected term on the selected campuses
+		const hasValidMeeting = cls.meetings.some(
+			(m) =>
+				isMeetingInTerm(m.date, selectedTermAlias) &&
+				(!selectedCampuses ||
+					selectedCampuses.length === 0 ||
+					selectedCampuses.includes(m.campus)),
+		);
+		if (!hasValidMeeting) return;
+
 		cls.meetings.forEach((m) => {
 			if (cls.number === currentClassNumber) return;
+
+			// Ensure this specific meeting matches the term, week, and campus
+			if (!isMeetingInTerm(m.date, selectedTermAlias)) return;
+			if (
+				selectedCampuses &&
+				selectedCampuses.length > 0 &&
+				!selectedCampuses.includes(m.campus)
+			) {
+				return;
+			}
+
 			const isMeetingInWeek = checkDateRangeInWeek(currentWeek, m.date);
 			if (!isMeetingInWeek) return;
+
 			const time = times[WEEK_DAYS.indexOf(m.day)];
 			const existingTime = time.find(
 				(t) => t.time.start === m.time.start && t.time.end === m.time.end,

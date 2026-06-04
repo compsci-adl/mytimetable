@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+import { useFilters } from '../../src/data/filters';
 import {
 	timeToMinutes,
 	timeRangesOverlap,
@@ -436,6 +437,7 @@ describe('coursesToVariables', () => {
 		});
 		localStorageMock.setItem('MTT.term', 'sem2'); // months [7..12]
 		localStorageMock.removeItem('MTT.campuses');
+		useFilters.setState({ term: 'sem2', campuses: undefined });
 	});
 
 	const makeCourse = (classesForTerm: boolean) =>
@@ -502,6 +504,7 @@ describe('coursesToVariables', () => {
 
 	it('should use sem1 as default if no term is set in localStorage', () => {
 		localStorageMock.removeItem('MTT.term');
+		useFilters.setState({ term: 'sem1' });
 		const result = coursesToVariables([makeCourse(false)]);
 		// sem1 = [2..7], course has Mar-May so it qualifies
 		expect(result.length).toBe(1);
@@ -509,6 +512,7 @@ describe('coursesToVariables', () => {
 
 	it('should filter by selected campuses when specified in localStorage', () => {
 		localStorageMock.setItem('MTT.campuses', JSON.stringify(['North Terrace']));
+		useFilters.setState({ campuses: ['North Terrace'] });
 		const result = coursesToVariables([makeCourse(true)]);
 		expect(result.length).toBe(1);
 	});
@@ -518,12 +522,14 @@ describe('coursesToVariables', () => {
 			'MTT.campuses',
 			JSON.stringify(['Roseworthy Campus']),
 		);
+		useFilters.setState({ campuses: ['Roseworthy Campus'] });
 		const result = coursesToVariables([makeCourse(true)]);
 		expect(result.length).toBe(0);
 	});
 
 	it('should handle empty campus list in localStorage as no filter', () => {
 		localStorageMock.setItem('MTT.campuses', JSON.stringify([]));
+		useFilters.setState({ campuses: [] });
 		const result = coursesToVariables([makeCourse(true)]);
 		expect(result.length).toBe(1);
 	});
@@ -775,6 +781,10 @@ describe('checkViolations utility', () => {
 			expect(isLectureMeeting('lec')).toBe(true);
 			expect(isLectureMeeting('Lec 2')).toBe(true);
 			expect(isLectureMeeting('lecture')).toBe(true);
+			expect(isLectureMeeting('Seminar')).toBe(true);
+			expect(isLectureMeeting('seminar')).toBe(true);
+			expect(isLectureMeeting('sem')).toBe(true);
+			expect(isLectureMeeting('Sem')).toBe(true);
 			expect(isLectureMeeting('Practical')).toBe(false);
 			expect(isLectureMeeting('Workshop')).toBe(false);
 			expect(isLectureMeeting('')).toBe(false);
@@ -941,6 +951,85 @@ describe('checkViolations utility', () => {
 		expect(violations).not.toContain(
 			'Contains class time conflicts (overlaps)',
 		);
+	});
+
+	it('should support same-day same-time but non-overlapping dates (alternating weeks)', () => {
+		const vars: Variable[] = [
+			makeVariable('type-1', 'Practical', [
+				{
+					number: '101',
+					available_seats: '5',
+					meetings: [
+						makeMeeting('Tuesday', '09:00', '10:00', {
+							date: { start: '03-01', end: '04-01' },
+						}),
+					],
+				},
+			]),
+			makeVariable('type-2', 'Practical', [
+				{
+					number: '201',
+					available_seats: '5',
+					meetings: [
+						makeMeeting('Tuesday', '09:00', '10:00', {
+							date: { start: '05-01', end: '06-01' },
+						}),
+					],
+				},
+			]),
+		];
+		const assignment = solveAutoTimetable(vars, makePrefs({}));
+		expect(assignment).toEqual({
+			'type-1': '101',
+			'type-2': '201',
+		});
+
+		const violations = checkViolations(assignment || {}, vars, makePrefs({}));
+		expect(violations).not.toContain(
+			'Contains class time conflicts (overlaps)',
+		);
+	});
+
+	it('should score same-day same-time alternating classes higher than different-day alternating classes', () => {
+		const vars: Variable[] = [
+			makeVariable('type-1', 'Practical', [
+				{
+					number: '101', // Tuesday 9:00 - 10:00, Weeks 1-6
+					available_seats: '5',
+					meetings: [
+						makeMeeting('Tuesday', '09:00', '10:00', {
+							date: { start: '03-01', end: '04-01' },
+						}),
+					],
+				},
+				{
+					number: '102', // Wednesday 9:00 - 10:00, Weeks 1-6
+					available_seats: '5',
+					meetings: [
+						makeMeeting('Wednesday', '09:00', '10:00', {
+							date: { start: '03-01', end: '04-01' },
+						}),
+					],
+				},
+			]),
+			makeVariable('type-2', 'Practical', [
+				{
+					number: '201', // Tuesday 9:00 - 10:00, Weeks 7-12
+					available_seats: '5',
+					meetings: [
+						makeMeeting('Tuesday', '09:00', '10:00', {
+							date: { start: '05-01', end: '06-01' },
+						}),
+					],
+				},
+			]),
+		];
+
+		const assignment = solveAutoTimetable(vars, makePrefs({}));
+		expect(assignment).toEqual({
+			'type-1': '101',
+			'type-2': '201',
+		});
 	});
 
 	it('should handle break duration exactly equal to preferred break', () => {
