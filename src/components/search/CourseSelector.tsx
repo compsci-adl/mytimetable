@@ -89,12 +89,39 @@ export const CourseSelector = ({
 		}
 	};
 
+	if (coursesQuery.isPending) {
+		return (
+			<form
+				className="mobile:flex-col flex grow items-center gap-2"
+				onSubmit={handleSubmit}
+			>
+				<Autocomplete
+					key="loading"
+					isDisabled
+					label={t('search.search-course')}
+					listboxProps={{ emptyContent: t('search.course-not-found') }}
+				>
+					{[]}
+				</Autocomplete>
+				<Button
+					color="primary"
+					type="submit"
+					isDisabled
+					className="mobile:w-full"
+				>
+					{t('search.add')}
+				</Button>
+			</form>
+		);
+	}
+
 	return (
 		<form
 			className="mobile:flex-col flex grow items-center gap-2"
 			onSubmit={handleSubmit}
 		>
 			<Autocomplete
+				key={`loaded-${selectedTerm}-${subject}-${courseList.length}`}
 				label={t('search.search-course')}
 				isDisabled={coursesQuery.isPending}
 				defaultItems={courseList}

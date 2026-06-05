@@ -6,3 +6,143 @@
 * {
 	font-family: 'Outfit Variable', sans-serif;
 }
+
+/* ─── CTA button pulse ────────────────────────────────── */
+@keyframes pulse-grow-shrink {
+	0%,
+	100% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.06);
+	}
+}
+.animate-grow-shrink {
+	animation: pulse-grow-shrink 2.2s ease-in-out infinite;
+}
+
+/* ─── Drag-and-drop timetable demo ───────────────────────
+   Column widths in the mini grid (px):
+     time-label: 36px
+     Mon col:    ~140px  (left: 36px)
+     Tue col:    ~140px  (left: 176px)   ← card starts here
+     Wed col:    ~140px  (left: 316px)
+
+   The card starts in Tue (left: 176px + 4px gap = ~180px).
+   It lifts and moves to Mon (left: ~40px).
+   translateX needed: 40 - 180 = -140px
+   ──────────────────────────────────────────────────────── */
+
+/* Floating / dragged card animation */
+@keyframes drag-event {
+	/* 0–12%: sitting still in Tue slot */
+	0%,
+	12% {
+		transform: translate(0, 0) scale(1);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+		opacity: 1;
+	}
+	/* 16–20%: lift off */
+	18% {
+		transform: translate(0, -8px) scale(1.04);
+		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+		opacity: 1;
+	}
+	/* 22–55%: glide across to Mon */
+	38%,
+	55% {
+		transform: translate(calc(-100% - 4px), -8px) scale(1.04);
+		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+		opacity: 1;
+	}
+	/* 60%: hover over Mon drop target */
+	60% {
+		transform: translate(calc(-100% - 4px), -4px) scale(1.02);
+		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+		opacity: 1;
+	}
+	/* 64–75%: drop into Mon */
+	66%,
+	78% {
+		transform: translate(calc(-100% - 4px), 0) scale(1);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+		opacity: 1;
+	}
+	/* 83–88%: lift back */
+	85% {
+		transform: translate(calc(-100% - 4px), -8px) scale(1.04);
+		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+		opacity: 1;
+	}
+	/* 90–100%: glide back to Tue */
+	92%,
+	100% {
+		transform: translate(0, 0) scale(1);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+		opacity: 1;
+	}
+}
+
+.animate-drag-card {
+	animation: drag-event 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Source card fading when its clone is being dragged */
+@keyframes source-fade {
+	0%,
+	12% {
+		opacity: 0.85;
+	}
+	18%,
+	78% {
+		opacity: 0.25;
+	}
+	85%,
+	100% {
+		opacity: 0.85;
+	}
+}
+.animate-source-card {
+	animation: source-fade 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Mon drop-target placeholder highlight (only visible when hovering/dropped) */
+@keyframes dropzone-mon {
+	/* Invisible when card is in Tue or back */
+	0%,
+	18% {
+		border-color: transparent;
+		background-color: transparent;
+		opacity: 0;
+	}
+	/* Fade in and show outline/fill as card arrives and is hovered/dropped */
+	22%,
+	80% {
+		border-color: rgba(29, 155, 246, 0.8);
+		background-color: rgba(201, 230, 254, 0.4);
+		opacity: 1;
+	}
+	/* Fade out as card returns */
+	85%,
+	100% {
+		border-color: transparent;
+		background-color: transparent;
+		opacity: 0;
+	}
+}
+.animate-dropzone-mon {
+	animation: dropzone-mon 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Wed drop-target placeholder (invisible since card never hovers it) */
+@keyframes dropzone-wed {
+	0%,
+	100% {
+		border-color: transparent;
+		background-color: transparent;
+		opacity: 0;
+	}
+}
+.animate-dropzone-wed {
+	animation: dropzone-wed 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}

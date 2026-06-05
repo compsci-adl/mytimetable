@@ -31,8 +31,24 @@ export const SubjectSelector = ({
 			return { key: s.code, code: s.code, name: `${s.code} - ${s.name}` };
 		}) ?? [];
 
+	if (subjectsQuery.isPending) {
+		return (
+			<Autocomplete
+				key="loading"
+				isDisabled
+				label={t('search.choose-subject')}
+				className="mobile:w-full w-96"
+				selectedKey={null}
+				listboxProps={{ emptyContent: t('search.subject-not-found') }}
+			>
+				{[]}
+			</Autocomplete>
+		);
+	}
+
 	return (
 		<Autocomplete
+			key={`loaded-${selectedTerm}-${subjectList.length}`}
 			defaultItems={subjectList}
 			label={t('search.choose-subject')}
 			className="mobile:w-full w-96"
