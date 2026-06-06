@@ -25,7 +25,7 @@ const HEADER_BUTTON_PROPS = {
 	className: 'text-xl',
 } as const;
 
-export const Header = () => {
+export const Header = ({ isSplash = false }: { isSplash?: boolean }) => {
 	const { t, i18n } = useTranslation();
 
 	const openHelpModal = useHelpModal((s) => s.open);
@@ -36,76 +36,90 @@ export const Header = () => {
 
 	return (
 		<Navbar
-			isBordered
+			isBordered={!isSplash}
+			isBlurred={!isSplash}
 			maxWidth="xl"
-			position="static"
+			position={isSplash ? 'sticky' : 'static'}
 			classNames={{ wrapper: 'px-4' }}
+			className={isSplash ? 'sticky top-0 z-50 bg-transparent' : ''}
+			style={
+				isSplash
+					? {
+							backgroundColor: 'transparent',
+							backdropFilter: 'none',
+							WebkitBackdropFilter: 'none',
+							boxShadow: 'none',
+						}
+					: {}
+			}
 		>
 			<NavbarBrand>
 				<img src="/favicon.svg" alt="Logo" className="mr-2 w-6" />
 				<h1 className="font-bold text-inherit">MyTimetable</h1>
 			</NavbarBrand>
-			<NavbarContent justify="end">
-				<NavbarItem>
-					<Tooltip content={t('header.help')} size="sm">
-						<Button {...HEADER_BUTTON_PROPS} onClick={openHelpModal}>
-							❓
-						</Button>
-					</Tooltip>
-				</NavbarItem>
-				<NavbarItem>
-					<Tooltip content={t('header.feedback')} size="sm">
-						<Button
-							{...HEADER_BUTTON_PROPS}
-							as={Link}
-							href={import.meta.env.VITE_FEEDBACK_FORM_URL}
-						>
-							🗣
-						</Button>
-					</Tooltip>
-				</NavbarItem>
-				<NavbarItem>
-					<Tooltip content={t('header.toggle-dark-mode')} size="sm">
-						<Button {...HEADER_BUTTON_PROPS} onClick={toggleIsDarkMode}>
-							{isDarkMode ? '🌚' : '🌞'}
-						</Button>
-					</Tooltip>
-				</NavbarItem>
-				<NavbarItem>
-					<Popover
-						isOpen={isChangeLanguageOpen}
-						onOpenChange={(open) => setIsChangeLanguageOpen(open)}
-					>
-						<Tooltip
-							content={t('header.change-language')}
-							size="sm"
-							isDisabled={isChangeLanguageOpen}
-						>
-							<div>
-								<PopoverTrigger>
-									<Button {...HEADER_BUTTON_PROPS}>🌐</Button>
-								</PopoverTrigger>
-							</div>
+			{!isSplash && (
+				<NavbarContent justify="end">
+					<NavbarItem>
+						<Tooltip content={t('header.help')} size="sm">
+							<Button {...HEADER_BUTTON_PROPS} onClick={openHelpModal}>
+								❓
+							</Button>
 						</Tooltip>
-						<PopoverContent>
-							{LANGUAGES.map((language) => (
-								<Button
-									key={language.code}
-									fullWidth
-									variant="light"
-									onClick={() => {
-										i18n.changeLanguage(language.code);
-										setIsChangeLanguageOpen(false);
-									}}
-								>
-									<span>{language.name} </span>
-									<span className="font-noto-emoji">{language.flag}</span>
-								</Button>
-							))}
-						</PopoverContent>
-					</Popover>
-				</NavbarItem>
-			</NavbarContent>
+					</NavbarItem>
+					<NavbarItem>
+						<Tooltip content={t('header.feedback')} size="sm">
+							<Button
+								{...HEADER_BUTTON_PROPS}
+								as={Link}
+								href={import.meta.env.VITE_FEEDBACK_FORM_URL}
+							>
+								🗣
+							</Button>
+						</Tooltip>
+					</NavbarItem>
+					<NavbarItem>
+						<Tooltip content={t('header.toggle-dark-mode')} size="sm">
+							<Button {...HEADER_BUTTON_PROPS} onClick={toggleIsDarkMode}>
+								{isDarkMode ? '🌚' : '🌞'}
+							</Button>
+						</Tooltip>
+					</NavbarItem>
+					<NavbarItem>
+						<Popover
+							isOpen={isChangeLanguageOpen}
+							onOpenChange={(open) => setIsChangeLanguageOpen(open)}
+						>
+							<Tooltip
+								content={t('header.change-language')}
+								size="sm"
+								isDisabled={isChangeLanguageOpen}
+							>
+								<div>
+									<PopoverTrigger>
+										<Button {...HEADER_BUTTON_PROPS}>🌐</Button>
+									</PopoverTrigger>
+								</div>
+							</Tooltip>
+							<PopoverContent>
+								{LANGUAGES.map((language) => (
+									<Button
+										key={language.code}
+										fullWidth
+										variant="light"
+										onClick={() => {
+											i18n.changeLanguage(language.code);
+											setIsChangeLanguageOpen(false);
+										}}
+									>
+										<span>{language.name} </span>
+										<span className="font-noto-emoji">{language.flag}</span>
+									</Button>
+								))}
+							</PopoverContent>
+						</Popover>
+					</NavbarItem>
+				</NavbarContent>
+			)}
 		</Navbar>
 	);
 };

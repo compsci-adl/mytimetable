@@ -17,6 +17,7 @@ import {
 	FaYoutube,
 } from 'react-icons/fa';
 
+import { useSplashScreen } from '../helpers/splash-screen';
 import { Tips } from './Tips';
 
 interface FooterModalProps {
@@ -70,6 +71,7 @@ const LINKS = [
 
 export const Footer = () => {
 	const [openModal, setOpenModal] = useState<string | null>(null);
+	const openSplash = useSplashScreen((s) => s.openSplash);
 
 	return (
 		<footer className="text-apple-gray-700 space-y-4">
@@ -90,7 +92,13 @@ export const Footer = () => {
 						<h3
 							key={i}
 							className="hover:text-primary cursor-pointer text-sm font-semibold tracking-wider uppercase transition-colors"
-							onClick={() => setOpenModal(section.title)}
+							onClick={() => {
+								if (section.title === 'About') {
+									openSplash();
+								} else {
+									setOpenModal(section.title);
+								}
+							}}
 						>
 							{section.title}
 						</h3>

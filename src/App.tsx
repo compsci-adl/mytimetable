@@ -4,13 +4,18 @@ import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { HelpModal } from './components/HelpModal';
 import { SearchForm } from './components/SearchForm';
+import { SplashScreen } from './components/SplashScreen';
 import { ZoomButtons } from './components/ZoomButtons';
 import { useCoursesInfo } from './data/course-info';
-import { useFirstTimeHelp } from './helpers/help-modal';
+import { useSplashScreen } from './helpers/splash-screen';
 
 export const App = () => {
 	useCoursesInfo();
-	useFirstTimeHelp();
+	const showSplash = useSplashScreen((s) => s.showSplash);
+
+	if (showSplash) {
+		return <SplashScreen />;
+	}
 
 	return (
 		<>
