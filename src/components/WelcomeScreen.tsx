@@ -167,7 +167,7 @@ export const WelcomeScreen = () => {
 						}}
 						className={`h-3 w-3 cursor-pointer rounded-full transition-all duration-300 ${
 							activeSection === sec.id
-								? 'bg-tiger shadow-tiger/45 scale-125 shadow-md'
+								? 'bg-tiger scale-125 shadow-md'
 								: 'bg-sage/50 hover:bg-sage hover:scale-110'
 						}`}
 						aria-label={`Scroll to ${sec.label} section`}
