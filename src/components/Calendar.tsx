@@ -118,7 +118,7 @@ const CourseCard = ({
 		<div
 			ref={ref}
 			className={clsx(
-				'@container h-full overflow-hidden rounded-2xl border-l-3 p-2 text-xs shadow-sm transition-all duration-200 @[min-width:75px]:p-2.5',
+				'@container h-full overflow-hidden rounded-2xl border-l-3 p-2 text-xs shadow-sm transition-all duration-200 @min-[75px]:p-2.5',
 				'relative',
 				color.border,
 				color.bg,
@@ -148,14 +148,14 @@ const CourseCard = ({
 					)}
 				</div>
 			</div>
-			<div className="absolute right-1 bottom-1 z-30 @[min-width:75px]:right-1.5 @[min-width:75px]:bottom-1.5">
+			<div className="absolute right-1 bottom-1 z-30 @min-[75px]:right-1.5 @min-[75px]:bottom-1.5">
 				<Tooltip delay={0}>
 					<Tooltip.Trigger>
 						<Button
 							isIconOnly
 							variant="tertiary"
 							size="sm"
-							className="flex h-5 w-5 items-center justify-center rounded-full bg-current/10 text-xs font-bold transition-colors hover:bg-current/20 @[min-width:75px]:h-6 @[min-width:75px]:w-6 @[min-width:75px]:text-sm"
+							className="flex h-5 w-5 items-center justify-center rounded-full bg-current/10 text-xs font-bold transition-colors hover:bg-current/20 @min-[75px]:h-6 @min-[75px]:w-6 @min-[75px]:text-sm"
 							style={{ color: textColor }}
 							onPointerDown={(e) => e.stopPropagation()}
 							onMouseDown={(e: MouseEvent<HTMLButtonElement>) => {
@@ -171,7 +171,7 @@ const CourseCard = ({
 					<Tooltip.Content>{t('calendar.open-class')}</Tooltip.Content>
 				</Tooltip>
 			</div>
-			<div className="text-2xs mt-0.5 pr-5 font-extrabold break-words @[min-width:70px]:text-xs @[min-width:75px]:pr-6 @[min-width:90px]:text-sm">
+			<div className="text-2xs mt-0.5 pr-5 font-extrabold break-words @min-[70px]:text-xs @min-[75px]:pr-6 @min-[90px]:text-sm">
 				{hasConflict && (
 					<Tooltip delay={0}>
 						<Tooltip.Trigger>
@@ -203,7 +203,7 @@ const CourseCard = ({
 				)}
 				{course.name.code} - {course.classType}{' '}
 			</div>
-			<div className="text-3xs @[min-width:75px]:text-2xs mt-0.5 pr-5 opacity-90 @[max-width:60px]:hidden @[min-width:75px]:pr-6">
+			<div className="text-3xs @min-[75px]:text-2xs mt-0.5 pr-5 opacity-90 @max-[60px]:hidden @min-[75px]:pr-6">
 				{course.location} | {course.campus}
 			</div>
 			<InvisiblePlaceholder />
