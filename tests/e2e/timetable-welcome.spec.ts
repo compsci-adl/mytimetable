@@ -16,7 +16,9 @@ test.describe('MyTimetable App Welcome Screen End-to-End Tests', () => {
 		});
 		await expect(mainHeading).toBeVisible();
 
-		const badge = page.locator('text=Made by Adelaide Uni CS Club');
+		const badge = page.locator(
+			'text=Made by the Adelaide University Computer Science Club',
+		);
 		await expect(badge).toBeVisible();
 
 		const startButton = page.getByRole('button', {

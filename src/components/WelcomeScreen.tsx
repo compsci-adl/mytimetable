@@ -197,7 +197,9 @@ export const WelcomeScreen = () => {
 								MyTimetable
 							</h1>
 							<div className="bg-primary/10 border-primary/20 text-primary inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold">
-								<span>Made by Adelaide Uni CS Club</span>
+								<span>
+									Made by the Adelaide University Computer Science Club
+								</span>
 							</div>
 						</div>
 
