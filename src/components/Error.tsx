@@ -1,4 +1,4 @@
-import { Code, Link } from '@heroui/react';
+import { Link } from '@heroui/react';
 import type { FallbackProps } from 'react-error-boundary';
 
 import { useMount } from '../utils/mount';
@@ -13,19 +13,26 @@ export const Error = ({ error }: FallbackProps) => {
 	});
 
 	return (
-		<div className="mx-2 flex h-dvh flex-col items-center justify-center gap-2">
-			<h1 className="text-4xl">Oops... Something went wrong!</h1>
-			<p>
+		<div className="mx-2 flex h-dvh flex-col items-center justify-center gap-2 text-center">
+			<h1 className="text-foreground text-4xl font-extrabold">
+				Oops... Something went wrong!
+			</h1>
+			<p className="text-default-500 max-w-md">
 				We're sorry, but we need to clear all saved data for this website
 				(including any locally stored courses and times).
 			</p>
-			<Code size="lg" className="max-w-full overflow-x-auto p-2">
-				<span className="font-bold">Error Message:</span> <br />
+			<code className="bg-content2 border-separator text-danger block max-w-md overflow-x-auto rounded-2xl border p-4 text-left font-mono text-xs font-semibold whitespace-pre-wrap">
+				<span className="text-foreground font-bold">Error Message:</span> <br />
 				{errorMessage}
-			</Code>
-			<p>
+			</code>
+			<p className="text-default-500 mt-2">
 				Before refreshing the page, would you like to{' '}
-				<Link isExternal href={prefilledFeedbackForm}>
+				<Link
+					target="_blank"
+					rel="noopener noreferrer"
+					href={prefilledFeedbackForm}
+					className="text-primary underline"
+				>
 					send us feedback
 				</Link>{' '}
 				along with the error message to help improve our app?

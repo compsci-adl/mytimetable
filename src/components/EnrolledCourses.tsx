@@ -1,14 +1,19 @@
-import { Chip, useDisclosure, Tooltip } from '@heroui/react';
+import { Tooltip, CloseButton } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
+import {
+	FaExclamationTriangle,
+	FaExternalLinkAlt,
+	FaSpinner,
+	FaTimes,
+} from 'react-icons/fa';
 
 import { getCourse } from '../apis';
 import { useGetCourseInfo } from '../data/course-info';
 import { useCourseColor, useEnrolledCourses } from '../data/enrolled-courses';
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import { findConflicts } from '../helpers/conflicts';
-import { AutoTimetable } from './AutoTimetable';
 import { CourseModal } from './CourseModal';
 
 type CourseChipProps = {
@@ -45,64 +50,68 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 	});
 
 	return (
-		<Chip
-			variant="dot"
-			onClose={() => {
-				removeCourse(id);
-			}}
+		<button
+			type="button"
+			className={clsx(
+				'border-tiger/25 bg-tiger/5 dark:border-tiger/35 dark:bg-tiger/10 text-foreground focus-visible:ring-tiger flex items-center gap-1.5 rounded-full border py-1 pr-1.5 pl-2.5 text-sm font-semibold shadow-sm transition-all duration-200 outline-none focus-visible:ring-2',
+				isFetching
+					? 'cursor-wait'
+					: 'hover:border-tiger/50 hover:bg-tiger/10 dark:hover:border-tiger/50 dark:hover:bg-tiger/20 cursor-pointer',
+			)}
 			onClick={() => {
-				if (isFetching || isError) return;
+				if (isError) return;
 				onOpenModal(id);
 			}}
-			classNames={{
-				base: clsx(
-					'border-primary text-primary',
-					isFetching ? 'cursor-wait' : 'cursor-pointer hover:brightness-125',
-				),
-				dot: color.dot,
-			}}
 		>
-			{isFetching && '⏳ '}
-			{isError && '❌ '}
-			{isEmpty && '⚠️ '}
+			<span className={clsx('h-2.5 w-2.5 shrink-0 rounded-full', color.dot)} />
+
+			{isFetching && <FaSpinner className="text-primary inline animate-spin" />}
+			{isError && <FaTimes className="text-danger inline" />}
+			{isEmpty && <FaExclamationTriangle className="text-warning inline" />}
+
 			{courseHasConflict[id] && (
-				<Tooltip
-					content="This course conflicts with another enrolled course"
-					size="sm"
-				>
-					<span aria-hidden className="mr-1">
-						⚠️
-					</span>
+				<Tooltip delay={0}>
+					<Tooltip.Trigger>
+						<span aria-hidden className="text-warning mr-1 flex items-center">
+							<FaExclamationTriangle />
+						</span>
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						This course conflicts with another enrolled course
+					</Tooltip.Content>
 				</Tooltip>
 			)}
-			{name}
+
+			<span className="text-sm font-semibold">{name}</span>
+
 			{courseInfo?.url && (
-				<div
-					role="button"
-					tabIndex={0}
-					className="ml-2 cursor-pointer transition-opacity hover:opacity-70"
+				<span
+					className="hover:bg-default-200 text-default-500 hover:text-foreground ml-1.5 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition-colors"
 					onClick={(e) => {
 						e.stopPropagation();
 						window.open(courseInfo.url, '_blank', 'noopener,noreferrer');
 					}}
-					onKeyDown={(e) => {
-						if (e.key === 'Enter' || e.key === ' ') {
-							e.stopPropagation();
-							window.open(courseInfo.url, '_blank', 'noopener,noreferrer');
-						}
-					}}
 				>
-					🔗
-				</div>
+					<FaExternalLinkAlt className="text-2xs" />
+				</span>
 			)}
-		</Chip>
+
+			<CloseButton
+				aria-label="Remove course"
+				onClick={(e) => {
+					e.stopPropagation();
+					removeCourse(id);
+				}}
+				className="hover:bg-tiger/15 hover:text-tiger ml-1 h-5 w-5 rounded-full transition-colors"
+			/>
+		</button>
 	);
 };
 
 export const EnrolledCourses = () => {
 	const courses = useEnrolledCourses((s) => s.courses);
 	const [courseModalId, setCourseModalId] = useState<string | null>(null);
-	const courseModal = useDisclosure();
+	const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
 
 	return (
 		<>
@@ -118,18 +127,17 @@ export const EnrolledCourses = () => {
 								key={c.id}
 								onOpenModal={(id) => {
 									setCourseModalId(id);
-									courseModal.onOpen();
+									setIsCourseModalOpen(true);
 								}}
 							/>
 						);
 					})}
 				</div>
-				{courses.length > 0 && <AutoTimetable />}
 			</div>
 			{courseModalId && (
 				<CourseModal
-					isOpen={courseModal.isOpen}
-					onOpenChange={courseModal.onOpenChange}
+					isOpen={isCourseModalOpen}
+					onOpenChange={setIsCourseModalOpen}
 					id={courseModalId}
 				/>
 			)}

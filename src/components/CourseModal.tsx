@@ -1,23 +1,19 @@
 import {
 	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
 	Select,
-	SelectItem,
+	ListBox,
 	Table,
-	TableBody,
-	TableCell,
-	TableColumn,
-	TableHeader,
-	TableRow,
 	Tooltip,
+	Separator,
 } from '@heroui/react';
-import { AnimatePresence, motion } from 'framer-motion';
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaChevronDown } from 'react-icons/fa';
-import { Fragment } from 'react/jsx-runtime';
+import {
+	FaChevronDown,
+	FaExclamationTriangle,
+	FaSpinner,
+} from 'react-icons/fa';
 
 import { useGetCourseInfo } from '../data/course-info';
 import {
@@ -28,8 +24,7 @@ import { useFilters } from '../data/filters';
 import { findConflicts } from '../helpers/conflicts';
 import type { ConflictDetail } from '../helpers/conflicts';
 import type dayjs from '../lib/dayjs';
-import type { Meetings } from '../types/course';
-import type { Key } from '../types/key';
+import type { Course, Meetings } from '../types/course';
 import {
 	dateToDayjs,
 	timeToDayjs,
@@ -60,6 +55,31 @@ const getDisplayTime = (time: { start: string; end: string }) => {
 	const end = timeToDayjs(time.end);
 	return `${formatTime(start)} - ${formatTime(end)}`;
 };
+
+interface CourseRowItem {
+	id: string | number;
+	dates: string;
+	day: string;
+	time: string;
+	location: string;
+	campus: string;
+	availability: string;
+	isFull: boolean;
+}
+
+type CourseClass = Course['class_list'][number]['classes'][number];
+
+interface CourseListBoxItem {
+	id: string;
+	isNotAvailable: boolean;
+	label: string;
+	itemConflicted: boolean;
+	campusList: string;
+	availability: string | undefined;
+	isFull: boolean;
+	classInfo: CourseClass | null;
+}
+
 const MeetingsTime = ({
 	meetings,
 	classType,
@@ -78,106 +98,129 @@ const MeetingsTime = ({
 	const isFullValue =
 		availableSeats !== undefined && parseInt(availableSeats, 10) === 0;
 
-	return (
-		<Table aria-label={`${classType} Meetings Table`}>
-			<TableHeader>
-				<TableColumn>{t('course-modal.dates')}</TableColumn>
-				<TableColumn>{t('course-modal.days')}</TableColumn>
-				<TableColumn>{t('course-modal.time')}</TableColumn>
-				<TableColumn>{t('course-modal.location')}</TableColumn>
-				<TableColumn>{t('course-modal.campus')}</TableColumn>
-				<TableColumn>{t('course-modal.availability')}</TableColumn>
-			</TableHeader>
-			<TableBody>
-				{/* Group meetings that are identical except for the date */}
-				{(() => {
-					if (meetings.length === 0) {
-						return (
-							<TableRow key="no-meetings">
-								<TableCell>
-									{t('course-modal.not-available', {
-										defaultValue: 'Not available',
-									})}
-								</TableCell>
-								<TableCell>
-									{t('course-modal.not-available', {
-										defaultValue: 'Not available',
-									})}
-								</TableCell>
-								<TableCell>
-									{t('course-modal.not-available', {
-										defaultValue: 'Not available',
-									})}
-								</TableCell>
-								<TableCell>
-									{t('course-modal.not-available', {
-										defaultValue: 'Not available',
-									})}
-								</TableCell>
-								<TableCell>
-									{courseCampus ||
-										t('course-modal.not-available', {
-											defaultValue: 'Not available',
-										})}
-								</TableCell>
-								<TableCell>
-									{availableSeats && size ? (
-										<span className={isFullValue ? 'text-danger' : ''}>
-											{`${availableSeats} / ${size}`}
-										</span>
-									) : (
-										t('course-modal.not-available', {
-											defaultValue: 'Not available',
-										})
-									)}
-								</TableCell>
-							</TableRow>
-						);
-					}
+	const rows: CourseRowItem[] = [];
 
-					const grouped: Record<string, Meetings> = {};
-					const order: string[] = [];
-					meetings.forEach((m) => {
-						const key = [
-							m.day,
-							m.time.start,
-							m.time.end,
-							m.location,
-							m.campus,
-						].join('|');
-						if (!grouped[key]) {
-							grouped[key] = [];
-							order.push(key);
-						}
-						grouped[key].push(m);
-					});
-					return order.map((k, i) => {
-						const group = grouped[k];
-						const sample = group[0];
-						const dates = deduplicateArray(
-							group.map((m) => getDisplayDate(m.date)),
-						).join(', ');
-						return (
-							<TableRow key={i}>
-								<TableCell>{dates}</TableCell>
-								<TableCell>{sample.day}</TableCell>
-								<TableCell>{getDisplayTime(sample.time)}</TableCell>
-								<TableCell>{sample.location}</TableCell>
-								<TableCell>{sample.campus}</TableCell>
-								<TableCell>
-									{availableSeats && size ? (
-										<span className={isFullValue ? 'text-danger' : ''}>
-											{`${availableSeats} / ${size}`}
+	if (meetings.length === 0) {
+		const notAvailableStr = t('course-modal.not-available', {
+			defaultValue: 'Not available',
+		});
+		rows.push({
+			id: 'no-meetings',
+			dates: notAvailableStr,
+			day: notAvailableStr,
+			time: notAvailableStr,
+			location: notAvailableStr,
+			campus: courseCampus || notAvailableStr,
+			availability:
+				availableSeats && size
+					? `${availableSeats} / ${size}`
+					: notAvailableStr,
+			isFull: isFullValue,
+		});
+	} else {
+		const grouped: Record<string, Meetings> = {};
+		const order: string[] = [];
+		meetings.forEach((m) => {
+			const key = [m.day, m.time.start, m.time.end, m.location, m.campus].join(
+				'|',
+			);
+			if (!grouped[key]) {
+				grouped[key] = [];
+				order.push(key);
+			}
+			grouped[key].push(m);
+		});
+
+		order.forEach((k, i) => {
+			const group = grouped[k];
+			const sample = group[0];
+			const dates = deduplicateArray(
+				group.map((m) => getDisplayDate(m.date)),
+			).join(', ');
+
+			const availabilityStr =
+				availableSeats && size ? `${availableSeats} / ${size}` : '';
+
+			rows.push({
+				id: i,
+				dates,
+				day: sample.day,
+				time: getDisplayTime(sample.time),
+				location: sample.location,
+				campus: sample.campus,
+				availability: availabilityStr,
+				isFull: isFullValue,
+			});
+		});
+	}
+	return (
+		<Table className="border-separator mt-2 overflow-hidden rounded-xl border shadow-sm">
+			<Table.ScrollContainer>
+				<Table.Content aria-label={`${classType} Meetings Table`}>
+					<Table.Header className="bg-default-100">
+						<Table.Column
+							isRowHeader
+							className="text-default-500 !rounded-none text-xs font-semibold"
+						>
+							{t('course-modal.dates')}
+						</Table.Column>
+						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+							{t('course-modal.days')}
+						</Table.Column>
+						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+							{t('course-modal.time')}
+						</Table.Column>
+						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+							{t('course-modal.location')}
+						</Table.Column>
+						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+							{t('course-modal.campus')}
+						</Table.Column>
+						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+							{t('course-modal.availability')}
+						</Table.Column>
+					</Table.Header>
+					<Table.Body items={rows}>
+						{(row: CourseRowItem) => (
+							<Table.Row
+								key={row.id}
+								className="border-separator bg-background hover:bg-default-50 border-b text-sm transition-colors last:border-b-0"
+							>
+								<Table.Cell className="text-foreground !rounded-none py-3">
+									{row.dates}
+								</Table.Cell>
+								<Table.Cell className="text-foreground !rounded-none py-3">
+									{row.day}
+								</Table.Cell>
+								<Table.Cell className="text-foreground !rounded-none py-3">
+									{row.time}
+								</Table.Cell>
+								<Table.Cell className="text-foreground !rounded-none py-3">
+									{row.location}
+								</Table.Cell>
+								<Table.Cell className="text-foreground !rounded-none py-3">
+									{row.campus}
+								</Table.Cell>
+								<Table.Cell className="!rounded-none py-3">
+									{row.availability ? (
+										<span
+											className={
+												row.isFull
+													? 'text-danger font-bold'
+													: 'text-foreground font-semibold'
+											}
+										>
+											{row.availability}
 										</span>
 									) : (
 										''
 									)}
-								</TableCell>
-							</TableRow>
-						);
-					});
-				})()}
-			</TableBody>
+								</Table.Cell>
+							</Table.Row>
+						)}
+					</Table.Body>
+				</Table.Content>
+			</Table.ScrollContainer>
 		</Table>
 	);
 };
@@ -188,9 +231,7 @@ const getPreviewMeetingInfo = (meetings: Meetings) => {
 	);
 	return deduplicateArray(displayMeetings).join(', ');
 };
-const getKeys = (nullableKey: Key | undefined) => {
-	return nullableKey ? [nullableKey] : undefined;
-};
+
 const CollapsibleSection = ({
 	title,
 	children,
@@ -200,36 +241,16 @@ const CollapsibleSection = ({
 	children: React.ReactNode;
 	defaultExpanded?: boolean;
 }) => {
-	const [isExpanded, setIsExpanded] = useState(defaultExpanded);
-
 	return (
-		<div className="mt-2 text-sm">
-			<button
-				className="flex w-full items-center justify-between py-1 text-left font-semibold"
-				onClick={() => setIsExpanded(!isExpanded)}
-			>
+		<details className="group mt-2 text-sm" open={defaultExpanded}>
+			<summary className="hover:text-primary border-separator/50 flex w-full cursor-pointer list-none items-center justify-between border-b py-2 text-left font-semibold transition-colors">
 				<span>{title}</span>
-				<motion.span
-					animate={{ rotate: isExpanded ? 180 : 0 }}
-					transition={{ duration: 0.3 }}
-				>
-					<FaChevronDown />
-				</motion.span>
-			</button>
-			<AnimatePresence initial={false}>
-				{isExpanded && (
-					<motion.div
-						initial={{ height: 0, opacity: 0 }}
-						animate={{ height: 'auto', opacity: 1 }}
-						exit={{ height: 0, opacity: 0 }}
-						transition={{ duration: 0.3 }}
-						className="overflow-hidden"
-					>
-						<div className="pt-1 pb-2">{children}</div>
-					</motion.div>
-				)}
-			</AnimatePresence>
-		</div>
+				<FaChevronDown className="text-default-500 text-xs transition-transform duration-300 group-open:rotate-180" />
+			</summary>
+			<div className="pt-2 pb-3 transition-all duration-300 ease-in-out">
+				{children}
+			</div>
+		</details>
 	);
 };
 
@@ -238,6 +259,7 @@ type CourseModalProps = {
 	onOpenChange: (isOpen: boolean) => void;
 	id: string;
 };
+
 export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 	const courseInfo = useGetCourseInfo(id);
 	const { t } = useTranslation();
@@ -281,8 +303,6 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 		return () => window.removeEventListener('resize', updateLimit);
 	}, []);
 
-	if (!courseInfo) return;
-
 	const classConflictsWithEnrolled = (
 		meetings: Meetings,
 		classTypeId: string,
@@ -305,437 +325,319 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 		}
 		return false;
 	};
+
 	return (
-		<Modal
+		<Modal.Backdrop
+			variant="opaque"
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			size="3xl"
-			scrollBehavior="inside"
 		>
-			<ModalContent>
-				{() => (
-					<>
-						<ModalHeader className="flex flex-col gap-1">
-							{courseInfo.url || courseInfo.course_url ? (
-								<a
-									href={courseInfo.url || courseInfo.course_url}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex w-fit underline"
-								>
-									{courseInfo.name.code} - {courseInfo.name.title}
-								</a>
-							) : (
-								<div className="flex w-fit">
-									{courseInfo.name.code} - {courseInfo.name.title}
-								</div>
-							)}{' '}
-							<div className="text-sm">
-								{t('course-modal.level_of_study')}:{' '}
-								<span className="font-normal">
-									{courseInfo.level_of_study
-										? courseInfo.level_of_study
-										: 'None listed'}
-								</span>
-							</div>
-							<div className="text-sm">
-								{t('course-modal.course_coordinator')}:{' '}
-								<span className="font-normal">
-									{courseInfo.course_coordinator
-										? courseInfo.course_coordinator
-										: 'None listed'}
-								</span>
-							</div>
-							<div className="text-sm">
-								{t('course-modal.university-wide-elective')}:{' '}
-								<span className="font-normal">
-									{courseInfo.university_wide_elective ? 'True' : 'False'}
-								</span>
-							</div>
-							<div className="text-sm">
-								{t('course-modal.course_overview')}:{' '}
-								<div className="relative">
-									<motion.div
-										initial={false}
-										animate={{ height: overviewExpanded ? 'auto' : 50 }}
-										transition={{ duration: 0.3, ease: 'easeInOut' }}
-										className="overflow-hidden font-normal"
-									>
-										{courseInfo.course_overview || 'None listed'}
-									</motion.div>
-									<AnimatePresence>
-										{!overviewExpanded &&
-											courseInfo.course_overview &&
-											courseInfo.course_overview.length > charLimit && (
-												<motion.div
-													initial={{ opacity: 0 }}
-													animate={{ opacity: 1 }}
-													exit={{ opacity: 0 }}
-													transition={{ duration: 0.2 }}
-													className="from-background absolute bottom-0 left-0 h-8 w-full bg-gradient-to-t to-transparent"
-												/>
-											)}
-									</AnimatePresence>
-								</div>
-								{courseInfo.course_overview &&
-									courseInfo.course_overview.length > charLimit && (
-										<button
-											className="text-primary underline"
-											onClick={() => setOverviewExpanded(!overviewExpanded)}
-										>
-											{overviewExpanded
-												? t('course.overview.show-less')
-												: t('course.overview.show-more')}
-										</button>
-									)}
-							</div>
-							{(() => {
-								const outcomes =
-									courseInfo.learning_outcomes &&
-									Array.isArray(courseInfo.learning_outcomes)
-										? courseInfo.learning_outcomes.filter(
-												(o: { description: string; outcome_index: number }) =>
-													o.description && o.description.trim() !== '',
-											)
-										: [];
-
-								if (outcomes.length === 0) return null;
-
-								return (
-									<CollapsibleSection
-										title={
-											t('course-modal.learning-outcomes') ?? 'Learning Outcomes'
-										}
-									>
-										<ul className="mt-1 list-disc pl-5">
-											{outcomes.map(
-												(
-													outcome: {
-														description: string;
-														outcome_index: number;
-													},
-													index: number,
-												) => (
-													<li key={index} className="font-normal">
-														{outcome.description}
-													</li>
-												),
-											)}
-										</ul>
-									</CollapsibleSection>
-								);
-							})()}
-							{courseInfo.textbooks &&
-								Array.isArray(courseInfo.textbooks) &&
-								courseInfo.textbooks.length > 0 && (
-									<div className="mt-2 text-sm">
-										<div className="font-semibold">
-											{t('course-modal.textbooks') ?? 'Textbooks'}:
-										</div>
-										<ul className="list-disc pl-5">
-											{courseInfo.textbooks.map(
-												(textbook: string, index: number) => (
-													<li key={index} className="font-normal">
-														{textbook}
-													</li>
-												),
-											)}
-										</ul>
+			<Modal.Container size="lg">
+				<Modal.Dialog className="bg-background border-separator w-full max-w-3xl rounded-3xl border p-6 shadow-2xl">
+					<Modal.CloseTrigger className="hover:bg-default-100 rounded-full" />
+					{!courseInfo ? (
+						<div className="flex h-40 items-center justify-center">
+							<FaSpinner className="text-primary animate-spin text-2xl" />
+						</div>
+					) : (
+						<>
+							<header className="contents">
+								<Modal.Header className="flex flex-col gap-1 pb-2">
+									<Modal.Heading className="text-foreground text-xl font-black">
+										{courseInfo.url || courseInfo.course_url ? (
+											<a
+												href={courseInfo.url || courseInfo.course_url}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="hover:text-primary text-foreground flex w-fit underline transition-colors"
+											>
+												{courseInfo.name.code} - {courseInfo.name.title}
+											</a>
+										) : (
+											<div className="text-foreground flex w-fit">
+												{courseInfo.name.code} - {courseInfo.name.title}
+											</div>
+										)}
+									</Modal.Heading>
+									<div className="text-default-500 mt-2 text-sm">
+										{t('course-modal.level_of_study')}:{' '}
+										<span className="text-foreground font-semibold">
+											{courseInfo.level_of_study
+												? courseInfo.level_of_study
+												: 'None listed'}
+										</span>
 									</div>
-								)}
-							{(() => {
-								const assessments =
-									courseInfo.assessments &&
-									Array.isArray(courseInfo.assessments)
-										? courseInfo.assessments
-										: [];
+									<div className="text-default-500 text-sm">
+										{t('course-modal.course_coordinator')}:{' '}
+										<span className="text-foreground font-semibold">
+											{courseInfo.course_coordinator
+												? courseInfo.course_coordinator
+												: 'None listed'}
+										</span>
+									</div>
+									<div className="text-default-500 text-sm">
+										{t('course-modal.university-wide-elective')}:{' '}
+										<span className="text-foreground font-semibold">
+											{courseInfo.university_wide_elective ? 'True' : 'False'}
+										</span>
+									</div>
+									<div className="text-default-500 mt-1 text-sm">
+										{t('course-modal.course_overview')}:{' '}
+										<div className="relative mt-1">
+											<div
+												className={clsx(
+													'text-foreground overflow-hidden font-normal transition-[max-height] duration-300 ease-in-out',
+													overviewExpanded ? 'max-h-[1000px]' : 'max-h-[55px]',
+												)}
+											>
+												{courseInfo.course_overview || 'None listed'}
+											</div>
+											{!overviewExpanded &&
+												courseInfo.course_overview &&
+												courseInfo.course_overview.length > charLimit && (
+													<div className="from-background absolute bottom-0 left-0 h-6 w-full bg-gradient-to-t to-transparent" />
+												)}
+										</div>
+										{courseInfo.course_overview &&
+											courseInfo.course_overview.length > charLimit && (
+												<button
+													className="text-primary mt-1.5 cursor-pointer font-bold underline"
+													onClick={() => setOverviewExpanded(!overviewExpanded)}
+												>
+													{overviewExpanded
+														? t('course.overview.show-less')
+														: t('course.overview.show-more')}
+												</button>
+											)}
+									</div>
+									{(() => {
+										const outcomes =
+											courseInfo.learning_outcomes &&
+											Array.isArray(courseInfo.learning_outcomes)
+												? courseInfo.learning_outcomes.filter(
+														(o: {
+															description: string;
+															outcome_index: number;
+														}) => o.description && o.description.trim() !== '',
+													)
+												: [];
 
-								if (assessments.length === 0) return null;
+										if (outcomes.length === 0) return null;
 
-								return (
-									<CollapsibleSection
-										title={t('course-modal.assessments') ?? 'Assessments'}
-									>
-										<div className="mt-1 overflow-x-auto">
-											<table className="w-full text-left">
-												<thead>
-													<tr>
-														<th className="px-2 py-1 font-semibold">
-															{t('course-modal.assessment-name') ?? 'Name'}
-														</th>
-														<th className="px-2 py-1 font-semibold">
-															{t('course-modal.assessment-weight') ?? 'Weight'}
-														</th>
-														<th className="px-2 py-1 font-semibold">
-															{t('course-modal.assessment-hurdle') ?? 'Hurdle'}
-														</th>
-														<th className="px-2 py-1 font-semibold">
-															{t('course-modal.assessment-learning-outcomes') ??
-																'Learning Outcomes'}
-														</th>
-													</tr>
-												</thead>
-												<tbody>
-													{assessments.map(
+										return (
+											<CollapsibleSection
+												title={
+													t('course-modal.learning-outcomes') ??
+													'Learning Outcomes'
+												}
+											>
+												<ul className="mt-1 list-disc space-y-1 pl-5">
+													{outcomes.map(
 														(
-															assessment: {
-																name?: string;
-																title?: string;
-																weight?: string;
-																weighting?: string;
-																due_date?: string;
-																hurdle?: string;
-																learning_outcomes?: string;
+															outcome: {
+																description: string;
+																outcome_index: number;
 															},
 															index: number,
 														) => (
-															<tr
+															<li
 																key={index}
-																className="border-default-200 border-b"
+																className="text-foreground font-normal"
 															>
-																<td className="px-2 py-1 font-normal">
-																	{assessment.name || assessment.title || '-'}
-																</td>
-																<td className="px-2 py-1 font-normal">
-																	{assessment.weight ||
-																		assessment.weighting ||
-																		'-'}
-																</td>
-																<td className="px-2 py-1 font-normal">
-																	{assessment.hurdle || '-'}
-																</td>
-																<td className="px-2 py-1 font-normal">
-																	{assessment.learning_outcomes || '-'}
-																</td>
-															</tr>
+																{outcome.description}
+															</li>
 														),
 													)}
-												</tbody>
-											</table>
-										</div>
-									</CollapsibleSection>
-								);
-							})()}
-						</ModalHeader>
-						<ModalBody className="mb-4">
-							{(() => {
-								// Gather conflicts for all selected classes in this course
-								const aggregated: ConflictDetail[] = [];
-								const seen = new Set<string>();
-								for (const ct of courseInfo.class_list) {
-									const selectedNumber = course?.classes.find(
-										(c) => c.id === ct.id,
-									)?.classNumber;
-									if (!selectedNumber) continue;
-									const key = `${id}|${ct.id}|${selectedNumber}`;
-									const items = conflictsByClassKey[key] ?? [];
-									for (const it of items) {
-										const k = `${it.otherCourseId}|${it.otherClassNumber}|${it.otherMeeting.time.start}|${it.otherMeeting.time.end}|${it.otherMeeting.location}|${it.otherMeeting.campus}`;
-										if (!seen.has(k)) {
-											seen.add(k);
-											aggregated.push(it);
+												</ul>
+											</CollapsibleSection>
+										);
+									})()}
+									{courseInfo.textbooks &&
+										Array.isArray(courseInfo.textbooks) &&
+										courseInfo.textbooks.length > 0 && (
+											<div className="text-default-500 mt-2 text-sm">
+												<div className="text-foreground font-bold">
+													{t('course-modal.textbooks') ?? 'Textbooks'}:
+												</div>
+												<ul className="mt-1 list-disc space-y-1 pl-5">
+													{courseInfo.textbooks.map(
+														(textbook: string, index: number) => (
+															<li
+																key={index}
+																className="text-foreground font-normal"
+															>
+																{textbook}
+															</li>
+														),
+													)}
+												</ul>
+											</div>
+										)}
+									{(() => {
+										const assessments =
+											courseInfo.assessments &&
+											Array.isArray(courseInfo.assessments)
+												? courseInfo.assessments
+												: [];
+
+										if (assessments.length === 0) return null;
+
+										return (
+											<CollapsibleSection
+												title={t('course-modal.assessments') ?? 'Assessments'}
+											>
+												<div className="border-separator bg-content1 mt-1 overflow-x-auto rounded-2xl border">
+													<table className="w-full border-collapse text-left text-sm">
+														<thead>
+															<tr className="border-separator bg-content2 border-b">
+																<th className="text-foreground px-3 py-2 font-bold">
+																	{t('course-modal.assessment-name') ?? 'Name'}
+																</th>
+																<th className="text-foreground px-3 py-2 font-bold">
+																	{t('course-modal.assessment-weight') ??
+																		'Weight'}
+																</th>
+																<th className="text-foreground px-3 py-2 font-bold">
+																	{t('course-modal.assessment-hurdle') ??
+																		'Hurdle'}
+																</th>
+																<th className="text-foreground px-3 py-2 font-bold">
+																	{t(
+																		'course-modal.assessment-learning-outcomes',
+																	) ?? 'Learning Outcomes'}
+																</th>
+															</tr>
+														</thead>
+														<tbody>
+															{assessments.map(
+																(
+																	assessment: {
+																		name?: string;
+																		title?: string;
+																		weight?: string;
+																		weighting?: string;
+																		due_date?: string;
+																		hurdle?: string;
+																		learning_outcomes?: string;
+																	},
+																	index: number,
+																) => (
+																	<tr
+																		key={index}
+																		className="border-separator hover:bg-default-100/30 border-b transition-colors last:border-b-0"
+																	>
+																		<td className="text-foreground px-3 py-2 font-semibold">
+																			{assessment.name ||
+																				assessment.title ||
+																				'-'}
+																		</td>
+																		<td className="text-default-600 px-3 py-2">
+																			{assessment.weight ||
+																				assessment.weighting ||
+																				'-'}
+																		</td>
+																		<td className="text-default-600 px-3 py-2">
+																			{assessment.hurdle || '-'}
+																		</td>
+																		<td className="text-default-600 px-3 py-2">
+																			{assessment.learning_outcomes || '-'}
+																		</td>
+																	</tr>
+																),
+															)}
+														</tbody>
+													</table>
+												</div>
+											</CollapsibleSection>
+										);
+									})()}
+								</Modal.Header>
+							</header>
+							<Separator className="my-2" />
+							<Modal.Body className="mb-4 max-h-[400px] gap-4 overflow-y-auto pr-2">
+								{(() => {
+									const aggregated: ConflictDetail[] = [];
+									const seen = new Set<string>();
+									for (const ct of courseInfo.class_list) {
+										const selectedNumber = course?.classes.find(
+											(c) => c.id === ct.id,
+										)?.classNumber;
+										if (!selectedNumber) continue;
+										const key = `${id}|${ct.id}|${selectedNumber}`;
+										const items = conflictsByClassKey[key] ?? [];
+										for (const it of items) {
+											const k = `${it.otherCourseId}|${it.otherClassNumber}|${it.otherMeeting.time.start}|${it.otherMeeting.time.end}|${it.otherMeeting.location}|${it.otherMeeting.campus}`;
+											if (!seen.has(k)) {
+												seen.add(k);
+												aggregated.push(it);
+											}
 										}
 									}
-								}
-								if (aggregated.length === 0) return null;
-								return (
-									<div className="mb-4 rounded-md border border-yellow-300 bg-yellow-50 p-4 dark:bg-yellow-600 dark:text-slate-100">
-										<div className="mb-2 font-semibold">
-											<span aria-hidden className="mr-2">
-												⚠️
-											</span>
-											{t('course-modal.conflicts-with-other-classes') ??
-												'Conflicts with other classes'}
-										</div>
-										<ul className="list-disc pl-5">
-											{aggregated.map((c, i) => (
-												<li
-													key={i}
-												>{`${c.otherCourseCode} (${c.otherClassNumber}) — ${c.otherMeeting.time.start} - ${c.otherMeeting.time.end} @ ${c.otherMeeting.location}`}</li>
-											))}
-										</ul>
-									</div>
-								);
-							})()}
-							{(() => {
-								const hasClassInfo =
-									!!courseInfo.class_list &&
-									courseInfo.class_list.some(
-										(ct) => ct.classes && ct.classes.length > 0,
-									);
-								if (!hasClassInfo) {
+									if (aggregated.length === 0) return null;
 									return (
-										<div className="text-default-500">
-											{t('course-modal.no-class-info') ??
-												'No available class information for now, check back later.'}
+										<div className="border-warning/30 bg-warning/10 dark:bg-warning/5 text-foreground mb-2 rounded-2xl border p-4">
+											<div className="text-warning mb-2 flex items-center gap-2 font-bold">
+												<FaExclamationTriangle />
+												<span>
+													{t('course-modal.conflicts-with-other-classes') ??
+														'Conflicts with other classes'}
+												</span>
+											</div>
+											<ul className="list-disc space-y-1 pl-5 text-sm">
+												{aggregated.map((c, i) => (
+													<li
+														key={i}
+													>{`${c.otherCourseCode} (${c.otherClassNumber}) — ${c.otherMeeting.time.start} - ${c.otherMeeting.time.end} @ ${c.otherMeeting.location}`}</li>
+												))}
+											</ul>
 										</div>
 									);
-								}
-								return courseInfo.class_list.map((classType) => {
-									// Using selectedTermAlias and selectedCampuses from component closure
+								})()}
+								{(() => {
+									const hasClassInfo =
+										!!courseInfo.class_list &&
+										courseInfo.class_list.some(
+											(ct) => ct.classes && ct.classes.length > 0,
+										);
+									if (!hasClassInfo) {
+										return (
+											<div className="text-default-500">
+												{t('course-modal.no-class-info') ??
+													'No available class information for now, check back later.'}
+											</div>
+										);
+									}
+									return courseInfo.class_list.map((classType) => {
+										const classesToShow = classType.classes.filter(
+											(classInfo) =>
+												classInfo.meetings.some(
+													(m) =>
+														isMeetingInTerm(m.date, selectedTermAlias) &&
+														(!selectedCampuses ||
+															selectedCampuses.length === 0 ||
+															selectedCampuses.includes(m.campus)),
+												),
+										);
+										const isEmpty = classesToShow.length === 0;
+										const selectedKey = getSelectedClassNumber(classType.id);
 
-									const classesToShow = classType.classes.filter((classInfo) =>
-										classInfo.meetings.some(
-											(m) =>
-												isMeetingInTerm(m.date, selectedTermAlias) &&
-												(!selectedCampuses ||
-													selectedCampuses.length === 0 ||
-													selectedCampuses.includes(m.campus)),
-										),
-									);
-									const isEmpty = classesToShow.length === 0;
-									return (
-										<Fragment key={classType.id}>
-											<Select
-												label={`${classType.type} Time`}
-												isDisabled={isEmpty}
-												renderValue={(value) => {
-													if (isEmpty) {
-														return (
-															<div>
-																{t('course-modal.not-available', {
-																	defaultValue: 'Not available',
-																})}
-															</div>
-														);
-													}
-													const items = value as unknown as
-														| Array<{ key?: Key }>
-														| undefined;
-													const key = items?.[0]?.key as string | undefined;
-													const selectedClass = getSelectedClass(classType.id);
-													const isFullSelected =
-														selectedClass?.available_seats !== undefined &&
-														parseInt(selectedClass.available_seats, 10) === 0;
-													return (
-														<div className="flex items-center gap-2">
-															{isFullSelected && (
-																<Tooltip
-																	content={
-																		t('calendar.no-available-seats', {
-																			defaultValue: 'Class full',
-																		}) as string
-																	}
-																	size="sm"
-																>
-																	<span aria-hidden>⚠️</span>
-																</Tooltip>
-															)}
-															{(() => {
-																const selKey = key
-																	? `${id}|${classType.id}|${key}`
-																	: undefined;
-																const selConf =
-																	(selKey
-																		? (conflictsByClassKey[selKey] ?? [])
-																				.length > 0
-																		: false) ||
-																	(selectedClass
-																		? classConflictsWithEnrolled(
-																				selectedClass.meetings,
-																				classType.id,
-																			)
-																		: false);
-																return (
-																	selConf && (
-																		<Tooltip
-																			content={
-																				t('calendar.conflict') ??
-																				'Conflict with another class'
-																			}
-																			size="sm"
-																		>
-																			<span aria-hidden className="">
-																				⚠️
-																			</span>
-																		</Tooltip>
-																	)
-																);
-															})()}
-															<div>{`Class Number: ${key}`}</div>
-														</div>
-													);
-												}}
-												selectedKeys={
-													isEmpty
-														? ['not-available']
-														: getKeys(getSelectedClassNumber(classType.id))
-												}
-												// Prevent the selected class from being clicked again to avoid it becoming undefined
-												disabledKeys={
-													isEmpty
-														? ['not-available']
-														: getKeys(getSelectedClassNumber(classType.id))
-												}
-												onSelectionChange={(selectedClassNumber) => {
-													if (isEmpty) return;
-													let classNumber = '';
-													if (typeof selectedClassNumber === 'string') {
-														classNumber = selectedClassNumber;
-													} else if (selectedClassNumber instanceof Set) {
-														classNumber = [...selectedClassNumber][0] as string;
-													} else if (
-														selectedClassNumber &&
-														typeof selectedClassNumber === 'object'
-													) {
-														const arr = Array.from(
-															selectedClassNumber as Iterable<unknown>,
-														);
-														classNumber = arr[0] as string;
-													}
-
-													// On mobile devices, React Aria/NextUI can sometimes pass option indices
-													// (like "2") instead of collection keys (like "25026").
-													// Let's resolve the index back to the actual option value.
-													const classNumbersToShow = classesToShow.map(
-														(c) => c.number,
-													);
-													if (
-														classNumber &&
-														!classNumbersToShow.includes(classNumber)
-													) {
-														const selectEl =
-															(document.querySelector(
-																`select[aria-label*="${classType.type}"]`,
-															) as HTMLSelectElement) ||
-															(document.querySelector(
-																`select[name*="${classType.type}"]`,
-															) as HTMLSelectElement) ||
-															document.querySelectorAll('select')[2]; // Fallback to index 2 (Practical Select)
-														if (selectEl && selectEl.options) {
-															const idx = Number(classNumber);
-															if (
-																!isNaN(idx) &&
-																idx >= 0 &&
-																idx < selectEl.options.length
-															) {
-																const mappedVal = selectEl.options[idx].value;
-																if (mappedVal) {
-																	classNumber = mappedVal;
-																}
-															}
-														}
-													}
-
-													updateClass({
-														classNumber,
-														classTypeId: classType.id,
-													});
-												}}
-											>
-												{isEmpty ? (
-													<SelectItem
-														key="not-available"
-														textValue={t('course-modal.not-available', {
-															defaultValue: 'Not available',
-														})}
-													>
-														{t('course-modal.not-available', {
-															defaultValue: 'Not available',
-														})}
-													</SelectItem>
-												) : (
-													classesToShow.map((classInfo) => {
+										const listBoxItems = (
+											isEmpty
+												? [
+														{
+															id: 'not-available',
+															isNotAvailable: true,
+															label: t('course-modal.not-available', {
+																defaultValue: 'Not available',
+															}),
+															itemConflicted: false,
+															campusList: '',
+															availability: '',
+															isFull: false,
+															classInfo: null,
+														},
+													]
+												: classesToShow.map((classInfo) => {
 														const itemKey = `${id}|${classType.id}|${classInfo.number}`;
 														const itemConflicted =
 															(conflictsByClassKey[itemKey] ?? []).length > 0 ||
@@ -755,91 +657,190 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 														const isFull =
 															classInfo.available_seats !== undefined &&
 															parseInt(classInfo.available_seats, 10) === 0;
-														return (
-															<SelectItem
-																key={classInfo.number}
-																textValue={classInfo.number}
-															>
-																<div>
-																	<div className="flex items-center">
-																		{itemConflicted && (
-																			<Tooltip
-																				content={
-																					t('calendar.conflict') ??
-																					'Conflict with another class'
-																				}
-																				size="sm"
-																			>
-																				<span aria-hidden className="mr-2">
-																					⚠️
-																				</span>
-																			</Tooltip>
-																		)}
-																		{isFull && (
-																			<Tooltip
-																				content={
-																					t('calendar.no-available-seats', {
-																						defaultValue: 'Class full',
-																					}) as string
-																				}
-																				size="sm"
-																			>
-																				<span aria-hidden>⚠️</span>
-																			</Tooltip>
-																		)}
-																		<div>{classInfo.number}</div>
-																	</div>
-																	<div className="text-tiny text-default-500">
-																		{getPreviewMeetingInfo(classInfo.meetings)}
-																		{campusList ? ` | ${campusList}` : ''}
-																		{availability ? (
-																			<>
-																				{' '}
-																				|{' '}
-																				<span
-																					className={
-																						isFull ? 'text-danger' : ''
-																					}
-																				>
-																					{availability}
-																				</span>
-																			</>
-																		) : (
-																			''
-																		)}
-																	</div>
-																</div>
-															</SelectItem>
-														);
+
+														return {
+															id: classInfo.number,
+															isNotAvailable: false,
+															label: classInfo.number,
+															itemConflicted,
+															campusList,
+															availability,
+															isFull,
+															classInfo,
+														};
 													})
-												)}
-											</Select>
-											{(() => {
-												const selectedClass = getSelectedClass(classType.id);
-												const size =
-													selectedClass?.size ??
-													selectedClass?.section ??
-													undefined;
-												const availableSeats =
-													selectedClass?.available_seats ?? undefined;
-												return (
-													<MeetingsTime
-														meetings={getMeetings(classType.id)}
-														classType={classType.type}
-														size={size}
-														availableSeats={availableSeats}
-														courseCampus={courseInfo?.campus}
-													/>
-												);
-											})()}
-										</Fragment>
-									);
-								});
-							})()}
-						</ModalBody>
-					</>
-				)}
-			</ModalContent>
-		</Modal>
+										) as Array<{
+											id: string;
+											isNotAvailable: boolean;
+											label: string;
+											itemConflicted: boolean;
+											campusList: string;
+											availability: string | undefined;
+											isFull: boolean;
+											classInfo: (typeof classType.classes)[number] | null;
+										}>;
+
+										return (
+											<div
+												key={classType.id}
+												className="border-separator bg-content1/75 flex flex-col gap-2 rounded-2xl border p-4"
+											>
+												<div className="text-foreground text-sm font-bold">
+													{classType.type} Time
+												</div>
+												<Select
+													aria-label={`${classType.type} Time`}
+													isDisabled={isEmpty}
+													value={isEmpty ? 'not-available' : selectedKey}
+													onChange={(val) => {
+														if (isEmpty || !val) return;
+														updateClass({
+															classNumber: String(val),
+															classTypeId: classType.id,
+														});
+													}}
+													disabledKeys={
+														isEmpty
+															? ['not-available']
+															: selectedKey
+																? [selectedKey]
+																: []
+													}
+												>
+													<Select.Trigger className="border-separator bg-content2/30 hover:bg-content2/50 flex w-full items-center justify-between rounded-2xl border px-4 py-2.5 transition-colors">
+														<Select.Value />
+														<Select.Indicator>
+															<FaChevronDown className="text-default-500 text-xs" />
+														</Select.Indicator>
+													</Select.Trigger>
+													<Select.Popover>
+														<ListBox
+															className="bg-overlay border-separator max-h-[300px] overflow-y-auto rounded-2xl border p-2 shadow-xl"
+															items={listBoxItems}
+														>
+															{(item: CourseListBoxItem) => {
+																if (item.isNotAvailable) {
+																	return (
+																		<ListBox.Item
+																			id="not-available"
+																			textValue={item.label}
+																			className="text-default-500 rounded-xl px-3 py-2"
+																		>
+																			{item.label}
+																		</ListBox.Item>
+																	);
+																}
+
+																return (
+																	<ListBox.Item
+																		id={item.id}
+																		textValue={item.label}
+																		className="hover:bg-default-100/50 text-foreground cursor-pointer rounded-xl px-3 py-2 transition-colors"
+																	>
+																		<div>
+																			<div className="flex items-center gap-1.5">
+																				{item.itemConflicted && (
+																					<Tooltip delay={0}>
+																						<Tooltip.Trigger>
+																							<span
+																								aria-hidden
+																								className="text-warning flex items-center"
+																							>
+																								<FaExclamationTriangle />
+																							</span>
+																						</Tooltip.Trigger>
+																						<Tooltip.Content>
+																							{t('calendar.conflict') ??
+																								'Conflict with another class'}
+																						</Tooltip.Content>
+																					</Tooltip>
+																				)}
+																				{item.isFull && (
+																					<Tooltip delay={0}>
+																						<Tooltip.Trigger>
+																							<span
+																								aria-hidden
+																								className="text-danger flex items-center"
+																							>
+																								<FaExclamationTriangle />
+																							</span>
+																						</Tooltip.Trigger>
+																						<Tooltip.Content>
+																							{t(
+																								'calendar.no-available-seats',
+																								{
+																									defaultValue: 'Class full',
+																								},
+																							)}
+																						</Tooltip.Content>
+																					</Tooltip>
+																				)}
+																				<div className="font-bold">
+																					{item.label}
+																				</div>
+																			</div>
+																			<div className="text-default-500 mt-0.5 text-xs">
+																				{item.classInfo
+																					? getPreviewMeetingInfo(
+																							item.classInfo.meetings,
+																						)
+																					: ''}
+																				{item.campusList
+																					? ` | ${item.campusList}`
+																					: ''}
+																				{item.availability ? (
+																					<>
+																						{' | '}
+																						<span
+																							className={
+																								item.isFull
+																									? 'text-danger font-bold'
+																									: ''
+																							}
+																						>
+																							{item.availability}
+																						</span>
+																					</>
+																				) : (
+																					''
+																				)}
+																			</div>
+																		</div>
+																	</ListBox.Item>
+																);
+															}}
+														</ListBox>
+													</Select.Popover>
+												</Select>
+												{(() => {
+													const selectedClass = getSelectedClass(classType.id);
+													const size =
+														selectedClass?.size ??
+														selectedClass?.section ??
+														undefined;
+													const availableSeats =
+														selectedClass?.available_seats ?? undefined;
+													return (
+														<MeetingsTime
+															meetings={getMeetings(classType.id)}
+															classType={classType.type}
+															size={size}
+															availableSeats={availableSeats}
+															courseCampus={courseInfo?.campus}
+														/>
+													);
+												})()}
+											</div>
+										);
+									});
+								})()}
+							</Modal.Body>
+						</>
+					)}
+				</Modal.Dialog>
+			</Modal.Container>
+		</Modal.Backdrop>
 	);
 };
+
+export default CourseModal;

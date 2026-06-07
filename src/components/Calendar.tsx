@@ -1,7 +1,17 @@
-import { Button, Tooltip, useDisclosure } from '@heroui/react';
+import { Button, Tooltip } from '@heroui/react';
 import clsx from 'clsx';
 import { useRef, useState, type MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+	FaAngleDoubleLeft,
+	FaAngleDoubleRight,
+	FaAngleLeft,
+	FaAngleRight,
+	FaExclamationTriangle,
+	FaPlus,
+	FaRocket,
+	FaThumbtack,
+} from 'react-icons/fa';
 import { create } from 'zustand';
 
 import { WEEK_DAYS } from '../constants/week-days';
@@ -15,10 +25,12 @@ import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
 import { findConflicts } from '../helpers/conflicts';
+import { useDarkMode } from '../helpers/dark-mode';
 import { calcHoursDuration } from '../helpers/hours-duration';
 import { useZoom } from '../helpers/zoom';
 import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
+import { getAccessibleTextColorForCourse } from '../utils/contrast';
 import { timeToDayjs } from '../utils/date';
 import { useDrag, useDrop } from '../utils/dnd';
 import { ClassModal } from './ClassModal';
@@ -70,6 +82,12 @@ const CourseCard = ({
 	const isOnlyTime = !otherTimes.some((times) => times.length !== 0);
 
 	const color = useCourseColor(course.id);
+	const colorIndex =
+		useEnrolledCourses(
+			(s) => s.courses.find((c) => c.id === course.id)?.color,
+		) ?? 0;
+	const { isDarkMode } = useDarkMode();
+	const textColor = getAccessibleTextColorForCourse(colorIndex, isDarkMode);
 
 	const draggingCourse = useDraggingCourse();
 	const [isDragging, setIsDragging] = useState(false);
@@ -100,72 +118,92 @@ const CourseCard = ({
 		<div
 			ref={ref}
 			className={clsx(
-				'h-full overflow-hidden rounded-md border-l-3 p-1 text-xs',
+				'@container h-full overflow-hidden rounded-2xl border-l-3 p-2 text-xs shadow-sm transition-all duration-200 @[min-width:75px]:p-2.5',
 				'relative',
 				color.border,
 				color.bg,
-				color.text,
-				isDragging ? 'opacity-30' : 'opacity-85',
+				isDragging ? 'opacity-30' : 'opacity-90 hover:opacity-100',
 				hasConflict && 'relative',
 			)}
 			style={{
+				color: textColor,
 				outline: hasConflict ? '3px solid #f59e0b' : undefined,
 				outlineOffset: hasConflict ? '-3px' : undefined,
 			}}
 		>
-			<div className="text-2xs flex justify-between">
+			<div className="text-2xs flex justify-between font-medium">
 				<div>{time.start}</div>
 				<div className="flex items-center gap-1">
 					{isOnlyTime && (
-						<Tooltip content={t('calendar.immoveable-course')} size="sm">
-							<div>📌</div>
+						<Tooltip delay={0}>
+							<Tooltip.Trigger>
+								<div>
+									<FaThumbtack className="text-xs opacity-70" />
+								</div>
+							</Tooltip.Trigger>
+							<Tooltip.Content>
+								{t('calendar.immoveable-course')}
+							</Tooltip.Content>
 						</Tooltip>
 					)}
 				</div>
 			</div>
-			<div className="absolute right-1 bottom-1 z-30">
-				<Tooltip content={t('calendar.open-class') as string} size="sm">
-					<Button
-						isIconOnly
-						variant="light"
-						size="sm"
-						className="text-lg font-semibold"
-						onPointerDown={(e) => e.stopPropagation()}
-						onMouseDown={(e: MouseEvent<HTMLButtonElement>) => {
-							e.stopPropagation();
-						}}
-						onPress={() => {
-							if (onOpen) onOpen(course);
-						}}
-					>
-						+
-					</Button>
+			<div className="absolute right-1 bottom-1 z-30 @[min-width:75px]:right-1.5 @[min-width:75px]:bottom-1.5">
+				<Tooltip delay={0}>
+					<Tooltip.Trigger>
+						<Button
+							isIconOnly
+							variant="tertiary"
+							size="sm"
+							className="flex h-5 w-5 items-center justify-center rounded-full bg-current/10 text-xs font-bold transition-colors hover:bg-current/20 @[min-width:75px]:h-6 @[min-width:75px]:w-6 @[min-width:75px]:text-sm"
+							style={{ color: textColor }}
+							onPointerDown={(e) => e.stopPropagation()}
+							onMouseDown={(e: MouseEvent<HTMLButtonElement>) => {
+								e.stopPropagation();
+							}}
+							onPress={() => {
+								if (onOpen) onOpen(course);
+							}}
+						>
+							<FaPlus />
+						</Button>
+					</Tooltip.Trigger>
+					<Tooltip.Content>{t('calendar.open-class')}</Tooltip.Content>
 				</Tooltip>
 			</div>
-			<div className="pr-6 font-bold">
+			<div className="text-2xs mt-0.5 pr-5 font-extrabold break-words @[min-width:70px]:text-xs @[min-width:75px]:pr-6 @[min-width:90px]:text-sm">
 				{hasConflict && (
-					<Tooltip
-						content={t('calendar.conflict') ?? 'Conflict with another class'}
-						size="sm"
-					>
-						<span aria-label="full">⚠️ </span>
+					<Tooltip delay={0}>
+						<Tooltip.Trigger>
+							<span
+								aria-label="conflict"
+								className="text-warning mr-1 inline-flex"
+							>
+								<FaExclamationTriangle />
+							</span>
+						</Tooltip.Trigger>
+						<Tooltip.Content>
+							{t('calendar.conflict') ?? 'Conflict with another class'}
+						</Tooltip.Content>
 					</Tooltip>
 				)}
 				{isFull && (
-					<Tooltip
-						content={
-							t('calendar.no-available-seats', {
+					<Tooltip delay={0}>
+						<Tooltip.Trigger>
+							<span aria-label="full" className="text-warning mr-1 inline-flex">
+								<FaExclamationTriangle />
+							</span>
+						</Tooltip.Trigger>
+						<Tooltip.Content>
+							{t('calendar.no-available-seats', {
 								defaultValue: 'Class full',
-							}) as string
-						}
-						size="sm"
-					>
-						<span aria-label="full">⚠️ </span>
+							})}
+						</Tooltip.Content>
 					</Tooltip>
 				)}
 				{course.name.code} - {course.classType}{' '}
 			</div>
-			<div className="text-2xs pr-6">
+			<div className="text-3xs @[min-width:75px]:text-2xs mt-0.5 pr-5 opacity-90 @[max-width:60px]:hidden @[min-width:75px]:pr-6">
 				{course.location} | {course.campus}
 			</div>
 			<InvisiblePlaceholder />
@@ -187,34 +225,34 @@ const CalendarHeader = ({
 
 	const actionButtons = [
 		{
-			icon: '⏪',
+			icon: <FaAngleDoubleLeft />,
 			description: t('calendar.first-week'),
 			action: actions.goToStartWeek,
 			disabled: status.isStartWeek,
 		},
 		{
-			icon: '◀️',
+			icon: <FaAngleLeft />,
 			description: t('calendar.previous-week'),
 			action: actions.prevWeek,
 			disabled: status.isStartWeek,
 		},
 		{
-			icon: '▶️',
+			icon: <FaAngleRight />,
 			description: t('calendar.next-week'),
 			action: actions.nextWeek,
 			disabled: status.isEndWeek,
 		},
 		{
-			icon: '⏩',
+			icon: <FaAngleDoubleRight />,
 			description: t('calendar.last-week'),
 			action: actions.goToEndWeek,
 			disabled: status.isEndWeek,
 		},
 	];
 	return (
-		<div className="bg-background sticky top-0 z-50 flex items-center justify-between">
-			<h2 className="mobile:text-2xl text-3xl">
-				<span className="mr-2 font-bold">
+		<div className="bg-background sticky top-0 z-50 flex h-12 items-center justify-between pb-3">
+			<h2 className="mobile:text-xl text-2xl">
+				<span className="text-foreground mr-2 font-black">
 					{/* Month for Wednesday in the week is more accurate than Monday */}
 					{
 						(t('calendar.months') as unknown as Array<string>)[
@@ -222,20 +260,23 @@ const CalendarHeader = ({
 						]
 					}
 				</span>
-				<span className="font-light">{YEAR}</span>
+				<span className="text-default-500 font-light">{YEAR}</span>
 			</h2>
-			<div className="flex">
-				{actionButtons.map((a) => (
-					<Tooltip content={a.description} key={a.description}>
-						<Button
-							isIconOnly
-							variant="light"
-							onClick={a.action}
-							disabled={a.disabled}
-							className="text-3xl disabled:opacity-50"
-						>
-							{a.icon}
-						</Button>
+			<div className="flex gap-1">
+				{actionButtons.map((a, i) => (
+					<Tooltip key={i} delay={0}>
+						<Tooltip.Trigger>
+							<Button
+								isIconOnly
+								variant="secondary"
+								onPress={a.action}
+								isDisabled={a.disabled}
+								className="bg-default-100 hover:bg-default-200 h-9 w-9 rounded-full text-lg disabled:opacity-30"
+							>
+								{a.icon}
+							</Button>
+						</Tooltip.Trigger>
+						<Tooltip.Content>{a.description}</Tooltip.Content>
 					</Tooltip>
 				))}
 			</div>
@@ -246,30 +287,21 @@ const CalendarHeader = ({
 const EndActions = () => {
 	const { t } = useTranslation();
 
-	const blockHeight = useCalendarHourHeight((s) => s.height);
-
-	const {
-		isOpen: isReadyModalOpen,
-		onOpen: onReadyModalOpen,
-		onOpenChange: onReadyModalOpenChange,
-	} = useDisclosure();
+	const [isReadyModalOpen, setIsReadyModalOpen] = useState(false);
 	return (
-		<div
-			className="absolute -bottom-2 left-0 flex w-full items-center justify-center gap-4"
-			style={{ height: blockHeight + 'rem' }}
-		>
-			{/* TODO: Share Button */}
+		<div className="mt-6 flex w-full items-center justify-center gap-4">
 			<Button
-				color="primary"
+				variant="primary"
 				size="lg"
-				className="font-semibold"
-				onPress={onReadyModalOpen}
+				className="flex items-center gap-2 rounded-full font-bold shadow-lg transition-transform hover:scale-105"
+				onPress={() => setIsReadyModalOpen(true)}
 			>
-				{t('calendar.end-actions.ready')} 🚀
+				<span>{t('calendar.end-actions.ready')}</span>
+				<FaRocket />
 			</Button>
 			<EnrolmentModal
 				isOpen={isReadyModalOpen}
-				onOpenChange={onReadyModalOpenChange}
+				onOpenChange={setIsReadyModalOpen}
 			/>
 		</div>
 	);
@@ -281,12 +313,21 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 	const blockHeight = useCalendarHourHeight((s) => s.height);
 
 	return (
-		<div className="-z-50 grid grid-cols-[2.5rem_repeat(5,minmax(0,1fr))] grid-rows-[2.5rem_repeat(30,minmax(0,1fr))]">
-			<div className="border-apple-gray-300 bg-background sticky top-12 z-50 col-span-full col-start-2 grid grid-cols-subgrid border-b-1">
+		<div
+			className="-z-50 grid"
+			style={{
+				gridTemplateColumns: '2.5rem repeat(5, minmax(0, 1fr))',
+				gridTemplateRows: '2.5rem repeat(30, minmax(0, 1fr))',
+			}}
+		>
+			<div
+				className="border-apple-gray-300 bg-background col-span-full col-start-2 grid grid-cols-subgrid border-b-1"
+				style={{ gridRow: '1 / 2' }}
+			>
 				{WEEK_DAYS.map((day, i) => (
 					<div
 						key={day}
-						className="flex justify-center gap-1 text-lg font-light"
+						className="text-foreground flex justify-center gap-1 py-1 text-lg font-light"
 					>
 						<div>
 							{
@@ -295,18 +336,25 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 								]
 							}
 						</div>
-						<div>{currentWeek.add(i, 'day').date()}</div>
+						<div className="font-bold">{currentWeek.add(i, 'day').date()}</div>
 					</div>
 				))}
 			</div>
-			{/* FIXME: Remove the last two grid rows for 21:00 */}
-			<div className="text-2xs text-apple-gray-500 relative -top-[0.35rem] row-span-full row-start-2 grid grid-cols-subgrid grid-rows-15 pr-2 text-end">
+			<div
+				className="text-2xs text-apple-gray-500 relative -top-[0.35rem] grid grid-cols-subgrid grid-rows-15 pr-2 text-end"
+				style={{ gridRow: '2 / 32' }}
+			>
 				{Array.from({ length: 15 }, (_, i) => (
-					<div key={i}>{String(7 + i).padStart(2, '0')}:00</div>
+					<div key={i} className="text-default-500">
+						{String(7 + i).padStart(2, '0')}:00
+					</div>
 				))}
 			</div>
-			<div className="col-span-full col-start-2 row-start-2 row-end-30 grid grid-cols-subgrid grid-rows-subgrid">
-				{Array.from({ length: 5 * 28 }, (_, i) => (
+			<div
+				className="col-span-full col-start-2 grid grid-cols-subgrid grid-rows-subgrid"
+				style={{ gridRow: '2 / 32' }}
+			>
+				{Array.from({ length: 5 * 30 }, (_, i) => (
 					<div
 						key={i}
 						className={clsx(
@@ -325,7 +373,7 @@ const getGridRow = (time: string) => {
 	const t = timeToDayjs(time);
 	return t.hour() * 2 + (t.minute() >= 30 ? 1 : 0) - 13;
 };
-// Compute column assignments for classes (to render overlapping classes side-by-side)
+
 const computeEventColumns = (
 	events: Array<{ time: DateTimeRange; key: string }>,
 ) => {
@@ -404,7 +452,6 @@ const computeEventColumns = (
 			assignedPerKey[e.key] = assigned;
 		}
 		const columnsCount = columnEnds.length;
-		// Ensure every event in the cluster uses the same columnsCount
 		Object.entries(assignedPerKey).forEach(([k, assigned]) => {
 			result[k] = { column: assigned, columns: columnsCount };
 		});
@@ -452,7 +499,7 @@ const CalendarCourses = ({
 
 	return (
 		<div
-			className="absolute top-10 left-10 z-0 grid grid-cols-5 grid-rows-28"
+			className="absolute top-10 left-10 z-0 grid grid-cols-5 grid-rows-30"
 			style={{ width: 'calc(100% - 2.5rem)' }}
 			onPointerMove={(e) => {
 				const { clientX, clientY } = e;
@@ -550,6 +597,12 @@ const CourseTimePlaceholderCard = ({
 	campus,
 }: CourseTimePlaceholderCardProps) => {
 	const color = useCourseColor(courseId);
+	const colorIndex =
+		useEnrolledCourses(
+			(s) => s.courses.find((c) => c.id === courseId)?.color,
+		) ?? 0;
+	const { isDarkMode } = useDarkMode();
+	const textColor = getAccessibleTextColorForCourse(colorIndex, isDarkMode);
 
 	const { updateClass } = useEnrolledCourse(courseId);
 	const [isDraggedOver, setIsDraggedOver] = useState(false);
@@ -566,15 +619,16 @@ const CourseTimePlaceholderCard = ({
 	return (
 		<div
 			className={clsx(
-				'relative z-40 h-full w-full overflow-hidden rounded-md pt-4 text-xs',
+				'relative z-40 h-full w-full overflow-hidden rounded-2xl border border-dashed border-current/40 pt-4 text-xs',
 				color.bg,
-				color.text,
-				isDraggedOver ? 'opacity-80 brightness-75' : 'opacity-50',
+				isDraggedOver
+					? 'scale-98 opacity-80 brightness-75 transition-transform'
+					: 'opacity-50',
 			)}
+			style={{ color: textColor }}
 			ref={ref}
 		>
-			{/* FIXME: Remove placeholder and center the location text by flex */}
-			<div className="absolute top-1/2 w-full -translate-y-1/2 text-center">
+			<div className="absolute top-1/2 w-full -translate-y-1/2 px-1 text-center font-bold">
 				{location + ' | ' + campus}
 			</div>
 			<InvisiblePlaceholder />
@@ -599,7 +653,6 @@ const CalendarCourseOtherTimes = ({
 	const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 	const placeholderRefs = useRef<Record<string, HTMLDivElement | null>>({});
 	if (times.length === 0) return;
-	// Flatten classes per day to handle overlapping placeholders side-by-side
 	const eventsPerDay = times.map((dayTimes) =>
 		dayTimes.flatMap((t, j) =>
 			t.classes.map((c, index) => ({
@@ -613,7 +666,7 @@ const CalendarCourseOtherTimes = ({
 
 	return (
 		<div
-			className="absolute top-10 left-10 z-40 grid grid-cols-5 grid-rows-28"
+			className="absolute top-10 left-10 z-40 grid grid-cols-5 grid-rows-30"
 			style={{ width: 'calc(100% - 2.5rem)' }}
 			onPointerMove={(e) => {
 				const { clientX, clientY } = e;
@@ -713,7 +766,7 @@ export const Calendar = () => {
 
 	const noCourses = useEnrolledCourses((s) => s.courses.length === 0);
 
-	const classModal = useDisclosure();
+	const [isClassModalOpen, setIsClassModalOpen] = useState(false);
 	type SelectedClassState = {
 		courseId: string;
 		classTypeId: string;
@@ -727,17 +780,20 @@ export const Calendar = () => {
 			classTypeId: course.classTypeId,
 			classNumber: course.classNumber,
 		});
-		classModal.onOpen();
+		setIsClassModalOpen(true);
 	};
 
 	return (
-		<div ref={ref} className="touch-pan-y">
+		<div
+			ref={ref}
+			className="bg-background border-separator touch-pan-y rounded-3xl border p-6 shadow-md"
+		>
 			<CalendarHeader
 				currentWeek={currentWeek}
 				actions={actions}
 				status={status}
 			/>
-			<div className="relative">
+			<div className="no-scrollbar relative overflow-x-auto overscroll-x-contain">
 				<CalendarBg currentWeek={currentWeek} />
 				<CalendarCourses
 					courses={courses}
@@ -745,18 +801,14 @@ export const Calendar = () => {
 					onCourseClick={onOpenClass}
 				/>
 				{isDragging && <CalendarCourseOtherTimes currentWeek={currentWeek} />}
-				{!noCourses && <EndActions />}
 			</div>
+			{!noCourses && <EndActions />}
 			{selectedClass && (
 				<ClassModal
-					isOpen={classModal.isOpen}
-					onOpenChange={(isOpen) => {
-						if (isOpen) {
-							classModal.onOpen();
-						} else {
-							classModal.onClose();
-						}
-						if (!isOpen) setSelectedClass(null);
+					isOpen={isClassModalOpen}
+					onOpenChange={(open) => {
+						setIsClassModalOpen(open);
+						if (!open) setSelectedClass(null);
 					}}
 					courseId={selectedClass.courseId}
 					classTypeId={selectedClass.classTypeId}

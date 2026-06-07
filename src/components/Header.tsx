@@ -1,17 +1,13 @@
-import {
-	Button,
-	Link,
-	Navbar,
-	NavbarBrand,
-	NavbarContent,
-	NavbarItem,
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-	Tooltip,
-} from '@heroui/react';
+import { Button, Link, Popover, Tooltip } from '@heroui/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+	FaCommentDots,
+	FaGlobe,
+	FaMoon,
+	FaQuestionCircle,
+	FaSun,
+} from 'react-icons/fa';
 
 import { LANGUAGES } from '../constants/languages';
 import { useDarkMode } from '../helpers/dark-mode';
@@ -20,12 +16,12 @@ import { useHelpModal } from '../helpers/help-modal';
 const HEADER_BUTTON_PROPS = {
 	size: 'sm',
 	isIconOnly: true,
-	variant: 'flat',
-	color: 'primary',
-	className: 'text-xl',
+	variant: 'secondary',
+	className:
+		'text-lg rounded-full flex items-center justify-center bg-default-100 hover:bg-default-200 text-foreground',
 } as const;
 
-export const Header = ({ isSplash = false }: { isSplash?: boolean }) => {
+export const Header = ({ isWelcome = false }: { isWelcome?: boolean }) => {
 	const { t, i18n } = useTranslation();
 
 	const openHelpModal = useHelpModal((s) => s.open);
@@ -35,91 +31,102 @@ export const Header = ({ isSplash = false }: { isSplash?: boolean }) => {
 	const { isDarkMode, toggleIsDarkMode } = useDarkMode();
 
 	return (
-		<Navbar
-			isBordered={!isSplash}
-			isBlurred={!isSplash}
-			maxWidth="xl"
-			position={isSplash ? 'sticky' : 'static'}
-			classNames={{ wrapper: 'px-4' }}
-			className={isSplash ? 'sticky top-0 z-50 bg-transparent' : ''}
-			style={
-				isSplash
-					? {
-							backgroundColor: 'transparent',
-							backdropFilter: 'none',
-							WebkitBackdropFilter: 'none',
-							boxShadow: 'none',
-						}
-					: {}
-			}
+		<nav
+			className={`flex h-16 w-full items-center ${
+				isWelcome
+					? 'sticky top-0 z-50 bg-transparent'
+					: 'border-separator bg-background border-b'
+			}`}
 		>
-			<NavbarBrand>
-				<img src="/favicon.svg" alt="Logo" className="mr-2 w-6" />
-				<h1 className="font-bold text-inherit">MyTimetable</h1>
-			</NavbarBrand>
-			{!isSplash && (
-				<NavbarContent justify="end">
-					<NavbarItem>
-						<Tooltip content={t('header.help')} size="sm">
-							<Button {...HEADER_BUTTON_PROPS} onClick={openHelpModal}>
-								❓
-							</Button>
-						</Tooltip>
-					</NavbarItem>
-					<NavbarItem>
-						<Tooltip content={t('header.feedback')} size="sm">
-							<Button
-								{...HEADER_BUTTON_PROPS}
-								as={Link}
-								href={import.meta.env.VITE_FEEDBACK_FORM_URL}
-							>
-								🗣
-							</Button>
-						</Tooltip>
-					</NavbarItem>
-					<NavbarItem>
-						<Tooltip content={t('header.toggle-dark-mode')} size="sm">
-							<Button {...HEADER_BUTTON_PROPS} onClick={toggleIsDarkMode}>
-								{isDarkMode ? '🌚' : '🌞'}
-							</Button>
-						</Tooltip>
-					</NavbarItem>
-					<NavbarItem>
-						<Popover
-							isOpen={isChangeLanguageOpen}
-							onOpenChange={(open) => setIsChangeLanguageOpen(open)}
-						>
-							<Tooltip
-								content={t('header.change-language')}
-								size="sm"
-								isDisabled={isChangeLanguageOpen}
-							>
-								<div>
-									<PopoverTrigger>
-										<Button {...HEADER_BUTTON_PROPS}>🌐</Button>
-									</PopoverTrigger>
-								</div>
-							</Tooltip>
-							<PopoverContent>
-								{LANGUAGES.map((language) => (
-									<Button
-										key={language.code}
-										fullWidth
-										variant="light"
-										onClick={() => {
-											i18n.changeLanguage(language.code);
-											setIsChangeLanguageOpen(false);
-										}}
-									>
-										<span>{language.name} </span>
-										<span className="font-noto-emoji">{language.flag}</span>
+			<div
+				className={`mx-auto flex w-full items-center justify-between ${
+					isWelcome ? 'max-w-6xl px-4 md:px-6' : 'max-w-(--breakpoint-xl) px-2'
+				}`}
+			>
+				<div className="flex items-center">
+					<img src="/favicon.svg" alt="Logo" className="mr-2 h-6 w-6" />
+					<h1 className="text-foreground text-lg font-bold">MyTimetable</h1>
+				</div>
+				{!isWelcome && (
+					<div className="flex items-center gap-2">
+						<div>
+							<Tooltip delay={0}>
+								<Tooltip.Trigger>
+									<Button {...HEADER_BUTTON_PROPS} onPress={openHelpModal}>
+										<FaQuestionCircle />
 									</Button>
-								))}
-							</PopoverContent>
-						</Popover>
-					</NavbarItem>
-				</NavbarContent>
-			)}
-		</Navbar>
+								</Tooltip.Trigger>
+								<Tooltip.Content>{t('header.help')}</Tooltip.Content>
+							</Tooltip>
+						</div>
+						<div>
+							<Tooltip delay={0}>
+								<Tooltip.Trigger>
+									<Link
+										href={import.meta.env.VITE_FEEDBACK_FORM_URL}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="bg-default-100 hover:bg-default-200 text-foreground flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-lg"
+									>
+										<FaCommentDots />
+									</Link>
+								</Tooltip.Trigger>
+								<Tooltip.Content>{t('header.feedback')}</Tooltip.Content>
+							</Tooltip>
+						</div>
+						<div>
+							<Tooltip delay={0}>
+								<Tooltip.Trigger>
+									<Button {...HEADER_BUTTON_PROPS} onPress={toggleIsDarkMode}>
+										{isDarkMode ? <FaMoon /> : <FaSun />}
+									</Button>
+								</Tooltip.Trigger>
+								<Tooltip.Content>
+									{t('header.toggle-dark-mode')}
+								</Tooltip.Content>
+							</Tooltip>
+						</div>
+						<div>
+							<Popover
+								isOpen={isChangeLanguageOpen}
+								onOpenChange={(open) => setIsChangeLanguageOpen(open)}
+							>
+								<Tooltip delay={0} isDisabled={isChangeLanguageOpen}>
+									<Tooltip.Trigger>
+										<Popover.Trigger>
+											<Button {...HEADER_BUTTON_PROPS}>
+												<FaGlobe />
+											</Button>
+										</Popover.Trigger>
+									</Tooltip.Trigger>
+									<Tooltip.Content>
+										{t('header.change-language')}
+									</Tooltip.Content>
+								</Tooltip>
+								<Popover.Content>
+									<Popover.Dialog className="bg-overlay border-separator flex min-w-[150px] flex-col gap-1 rounded-2xl border p-2 shadow-xl">
+										{LANGUAGES.map((language) => (
+											<Button
+												key={language.code}
+												fullWidth
+												variant="tertiary"
+												onPress={() => {
+													i18n.changeLanguage(language.code);
+													setIsChangeLanguageOpen(false);
+												}}
+												className="hover:bg-default-100 text-foreground justify-start gap-2 rounded-xl px-3 py-2 text-sm"
+											>
+												<span>{language.name} </span>
+												<span className="font-noto-emoji">{language.flag}</span>
+											</Button>
+										))}
+									</Popover.Dialog>
+								</Popover.Content>
+							</Popover>
+						</div>
+					</div>
+				)}
+			</div>
+		</nav>
 	);
 };

@@ -2,14 +2,14 @@ import { test, expect } from '@playwright/test';
 
 import { setupPage } from './helpers';
 
-test.describe('MyTimetable App Splash Screen End-to-End Tests', () => {
-	test('should display splash screen on first visit, allow starting, persist state, and allow re-opening from footer', async ({
+test.describe('MyTimetable App Welcome Screen End-to-End Tests', () => {
+	test('should display welcome screen on first visit, allow starting, persist state, and allow re-opening from footer', async ({
 		page,
 	}) => {
-		// 1. Visit with a clean storage environment (no addInitScript to skip splash)
+		// 1. Visit with a clean storage environment (no addInitScript to skip welcome screen)
 		await page.goto('/');
 
-		// Verify splash screen elements are visible
+		// Verify welcome screen elements are visible
 		const mainHeading = page.getByRole('main').getByRole('heading', {
 			name: 'MyTimetable',
 			exact: true,
@@ -46,7 +46,7 @@ test.describe('MyTimetable App Splash Screen End-to-End Tests', () => {
 			await page.waitForTimeout(500);
 		}
 
-		// Verify that the splash screen is gone and the main dashboard is visible
+		// Verify that the welcome screen is gone and the main dashboard is visible
 		await expect(startButton).not.toBeVisible();
 		const termSelector = page.getByRole('button', { name: /Select a term/ });
 		await expect(termSelector).toBeVisible();
@@ -56,17 +56,17 @@ test.describe('MyTimetable App Splash Screen End-to-End Tests', () => {
 		await expect(startButton).not.toBeVisible();
 		await expect(termSelector).toBeVisible();
 
-		// 4. Click the "About" link in the footer to re-open the splash screen
+		// 4. Click the "About" link in the footer to re-open the welcome screen
 		const aboutLink = page.getByRole('heading', { name: 'About' });
 		await expect(aboutLink).toBeVisible();
 		await aboutLink.click();
 		await page.waitForTimeout(500);
 
-		// Verify that the splash screen is displayed again
+		// Verify that the welcome screen is displayed again
 		await expect(mainHeading).toBeVisible();
 		await expect(startButton).toBeVisible();
 
-		// 5. Close the splash screen again using the start button
+		// 5. Close the welcome screen again using the start button
 		await startButton.click({ force: true });
 		await page.waitForTimeout(500);
 		try {

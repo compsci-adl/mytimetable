@@ -2,13 +2,13 @@ import { create } from 'zustand';
 
 import { LocalStorageKey } from '../constants/local-storage-keys';
 
-type SplashScreenState = {
-	showSplash: boolean;
-	openSplash: () => void;
-	closeSplash: () => void;
+type WelcomeScreenState = {
+	showWelcome: boolean;
+	openWelcome: () => void;
+	closeWelcome: () => void;
 };
 
-export const useSplashScreen = create<SplashScreenState>()((set) => {
+export const useWelcomeScreen = create<WelcomeScreenState>()((set) => {
 	let isFirstTime = true;
 	try {
 		isFirstTime = localStorage.getItem(LocalStorageKey.FirstTime) === null;
@@ -20,9 +20,9 @@ export const useSplashScreen = create<SplashScreenState>()((set) => {
 	}
 
 	return {
-		showSplash: isFirstTime,
-		openSplash: () => set({ showSplash: true }),
-		closeSplash: () => {
+		showWelcome: isFirstTime,
+		openWelcome: () => set({ showWelcome: true }),
+		closeWelcome: () => {
 			try {
 				localStorage.setItem(LocalStorageKey.FirstTime, 'false');
 			} catch (e) {
@@ -31,7 +31,7 @@ export const useSplashScreen = create<SplashScreenState>()((set) => {
 				console.error('Failed to write FirstTime to localStorage:', e);
 				/* v8 ignore stop */
 			}
-			set({ showSplash: false });
+			set({ showWelcome: false });
 		},
 	};
 });
