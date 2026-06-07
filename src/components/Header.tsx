@@ -39,8 +39,8 @@ export const Header = ({ isWelcome = false }: { isWelcome?: boolean }) => {
 			}`}
 		>
 			<div
-				className={`mx-auto flex w-full items-center justify-between ${
-					isWelcome ? 'max-w-6xl px-4 md:px-6' : 'max-w-(--breakpoint-xl) px-2'
+				className={`flex w-full items-center justify-between ${
+					isWelcome ? 'pl-4 md:pl-6' : 'mx-auto max-w-(--breakpoint-xl) px-2'
 				}`}
 			>
 				<div className="flex items-center">
