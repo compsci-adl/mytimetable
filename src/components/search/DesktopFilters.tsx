@@ -122,7 +122,7 @@ export const DesktopFilters = ({
 								<AutoTimetable isDisabled={true} />
 							</span>
 						</Tooltip.Trigger>
-						<Tooltip.Content>Please select course first</Tooltip.Content>
+						<Tooltip.Content>Please select a course first</Tooltip.Content>
 					</Tooltip>
 				) : (
 					<AutoTimetable isDisabled={false} />
