@@ -117,16 +117,21 @@ export const HelpModal = () => {
 							<Tabs.ListContainer className="self-center">
 								<Tabs.List
 									aria-label="Help Steps"
-									className="border-separator flex border-b"
+									className="bg-content2 border-separator flex max-w-full gap-1 overflow-x-auto rounded-full border p-1"
 								>
 									{STEPS.map((_, i) => (
 										<Tabs.Tab
 											key={i}
 											id={String(i)}
-											className="rounded-t-lg px-4 py-2 text-sm font-semibold"
+											className={clsx(
+												'relative rounded-full px-3 py-1 text-xs font-semibold transition-colors',
+												stepIndex === i
+													? 'text-primary-foreground font-black'
+													: 'text-default-500 hover:text-foreground',
+											)}
 										>
 											{i + 1}
-											<Tabs.Indicator className="bg-primary h-0.5" />
+											<Tabs.Indicator className="bg-primary rounded-full" />
 										</Tabs.Tab>
 									))}
 								</Tabs.List>
@@ -140,9 +145,9 @@ export const HelpModal = () => {
 									direction ? 'animate-slide-right' : 'animate-slide-left',
 								)}
 							>
-								<Card className="mobile:p-1 border-separator bg-content1/50 h-full rounded-2xl border p-2 shadow-md">
-									<Card.Content className="flex h-full flex-col gap-2">
-										<div className="mobile:text-sm text-foreground text-lg font-medium">
+								<Card className="mobile:p-3 border-separator bg-content1/50 h-full rounded-3xl border p-4 shadow-md md:p-6">
+									<Card.Content className="flex h-full flex-col gap-4 md:gap-6">
+										<div className="mobile:text-sm text-foreground px-2 text-center text-base leading-relaxed md:px-4 md:text-lg">
 											{step.content}
 										</div>
 										<div className="flex grow items-center justify-center overflow-hidden">
