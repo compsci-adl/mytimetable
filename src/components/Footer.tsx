@@ -1,10 +1,4 @@
-import {
-	Divider,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
-} from '@heroui/react';
+import { Modal, Separator } from '@heroui/react';
 import { useState } from 'react';
 import {
 	FaDiscord,
@@ -17,7 +11,7 @@ import {
 	FaYoutube,
 } from 'react-icons/fa';
 
-import { useSplashScreen } from '../helpers/splash-screen';
+import { useWelcomeScreen } from '../helpers/welcome-screen';
 import { Tips } from './Tips';
 
 interface FooterModalProps {
@@ -29,14 +23,27 @@ interface FooterModalProps {
 
 const FooterModal = ({ title, content, isOpen, onClose }: FooterModalProps) => {
 	return (
-		<Modal isOpen={isOpen} onClose={onClose}>
-			<ModalContent>
-				<ModalHeader>{title}</ModalHeader>
-				<ModalBody>
-					<p className="mb-4">{content}</p>
-				</ModalBody>
-			</ModalContent>
-		</Modal>
+		<Modal.Backdrop
+			variant="opaque"
+			isOpen={isOpen}
+			onOpenChange={(open) => !open && onClose()}
+		>
+			<Modal.Container size="md">
+				<Modal.Dialog className="bg-background border-separator rounded-3xl border p-6 shadow-2xl">
+					<Modal.CloseTrigger className="hover:bg-default-100 rounded-full" />
+					<header className="contents">
+						<Modal.Header>
+							<Modal.Heading className="text-xl font-bold">
+								{title}
+							</Modal.Heading>
+						</Modal.Header>
+					</header>
+					<Modal.Body>
+						<p className="text-foreground/80 mb-4">{content}</p>
+					</Modal.Body>
+				</Modal.Dialog>
+			</Modal.Container>
+		</Modal.Backdrop>
 	);
 };
 
@@ -71,62 +78,71 @@ const LINKS = [
 
 export const Footer = () => {
 	const [openModal, setOpenModal] = useState<string | null>(null);
-	const openSplash = useSplashScreen((s) => s.openSplash);
+	const openWelcome = useWelcomeScreen((s) => s.openWelcome);
 
 	return (
-		<footer className="text-apple-gray-700 space-y-4">
+		<footer className="text-apple-gray-700 space-y-3">
 			<div className="text-center text-sm">
 				<Tips />
 			</div>
-			<Divider />
-			<div className="mobile:grid-cols-1 mobile:justify-items-center mobile:gap-4 grid grid-cols-2 items-center gap-2">
-				<div className="flex items-center gap-2">
-					<img src="/favicon.svg" alt="Logo" className="w-10" />
-					<h1 className="text-foreground ml-1 text-xl font-bold">
-						MyTimetable
-					</h1>
+			<Separator />
+			<div className="flex flex-col gap-3 py-2">
+				{/* Row 1: Logo | Nav links */}
+				<div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+					<div className="flex items-center justify-center gap-2 md:justify-start">
+						<img
+							src="/favicon.svg"
+							alt="Logo"
+							className="h-8 w-8 md:h-9 md:w-9"
+						/>
+						<span className="text-foreground text-base font-bold md:text-lg">
+							MyTimetable
+						</span>
+					</div>
+					<div className="flex flex-wrap justify-center gap-4 md:gap-6">
+						{FOOTER_SECTIONS.map((section, i) => (
+							<h3
+								key={i}
+								className="hover:text-primary cursor-pointer text-xs font-semibold tracking-widest uppercase transition-colors md:text-sm"
+								onClick={() => {
+									if (section.title === 'About') {
+										openWelcome();
+									} else {
+										setOpenModal(section.title);
+									}
+								}}
+							>
+								{section.title}
+							</h3>
+						))}
+					</div>
 				</div>
 
-				<div className="mobile:justify-self-auto mt-0 flex gap-6 justify-self-end">
-					{FOOTER_SECTIONS.map((section, i) => (
-						<h3
-							key={i}
-							className="hover:text-primary cursor-pointer text-sm font-semibold tracking-wider uppercase transition-colors"
-							onClick={() => {
-								if (section.title === 'About') {
-									openSplash();
-								} else {
-									setOpenModal(section.title);
-								}
-							}}
-						>
-							{section.title}
-						</h3>
-					))}
-				</div>
-
-				<div className="flex items-center text-sm">
-					<span className="mr-1">&copy; {new Date().getFullYear()}</span>
-					<a
-						href="https://csclub.org.au/"
-						target="_blank"
-						className="underline"
-					>
-						Adelaide University Computer Science Club
-					</a>
-				</div>
-
-				<div className="mobile:justify-self-auto flex gap-5 justify-self-end text-2xl">
-					{LINKS.map(({ icon: Icon, link }, i) => (
+				{/* Row 2: Copyright | Social icons */}
+				<div className="border-separator/40 flex flex-col-reverse gap-4 border-t pt-3 md:flex-row md:items-center md:justify-between md:border-0 md:pt-0">
+					<div className="text-foreground/70 flex flex-wrap items-center justify-center gap-1 text-center text-xs md:justify-start md:text-left md:text-sm">
+						<span>&copy; {new Date().getFullYear()}</span>
 						<a
-							href={link}
-							key={i}
-							className="hover:text-primary transition-colors duration-300"
+							href="https://csclub.org.au/"
 							target="_blank"
+							className="hover:text-primary underline transition-colors"
 						>
-							<Icon />
+							Adelaide University Computer Science Club
 						</a>
-					))}
+					</div>
+					<div className="flex items-center justify-center gap-2">
+						{LINKS.map(({ icon: Icon, link }, i) => (
+							<a
+								href={link}
+								key={i}
+								className="bg-default-100 hover:bg-default-200 text-foreground flex h-8 w-8 items-center justify-center rounded-full text-lg transition-all duration-300 hover:scale-110"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<Icon />
+							</a>
+						))}
+					</div>
 				</div>
 			</div>
 

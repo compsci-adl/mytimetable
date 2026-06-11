@@ -4,17 +4,17 @@ import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { HelpModal } from './components/HelpModal';
 import { SearchForm } from './components/SearchForm';
-import { SplashScreen } from './components/SplashScreen';
+import { WelcomeScreen } from './components/WelcomeScreen';
 import { ZoomButtons } from './components/ZoomButtons';
 import { useCoursesInfo } from './data/course-info';
-import { useSplashScreen } from './helpers/splash-screen';
+import { useWelcomeScreen } from './helpers/welcome-screen';
 
 export const App = () => {
 	useCoursesInfo();
-	const showSplash = useSplashScreen((s) => s.showSplash);
+	const showWelcome = useWelcomeScreen((s) => s.showWelcome);
 
-	if (showSplash) {
-		return <SplashScreen />;
+	if (showWelcome) {
+		return <WelcomeScreen />;
 	}
 
 	return (

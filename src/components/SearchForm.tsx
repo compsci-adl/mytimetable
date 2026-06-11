@@ -138,7 +138,7 @@ export const SearchForm = () => {
 
 	return (
 		<div>
-			<div className="mobile:flex-col flex gap-2">
+			<div className="mobile:flex-row mobile:items-end flex flex-col items-stretch gap-2">
 				<TermSelector
 					selectedTerm={selectedTerm}
 					onTermChange={setSelectedTerm}

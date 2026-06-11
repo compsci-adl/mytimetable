@@ -4,4 +4,5 @@ export const enum LocalStorageKey {
 	FirstTime = 'MTT.first-time',
 	CalendarHeight = 'MTT.calendar-height',
 	Campuses = 'MTT.campuses',
+	DarkMode = 'MTT.dark-mode',
 }

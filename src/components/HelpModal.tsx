@@ -1,17 +1,5 @@
-import {
-	Button,
-	Card,
-	CardBody,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	Tab,
-	Tabs,
-} from '@heroui/react';
+import { Button, Card, Modal, Tabs } from '@heroui/react';
 import clsx from 'clsx';
-import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -94,15 +82,6 @@ export const HelpModal = () => {
 		setDirection(index >= stepIndex);
 		setStepIndexKey(String(index));
 	};
-	const slideVariants = {
-		enter: (direction: boolean) => ({
-			x: direction ? '100%' : '-100%',
-		}),
-		center: { x: 0 },
-		exit: (direction: boolean) => ({
-			x: direction ? '-100%' : '100%',
-		}),
-	};
 
 	const handleClose = () => {
 		setStepIndex(0);
@@ -112,80 +91,110 @@ export const HelpModal = () => {
 	const step = STEPS[stepIndex];
 
 	return (
-		<Modal
-			size="3xl"
+		<Modal.Backdrop
+			variant="opaque"
 			isOpen={helpModal.isOpen}
-			onClose={handleClose}
-			scrollBehavior="inside"
+			onOpenChange={(open) => !open && handleClose()}
 		>
-			<ModalContent>
-				<ModalHeader>{t('help.title')}</ModalHeader>
-				<ModalBody>
-					{/* FIXME: Tabs are missing animation when controlled */}
-					<Tabs
-						aria-label="Help Steps"
-						selectedKey={stepIndexKey}
-						onSelectionChange={(step) => setStepIndex(Number(step))}
-						className="self-center"
-						variant="underlined"
-					>
-						{STEPS.map((_, i) => (
-							<Tab key={i} title={i + 1} />
-						))}
-					</Tabs>
-					<div className="relative h-152 w-full overflow-x-hidden">
-						<AnimatePresence initial={false} custom={direction}>
-							<motion.div
+			<Modal.Container size="lg">
+				<Modal.Dialog className="bg-background border-separator w-full max-w-3xl rounded-3xl border p-6 shadow-2xl">
+					<Modal.CloseTrigger
+						onPress={handleClose}
+						className="hover:bg-default-100 rounded-full"
+					/>
+					<header className="contents">
+						<Modal.Header>
+							<Modal.Heading className="text-xl font-bold">
+								{t('help.title')}
+							</Modal.Heading>
+						</Modal.Header>
+					</header>
+					<Modal.Body className="gap-4">
+						<Tabs
+							selectedKey={stepIndexKey}
+							onSelectionChange={(step) => setStepIndex(Number(step))}
+						>
+							<Tabs.ListContainer className="self-center">
+								<Tabs.List
+									aria-label="Help Steps"
+									className="bg-content2 border-separator flex max-w-full gap-1 overflow-x-auto rounded-full border p-1"
+								>
+									{STEPS.map((_, i) => (
+										<Tabs.Tab
+											key={i}
+											id={String(i)}
+											className={clsx(
+												'relative rounded-full px-3 py-1 text-xs font-semibold transition-colors',
+												stepIndex === i
+													? 'text-primary-foreground font-black'
+													: 'text-default-500 hover:text-foreground',
+											)}
+										>
+											{i + 1}
+											<Tabs.Indicator className="bg-primary rounded-full" />
+										</Tabs.Tab>
+									))}
+								</Tabs.List>
+							</Tabs.ListContainer>
+						</Tabs>
+						<div className="relative h-120 w-full overflow-hidden">
+							<div
 								key={stepIndexKey}
-								custom={direction}
-								variants={slideVariants}
-								initial="enter"
-								animate="center"
-								exit="exit"
-								transition={{ ease: 'easeInOut', duration: 0.3 }}
-								className="mobile:p-1 absolute h-full w-full p-4"
+								className={clsx(
+									'mobile:p-1 absolute h-full w-full p-4',
+									direction ? 'animate-slide-right' : 'animate-slide-left',
+								)}
 							>
-								<Card className="mobile:p-1 h-full p-2">
-									<CardBody className="gap-2">
-										<div className="mobile:text-sm text-lg">{step.content}</div>
-										<div className="flex grow items-center justify-center">
+								<Card className="mobile:p-3 border-separator bg-content1/50 h-full rounded-3xl border p-4 shadow-md md:p-6">
+									<Card.Content className="flex h-full flex-col gap-4 md:gap-6">
+										<div className="mobile:text-sm text-foreground px-2 text-center text-base leading-relaxed md:px-4 md:text-lg">
+											{step.content}
+										</div>
+										<div className="flex grow items-center justify-center overflow-hidden">
 											{step.image?.path ? (
 												<img
 													alt={step.image?.alt ?? step.content}
 													src={step.image.path}
-													className="max-h-112"
+													className="border-separator max-h-80 rounded-xl border object-contain shadow-sm"
 												/>
 											) : null}
 										</div>
-									</CardBody>
+									</Card.Content>
 								</Card>
-							</motion.div>
-						</AnimatePresence>
-					</div>
-				</ModalBody>
-				<ModalFooter className="justify-between">
-					<Button
-						color="primary"
-						onClick={() => setStepIndex(stepIndex - 1)}
-						className={clsx('invisible', stepIndex > 0 && 'visible')}
-					>
-						{t('help.actions.previous-step')}
-					</Button>
-					{stepIndex < STEPS.length - 1 ? (
+							</div>
+						</div>
+					</Modal.Body>
+					<Modal.Footer className="border-separator flex justify-between border-t pt-4">
 						<Button
-							className="self-end"
-							color="primary"
-							onClick={() => setStepIndex(stepIndex + 1)}
+							variant="secondary"
+							onPress={() => setStepIndex(stepIndex - 1)}
+							className={clsx(
+								'invisible rounded-full px-6',
+								stepIndex > 0 && 'visible',
+							)}
 						>
-							{t('help.actions.next-step')}
+							{t('help.actions.previous-step')}
 						</Button>
-					) : (
-						<Button color="primary" onClick={helpModal.close}>
-							{t('help.actions.get-started')}
-						</Button>
-					)}
-				</ModalFooter>
-			</ModalContent>
-		</Modal>
+						{stepIndex < STEPS.length - 1 ? (
+							<Button
+								className="rounded-full px-6"
+								variant="primary"
+								onPress={() => setStepIndex(stepIndex + 1)}
+							>
+								{t('help.actions.next-step')}
+							</Button>
+						) : (
+							<Button
+								variant="primary"
+								className="rounded-full px-6"
+								onPress={handleClose}
+							>
+								{t('help.actions.get-started')}
+							</Button>
+						)}
+					</Modal.Footer>
+				</Modal.Dialog>
+			</Modal.Container>
+		</Modal.Backdrop>
 	);
 };

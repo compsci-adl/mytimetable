@@ -1,5 +1,4 @@
 import '@fontsource-variable/outfit';
-import { HeroUIProvider } from '@heroui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
@@ -11,6 +10,7 @@ import { Toaster } from 'sonner';
 import { App } from './App';
 import { Error } from './components/Error';
 import { useEnrolledCourses } from './data/enrolled-courses';
+import { useDarkMode } from './helpers/dark-mode';
 import './i18n';
 import './index.css';
 import { queryClient } from './lib/query';
@@ -35,6 +35,9 @@ if (import.meta.env.DEV) {
 	mountStoreDevtool('Courses', useEnrolledCourses);
 }
 
+// Initialise system-aware dark mode
+useDarkMode.getState().initDarkMode();
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<ErrorBoundary FallbackComponent={Error}>
@@ -43,10 +46,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 					initialIsOpen={false}
 					buttonPosition="bottom-left"
 				/>
-				<HeroUIProvider>
-					<Toaster richColors position="top-center" />
-					<App />
-				</HeroUIProvider>
+				<Toaster richColors position="top-center" />
+				<App />
 			</QueryClientProvider>
 		</ErrorBoundary>
 	</React.StrictMode>,

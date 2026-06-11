@@ -29,7 +29,7 @@ vi.hoisted(() => {
 	}
 });
 
-describe('useSplashScreen Zustand Store', () => {
+describe('useWelcomeScreen Zustand Store', () => {
 	beforeEach(() => {
 		localStorage.clear();
 		vi.clearAllMocks();
@@ -37,26 +37,30 @@ describe('useSplashScreen Zustand Store', () => {
 	});
 
 	it('should default to true if FirstTime is not set in localStorage', async () => {
-		const { useSplashScreen } = await import('../../src/helpers/splash-screen');
-		expect(useSplashScreen.getState().showSplash).toBe(true);
+		const { useWelcomeScreen } =
+			await import('../../src/helpers/welcome-screen');
+		expect(useWelcomeScreen.getState().showWelcome).toBe(true);
 	});
 
 	it('should default to false if FirstTime is set to false in localStorage', async () => {
 		localStorage.setItem('MTT.first-time', 'false');
-		const { useSplashScreen } = await import('../../src/helpers/splash-screen');
-		expect(useSplashScreen.getState().showSplash).toBe(false);
+		const { useWelcomeScreen } =
+			await import('../../src/helpers/welcome-screen');
+		expect(useWelcomeScreen.getState().showWelcome).toBe(false);
 	});
 
-	it('should open splash and set showSplash to true', async () => {
-		const { useSplashScreen } = await import('../../src/helpers/splash-screen');
-		useSplashScreen.getState().openSplash();
-		expect(useSplashScreen.getState().showSplash).toBe(true);
+	it('should open welcome screen and set showWelcome to true', async () => {
+		const { useWelcomeScreen } =
+			await import('../../src/helpers/welcome-screen');
+		useWelcomeScreen.getState().openWelcome();
+		expect(useWelcomeScreen.getState().showWelcome).toBe(true);
 	});
 
-	it('should close splash and persist setting to localStorage', async () => {
-		const { useSplashScreen } = await import('../../src/helpers/splash-screen');
-		useSplashScreen.getState().closeSplash();
-		expect(useSplashScreen.getState().showSplash).toBe(false);
+	it('should close welcome screen and persist setting to localStorage', async () => {
+		const { useWelcomeScreen } =
+			await import('../../src/helpers/welcome-screen');
+		useWelcomeScreen.getState().closeWelcome();
+		expect(useWelcomeScreen.getState().showWelcome).toBe(false);
 		expect(localStorage.getItem('MTT.first-time')).toBe('false');
 	});
 
@@ -66,8 +70,9 @@ describe('useSplashScreen Zustand Store', () => {
 			throw new Error('Read error');
 		});
 
-		const { useSplashScreen } = await import('../../src/helpers/splash-screen');
-		expect(useSplashScreen.getState().showSplash).toBe(true);
+		const { useWelcomeScreen } =
+			await import('../../src/helpers/welcome-screen');
+		expect(useWelcomeScreen.getState().showWelcome).toBe(true);
 
 		localStorage.getItem = originalGetItem;
 	});
@@ -78,9 +83,10 @@ describe('useSplashScreen Zustand Store', () => {
 			throw new Error('Write error');
 		});
 
-		const { useSplashScreen } = await import('../../src/helpers/splash-screen');
-		useSplashScreen.getState().closeSplash();
-		expect(useSplashScreen.getState().showSplash).toBe(false);
+		const { useWelcomeScreen } =
+			await import('../../src/helpers/welcome-screen');
+		useWelcomeScreen.getState().closeWelcome();
+		expect(useWelcomeScreen.getState().showWelcome).toBe(false);
 
 		localStorage.setItem = originalSetItem;
 	});

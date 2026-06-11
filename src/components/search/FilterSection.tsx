@@ -1,4 +1,4 @@
-import { Checkbox } from '@heroui/react';
+import { Checkbox, Label } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
@@ -150,23 +150,34 @@ export const FilterSection = ({
 					};
 
 					return (
-						<div className={`grid gap-2 ${colsClass}`}>
+						<div className={`grid gap-2.5 ${colsClass}`}>
 							{visibleLevels.map((lvl) => (
 								<div
 									key={lvl}
 									className={`max-h-20 w-auto opacity-100 transition-all duration-200 ease-in-out`}
 								>
 									<Checkbox
+										id={`level-${lvl}`}
 										isSelected={currentLevelOfStudy === lvl}
 										isDisabled={
 											currentLevelOfStudy !== undefined &&
 											currentLevelOfStudy !== lvl
 										}
-										onValueChange={(isSelected) =>
+										onChange={(isSelected) =>
 											setLevelOfStudy(isSelected ? lvl : undefined)
 										}
 									>
-										{t(labelKey[lvl])}
+										<Checkbox.Control>
+											<Checkbox.Indicator />
+										</Checkbox.Control>
+										<Checkbox.Content>
+											<Label
+												htmlFor={`level-${lvl}`}
+												className="text-foreground cursor-pointer text-xs font-semibold select-none"
+											>
+												{t(labelKey[lvl])}
+											</Label>
+										</Checkbox.Content>
 									</Checkbox>
 								</div>
 							))}
@@ -191,12 +202,23 @@ export const FilterSection = ({
 							}`}
 						>
 							<Checkbox
+								id="uni-wide"
 								isSelected={currentOnlyUniversityWide === true}
-								onValueChange={(isSelected) =>
+								onChange={(isSelected) =>
 									setOnlyUniversityWide(isSelected ? true : undefined)
 								}
 							>
-								{t('search.university-wide-elective')}
+								<Checkbox.Control>
+									<Checkbox.Indicator />
+								</Checkbox.Control>
+								<Checkbox.Content>
+									<Label
+										htmlFor="uni-wide"
+										className="text-foreground cursor-pointer text-xs font-semibold select-none"
+									>
+										{t('search.university-wide-elective')}
+									</Label>
+								</Checkbox.Content>
 							</Checkbox>
 						</div>
 					</div>
@@ -210,8 +232,9 @@ export const FilterSection = ({
 						{Array.from(availableCampuses).map((campus) => (
 							<Checkbox
 								key={campus}
+								id={`campus-${campus}`}
 								isSelected={currentCampuses?.includes(campus) ?? false}
-								onValueChange={(isSelected) => {
+								onChange={(isSelected) => {
 									if (!isSelected) {
 										setCampuses(
 											currentCampuses?.filter((s: string) => s !== campus) ??
@@ -222,7 +245,17 @@ export const FilterSection = ({
 									setCampuses([...(currentCampuses ?? []), campus]);
 								}}
 							>
-								{campus}
+								<Checkbox.Control>
+									<Checkbox.Indicator />
+								</Checkbox.Control>
+								<Checkbox.Content>
+									<Label
+										htmlFor={`campus-${campus}`}
+										className="text-foreground cursor-pointer text-xs font-semibold select-none"
+									>
+										{campus}
+									</Label>
+								</Checkbox.Content>
 							</Checkbox>
 						))}
 					</div>

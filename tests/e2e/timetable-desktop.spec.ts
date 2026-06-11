@@ -48,7 +48,7 @@ test.describe('MyTimetable App Desktop End-to-End Tests', () => {
 		const lunchSwitch = page.getByLabel('Enable preferred lunch break');
 		await expect(lunchSwitch).toBeVisible();
 		// Let's check its state, click it to enable
-		await lunchSwitch.click();
+		await lunchSwitch.click({ force: true });
 
 		// Check that lunch start and end time inputs become visible
 		const lunchStartSelect = page.getByRole('button', { name: /Lunch start/ });
@@ -57,14 +57,16 @@ test.describe('MyTimetable App Desktop End-to-End Tests', () => {
 		await expect(lunchEndSelect).toBeVisible();
 
 		// Select "ONLINE" mode
-		const onlineModeBtn = page.getByRole('button', { name: 'ONLINE' });
+		const onlineModeBtn = page
+			.locator('button')
+			.filter({ hasText: /^ONLINE$/ });
 		await expect(onlineModeBtn).toBeVisible();
 		await onlineModeBtn.click();
 
 		// Click "Allow lecture clashes" switch
 		const ignoreLecturesSwitch = page.getByLabel('Ignore lectures');
 		await expect(ignoreLecturesSwitch).toBeVisible();
-		await ignoreLecturesSwitch.click();
+		await ignoreLecturesSwitch.click({ force: true });
 
 		// Click GO button to run auto-timetable solver
 		const goButton = page.getByRole('button', { name: 'GO' });

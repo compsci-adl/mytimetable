@@ -2,6 +2,7 @@
 	"search": {
 		"select-term": "Select a term",
 		"search-course": "Search a course",
+		"loading": "Loading...",
 		"add": "Add",
 		"course-not-found": "No course found",
 		"choose-subject": "Choose a subject area",

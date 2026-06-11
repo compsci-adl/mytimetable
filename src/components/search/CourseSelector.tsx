@@ -1,7 +1,8 @@
-import { Autocomplete, AutocompleteItem, Button } from '@heroui/react';
+import { Label, ComboBox, Input, ListBox, Button } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaSearch, FaTimes } from 'react-icons/fa';
 
 import { getCourses } from '../../apis';
 import { YEAR } from '../../constants/year';
@@ -26,6 +27,8 @@ export const CourseSelector = ({
 	const { t } = useTranslation();
 	const enrolledCourses = useEnrolledCourses();
 	const [selectedCourseId, setSelectedCourseId] = useState<Key | null>(null);
+	const [inputValue, setInputValue] = useState('');
+	const formRef = useRef<HTMLFormElement>(null);
 
 	const coursesQuery = useQuery({
 		queryKey: [
@@ -53,6 +56,7 @@ export const CourseSelector = ({
 					return courseCampuses.some((cc) => campuses.includes(cc));
 				})
 			: courses;
+
 	const courseList =
 		filteredByCampus?.map((c) => ({
 			key: c.id,
@@ -62,86 +66,133 @@ export const CourseSelector = ({
 			level_of_study: c.level_of_study ?? '',
 		})) ?? [];
 
-	const courseSearchFilter = (text: string, input: string) => {
-		text = text.normalize('NFC');
-		const courseName = text.split(' - ')[1];
-		const courseAbbr = (
-			courseName.match(/[A-Z]/g)?.join('') ?? ''
-		).toLowerCase();
-		text = text.toLocaleLowerCase();
-		input = input.normalize('NFC').toLocaleLowerCase();
-		return text.includes(input) || courseAbbr.includes(input);
-	};
-
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const course = courses?.find((c) => c.id === selectedCourseId);
 		if (!course) return;
-		const name = `$${course.name.code}`;
+		const name = `${course.name.code}`;
 		enrolledCourses.addCourse({
 			name,
 			id: course.id,
 			preferredCampuses: campuses,
 		});
 		setSelectedCourseId(null);
+		setInputValue('');
 		if (typeof umami !== 'undefined') {
 			await umami.track('Add course', { subject: course.name.subject, name });
 		}
 	};
 
-	if (coursesQuery.isPending) {
-		return (
-			<form
-				className="mobile:flex-col flex grow items-center gap-2"
-				onSubmit={handleSubmit}
-			>
-				<Autocomplete
-					key="loading"
-					isDisabled
-					label={t('search.search-course')}
-					listboxProps={{ emptyContent: t('search.course-not-found') }}
-				>
-					{[]}
-				</Autocomplete>
-				<Button
-					color="primary"
-					type="submit"
-					isDisabled
-					className="mobile:w-full"
-				>
-					{t('search.add')}
-				</Button>
-			</form>
-		);
+	const disabledKeys = new Set(enrolledCourses.courses.map((c) => c.id));
+
+	const [prevSubject, setPrevSubject] = useState(subject);
+	const [prevTerm, setPrevTerm] = useState(selectedTerm);
+
+	if (subject !== prevSubject || selectedTerm !== prevTerm) {
+		setPrevSubject(subject);
+		setPrevTerm(selectedTerm);
+		setSelectedCourseId(null);
+		setInputValue('');
 	}
+
+	const filteredCourses = courseList.filter((item) =>
+		item.name.toLowerCase().includes(inputValue.toLowerCase()),
+	);
+
+	const labelText = t('search.search-course') ?? 'Search a course';
 
 	return (
 		<form
-			className="mobile:flex-col flex grow items-center gap-2"
+			ref={formRef}
+			className="mobile:flex-row mobile:items-end flex w-full grow flex-col items-stretch gap-2"
 			onSubmit={handleSubmit}
 		>
-			<Autocomplete
-				key={`loaded-${selectedTerm}-${subject}-${courseList.length}`}
-				label={t('search.search-course')}
-				isDisabled={coursesQuery.isPending}
-				defaultItems={courseList}
-				selectedKey={selectedCourseId}
-				onSelectionChange={setSelectedCourseId}
-				disabledKeys={enrolledCourses.courses.map((c) => c.id)}
-				listboxProps={{ emptyContent: t('search.course-not-found') }}
-				defaultFilter={courseSearchFilter}
-			>
-				{(course) => (
-					<AutocompleteItem key={course.key} textValue={course.name}>
-						<div>{course.name}</div>
-					</AutocompleteItem>
-				)}
-			</Autocomplete>
+			<div className="mobile:w-auto mobile:flex-grow flex w-full flex-col gap-1.5">
+				<ComboBox
+					selectedKey={selectedCourseId}
+					onSelectionChange={(key) => {
+						setSelectedCourseId(key as Key | null);
+						const selected = courseList.find((c) => c.key === key);
+						if (selected) {
+							setInputValue(selected.name);
+						}
+					}}
+					inputValue={inputValue}
+					onInputChange={(val) => {
+						setInputValue(val);
+						if (val === '') {
+							setSelectedCourseId(null);
+						}
+					}}
+					className="w-full"
+					menuTrigger="focus"
+					isDisabled={coursesQuery.isPending}
+					disabledKeys={disabledKeys}
+					items={filteredCourses}
+				>
+					<Label className="text-foreground/80 pl-1 text-xs leading-normal font-bold">
+						{labelText}
+					</Label>
+					<ComboBox.InputGroup className="border-separator bg-content1 focus-within:ring-primary/20 flex h-11 w-full items-center rounded-2xl border px-4 transition-colors focus-within:ring-2">
+						<FaSearch className="text-default-400 mr-3 size-4" />
+						<Input
+							aria-label={labelText}
+							placeholder={labelText}
+							className="text-foreground placeholder:text-default-400 h-auto w-full !border-0 !bg-transparent !p-0 !pl-1.5 text-sm !shadow-none focus:!border-0 focus:!bg-transparent focus:!shadow-none focus:!ring-0 focus:!outline-none focus-visible:!outline-none"
+						/>
+						{inputValue && (
+							<button
+								type="button"
+								onClick={() => {
+									setInputValue('');
+									setSelectedCourseId(null);
+								}}
+								className="text-default-400 hover:text-foreground ml-2 rounded-full p-0.5 transition-colors"
+								aria-label="Clear search"
+							>
+								<FaTimes className="size-4" />
+							</button>
+						)}
+					</ComboBox.InputGroup>
+
+					<ComboBox.Popover
+						placement="bottom start"
+						className="bg-content1 border-separator min-w-[280px] rounded-2xl border p-1 shadow-lg"
+					>
+						<ListBox
+							className="max-h-60 overflow-y-auto outline-none"
+							items={filteredCourses}
+							aria-label="Course suggestions"
+							aria-labelledby="course-listbox-label"
+							renderEmptyState={() => (
+								<div className="text-default-400 p-4 text-center text-xs">
+									{t('search.course-not-found')}
+								</div>
+							)}
+						>
+							{(item) => (
+								<ListBox.Item
+									key={item.key}
+									id={item.key}
+									textValue={item.name}
+									className={`focus:bg-default-100 hover:bg-default-100/50 text-foreground cursor-pointer rounded-xl px-3 py-2 transition-colors outline-none ${
+										disabledKeys.has(item.id)
+											? 'cursor-not-allowed opacity-50'
+											: ''
+									}`}
+								>
+									{item.name}
+								</ListBox.Item>
+							)}
+						</ListBox>
+					</ComboBox.Popover>
+				</ComboBox>
+			</div>
 			<Button
-				color="primary"
+				variant="primary"
 				type="submit"
-				isDisabled={!selectedCourseId}
-				className="mobile:w-full"
+				isDisabled={!selectedCourseId || coursesQuery.isPending}
+				className="mobile:w-auto h-11 w-full rounded-full px-6"
 			>
 				{t('search.add')}
 			</Button>

@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { FaLightbulb } from 'react-icons/fa';
 
 import { shuffle } from '../utils/shuffle';
 
@@ -40,25 +40,25 @@ const TIP_ANIMATION_SPEED = 8;
 
 export const Tips = () => {
 	const [tipIndex, setTipIndex] = useState(0);
+	const [opacity, setOpacity] = useState('opacity-100');
+
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setTipIndex((t) => (t + 1) % TIPS.length);
+			setOpacity('opacity-0');
+			setTimeout(() => {
+				setTipIndex((t) => (t + 1) % TIPS.length);
+				setOpacity('opacity-100');
+			}, 500);
 		}, TIP_ANIMATION_SPEED * 1000);
 		return () => clearInterval(interval);
 	}, []);
 
 	return (
-		<AnimatePresence mode="wait">
-			<motion.div
-				key={tipIndex}
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				exit={{ opacity: 0 }}
-				transition={{ duration: 1 }}
-				className="[&>a]:underline"
-			>
-				💡 {tips[tipIndex]}
-			</motion.div>
-		</AnimatePresence>
+		<div
+			className={`flex h-10 items-center justify-center gap-1.5 text-sm leading-5 transition-opacity duration-500 ease-in-out md:h-auto [&>a]:underline ${opacity}`}
+		>
+			<FaLightbulb className="shrink-0 text-xs text-amber-400" />
+			<span>{tips[tipIndex]}</span>
+		</div>
 	);
 };

@@ -1,40 +1,17 @@
-import { useQueries, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useQueries, useQuery } from '@tanstack/react-query';
 
 import { getCourse } from '../apis';
 import type { Course } from '../types/course';
 import { useEnrolledCourses } from './enrolled-courses';
 
 export const useGetCourseInfo = (id: string) => {
-	const queryClient = useQueryClient();
-	const [course, setCourse] = useState<Course | null>(
-		() => queryClient.getQueryData<Course>(['course', id]) ?? null,
-	);
+	const { data } = useQuery({
+		queryKey: ['course', id],
+		queryFn: () => getCourse({ id }),
+		staleTime: Infinity,
+	});
 
-	useEffect(() => {
-		const cache = queryClient.getQueryCache();
-		const key = ['course', id];
-		let lastJson: string | null = null;
-		const unsubscribe = cache.subscribe(
-			(e: { query?: { queryKey?: unknown[]; state?: { data?: unknown } } }) => {
-				try {
-					const q = e.query;
-					if (!q) return;
-					if (JSON.stringify(q.queryKey) !== JSON.stringify(key)) return;
-					const data = q.state?.data as Course | undefined;
-					const json = JSON.stringify(data ?? null);
-					if (json === lastJson) return;
-					lastJson = json;
-					setCourse(data ?? null);
-				} catch {
-					// Ignore malformed events
-				}
-			},
-		);
-		return unsubscribe;
-	}, [id, queryClient]);
-
-	return course;
+	return data ?? null;
 };
 
 export const useGetCourseClasses = (courseId: string, classTypeId: string) => {
