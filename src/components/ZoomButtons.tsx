@@ -14,7 +14,7 @@ export const ZoomButtons = () => {
 	const { height, setHeight } = useCalendarHourHeight();
 
 	return (
-		<div className="mobile:bottom-2 mobile:right-2 fixed right-20 bottom-8 z-50 flex flex-col gap-2">
+		<div className="mobile:bottom-2 mobile:right-1 fixed right-20 bottom-8 z-50 flex flex-col gap-2">
 			<Tooltip>
 				<Tooltip.Trigger>
 					<Button

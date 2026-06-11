@@ -138,7 +138,7 @@ export const DesktopFilters = ({
 					<Modal.Container size="lg">
 						<Modal.Dialog className="bg-background border-separator w-full max-w-4xl rounded-3xl border p-6 shadow-2xl">
 							<Modal.CloseTrigger className="hover:bg-default-100 rounded-full" />
-							<Modal.Header className="border-separator/50 border-b pb-2">
+							<Modal.Header className="border-separator/50 w-full border-b pb-2">
 								<Modal.Heading className="text-foreground flex items-center gap-2 text-xl font-bold">
 									<FaFilter className="text-primary text-sm" />
 									<span>Filters</span>

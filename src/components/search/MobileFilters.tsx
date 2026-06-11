@@ -199,6 +199,7 @@ export const MobileFilters = ({
 				>
 					<Drawer.Content placement="bottom">
 						<Drawer.Dialog className="bg-background border-separator max-h-[85vh] overflow-y-auto rounded-t-3xl border-t p-6 pb-12 shadow-2xl">
+							<Drawer.Handle />
 							<Drawer.Header className="border-separator/50 border-b pb-2">
 								<Drawer.Heading className="text-foreground flex items-center gap-2 text-xl font-bold">
 									<FaFilter className="text-primary text-sm" />
