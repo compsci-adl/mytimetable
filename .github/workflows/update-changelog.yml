@@ -1,0 +1,70 @@
+name: Update Changelog and Version
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
+
+jobs:
+  update-changelog:
+    name: Auto Changelog & Version Bump
+    # Run only if the PR has one of the release labels
+    if: |
+      contains(github.event.pull_request.labels.*.name, 'patch') ||
+      contains(github.event.pull_request.labels.*.name, 'minor-update') ||
+      contains(github.event.pull_request.labels.*.name, 'major-update')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check if already run
+        id: check_run
+        run: |
+          # Fetch base branch to ensure reference comparison is valid
+          git fetch origin ${{ github.event.pull_request.base.ref }} --depth=1
+          
+          # Check if any commit in the PR history matches the bot commit prefix
+          bot_commits=$(git log origin/${{ github.event.pull_request.base.ref }}..HEAD --grep="chore: update CHANGELOG.md" --oneline)
+          echo "Bot commits found: $bot_commits"
+          
+          if [ -n "$bot_commits" ]; then
+            echo "Changelog and version have already been updated by the bot in this PR. Skipping."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "No bot commits found. Proceeding with run."
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run update script
+        if: steps.check_run.outputs.skip != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_LABELS: ${{ toJson(github.event.pull_request.labels) }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+        run: npx tsx scripts/update-changelog-ci.ts
+
+      - name: Commit and Push changes
+        if: steps.check_run.outputs.skip != 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json CHANGELOG.md
+          git commit -m "chore: update CHANGELOG.md and bump version"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
