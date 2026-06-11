@@ -7,8 +7,9 @@ on:
 jobs:
   update-changelog:
     name: Auto Changelog & Version Bump
-    # Run only if the PR has one of the release labels
+    # Run only if the PR is created by Renovate or has one of the release labels
     if: |
+      github.event.pull_request.user.login == 'renovate[bot]' ||
       contains(github.event.pull_request.labels.*.name, 'patch') ||
       contains(github.event.pull_request.labels.*.name, 'minor-update') ||
       contains(github.event.pull_request.labels.*.name, 'major-update')
