@@ -279,6 +279,13 @@ describe('isValidChangelogUrl', () => {
 		expect(isValidChangelogUrl('javascript\x00:alert(1)')).toBe(false);
 	});
 
+	it('should filter out specific control/non-printable characters', () => {
+		// \x7f (127) and \x82 (130) are filtered out, \xaa (170) is kept
+		expect(isValidChangelogUrl('java\x7fscript:alert(1)')).toBe(false);
+		expect(isValidChangelogUrl('java\x82script:alert(1)')).toBe(false);
+		expect(isValidChangelogUrl('https://example.com/foo\xaa')).toBe(true);
+	});
+
 	it('should reject protocol relative URLs for safety', () => {
 		expect(isValidChangelogUrl('//evil.com')).toBe(false);
 	});

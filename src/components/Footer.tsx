@@ -133,6 +133,7 @@ export const Footer = () => {
 						<a
 							href="https://csclub.org.au/"
 							target="_blank"
+							rel="noopener noreferrer"
 							className="hover:text-primary underline transition-colors"
 						>
 							Adelaide University Computer Science Club
