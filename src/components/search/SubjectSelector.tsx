@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { FaSearch, FaTimes } from 'react-icons/fa';
 
 import { getSubjects } from '../../apis';
+import { SUBJECT_CODES } from '../../constants/subject-codes';
 import { YEAR } from '../../constants/year';
 
 interface SubjectSelectorProps {
@@ -29,7 +30,8 @@ export const SubjectSelector = ({
 	const subjectList =
 		subjectsQuery.data?.map((s) => {
 			if (typeof s === 'string') {
-				return { key: s, code: s, name: s };
+				const code = SUBJECT_CODES[s] || s;
+				return { key: s, code: s, name: code !== s ? `${code} - ${s}` : s };
 			}
 			return { key: s.code, code: s.code, name: `${s.code} - ${s.name}` };
 		}) ?? [];
