@@ -203,6 +203,9 @@ const CourseCard = ({
 				)}
 				{course.name.code} - {course.classType}{' '}
 			</div>
+			<div className="text-3xs @min-[75px]:text-2xs mt-0.5 line-clamp-1 pr-5 font-medium break-words opacity-90 @max-[60px]:hidden @min-[75px]:pr-6">
+				{course.name.title}
+			</div>
 			<div className="text-3xs @min-[75px]:text-2xs mt-0.5 pr-5 opacity-90 @max-[60px]:hidden @min-[75px]:pr-6">
 				{course.location} | {course.campus}
 			</div>
