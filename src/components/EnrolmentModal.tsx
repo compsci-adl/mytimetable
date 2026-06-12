@@ -34,7 +34,7 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 				<Modal.Dialog className="bg-background border-separator w-full max-w-2xl rounded-3xl border p-6 shadow-2xl">
 					<Modal.CloseTrigger className="hover:bg-default-100 rounded-full" />
 					<header className="contents">
-						<Modal.Header className="flex flex-col gap-1">
+						<Modal.Header className="border-separator/50 flex w-full flex-col gap-1 border-b pb-2">
 							<Modal.Heading className="text-foreground text-xl font-black">
 								{t('calendar.end-actions.ready')}
 							</Modal.Heading>
@@ -44,7 +44,7 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 						</Modal.Header>
 					</header>
 					<Modal.Body
-						className={clsx('mt-2 gap-4', !isOnlyCourse && 'grid grid-cols-2')}
+						className={clsx('mt-4 gap-4', !isOnlyCourse && 'grid grid-cols-2')}
 					>
 						{enrolledCourses.map((c) => (
 							<Card

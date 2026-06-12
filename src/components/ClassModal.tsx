@@ -214,7 +214,7 @@ export const ClassModal = ({
 				<Modal.Dialog className="bg-background border-separator w-full max-w-3xl rounded-3xl border p-6 shadow-2xl">
 					<Modal.CloseTrigger className="hover:bg-default-100 rounded-full" />
 					<header className="contents">
-						<Modal.Header className="mb-4 flex flex-col gap-1">
+						<Modal.Header className="border-separator/50 mb-4 flex w-full flex-col gap-1 border-b pb-2">
 							<Modal.Heading className="text-xl font-bold">
 								{courseUrl ? (
 									<a

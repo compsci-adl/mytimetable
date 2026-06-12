@@ -1,11 +1,4 @@
-import {
-	Modal,
-	Select,
-	ListBox,
-	Table,
-	Tooltip,
-	Separator,
-} from '@heroui/react';
+import { Modal, Select, ListBox, Table, Tooltip } from '@heroui/react';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -342,7 +335,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 					) : (
 						<>
 							<header className="contents">
-								<Modal.Header className="flex flex-col gap-1 pb-2">
+								<Modal.Header className="border-separator/50 flex w-full flex-col gap-1 border-b pb-2">
 									<Modal.Heading className="text-foreground text-xl font-black">
 										{courseInfo.url || courseInfo.course_url ? (
 											<a
@@ -553,8 +546,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 									})()}
 								</Modal.Header>
 							</header>
-							<Separator className="my-2" />
-							<Modal.Body className="mb-4 max-h-[400px] gap-4 overflow-y-auto pr-2">
+							<Modal.Body className="mt-4 mb-4 max-h-[400px] gap-4 overflow-y-auto pr-2">
 								{(() => {
 									const aggregated: ConflictDetail[] = [];
 									const seen = new Set<string>();

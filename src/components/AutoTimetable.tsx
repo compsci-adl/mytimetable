@@ -618,11 +618,11 @@ export const AutoTimetable = ({
 					>
 						<Drawer.Content placement="bottom">
 							<Drawer.Dialog className="bg-background border-separator max-h-[85vh] overflow-y-auto rounded-t-3xl border-t p-6 pb-12 shadow-2xl">
-								<Drawer.Handle className="bg-default-300 mx-auto mb-4 h-1 w-12 rounded-full" />
+								<Drawer.Handle />
 								<Drawer.Header className="border-separator/50 flex flex-col gap-1 border-b pb-2">
-									<Drawer.Heading className="text-foreground flex items-center gap-2">
+									<Drawer.Heading className="text-foreground flex items-center gap-2 text-xl font-bold">
 										<FaBolt className="text-primary animate-pulse text-sm" />
-										<span className="text-sm font-bold">
+										<span>
 											{t('auto-timetable.title', {
 												defaultValue: 'Auto-Timetable Preferences',
 											})}

@@ -1,4 +1,5 @@
 import { Calendar } from './components/Calendar';
+import { ChangelogModal } from './components/ChangelogModal';
 import { EnrolledCourses } from './components/EnrolledCourses';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
@@ -22,6 +23,7 @@ export const App = () => {
 			<Header />
 			<main className="mx-auto max-w-(--breakpoint-xl) space-y-4 px-2 py-4">
 				<HelpModal />
+				<ChangelogModal />
 				<ZoomButtons />
 				<SearchForm />
 				<EnrolledCourses />

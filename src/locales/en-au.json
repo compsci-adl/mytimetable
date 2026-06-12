@@ -21,7 +21,18 @@
 		"help": "Help",
 		"feedback": "Feedback",
 		"change-language": "Change Language",
-		"toggle-dark-mode": "Toggle Dark Mode"
+		"toggle-dark-mode": "Toggle Dark Mode",
+		"changelog": "Changelog"
+	},
+	"changelog": {
+		"subtitle": "Recent updates and version history",
+		"latest": "Latest",
+		"types": {
+			"added": "Added",
+			"changed": "Changed",
+			"fixed": "Fixed",
+			"removed": "Removed"
+		}
 	},
 	"course-modal": {
 		"dates": "Dates",

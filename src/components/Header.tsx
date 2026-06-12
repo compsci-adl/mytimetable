@@ -7,9 +7,11 @@ import {
 	FaMoon,
 	FaQuestionCircle,
 	FaSun,
+	FaHistory,
 } from 'react-icons/fa';
 
 import { LANGUAGES } from '../constants/languages';
+import { useChangelogModal } from '../helpers/changelog-modal';
 import { useDarkMode } from '../helpers/dark-mode';
 import { useHelpModal } from '../helpers/help-modal';
 
@@ -25,6 +27,7 @@ export const Header = ({ isWelcome = false }: { isWelcome?: boolean }) => {
 	const { t, i18n } = useTranslation();
 
 	const openHelpModal = useHelpModal((s) => s.open);
+	const openChangelogModal = useChangelogModal((s) => s.open);
 
 	const [isChangeLanguageOpen, setIsChangeLanguageOpen] = useState(false);
 
@@ -57,6 +60,16 @@ export const Header = ({ isWelcome = false }: { isWelcome?: boolean }) => {
 									</Button>
 								</Tooltip.Trigger>
 								<Tooltip.Content>{t('header.help')}</Tooltip.Content>
+							</Tooltip>
+						</div>
+						<div>
+							<Tooltip delay={0}>
+								<Tooltip.Trigger>
+									<Button {...HEADER_BUTTON_PROPS} onPress={openChangelogModal}>
+										<FaHistory />
+									</Button>
+								</Tooltip.Trigger>
+								<Tooltip.Content>{t('header.changelog')}</Tooltip.Content>
 							</Tooltip>
 						</div>
 						<div>
