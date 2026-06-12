@@ -16,7 +16,9 @@ test.describe('MyTimetable App Desktop End-to-End Tests', () => {
 		await enrollMockCourse(page);
 
 		// Wait for the course classes to render on the calendar to ensure data is loaded
-		await expect(page.locator('text=Lecture').first()).toBeVisible();
+		await expect(
+			page.locator('text=Lecture').filter({ visible: true }).first(),
+		).toBeVisible();
 
 		// Trigger Auto Timetable Preferences popover
 		const autoTimetableBtn = page.getByRole('button', {

@@ -29,6 +29,7 @@ export async function setupPage(page: Page) {
 export async function enrollMockCourse(page: Page) {
 	const subjectAutocomplete = page.getByLabel('Choose a subject area');
 	await expect(subjectAutocomplete).toBeVisible();
+	await expect(subjectAutocomplete).toBeEnabled();
 	await subjectAutocomplete.click();
 	await subjectAutocomplete.pressSequentially('COMP SCI');
 	await page.waitForTimeout(500); // Let suggestions settle
@@ -41,6 +42,7 @@ export async function enrollMockCourse(page: Page) {
 
 	const courseAutocomplete = page.getByLabel('Search a course');
 	await expect(courseAutocomplete).toBeVisible();
+	await expect(courseAutocomplete).toBeEnabled();
 	await courseAutocomplete.click();
 	await courseAutocomplete.pressSequentially('Algorithm Design');
 	await page.waitForTimeout(500); // Let suggestions settle

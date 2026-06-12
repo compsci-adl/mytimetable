@@ -4,13 +4,13 @@ import { FaPlus } from 'react-icons/fa';
 const HOUR_PX = 56; // height of one hour slot in px
 const START_HOUR = 9; // 9:00
 const HOURS = [9, 10, 11, 12, 13]; // labels shown
-
 type MiniCardProps = {
 	top: number;
 	height: number;
 	color: 'blue' | 'purple';
 	time: string;
 	name: string;
+	courseName: string;
 	location: string;
 	className?: string;
 	style?: React.CSSProperties;
@@ -22,6 +22,7 @@ const MiniCard = ({
 	color,
 	time,
 	name,
+	courseName,
 	location,
 	className = '',
 	style,
@@ -47,7 +48,10 @@ const MiniCard = ({
 			<div className="pr-5 text-[10px] leading-tight font-black text-current">
 				{name}
 			</div>
-			<div className="mt-0.5 pr-5 text-[8.5px] leading-tight text-current opacity-85">
+			<div className="mt-0.5 line-clamp-1 pr-5 text-[8.5px] leading-tight font-semibold text-current opacity-90">
+				{courseName}
+			</div>
+			<div className="mt-0.5 line-clamp-1 pr-5 text-[8.5px] leading-tight text-current opacity-85">
 				{location}
 			</div>
 			<div className="absolute right-2 bottom-2 flex h-6 w-6 items-center justify-center rounded-full bg-current/10 text-xs font-bold text-current transition-colors hover:bg-current/20">
@@ -56,7 +60,6 @@ const MiniCard = ({
 		</div>
 	);
 };
-
 export const MiniTimetableDemo = () => {
 	// offset in px from top of the time-body for a given hour
 	const hourOffset = (h: number) => (h - START_HOUR) * HOUR_PX;
@@ -143,6 +146,7 @@ export const MiniTimetableDemo = () => {
 						height={HOUR_PX * 2 - 4}
 						time="10:00"
 						name="COMP1002 – Tutorial"
+						courseName="Foundations of Computer Science"
 						location="Schulz, 214/218 | Adelaide City Campus East"
 						className="animate-source-card"
 					/>
@@ -153,6 +157,7 @@ export const MiniTimetableDemo = () => {
 						height={HOUR_PX * 2 - 4}
 						time="10:00"
 						name="COMP1002 – Tutorial"
+						courseName="Foundations of Computer Science"
 						location="Schulz, 214/218 | Adelaide City Campus East"
 						className="animate-drag-card pointer-events-none z-50"
 						style={{ cursor: 'grabbing' }}
@@ -174,6 +179,7 @@ export const MiniTimetableDemo = () => {
 						height={HOUR_PX * 2 - 4}
 						time="11:10"
 						name="ACCT1000 - Seminar"
+						courseName="Accounting for Decision Making"
 						location="Hughes, 111b | Adelaide City Campus East"
 						style={{ opacity: 0.85 }}
 					/>
