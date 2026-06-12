@@ -30,6 +30,7 @@ type CoursesState = {
 		},
 	) => void;
 	removeCourse: (courseId: string) => void;
+	clearCourses: () => void;
 	updateCourseClass: (props: {
 		courseId: string;
 		classTypeId: string;
@@ -111,6 +112,11 @@ export const useEnrolledCourses = create<CoursesState>()(
 			removeCourse: (courseId) => {
 				set((state) => {
 					state.courses = state.courses.filter((c) => c.id !== courseId);
+				});
+			},
+			clearCourses: () => {
+				set((state) => {
+					state.courses = [];
 				});
 			},
 			updateCourseClass: ({ courseId, classTypeId, classNumber }) => {
