@@ -1,4 +1,4 @@
-import { Modal, Select, ListBox, Table, Tooltip } from '@heroui/react';
+import { Modal, Select, ListBox, Table, Tooltip, Button } from '@heroui/react';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -393,14 +393,15 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 										</div>
 										{courseInfo.course_overview &&
 											courseInfo.course_overview.length > charLimit && (
-												<button
-													className="text-primary mt-1.5 cursor-pointer font-bold underline"
-													onClick={() => setOverviewExpanded(!overviewExpanded)}
+												<Button
+													variant="tertiary"
+													className="text-primary mt-1.5 h-auto min-w-0 cursor-pointer bg-transparent p-0 font-bold underline shadow-none"
+													onPress={() => setOverviewExpanded(!overviewExpanded)}
 												>
 													{overviewExpanded
 														? t('course.overview.show-less')
 														: t('course.overview.show-more')}
-												</button>
+												</Button>
 											)}
 									</div>
 									{(() => {

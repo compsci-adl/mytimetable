@@ -104,11 +104,22 @@ export const Footer = () => {
 							<h3
 								key={i}
 								className="hover:text-primary cursor-pointer text-xs font-semibold tracking-widest uppercase transition-colors md:text-sm"
+								tabIndex={0}
 								onClick={() => {
 									if (section.title === 'About') {
 										openWelcome();
 									} else {
 										setOpenModal(section.title);
+									}
+								}}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										e.preventDefault();
+										if (section.title === 'About') {
+											openWelcome();
+										} else {
+											setOpenModal(section.title);
+										}
 									}
 								}}
 							>

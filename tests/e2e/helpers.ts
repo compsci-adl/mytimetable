@@ -29,6 +29,10 @@ export async function setupPage(page: Page) {
 export async function enrollMockCourse(page: Page) {
 	const subjectAutocomplete = page.getByLabel('Choose a subject area');
 	await expect(subjectAutocomplete).toBeVisible();
+	await expect(subjectAutocomplete).not.toHaveAttribute(
+		'placeholder',
+		/Loading/i,
+	);
 	await expect(subjectAutocomplete).toBeEnabled();
 	await subjectAutocomplete.click();
 	await subjectAutocomplete.pressSequentially('COMP SCI');

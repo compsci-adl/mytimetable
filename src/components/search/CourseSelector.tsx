@@ -141,17 +141,18 @@ export const CourseSelector = ({
 							className="text-foreground placeholder:text-default-400 h-auto w-full !border-0 !bg-transparent !p-0 !pl-1.5 text-sm !shadow-none focus:!border-0 focus:!bg-transparent focus:!shadow-none focus:!ring-0 focus:!outline-none focus-visible:!outline-none"
 						/>
 						{inputValue && (
-							<button
-								type="button"
-								onClick={() => {
+							<Button
+								isIconOnly
+								variant="tertiary"
+								onPress={() => {
 									setInputValue('');
 									setSelectedCourseId(null);
 								}}
-								className="text-default-400 hover:text-foreground ml-2 rounded-full p-0.5 transition-colors"
+								className="text-default-400 hover:text-foreground ml-2 h-auto min-w-0 rounded-full bg-transparent p-0.5 shadow-none transition-colors"
 								aria-label="Clear search"
 							>
 								<FaTimes className="size-4" />
-							</button>
+							</Button>
 						)}
 					</ComboBox.InputGroup>
 

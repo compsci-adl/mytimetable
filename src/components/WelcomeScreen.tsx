@@ -157,15 +157,15 @@ export const WelcomeScreen = () => {
 					{ id: 'how-to-use', label: 'How to Use' },
 					{ id: 'contribute-footer', label: 'Contribute' },
 				].map((sec) => (
-					<button
+					<Button
 						key={sec.id}
-						onClick={() => {
+						onPress={() => {
 							const el = document.getElementById(sec.id);
 							if (el) {
 								el.scrollIntoView({ behavior: 'smooth' });
 							}
 						}}
-						className={`h-3 w-3 cursor-pointer rounded-full transition-all duration-300 ${
+						className={`h-3 w-3 min-w-0 cursor-pointer rounded-full border-none bg-transparent p-0 shadow-none transition-all duration-300 ${
 							activeSection === sec.id
 								? 'bg-tiger scale-125 shadow-md'
 								: 'bg-sage/50 hover:bg-sage hover:scale-110'

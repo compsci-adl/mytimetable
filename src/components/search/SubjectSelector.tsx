@@ -1,4 +1,4 @@
-import { Label, ComboBox, Input, ListBox } from '@heroui/react';
+import { Label, ComboBox, Input, ListBox, Button } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -104,17 +104,18 @@ export const SubjectSelector = ({
 						className="text-foreground placeholder:text-default-400 h-auto w-full !border-0 !bg-transparent !p-0 !pl-1.5 text-sm !shadow-none focus:!border-0 focus:!bg-transparent focus:!shadow-none focus:!ring-0 focus:!outline-none focus-visible:!outline-none"
 					/>
 					{inputValue && (
-						<button
-							type="button"
-							onClick={() => {
+						<Button
+							isIconOnly
+							variant="tertiary"
+							onPress={() => {
 								setInputValue('');
 								onSubjectChange(null);
 							}}
-							className="text-default-400 hover:text-foreground ml-2 rounded-full p-0.5 transition-colors"
+							className="text-default-400 hover:text-foreground ml-2 h-auto min-w-0 rounded-full bg-transparent p-0.5 shadow-none transition-colors"
 							aria-label="Clear search"
 						>
 							<FaTimes className="size-4" />
-						</button>
+						</Button>
 					)}
 				</ComboBox.InputGroup>
 

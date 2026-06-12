@@ -454,18 +454,17 @@ export const AutoTimetable = ({
 							const fullDay = DAYS_FULL[idx];
 							const isSelected = preferredDays.includes(fullDay);
 							return (
-								<button
+								<Button
 									key={day}
-									type="button"
-									onClick={() => toggleDay(fullDay)}
-									className={`flex-1 cursor-pointer py-2 text-xs font-bold transition-colors ${
+									onPress={() => toggleDay(fullDay)}
+									className={`h-auto min-w-0 flex-1 cursor-pointer rounded-none bg-transparent py-2 text-xs font-bold shadow-none transition-colors ${
 										isSelected
 											? 'bg-default-200 text-foreground dark:bg-default-300'
 											: 'text-default-400 hover:bg-default-100/50 bg-transparent'
 									}`}
 								>
 									{day}
-								</button>
+								</Button>
 							);
 						})}
 					</div>
@@ -534,20 +533,19 @@ export const AutoTimetable = ({
 							return (
 								<Tooltip key={m.value} delay={100} closeDelay={100}>
 									<Tooltip.Trigger className="flex flex-1 flex-grow">
-										<button
-											type="button"
-											onClick={() => {
+										<Button
+											onPress={() => {
 												setMode(m.value);
 												savePrefs({ mode: m.value });
 											}}
-											className={`w-full cursor-pointer py-2 text-xs font-bold transition-colors ${
+											className={`h-auto w-full min-w-0 cursor-pointer rounded-none bg-transparent py-2 text-xs font-bold shadow-none transition-colors ${
 												isSelected
 													? 'bg-default-200 text-foreground dark:bg-default-300'
 													: 'text-default-400 hover:bg-default-100/50 bg-transparent'
 											}`}
 										>
 											{m.label}
-										</button>
+										</Button>
 									</Tooltip.Trigger>
 									<Tooltip.Content>{tooltipContent}</Tooltip.Content>
 								</Tooltip>

@@ -331,7 +331,7 @@ export const CourseCard = ({
 							{isOnlyTime && (
 								<Tooltip delay={0}>
 									<Tooltip.Trigger>
-										<div>
+										<div tabIndex={0}>
 											<FaThumbtack className="text-xs opacity-70" />
 										</div>
 									</Tooltip.Trigger>
@@ -349,6 +349,7 @@ export const CourseCard = ({
 									<span
 										aria-label="conflict"
 										className="text-warning mr-1 inline-flex"
+										tabIndex={0}
 									>
 										<FaExclamationTriangle />
 									</span>
@@ -364,6 +365,7 @@ export const CourseCard = ({
 									<span
 										aria-label="full"
 										className="text-warning mr-1 inline-flex"
+										tabIndex={0}
 									>
 										<FaExclamationTriangle />
 									</span>
@@ -398,7 +400,7 @@ export const CourseCard = ({
 							{isOnlyTime && (
 								<Tooltip delay={0}>
 									<Tooltip.Trigger>
-										<div>
+										<div tabIndex={0}>
 											<FaThumbtack className="text-xs opacity-70" />
 										</div>
 									</Tooltip.Trigger>
@@ -416,6 +418,7 @@ export const CourseCard = ({
 									<span
 										aria-label="conflict"
 										className="text-warning mr-1 inline-flex"
+										tabIndex={0}
 									>
 										<FaExclamationTriangle />
 									</span>
@@ -431,6 +434,7 @@ export const CourseCard = ({
 									<span
 										aria-label="full"
 										className="text-warning mr-1 inline-flex"
+										tabIndex={0}
 									>
 										<FaExclamationTriangle />
 									</span>
