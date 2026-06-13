@@ -11,6 +11,7 @@ import {
 	FaCheckCircle,
 } from 'react-icons/fa';
 
+import { getHelpSteps } from '../data/help-steps';
 import { useWelcomeScreen } from '../helpers/welcome-screen';
 import { Footer } from './Footer';
 import { Header } from './Header';
@@ -89,61 +90,7 @@ export const WelcomeScreen = () => {
 		};
 	}, []);
 
-	const steps = [
-		{
-			content: t('help.steps.welcome'),
-			image: {
-				path: '/help/welcome.webp',
-				alt: 'Website preview',
-			},
-		},
-		{
-			content: t('help.steps.select-term'),
-			image: {
-				path: '/help/select-term.webp',
-				alt: 'Select a term',
-			},
-		},
-		{
-			content: t('help.steps.search-course'),
-			image: { path: '/help/search-course.webp', alt: 'Search a course' },
-		},
-		{
-			content: t('help.steps.calendar-dnd'),
-			image: {
-				path: '/help/calendar.webp',
-				alt: 'Drag and drop a course in calendar',
-			},
-		},
-		{
-			content: t('help.steps.change-week'),
-			image: { path: '/help/change-week.webp', alt: 'Change calendar week' },
-		},
-		{
-			content: t('help.steps.course-details'),
-			image: {
-				path: '/help/click-course.webp',
-				alt: 'Highlighted enrolled course',
-			},
-		},
-		{
-			content: t('help.steps.course-modal'),
-			image: {
-				path: '/help/modal.webp',
-				alt: 'Course modal to change class time',
-			},
-		},
-		{
-			content: t('help.steps.ready-button'),
-			image: {
-				path: '/help/ready-button.webp',
-				alt: 'Ready button at bottom',
-			},
-		},
-		{
-			content: t('help.steps.access-adelaide'),
-		},
-	];
+	const steps = getHelpSteps(t);
 
 	return (
 		<div className="bg-background selection:bg-primary/30 min-h-screen font-sans">
