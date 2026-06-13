@@ -1,8 +1,368 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
 @import 'tailwindcss';
 @config '../tailwind.config.js';
+@import '@heroui/styles';
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+	--font-sans: 'Outfit Variable', sans-serif;
+	--font-noto-emoji: '"Noto Color Emoji"', sans-serif;
+	--breakpoint-mobile: 767px;
+	--font-size-2xs: 0.625rem;
+
+	--color-eggshell: #fdf9ee;
+	--color-sage: #7a9a7e;
+	--color-tiger: #fc8500;
+	--color-midnight: #1c2321;
+
+	--color-primary: var(--accent);
+	--color-primary-foreground: var(--accent-foreground);
+
+	--color-separator: var(--separator-color);
+	--color-content1: var(--surface);
+	--color-content2: var(--overlay);
+
+	--color-default-50: var(--default-50);
+	--color-default-100: var(--default-100);
+	--color-default-200: var(--default-200);
+	--color-default-300: var(--default-300);
+	--color-default-400: var(--default-400);
+	--color-default-500: var(--default-500);
+	--color-default-600: var(--default-600);
+	--color-default-700: var(--default-700);
+	--color-default-800: var(--default-800);
+	--color-default-900: var(--default-900);
+
+	--color-apple-gray-300: var(--apple-gray-300);
+	--color-apple-gray-500: var(--apple-gray-500);
+	--color-apple-gray-700: var(--apple-gray-700);
+
+	--color-apple-blue-300: var(--apple-blue-300);
+	--color-apple-blue-500: var(--apple-blue-500);
+	--color-apple-blue-700: var(--apple-blue-700);
+
+	--color-apple-purple-300: var(--apple-purple-300);
+	--color-apple-purple-500: var(--apple-purple-500);
+	--color-apple-purple-700: var(--apple-purple-700);
+
+	--color-apple-green-300: var(--apple-green-300);
+	--color-apple-green-500: var(--apple-green-500);
+	--color-apple-green-700: var(--apple-green-700);
+
+	--color-apple-orange-300: var(--apple-orange-300);
+	--color-apple-orange-500: var(--apple-orange-500);
+	--color-apple-orange-700: var(--apple-orange-700);
+
+	--color-apple-yellow-300: var(--apple-yellow-300);
+	--color-apple-yellow-500: var(--apple-yellow-500);
+	--color-apple-yellow-700: var(--apple-yellow-700);
+
+	--color-apple-brown-300: var(--apple-brown-300);
+	--color-apple-brown-500: var(--apple-brown-500);
+	--color-apple-brown-700: var(--apple-brown-700);
+
+	--color-apple-red-300: var(--apple-red-300);
+	--color-apple-red-500: var(--apple-red-500);
+	--color-apple-red-700: var(--apple-red-700);
+
+	--color-not-found-300: var(--not-found-300);
+	--color-not-found-500: var(--not-found-500);
+	--color-not-found-700: var(--not-found-700);
+}
+
+:root {
+	--accent: #fc8500;
+	--accent-foreground: #000000;
+	--background: #fdf9ee;
+	--foreground: #1c2321;
+	--success: #7a9a7e;
+	--success-foreground: #fdf9ee;
+
+	--surface: #ffffff;
+	--surface-foreground: #1c2321;
+	--overlay: #ffffff;
+	--overlay-foreground: #1c2321;
+
+	--separator-color: rgba(122, 154, 126, 0.35); /* Muted Sage Green border */
+
+	--default-50: #faf8f2; /* Light Eggshell */
+	--default-100: #edf3ef; /* Light Sage Green-grey tint */
+	--default-200: #dce5df; /* Sage Green shape fill */
+	--default-300: #cad4ce; /* Darker Sage border/fill */
+	--default-400: #a1a1aa;
+	--default-500: #71717a;
+	--default-600: #52525b;
+	--default-700: #3f3f46;
+	--default-800: #27272a;
+	--default-900: #18181b;
+
+	--apple-gray-300: #cad4ce; /* Sage border for calendar grid */
+	--apple-gray-500: #afafaf;
+	--apple-gray-700: #6b6b6b;
+	--apple-blue-300: #c9e6fe;
+	--apple-blue-500: #1d9bf6;
+	--apple-blue-700: #1d6aa1;
+	--apple-purple-300: #eacdf4;
+	--apple-purple-500: #af38d1;
+	--apple-purple-700: #762c8b;
+	--apple-green-300: #d4f6c9;
+	--apple-green-500: #4ad321;
+	--apple-green-700: #3e8522;
+	--apple-orange-300: #fedbc4;
+	--apple-orange-500: #fa6d0d;
+	--apple-orange-700: #a75117;
+	--apple-yellow-300: #fdeec3;
+	--apple-yellow-500: #fcb80f;
+	--apple-yellow-700: #936e10;
+	--apple-brown-300: #dfd8cf;
+	--apple-brown-500: #7d5e3b;
+	--apple-brown-700: #5e4d39;
+	--apple-red-300: #febfd1;
+	--apple-red-500: #f50445;
+	--apple-red-700: #bb1644;
+	--not-found-300: #d3d3d3;
+	--not-found-500: #000000;
+	--not-found-700: #000000;
+	--dropzone-bg: rgba(201, 230, 254, 0.4);
+}
+
+.dark {
+	--accent: #fc8500;
+	--accent-foreground: #000000;
+	--background: #1c2321;
+	--foreground: #fdf9ee;
+	--success: #7a9a7e;
+	--success-foreground: #1c2321;
+
+	--surface: #26302d;
+	--surface-foreground: #fdf9ee;
+	--overlay: #2d3a36;
+	--overlay-foreground: #fdf9ee;
+
+	--separator-color: rgba(122, 154, 126, 0.2); /* Dark Sage Green border */
+
+	--default-50: #1f2725; /* Midnight-sage tint */
+	--default-100: #293431; /* Rich dark sage shape */
+	--default-200: #384643; /* Medium dark sage */
+	--default-300: #475a55; /* Visible dark sage border */
+	--default-400: #71717a;
+	--default-500: #a1a1aa;
+	--default-600: #d4d4d8;
+	--default-700: #e4e4e7;
+	--default-800: #f4f4f5;
+	--default-900: #fafaf9;
+
+	--apple-gray-300: #384643; /* Dark sage grid lines */
+	--apple-gray-500: #434444;
+	--apple-gray-700: #8f8f8f;
+	--apple-blue-300: #19283b;
+	--apple-blue-500: #1d9bf6;
+	--apple-blue-700: #1d9bf6;
+	--apple-purple-300: #2f1e36;
+	--apple-purple-500: #bf58da;
+	--apple-purple-700: #bf57da;
+	--apple-green-300: #1d341f;
+	--apple-green-500: #30d33b;
+	--apple-green-700: #30d33b;
+	--apple-orange-300: #38271a;
+	--apple-orange-500: #fd8208;
+	--apple-orange-700: #fd8208;
+	--apple-yellow-300: #39341c;
+	--apple-yellow-500: #fece0f;
+	--apple-yellow-700: #fed10e;
+	--apple-brown-300: #292621;
+	--apple-brown-500: #9b7c55;
+	--apple-brown-700: #9b7c55;
+	--apple-red-300: #391a21;
+	--apple-red-500: #e51167;
+	--apple-red-700: #e51166;
+	--not-found-300: #404040;
+	--not-found-500: #ffffff;
+	--not-found-700: #ffffff;
+	--dropzone-bg: rgba(25, 40, 59, 0.4);
+}
 
 * {
 	font-family: 'Outfit Variable', sans-serif;
+}
+
+/* ─── CTA button pulse ────────────────────────────────── */
+@keyframes pulse-grow-shrink {
+	0%,
+	100% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.06);
+	}
+}
+.animate-grow-shrink {
+	animation: pulse-grow-shrink 2.2s ease-in-out infinite;
+}
+
+/* ─── Drag-and-drop timetable demo ───────────────────────
+   Column widths in the mini grid (px):
+     time-label: 36px
+     Mon col:    ~140px  (left: 36px)
+     Tue col:    ~140px  (left: 176px)   ← card starts here
+     Wed col:    ~140px  (left: 316px)
+
+   The card starts in Tue (left: 176px + 4px gap = ~180px).
+   It lifts and moves to Mon (left: ~40px).
+   translateX needed: 40 - 180 = -140px
+   ──────────────────────────────────────────────────────── */
+
+/* Floating / dragged card animation */
+@keyframes drag-event {
+	/* 0–12%: sitting still in Tue slot */
+	0%,
+	12% {
+		transform: translate(0, 0) scale(1);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+		opacity: 1;
+	}
+	/* 16–20%: lift off */
+	18% {
+		transform: translate(0, -8px) scale(1.04);
+		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+		opacity: 1;
+	}
+	/* 22–55%: glide across to Mon */
+	38%,
+	55% {
+		transform: translate(calc(-100% - 4px), -8px) scale(1.04);
+		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+		opacity: 1;
+	}
+	/* 60%: hover over Mon drop target */
+	60% {
+		transform: translate(calc(-100% - 4px), -4px) scale(1.02);
+		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+		opacity: 1;
+	}
+	/* 64–75%: drop into Mon */
+	66%,
+	78% {
+		transform: translate(calc(-100% - 4px), 0) scale(1);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+		opacity: 1;
+	}
+	/* 83–88%: lift back */
+	85% {
+		transform: translate(calc(-100% - 4px), -8px) scale(1.04);
+		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+		opacity: 1;
+	}
+	/* 90–100%: glide back to Tue */
+	92%,
+	100% {
+		transform: translate(0, 0) scale(1);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+		opacity: 1;
+	}
+}
+
+.animate-drag-card {
+	animation: drag-event 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Source card fading when its clone is being dragged */
+@keyframes source-fade {
+	0%,
+	12% {
+		opacity: 0.85;
+	}
+	18%,
+	78% {
+		opacity: 0.25;
+	}
+	85%,
+	100% {
+		opacity: 0.85;
+	}
+}
+.animate-source-card {
+	animation: source-fade 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Mon drop-target placeholder highlight (only visible when hovering/dropped) */
+@keyframes dropzone-mon {
+	/* Invisible when card is in Tue or back */
+	0%,
+	18% {
+		border-color: transparent;
+		background-color: transparent;
+		opacity: 0;
+	}
+	/* Fade in and show outline/fill as card arrives and is hovered/dropped */
+	22%,
+	80% {
+		border-color: rgba(29, 155, 246, 0.8);
+		background-color: var(--dropzone-bg);
+		opacity: 1;
+	}
+	/* Fade out as card returns */
+	85%,
+	100% {
+		border-color: transparent;
+		background-color: transparent;
+		opacity: 0;
+	}
+}
+.animate-dropzone-mon {
+	animation: dropzone-mon 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Wed drop-target placeholder (invisible since card never hovers it) */
+@keyframes dropzone-wed {
+	0%,
+	100% {
+		border-color: transparent;
+		background-color: transparent;
+		opacity: 0;
+	}
+}
+.animate-dropzone-wed {
+	animation: dropzone-wed 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes slide-in-left {
+	from {
+		transform: translateX(-20px);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+@keyframes slide-in-right {
+	from {
+		transform: translateX(20px);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+.animate-slide-left {
+	animation: slide-in-left 0.25s ease-out forwards;
+}
+
+.animate-slide-right {
+	animation: slide-in-right 0.25s ease-out forwards;
+}
+
+/* Hide scrollbar for Chrome, Safari, and Opera */
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+.no-scrollbar {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
 }

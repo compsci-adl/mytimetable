@@ -1,18 +1,6 @@
-import {
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
-	Table,
-	TableHeader,
-	TableColumn,
-	TableBody,
-	TableRow,
-	TableCell,
-	Spacer,
-	Tooltip,
-} from '@heroui/react';
+import { Modal, Table, Tooltip } from '@heroui/react';
 import { useTranslation } from 'react-i18next';
+import { FaExclamationTriangle } from 'react-icons/fa';
 
 import { useGetCourseInfo, useGetCourseClasses } from '../data/course-info';
 import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
@@ -45,6 +33,17 @@ const getDisplayTime = (time: { start: string; end: string }) => {
 	return `${formatTime(start)} - ${formatTime(end)}`;
 };
 
+interface ClassTableItem {
+	id: number;
+	dates: string;
+	day: string;
+	time: string;
+	location: string;
+	campus: string;
+	availability: string;
+	isFull: boolean;
+}
+
 const MeetingsTime = ({
 	meetings,
 	size,
@@ -73,49 +72,92 @@ const MeetingsTime = ({
 		groupedMeetingsMap[key].push(m);
 	});
 	const groupedMeetings = groupedOrder.map((k) => groupedMeetingsMap[k]);
+	const tableItems: ClassTableItem[] = groupedMeetings.map((group, i) => {
+		const sample = group[0];
+		const dates = deduplicateArray(
+			group.map((m) => getDisplayDate(m.date)),
+		).join(', ');
+		const isFull =
+			availableSeats !== undefined && parseInt(availableSeats, 10) === 0;
+		return {
+			id: i,
+			dates,
+			day: sample.day,
+			time: getDisplayTime(sample.time),
+			location: sample.location,
+			campus: sample.campus,
+			availability: availableSeats && size ? `${availableSeats} / ${size}` : '',
+			isFull,
+		};
+	});
 	return (
-		<Table aria-label={t('class-modal.meetings-table') as string}>
-			<TableHeader>
-				<TableColumn>{t('class-modal.dates')}</TableColumn>
-				<TableColumn>{t('class-modal.days')}</TableColumn>
-				<TableColumn>{t('class-modal.time')}</TableColumn>
-				<TableColumn>{t('class-modal.location')}</TableColumn>
-				<TableColumn>{t('class-modal.campus')}</TableColumn>
-				<TableColumn>{t('class-modal.availability')}</TableColumn>
-			</TableHeader>
-			<TableBody>
-				{groupedMeetings.map((group, i) => {
-					const sample = group[0];
-					const dates = deduplicateArray(
-						group.map((m) => getDisplayDate(m.date)),
-					).join(', ');
-					return (
-						<TableRow key={i}>
-							<TableCell>{dates}</TableCell>
-							<TableCell>{sample.day}</TableCell>
-							<TableCell>{getDisplayTime(sample.time)}</TableCell>
-							<TableCell>{sample.location}</TableCell>
-							<TableCell>{sample.campus}</TableCell>
-							<TableCell>
-								{availableSeats && size ? (
-									<span
-										className={
-											availableSeats !== undefined &&
-											parseInt(availableSeats, 10) === 0
-												? 'text-danger'
-												: ''
-										}
-									>
-										{`${availableSeats} / ${size}`}
-									</span>
-								) : (
-									''
-								)}
-							</TableCell>
-						</TableRow>
-					);
-				})}
-			</TableBody>
+		<Table className="border-separator overflow-hidden rounded-xl border shadow-sm">
+			<Table.ScrollContainer>
+				<Table.Content aria-label={t('class-modal.meetings-table') as string}>
+					<Table.Header className="bg-default-100">
+						<Table.Column
+							isRowHeader
+							className="text-default-500 rounded-none! text-xs font-semibold"
+						>
+							{t('class-modal.dates')}
+						</Table.Column>
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
+							{t('class-modal.days')}
+						</Table.Column>
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
+							{t('class-modal.time')}
+						</Table.Column>
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
+							{t('class-modal.location')}
+						</Table.Column>
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
+							{t('class-modal.campus')}
+						</Table.Column>
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
+							{t('class-modal.availability')}
+						</Table.Column>
+					</Table.Header>
+					<Table.Body items={tableItems}>
+						{(item: ClassTableItem) => (
+							<Table.Row
+								key={item.id}
+								className="border-separator bg-background hover:bg-default-50 border-b text-sm transition-colors last:border-b-0"
+							>
+								<Table.Cell className="text-foreground rounded-none! py-3">
+									{item.dates}
+								</Table.Cell>
+								<Table.Cell className="text-foreground rounded-none! py-3">
+									{item.day}
+								</Table.Cell>
+								<Table.Cell className="text-foreground rounded-none! py-3">
+									{item.time}
+								</Table.Cell>
+								<Table.Cell className="text-foreground rounded-none! py-3">
+									{item.location}
+								</Table.Cell>
+								<Table.Cell className="text-foreground rounded-none! py-3">
+									{item.campus}
+								</Table.Cell>
+								<Table.Cell className="rounded-none! py-3">
+									{item.availability ? (
+										<span
+											className={
+												item.isFull
+													? 'text-danger font-bold'
+													: 'text-foreground font-semibold'
+											}
+										>
+											{item.availability}
+										</span>
+									) : (
+										''
+									)}
+								</Table.Cell>
+							</Table.Row>
+						)}
+					</Table.Body>
+				</Table.Content>
+			</Table.ScrollContainer>
 		</Table>
 	);
 };
@@ -163,43 +205,54 @@ export const ClassModal = ({
 	const courseUrl = courseInfo.course_url;
 
 	return (
-		<Modal
+		<Modal.Backdrop
+			variant="opaque"
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			size="3xl"
-			scrollBehavior="inside"
 		>
-			<ModalContent>
-				{() => (
-					<>
-						<ModalHeader className="flex flex-col">
-							{courseUrl ? (
-								<a
-									href={courseUrl}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex w-fit underline"
-								>
-									{courseInfo.name.code} - {courseInfo.name.title}
-								</a>
-							) : (
-								<div className="flex w-fit">
-									{courseInfo.name.code} - {courseInfo.name.title}
-								</div>
-							)}
-							<div className="text-default-500 text-sm">
+			<Modal.Container size="lg">
+				<Modal.Dialog className="bg-background border-separator w-full max-w-3xl rounded-3xl border p-6 shadow-2xl">
+					<Modal.CloseTrigger className="hover:bg-default-100 rounded-full" />
+					<header className="contents">
+						<Modal.Header className="border-separator/50 mb-4 flex w-full flex-col gap-1 border-b pb-2">
+							<Modal.Heading className="text-xl font-bold">
+								{courseUrl ? (
+									<a
+										href={courseUrl}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="hover:text-primary text-foreground flex w-fit underline transition-colors"
+									>
+										{courseInfo.name.code} - {courseInfo.name.title}
+									</a>
+								) : (
+									<div className="text-foreground flex w-fit">
+										{courseInfo.name.code} - {courseInfo.name.title}
+									</div>
+								)}
+							</Modal.Heading>
+							<div className="text-default-500 mt-1 text-sm">
 								<span className="flex items-center gap-2">
 									{availableSeats !== undefined &&
 										parseInt(availableSeats, 10) === 0 && (
-											<Tooltip
-												content={
-													t('calendar.no-available-seats', {
+											<Tooltip delay={0}>
+												<Tooltip.Trigger>
+													<span
+														tabIndex={0}
+														role="img"
+														aria-label={t('calendar.no-available-seats', {
+															defaultValue: 'Class full',
+														})}
+														className="text-danger flex items-center outline-none"
+													>
+														<FaExclamationTriangle />
+													</span>
+												</Tooltip.Trigger>
+												<Tooltip.Content>
+													{t('calendar.no-available-seats', {
 														defaultValue: 'Class full',
-													}) as string
-												}
-												size="sm"
-											>
-												<span aria-hidden>⚠️</span>
+													})}
+												</Tooltip.Content>
 											</Tooltip>
 										)}
 									<span>
@@ -210,52 +263,47 @@ export const ClassModal = ({
 									</span>
 								</span>
 							</div>
-						</ModalHeader>
-						<ModalBody>
-							{(() => {
-								const classKey = `${courseId}|${classTypeId}|${classNumber}`;
-								const classConflicts = conflictsByClassKey[classKey] ?? [];
-								if (classConflicts.length === 0) return null;
-								const unique: typeof classConflicts = [];
-								const seen = new Set<string>();
-								for (const c of classConflicts) {
-									const k = `${c.otherCourseId}|${c.otherClassNumber}|${c.otherMeeting.time.start}|${c.otherMeeting.time.end}|${c.otherMeeting.location}|${c.otherMeeting.campus}`;
-									if (!seen.has(k)) {
-										seen.add(k);
-										unique.push(c);
-									}
+						</Modal.Header>
+					</header>
+					<Modal.Body className="gap-4">
+						{(() => {
+							const classKey = `${courseId}|${classTypeId}|${classNumber}`;
+							const classConflicts = conflictsByClassKey[classKey] ?? [];
+							if (classConflicts.length === 0) return null;
+							const unique: typeof classConflicts = [];
+							const seen = new Set<string>();
+							for (const c of classConflicts) {
+								const k = `${c.otherCourseId}|${c.otherClassNumber}|${c.otherMeeting.time.start}|${c.otherMeeting.time.end}|${c.otherMeeting.location}|${c.otherMeeting.campus}`;
+								if (!seen.has(k)) {
+									seen.add(k);
+									unique.push(c);
 								}
-								return (
-									<div className="mb-4 rounded-md border border-yellow-300 bg-yellow-50 p-4 dark:bg-yellow-600 dark:text-slate-100">
-										<div className="mb-2 font-semibold">
-											<span aria-hidden className="mr-2">
-												⚠️
-											</span>
-											{t('class-modal.conflicts') ?? 'Conflicts'}
-										</div>
-										<ul className="list-disc pl-5">
-											{unique.map((c: ConflictDetail, i: number) => (
-												<li
-													key={i}
-												>{`${c.otherCourseCode} (${c.otherClassNumber}) — ${c.otherMeeting.time.start} - ${c.otherMeeting.time.end} @ ${c.otherMeeting.location}`}</li>
-											))}
-										</ul>
+							}
+							return (
+								<div className="border-warning/30 bg-warning/10 dark:bg-warning/5 text-foreground mb-4 rounded-2xl border p-4">
+									<div className="text-warning mb-2 flex items-center gap-2 font-bold">
+										<FaExclamationTriangle />
+										<span>{t('class-modal.conflicts') ?? 'Conflicts'}</span>
 									</div>
-								);
-							})()}
-							<MeetingsTime
-								meetings={meetings}
-								size={size}
-								availableSeats={availableSeats}
-							/>
-						</ModalBody>
-						<Spacer />
-						<Spacer />
-						<Spacer />
-					</>
-				)}
-			</ModalContent>
-		</Modal>
+									<ul className="list-disc space-y-1 pl-5 text-sm">
+										{unique.map((c: ConflictDetail, i: number) => (
+											<li
+												key={i}
+											>{`${c.otherCourseCode} (${c.otherClassNumber}) — ${c.otherMeeting.time.start} - ${c.otherMeeting.time.end} @ ${c.otherMeeting.location}`}</li>
+										))}
+									</ul>
+								</div>
+							);
+						})()}
+						<MeetingsTime
+							meetings={meetings}
+							size={size}
+							availableSeats={availableSeats}
+						/>
+					</Modal.Body>
+				</Modal.Dialog>
+			</Modal.Container>
+		</Modal.Backdrop>
 	);
 };
 

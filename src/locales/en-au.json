@@ -2,6 +2,7 @@
 	"search": {
 		"select-term": "Select a term",
 		"search-course": "Search a course",
+		"loading": "Loading...",
 		"add": "Add",
 		"course-not-found": "No course found",
 		"choose-subject": "Choose a subject area",
@@ -20,7 +21,18 @@
 		"help": "Help",
 		"feedback": "Feedback",
 		"change-language": "Change Language",
-		"toggle-dark-mode": "Toggle Dark Mode"
+		"toggle-dark-mode": "Toggle Dark Mode",
+		"changelog": "Changelog"
+	},
+	"changelog": {
+		"subtitle": "Recent updates and version history",
+		"latest": "Latest",
+		"types": {
+			"added": "Added",
+			"changed": "Changed",
+			"fixed": "Fixed",
+			"removed": "Removed"
+		}
 	},
 	"course-modal": {
 		"dates": "Dates",
@@ -106,13 +118,15 @@
 		"steps": {
 			"welcome": "Welcome to MyTimetable! With this tool, you can easily schedule your timetable before enrolment. We highly recommend using a computer or tablet to get started.",
 			"select-term": "Select a term.",
+			"filters": "Apply filters to narrow down your course search.",
 			"search-course": "Choose a subject area, search for a course, and click “Add” to include it in your timetable.",
 			"calendar-dnd": "Scroll down to see the calendar with your enrolled courses. You can drag a class and drop it in one of the highlighted boxes to change its time.",
 			"change-week": "Change the calendar week to see more classes.",
+			"auto-timetable": "Alternatively, you can click the Auto-Timetable button to automatically generate a timetable based on your preferences.",
 			"course-details": "Click your enrolled course to see details of your enrolled classes.",
 			"course-modal": "If you encounter any class clashes when using MyTimetable, you can open the modal to change the class.",
 			"ready-button": "Once you are satisfied with your class times, click the \"Ready for Enrolment\" button at the bottom of the calendar.",
-			"access-adelaide": "You can easily enroll in courses on myEnrolment using the class numbers shown in the modal."
+			"enrolment": "You can easily enroll in courses on myEnrolment using the class numbers shown in the modal."
 		},
 		"actions": {
 			"next-step": "Next Step",

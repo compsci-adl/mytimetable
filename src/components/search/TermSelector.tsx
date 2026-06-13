@@ -1,6 +1,6 @@
-import { Select, SelectItem } from '@heroui/react';
+import { Label, ListBox, Select } from '@heroui/react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { FaChevronDown } from 'react-icons/fa';
 
 import { LocalStorageKey } from '../../constants/local-storage-keys';
 import { TERMS } from '../../constants/terms';
@@ -14,7 +14,6 @@ interface TermSelectorProps {
 export const TermSelector = ({
 	selectedTerm,
 	onTermChange,
-	isDisabled,
 }: TermSelectorProps) => {
 	const { t } = useTranslation();
 
@@ -24,26 +23,48 @@ export const TermSelector = ({
 	};
 
 	return (
-		<div
-			onClick={() => {
-				if (!isDisabled) return;
-				toast.warning(t('toast.drop-to-change-term'));
-			}}
-		>
-			<Select
-				label={t('search.select-term')}
-				selectedKeys={[selectedTerm]}
-				onSelectionChange={(keys) => changeTerm(keys.currentKey!)}
-				className="mobile:w-full w-56"
-				isDisabled={isDisabled}
-				disallowEmptySelection
-			>
-				{TERMS.map((term) => (
-					<SelectItem key={term.alias} textValue={term.name}>
-						{term.name}
-					</SelectItem>
-				))}
-			</Select>
+		<div className="mobile:w-56 w-full">
+			<div className="flex flex-col gap-1.5">
+				<Label
+					id="term-label"
+					className="text-foreground/80 pl-1 text-xs leading-normal font-bold"
+				>
+					{t('search.select-term')}
+				</Label>
+				<Select
+					aria-labelledby="term-label"
+					selectedKey={selectedTerm}
+					onSelectionChange={(val) => {
+						if (val) {
+							changeTerm(String(val));
+						}
+					}}
+				>
+					<Select.Trigger className="border-separator bg-content1 flex h-11 w-full cursor-pointer items-center justify-between rounded-2xl border px-4 text-left text-sm font-medium transition-colors">
+						<Select.Value>{({ selectedText }) => selectedText}</Select.Value>
+						<Select.Indicator>
+							<FaChevronDown className="text-default-500 text-xs" />
+						</Select.Indicator>
+					</Select.Trigger>
+					<Select.Popover className="bg-content1 border-separator min-w-56 rounded-2xl border p-1 shadow-lg">
+						<ListBox className="outline-none" items={TERMS}>
+							{(term) => (
+								<ListBox.Item
+									key={term.alias}
+									id={term.alias}
+									textValue={term.name}
+									className="focus:bg-default-100 hover:bg-default-100/50 text-foreground relative flex cursor-pointer items-center rounded-xl py-2 pr-3 pl-9 transition-colors outline-none"
+								>
+									<ListBox.ItemIndicator className="text-primary absolute left-3 hidden h-4 w-4 items-center justify-center font-bold data-[visible=true]:flex">
+										✓
+									</ListBox.ItemIndicator>
+									<span className="select-none">{term.name}</span>
+								</ListBox.Item>
+							)}
+						</ListBox>
+					</Select.Popover>
+				</Select>
+			</div>
 		</div>
 	);
 };

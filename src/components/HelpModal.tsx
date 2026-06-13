@@ -1,20 +1,10 @@
-import {
-	Button,
-	Card,
-	CardBody,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	Tab,
-	Tabs,
-} from '@heroui/react';
+import { Button, Card, Drawer, Modal, Tabs, CloseButton } from '@heroui/react';
 import clsx from 'clsx';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaQuestionCircle } from 'react-icons/fa';
 
+import { getHelpSteps } from '../data/help-steps';
 import { useHelpModal } from '../helpers/help-modal';
 import { useMount } from '../utils/mount';
 import { prefetchImages } from '../utils/prefetch-image';
@@ -22,70 +12,31 @@ import { prefetchImages } from '../utils/prefetch-image';
 export const HelpModal = () => {
 	const { t } = useTranslation();
 
-	const STEPS = [
-		{
-			content: t('help.steps.welcome'),
-			image: {
-				path: '/help/welcome.webp',
-				alt: 'Website preview',
-			},
-		},
-		{
-			content: t('help.steps.select-term'),
-			image: {
-				path: '/help/select-term.webp',
-				alt: 'Select a term',
-			},
-		},
-		{
-			content: t('help.steps.search-course'),
-			image: { path: '/help/search-course.webp', alt: 'Search a course' },
-		},
-		{
-			content: t('help.steps.calendar-dnd'),
-			image: {
-				path: '/help/calendar.webp',
-				alt: 'Drag and drop a course in calendar',
-			},
-		},
-		{
-			content: t('help.steps.change-week'),
-			image: { path: '/help/change-week.webp', alt: 'Change calendar week' },
-		},
-		{
-			content: t('help.steps.course-details'),
-			image: {
-				path: '/help/click-course.webp',
-				alt: 'Highlighted enrolled course',
-			},
-		},
-		{
-			content: t('help.steps.course-modal'),
-			image: {
-				path: '/help/modal.webp',
-				alt: 'Course modal to change class time',
-			},
-		},
-		{
-			content: t('help.steps.ready-button'),
-			image: {
-				path: '/help/ready-button.webp',
-				alt: 'Ready button at bottom',
-			},
-		},
-		{
-			content: t('help.steps.access-adelaide'),
-		},
-	];
-
 	useMount(() => {
-		const imagePaths = STEPS.map((step) => step.image?.path).filter(
-			(p): p is string => Boolean(p),
-		);
+		const imagePaths = getHelpSteps(t)
+			.map((step) => step.image?.path)
+			.filter((p): p is string => Boolean(p));
 		prefetchImages(imagePaths);
 	});
 
 	const helpModal = useHelpModal();
+	const steps = getHelpSteps(t);
+
+	const [isMobile, setIsMobile] = useState(false);
+
+	useEffect(() => {
+		const media = window.matchMedia('(max-width: 767px)');
+		const isCurrentlyMobile = media.matches;
+		const id = setTimeout(() => {
+			setIsMobile(isCurrentlyMobile);
+		}, 0);
+		const listener = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+		media.addEventListener('change', listener);
+		return () => {
+			clearTimeout(id);
+			media.removeEventListener('change', listener);
+		};
+	}, []);
 
 	const [direction, setDirection] = useState(true);
 	const [stepIndexKey, setStepIndexKey] = useState('0');
@@ -94,98 +45,160 @@ export const HelpModal = () => {
 		setDirection(index >= stepIndex);
 		setStepIndexKey(String(index));
 	};
-	const slideVariants = {
-		enter: (direction: boolean) => ({
-			x: direction ? '100%' : '-100%',
-		}),
-		center: { x: 0 },
-		exit: (direction: boolean) => ({
-			x: direction ? '-100%' : '100%',
-		}),
-	};
 
 	const handleClose = () => {
 		setStepIndex(0);
 		helpModal.close();
 	};
 
-	const step = STEPS[stepIndex];
+	const step = steps[stepIndex];
+
+	const renderHelpBody = () => (
+		<div className="flex flex-col gap-4">
+			<Tabs
+				selectedKey={stepIndexKey}
+				onSelectionChange={(step: React.Key) => setStepIndex(Number(step))}
+			>
+				<Tabs.ListContainer className="self-center">
+					<Tabs.List
+						aria-label="Help Steps"
+						className="bg-content2 border-separator flex max-w-full gap-1 overflow-x-auto rounded-full border p-1"
+					>
+						{steps.map((_, i) => (
+							<Tabs.Tab
+								key={i}
+								id={String(i)}
+								className={clsx(
+									'relative rounded-full px-3 py-1 text-xs font-semibold transition-colors',
+									stepIndex === i
+										? 'text-primary-foreground font-black'
+										: 'text-default-500 hover:text-foreground',
+								)}
+							>
+								{i + 1}
+								<Tabs.Indicator className="bg-primary rounded-full" />
+							</Tabs.Tab>
+						))}
+					</Tabs.List>
+				</Tabs.ListContainer>
+			</Tabs>
+			<div className="relative h-120 w-full overflow-hidden">
+				<div
+					key={stepIndexKey}
+					className={clsx(
+						'mobile:p-1 absolute h-full w-full p-4',
+						direction ? 'animate-slide-right' : 'animate-slide-left',
+					)}
+				>
+					<Card className="mobile:p-3 border-separator bg-content1/50 h-full rounded-3xl border p-4 shadow-md md:p-6">
+						<Card.Content className="flex h-full flex-col gap-4 md:gap-6">
+							<div className="mobile:text-sm text-foreground px-2 text-center text-base leading-relaxed md:px-4 md:text-lg">
+								{step.content}
+							</div>
+							<div className="flex grow items-center justify-center overflow-hidden">
+								{step.image?.path ? (
+									<img
+										alt={step.image?.alt ?? step.content}
+										src={step.image.path}
+										className="border-separator max-h-80 rounded-xl border object-contain shadow-sm"
+									/>
+								) : null}
+							</div>
+						</Card.Content>
+					</Card>
+				</div>
+			</div>
+		</div>
+	);
+
+	const renderHelpFooter = () => (
+		<div className="border-separator flex justify-between border-t pt-4">
+			<Button
+				variant="secondary"
+				onPress={() => setStepIndex(stepIndex - 1)}
+				className={clsx(
+					'invisible rounded-full px-6',
+					stepIndex > 0 && 'visible',
+				)}
+			>
+				{t('help.actions.previous-step')}
+			</Button>
+			{stepIndex < steps.length - 1 ? (
+				<Button
+					className="rounded-full px-6"
+					variant="primary"
+					onPress={() => setStepIndex(stepIndex + 1)}
+				>
+					{t('help.actions.next-step')}
+				</Button>
+			) : (
+				<Button
+					variant="primary"
+					className="rounded-full px-6"
+					onPress={handleClose}
+				>
+					{t('help.actions.get-started')}
+				</Button>
+			)}
+		</div>
+	);
+
+	if (isMobile) {
+		return (
+			<Drawer>
+				<Drawer.Backdrop
+					isOpen={helpModal.isOpen}
+					onOpenChange={(open) => !open && handleClose()}
+					variant="opaque"
+					className="z-100"
+				>
+					<Drawer.Content placement="bottom">
+						<Drawer.Dialog className="bg-background border-separator max-h-[92vh] overflow-y-auto rounded-t-3xl border-t p-6 pb-12 shadow-2xl">
+							<Drawer.Handle />
+							<Drawer.Header className="border-separator/50 relative flex flex-col gap-1 border-b pb-2">
+								<Drawer.Heading className="text-foreground flex items-center gap-2 text-xl font-bold">
+									<FaQuestionCircle className="text-primary text-sm" />
+									<span>{t('help.title')}</span>
+								</Drawer.Heading>
+								<CloseButton
+									aria-label="Close"
+									onPress={handleClose}
+									className="hover:bg-default-100 text-foreground/75 absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus:outline-none"
+								/>
+							</Drawer.Header>
+							<Drawer.Body className="pt-2">{renderHelpBody()}</Drawer.Body>
+							{renderHelpFooter()}
+						</Drawer.Dialog>
+					</Drawer.Content>
+				</Drawer.Backdrop>
+			</Drawer>
+		);
+	}
 
 	return (
-		<Modal
-			size="3xl"
+		<Modal.Backdrop
+			variant="opaque"
 			isOpen={helpModal.isOpen}
-			onClose={handleClose}
-			scrollBehavior="inside"
+			onOpenChange={(open) => !open && handleClose()}
 		>
-			<ModalContent>
-				<ModalHeader>{t('help.title')}</ModalHeader>
-				<ModalBody>
-					{/* FIXME: Tabs are missing animation when controlled */}
-					<Tabs
-						aria-label="Help Steps"
-						selectedKey={stepIndexKey}
-						onSelectionChange={(step) => setStepIndex(Number(step))}
-						className="self-center"
-						variant="underlined"
-					>
-						{STEPS.map((_, i) => (
-							<Tab key={i} title={i + 1} />
-						))}
-					</Tabs>
-					<div className="relative h-152 w-full overflow-x-hidden">
-						<AnimatePresence initial={false} custom={direction}>
-							<motion.div
-								key={stepIndexKey}
-								custom={direction}
-								variants={slideVariants}
-								initial="enter"
-								animate="center"
-								exit="exit"
-								transition={{ ease: 'easeInOut', duration: 0.3 }}
-								className="mobile:p-1 absolute h-full w-full p-4"
-							>
-								<Card className="mobile:p-1 h-full p-2">
-									<CardBody className="gap-2">
-										<div className="mobile:text-sm text-lg">{step.content}</div>
-										<div className="flex grow items-center justify-center">
-											{step.image?.path ? (
-												<img
-													alt={step.image?.alt ?? step.content}
-													src={step.image.path}
-													className="max-h-112"
-												/>
-											) : null}
-										</div>
-									</CardBody>
-								</Card>
-							</motion.div>
-						</AnimatePresence>
-					</div>
-				</ModalBody>
-				<ModalFooter className="justify-between">
-					<Button
-						color="primary"
-						onClick={() => setStepIndex(stepIndex - 1)}
-						className={clsx('invisible', stepIndex > 0 && 'visible')}
-					>
-						{t('help.actions.previous-step')}
-					</Button>
-					{stepIndex < STEPS.length - 1 ? (
-						<Button
-							className="self-end"
-							color="primary"
-							onClick={() => setStepIndex(stepIndex + 1)}
-						>
-							{t('help.actions.next-step')}
-						</Button>
-					) : (
-						<Button color="primary" onClick={helpModal.close}>
-							{t('help.actions.get-started')}
-						</Button>
-					)}
-				</ModalFooter>
-			</ModalContent>
-		</Modal>
+			<Modal.Container size="lg">
+				<Modal.Dialog className="bg-background border-separator w-full max-w-3xl rounded-3xl border p-6 shadow-2xl">
+					<Modal.CloseTrigger
+						onPress={handleClose}
+						className="hover:bg-default-100 rounded-full"
+					/>
+					<header className="contents">
+						<Modal.Header className="border-separator/50 w-full border-b pb-2">
+							<Modal.Heading className="text-foreground flex items-center gap-2 text-xl font-bold">
+								<FaQuestionCircle className="text-primary text-sm" />
+								<span>{t('help.title')}</span>
+							</Modal.Heading>
+						</Modal.Header>
+					</header>
+					<Modal.Body className="gap-4">{renderHelpBody()}</Modal.Body>
+					<Modal.Footer>{renderHelpFooter()}</Modal.Footer>
+				</Modal.Dialog>
+			</Modal.Container>
+		</Modal.Backdrop>
 	);
 };

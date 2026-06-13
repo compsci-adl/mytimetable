@@ -1,14 +1,9 @@
-import { Button, Chip } from '@heroui/react';
-import {
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
-	useDisclosure,
-} from '@heroui/react';
+import { Button, Chip, CloseButton, Modal, Tooltip } from '@heroui/react';
+import { useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
 
+import { useEnrolledCourses } from '../../data/enrolled-courses';
+import { AutoTimetable } from '../AutoTimetable';
 import { FilterSection } from './FilterSection';
 
 interface DesktopFiltersProps {
@@ -46,13 +41,14 @@ export const DesktopFilters = ({
 	onTempCampusesChange,
 	onApplyFilters,
 }: DesktopFiltersProps) => {
-	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+	const [isOpen, setIsOpen] = useState(false);
+	const courses = useEnrolledCourses((s) => s.courses);
 
 	const handleOpen = () => {
 		onTempLevelOfStudyChange(levelOfStudy);
 		onTempOnlyUniversityWideChange(onlyUniversityWide);
 		onTempCampusesChange(campuses);
-		onOpen();
+		setIsOpen(true);
 	};
 
 	const handleReset = () => {
@@ -62,27 +58,41 @@ export const DesktopFilters = ({
 	};
 
 	return (
-		<div className="my-4">
-			<div className="flex items-start gap-4">
-				<Button size="sm" className="shrink-0 self-start" onPress={handleOpen}>
-					<FaFilter className="mr-1" />
-					Filters
-				</Button>
-				<div className="flex flex-wrap gap-2">
+		<>
+			<div className="my-4 flex flex-wrap items-center justify-between gap-2">
+				<div className="flex flex-wrap items-center gap-2">
+					<Button
+						className="rounded-full"
+						onPress={handleOpen}
+						variant="secondary"
+					>
+						<FaFilter className="mr-1.5" />
+						Filters
+					</Button>
 					{levelOfStudy && (
 						<Chip
-							onClose={() => onLevelOfStudyChange(undefined)}
-							variant="flat"
+							variant="secondary"
+							className="border-separator bg-content2/50 text-foreground flex h-8 items-center gap-1.5 rounded-full border px-2.5 text-xs font-medium"
 						>
-							{levelOfStudy}
+							<span>{levelOfStudy}</span>
+							<CloseButton
+								aria-label="Remove filter"
+								onPress={() => onLevelOfStudyChange(undefined)}
+								className="h-4 w-4 rounded-full"
+							/>
 						</Chip>
 					)}
 					{onlyUniversityWide && (
 						<Chip
-							onClose={() => onOnlyUniversityWideChange(undefined)}
-							variant="flat"
+							variant="secondary"
+							className="border-separator bg-content2/50 text-foreground flex h-8 items-center gap-1.5 rounded-full border px-2.5 text-xs font-medium"
 						>
-							University-wide elective
+							<span>University-wide elective</span>
+							<CloseButton
+								aria-label="Remove filter"
+								onPress={() => onOnlyUniversityWideChange(undefined)}
+								className="h-4 w-4 rounded-full"
+							/>
 						</Chip>
 					)}
 					{campuses &&
@@ -90,24 +100,51 @@ export const DesktopFilters = ({
 						campuses.map((c) => (
 							<Chip
 								key={c}
-								onClose={() => {
-									const next = campuses.filter((x) => x !== c);
-									onCampusChange(next.length > 0 ? next : undefined);
-								}}
-								variant="flat"
+								variant="secondary"
+								className="border-separator bg-content2/50 text-foreground flex h-8 items-center gap-1.5 rounded-full border px-2.5 text-xs font-medium"
 							>
-								{c}
+								<span>{c}</span>
+								<CloseButton
+									aria-label="Remove filter"
+									onPress={() => {
+										const next = campuses.filter((x) => x !== c);
+										onCampusChange(next.length > 0 ? next : undefined);
+									}}
+									className="h-4 w-4 rounded-full"
+								/>
 							</Chip>
 						))}
 				</div>
+				{courses.length === 0 ? (
+					<Tooltip delay={0}>
+						<Tooltip.Trigger>
+							<span className="inline-block outline-none" tabIndex={0}>
+								<AutoTimetable isDisabled={true} />
+							</span>
+						</Tooltip.Trigger>
+						<Tooltip.Content>Please select a course first</Tooltip.Content>
+					</Tooltip>
+				) : (
+					<AutoTimetable isDisabled={false} />
+				)}
 			</div>
 
-			<Modal isOpen={isOpen} onOpenChange={onOpenChange} size="4xl">
-				<ModalContent>
-					{(onClose) => (
-						<>
-							<ModalHeader className="flex flex-col gap-1">Filters</ModalHeader>
-							<ModalBody>
+			<Modal>
+				<Modal.Backdrop
+					isOpen={isOpen}
+					onOpenChange={setIsOpen}
+					variant="opaque"
+				>
+					<Modal.Container size="lg">
+						<Modal.Dialog className="bg-background border-separator w-full max-w-4xl rounded-3xl border p-6 shadow-2xl">
+							<Modal.CloseTrigger className="hover:bg-default-100 rounded-full" />
+							<Modal.Header className="border-separator/50 w-full border-b pb-2">
+								<Modal.Heading className="text-foreground flex items-center gap-2 text-xl font-bold">
+									<FaFilter className="text-primary text-sm" />
+									<span>Filters</span>
+								</Modal.Heading>
+							</Modal.Header>
+							<Modal.Body>
 								<FilterSection
 									selectedTerm={selectedTerm}
 									subject={subject}
@@ -122,23 +159,30 @@ export const DesktopFilters = ({
 									onCampusChange={onTempCampusesChange}
 									isTemp={true}
 								/>
-							</ModalBody>
-							<ModalFooter className="flex justify-between">
-								<Button onPress={handleReset}>Reset</Button>
+							</Modal.Body>
+							<Modal.Footer className="border-separator mt-4 flex justify-between border-t pt-4">
 								<Button
-									color="primary"
+									onPress={handleReset}
+									variant="secondary"
+									className="rounded-full"
+								>
+									Reset
+								</Button>
+								<Button
+									variant="primary"
+									className="rounded-full"
 									onPress={() => {
 										onApplyFilters();
-										onClose();
+										setIsOpen(false);
 									}}
 								>
 									Apply
 								</Button>
-							</ModalFooter>
-						</>
-					)}
-				</ModalContent>
+							</Modal.Footer>
+						</Modal.Dialog>
+					</Modal.Container>
+				</Modal.Backdrop>
 			</Modal>
-		</div>
+		</>
 	);
 };

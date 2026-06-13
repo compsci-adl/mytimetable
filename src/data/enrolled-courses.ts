@@ -1,6 +1,6 @@
+import { create as produce } from 'mutative';
 import { toast } from 'sonner';
 import { create } from 'zustand';
-import { mutative } from 'zustand-mutative';
 import { persist } from 'zustand/middleware';
 
 import { getCourse } from '../apis';
@@ -30,6 +30,7 @@ type CoursesState = {
 		},
 	) => void;
 	removeCourse: (courseId: string) => void;
+	clearCourses: () => void;
 	updateCourseClass: (props: {
 		courseId: string;
 		classTypeId: string;
@@ -39,7 +40,7 @@ type CoursesState = {
 
 export const useEnrolledCourses = create<CoursesState>()(
 	persist(
-		mutative((set, get) => ({
+		(set, get) => ({
 			courses: [],
 			addCourse: async (
 				course: Omit<Course, 'classes' | 'color'> & {
@@ -59,9 +60,11 @@ export const useEnrolledCourses = create<CoursesState>()(
 					color = (maxColor + 1) % COURSE_COLORS.length;
 				}
 				// Add course to state
-				set((state) => {
-					state.courses.push({ ...course, classes: [], color });
-				});
+				set(
+					produce((state) => {
+						state.courses.push({ ...course, classes: [], color });
+					}),
+				);
 				const preferredCampuses = course.preferredCampuses;
 
 				// Fetch course data
@@ -71,58 +74,73 @@ export const useEnrolledCourses = create<CoursesState>()(
 				});
 				// Initialise course classes to default, preferring classes that
 				// have meetings overlapping the currently selected term
-				set((state) => {
-					const enrolledCourse = state.courses.find((c) => c.id === course.id);
-					if (!enrolledCourse) return;
+				set(
+					produce((state) => {
+						const enrolledCourse = state.courses.find(
+							(c) => c.id === course.id,
+						);
+						if (!enrolledCourse) return;
 
-					const selectedTermAlias =
-						localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
+						const selectedTermAlias =
+							localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
 
-					enrolledCourse.classes = data.class_list.map((c) => {
-						const pick = () => {
-							const termClasses = c.classes.filter((cls) =>
-								cls.meetings.some((m) =>
-									isMeetingInTerm(m.date, selectedTermAlias),
-								),
-							);
-							const candidates =
-								termClasses.length > 0 ? termClasses : c.classes;
-
-							if (preferredCampuses && preferredCampuses.length > 0) {
-								const foundByCampus = candidates.find((cls) =>
-									cls.meetings.some((m: Meetings[number]) =>
-										preferredCampuses.includes(m.campus),
+						enrolledCourse.classes = data.class_list.map((c) => {
+							const pick = () => {
+								const termClasses = c.classes.filter((cls) =>
+									cls.meetings.some((m) =>
+										isMeetingInTerm(m.date, selectedTermAlias),
 									),
 								);
-								if (foundByCampus) return foundByCampus;
-							}
+								const candidates =
+									termClasses.length > 0 ? termClasses : c.classes;
 
-							return candidates[0];
-						};
+								if (preferredCampuses && preferredCampuses.length > 0) {
+									const foundByCampus = candidates.find((cls) =>
+										cls.meetings.some((m: Meetings[number]) =>
+											preferredCampuses.includes(m.campus),
+										),
+									);
+									if (foundByCampus) return foundByCampus;
+								}
 
-						const chosen = pick();
-						return {
-							id: c.id,
-							classNumber: chosen?.number ?? 'not-available',
-						};
-					});
-				});
+								return candidates[0];
+							};
+
+							const chosen = pick();
+							return {
+								id: c.id,
+								classNumber: chosen?.number ?? 'not-available',
+							};
+						});
+					}),
+				);
 			},
 			removeCourse: (courseId) => {
-				set((state) => {
-					state.courses = state.courses.filter((c) => c.id !== courseId);
-				});
+				set(
+					produce((state) => {
+						state.courses = state.courses.filter((c) => c.id !== courseId);
+					}),
+				);
+			},
+			clearCourses: () => {
+				set(
+					produce((state) => {
+						state.courses = [];
+					}),
+				);
 			},
 			updateCourseClass: ({ courseId, classTypeId, classNumber }) => {
-				set((state) => {
-					const course = state.courses.find((c) => c.id === courseId);
-					if (!course) return;
-					const classType = course.classes.find((c) => c.id === classTypeId);
-					if (!classType) return;
-					classType.classNumber = classNumber;
-				});
+				set(
+					produce((state) => {
+						const course = state.courses.find((c) => c.id === courseId);
+						if (!course) return;
+						const classType = course.classes.find((c) => c.id === classTypeId);
+						if (!classType) return;
+						classType.classNumber = classNumber;
+					}),
+				);
 			},
-		})),
+		}),
 		{ name: LocalStorageKey.EnrolledCourses, version: 0 },
 	),
 );

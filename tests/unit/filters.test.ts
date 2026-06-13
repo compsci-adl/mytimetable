@@ -28,13 +28,13 @@ describe('useFilters Zustand Store', () => {
 		vi.resetModules();
 	});
 
-	it('should initialize with default values when localStorage is empty', async () => {
+	it('should Initialisewith default values when localStorage is empty', async () => {
 		const { useFilters } = await import('../../src/data/filters');
 		expect(useFilters.getState().term).toBe('sem1');
 		expect(useFilters.getState().campuses).toBeUndefined();
 	});
 
-	it('should initialize with values from localStorage if present', async () => {
+	it('should Initialisewith values from localStorage if present', async () => {
 		localStorageMock.setItem('MTT.term', 'sem2');
 		localStorageMock.setItem(
 			'MTT.campuses',

@@ -49,8 +49,7 @@ export const useZoom = ({ ref, onPinchZoom, onWheelZoom }: UseZoomProps) => {
 	// Trackpad (Laptop) zoom
 	const onWheel = useCallback(
 		(e: WheelEvent) => {
-			// Check if user is scrolling
-			if (e.deltaY % 1 === 0) return;
+			if (!e.ctrlKey) return;
 			e.preventDefault();
 			e.stopPropagation();
 			onWheelZoom(e.deltaY);

@@ -1,18 +1,15 @@
 import {
 	Button,
 	Drawer,
-	DrawerBody,
-	DrawerContent,
-	DrawerHeader,
+	Label,
+	ListBox,
 	Popover,
-	PopoverContent,
-	PopoverTrigger,
 	Select,
-	SelectItem,
 	Slider,
 	Switch,
 	Tooltip,
 } from '@heroui/react';
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaBolt, FaChevronDown, FaInfoCircle } from 'react-icons/fa';
@@ -102,25 +99,35 @@ const loadInitialPrefs = () => {
 	};
 };
 
-export const AutoTimetable = () => {
+interface AutoTimetableProps {
+	className?: string;
+	isDisabled?: boolean;
+}
+
+export const AutoTimetable = ({
+	className,
+	isDisabled,
+}: AutoTimetableProps = {}) => {
 	const { t } = useTranslation();
 	const coursesInfo = useCoursesInfo();
 	const updateCourseClass = useEnrolledCourses((s) => s.updateCourseClass);
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	const [isMobile, setIsMobile] = useState(() => {
-		if (typeof window !== 'undefined') {
-			return window.matchMedia('(max-width: 767px)').matches;
-		}
-		return false;
-	});
+	const [isMobile, setIsMobile] = useState(false);
 
 	useEffect(() => {
 		const media = window.matchMedia('(max-width: 767px)');
+		const isCurrentlyMobile = media.matches;
+		const id = setTimeout(() => {
+			setIsMobile(isCurrentlyMobile);
+		}, 0);
 		const listener = (e: MediaQueryListEvent) => setIsMobile(e.matches);
 		media.addEventListener('change', listener);
-		return () => media.removeEventListener('change', listener);
+		return () => {
+			clearTimeout(id);
+			media.removeEventListener('change', listener);
+		};
 	}, []);
 
 	const [initialPrefs] = useState(loadInitialPrefs);
@@ -261,8 +268,8 @@ export const AutoTimetable = () => {
 		return (
 			<div className="flex w-full flex-col gap-4">
 				{/* Info section */}
-				<div className="flex items-start gap-2 rounded-lg bg-blue-50 p-3 text-xs leading-relaxed text-blue-800 dark:bg-blue-950/40 dark:text-blue-200">
-					<FaInfoCircle className="mt-0.5 shrink-0 text-sm" />
+				<div className="bg-primary/10 border-primary/20 dark:bg-primary/5 flex items-start gap-2 rounded-lg border p-3 text-xs leading-relaxed text-orange-800 dark:text-orange-200">
+					<FaInfoCircle className="text-primary mt-0.5 shrink-0 text-sm" />
 					<span>
 						Calculate your optimal class schedule based on daily preferences
 						automatically.
@@ -271,139 +278,193 @@ export const AutoTimetable = () => {
 
 				{/* Earliest start time */}
 				<div className="flex items-center justify-between gap-2">
-					<span className="text-default-700 text-xs font-semibold">
+					<span className="text-foreground text-xs font-bold">
 						Earliest start time
 					</span>
 					<Select
-						size="sm"
-						selectedKeys={[earliestStart]}
-						onChange={(e) => {
-							setEarliestStart(e.target.value);
-							savePrefs({ earliestStart: e.target.value });
-						}}
-						className="w-28"
-						disallowEmptySelection
 						aria-label="Earliest start time"
+						value={earliestStart}
+						onChange={(val) => {
+							if (!val) return;
+							setEarliestStart(String(val));
+							savePrefs({ earliestStart: String(val) });
+						}}
+						variant="secondary"
+						className="flex w-28 flex-col gap-1.5"
 					>
-						{START_TIMES.map((t) => (
-							<SelectItem key={t.value} textValue={t.label}>
-								{t.label}
-							</SelectItem>
-						))}
+						<Select.Trigger>
+							<Select.Value className="text-xs" />
+							<Select.Indicator />
+						</Select.Trigger>
+						<Select.Popover className="bg-content1 border-separator rounded-2xl border p-1 shadow-lg">
+							<ListBox className="max-h-48 overflow-y-auto outline-none">
+								{START_TIMES.map((t) => (
+									<ListBox.Item
+										key={t.value}
+										id={t.value}
+										textValue={t.label}
+										className="focus:bg-default-100 hover:bg-default-100/50 text-foreground cursor-pointer rounded-xl px-3 py-2 transition-colors outline-none"
+									>
+										{t.label}
+									</ListBox.Item>
+								))}
+							</ListBox>
+						</Select.Popover>
 					</Select>
 				</div>
 
 				{/* Latest end time */}
 				<div className="flex items-center justify-between gap-2">
-					<span className="text-default-700 text-xs font-semibold">
+					<span className="text-foreground text-xs font-bold">
 						Latest end time
 					</span>
 					<Select
-						size="sm"
-						selectedKeys={[latestEnd]}
-						onChange={(e) => {
-							setLatestEnd(e.target.value);
-							savePrefs({ latestEnd: e.target.value });
-						}}
-						className="w-28"
-						disallowEmptySelection
 						aria-label="Latest end time"
+						value={latestEnd}
+						onChange={(val) => {
+							if (!val) return;
+							setLatestEnd(String(val));
+							savePrefs({ latestEnd: String(val) });
+						}}
+						variant="secondary"
+						className="flex w-28 flex-col gap-1.5"
 					>
-						{END_TIMES.map((t) => (
-							<SelectItem key={t.value} textValue={t.label}>
-								{t.label}
-							</SelectItem>
-						))}
+						<Select.Trigger>
+							<Select.Value className="text-xs" />
+							<Select.Indicator />
+						</Select.Trigger>
+						<Select.Popover className="bg-content1 border-separator rounded-2xl border p-1 shadow-lg">
+							<ListBox className="max-h-48 overflow-y-auto outline-none">
+								{END_TIMES.map((t) => (
+									<ListBox.Item
+										key={t.value}
+										id={t.value}
+										textValue={t.label}
+										className="focus:bg-default-100 hover:bg-default-100/50 text-foreground cursor-pointer rounded-xl px-3 py-2 transition-colors outline-none"
+									>
+										{t.label}
+									</ListBox.Item>
+								))}
+							</ListBox>
+						</Select.Popover>
 					</Select>
 				</div>
 
 				{/* Preferred lunch break */}
 				<div className="flex items-center justify-between gap-2">
-					<span className="text-default-700 text-xs font-semibold">
+					<span className="text-foreground text-xs font-bold">
 						Preferred lunch break
 					</span>
 					<Switch
 						isSelected={enableLunch}
-						onValueChange={(val) => {
+						onChange={(val) => {
 							setEnableLunch(val);
 							savePrefs({ enableLunch: val });
 						}}
-						size="sm"
 						aria-label="Enable preferred lunch break"
-					/>
+					>
+						<Switch.Control>
+							<Switch.Thumb />
+						</Switch.Control>
+					</Switch>
 				</div>
 
 				{/* Lunch start and end times */}
 				{enableLunch && (
-					<>
-						<div className="flex items-center justify-between gap-2 pl-4">
-							<span className="text-default-600 text-2xs font-medium">
+					<div className="border-separator/80 flex flex-col gap-3 border-l pl-4">
+						<div className="flex items-center justify-between gap-2">
+							<span className="text-default-500 text-2xs font-semibold">
 								Lunch start time
 							</span>
 							<Select
-								size="sm"
-								selectedKeys={[lunchStart]}
-								onChange={(e) => {
-									setLunchStart(e.target.value);
-									savePrefs({ lunchStart: e.target.value });
-								}}
-								className="w-28"
-								disallowEmptySelection
 								aria-label="Lunch start time"
+								value={lunchStart}
+								onChange={(val) => {
+									if (!val) return;
+									setLunchStart(String(val));
+									savePrefs({ lunchStart: String(val) });
+								}}
+								variant="secondary"
+								className="flex w-28 flex-col gap-1.5"
 							>
-								{LUNCH_START_TIMES.map((t) => (
-									<SelectItem key={t.value} textValue={t.label}>
-										{t.label}
-									</SelectItem>
-								))}
+								<Select.Trigger>
+									<Select.Value className="text-xs" />
+									<Select.Indicator />
+								</Select.Trigger>
+								<Select.Popover className="bg-content1 border-separator rounded-2xl border p-1 shadow-lg">
+									<ListBox className="max-h-48 overflow-y-auto outline-none">
+										{LUNCH_START_TIMES.map((t) => (
+											<ListBox.Item
+												key={t.value}
+												id={t.value}
+												textValue={t.label}
+												className="focus:bg-default-100 hover:bg-default-100/50 text-foreground cursor-pointer rounded-xl px-3 py-2 transition-colors outline-none"
+											>
+												{t.label}
+											</ListBox.Item>
+										))}
+									</ListBox>
+								</Select.Popover>
 							</Select>
 						</div>
 
-						<div className="flex items-center justify-between gap-2 pl-4">
-							<span className="text-default-600 text-2xs font-medium">
+						<div className="flex items-center justify-between gap-2">
+							<span className="text-default-500 text-2xs font-semibold">
 								Lunch end time
 							</span>
 							<Select
-								size="sm"
-								selectedKeys={[lunchEnd]}
-								onChange={(e) => {
-									setLunchEnd(e.target.value);
-									savePrefs({ lunchEnd: e.target.value });
-								}}
-								className="w-28"
-								disallowEmptySelection
 								aria-label="Lunch end time"
+								value={lunchEnd}
+								onChange={(val) => {
+									if (!val) return;
+									setLunchEnd(String(val));
+									savePrefs({ lunchEnd: String(val) });
+								}}
+								variant="secondary"
+								className="flex w-28 flex-col gap-1.5"
 							>
-								{LUNCH_END_TIMES.map((t) => (
-									<SelectItem key={t.value} textValue={t.label}>
-										{t.label}
-									</SelectItem>
-								))}
+								<Select.Trigger>
+									<Select.Value className="text-xs" />
+									<Select.Indicator />
+								</Select.Trigger>
+								<Select.Popover className="bg-content1 border-separator rounded-2xl border p-1 shadow-lg">
+									<ListBox className="max-h-48 overflow-y-auto outline-none">
+										{LUNCH_END_TIMES.map((t) => (
+											<ListBox.Item
+												key={t.value}
+												id={t.value}
+												textValue={t.label}
+												className="focus:bg-default-100 hover:bg-default-100/50 text-foreground cursor-pointer rounded-xl px-3 py-2 transition-colors outline-none"
+											>
+												{t.label}
+											</ListBox.Item>
+										))}
+									</ListBox>
+								</Select.Popover>
 							</Select>
 						</div>
-					</>
+					</div>
 				)}
 
 				{/* Days selection */}
 				<div className="flex flex-col gap-1.5">
-					<span className="text-default-700 text-xs font-semibold">Days</span>
-					<div className="border-default-200 divide-default-200 flex divide-x overflow-hidden rounded-lg border">
+					<span className="text-foreground text-xs font-bold">Days</span>
+					<div className="border-separator divide-separator bg-content2/10 flex divide-x overflow-hidden rounded-xl border">
 						{DAYS_SHORT.map((day, idx) => {
 							const fullDay = DAYS_FULL[idx];
 							const isSelected = preferredDays.includes(fullDay);
 							return (
-								<button
+								<Button
 									key={day}
-									type="button"
-									onClick={() => toggleDay(fullDay)}
-									className={`flex-1 py-1.5 text-xs font-semibold transition-colors ${
+									onPress={() => toggleDay(fullDay)}
+									className={`h-auto min-w-0 flex-1 cursor-pointer rounded-none bg-transparent py-2 text-xs font-bold shadow-none transition-colors ${
 										isSelected
-											? 'bg-default-200 text-default-800 dark:bg-default-300 dark:text-default-900'
-											: 'text-default-400 hover:bg-default-50 bg-transparent'
+											? 'bg-default-200 text-foreground dark:bg-default-300'
+											: 'text-default-400 hover:bg-default-100/50 bg-transparent'
 									}`}
 								>
 									{day}
-								</button>
+								</Button>
 							);
 						})}
 					</div>
@@ -411,10 +472,6 @@ export const AutoTimetable = () => {
 
 				{/* Breaks Slider */}
 				<div className="flex flex-col gap-1">
-					<div className="text-default-700 flex items-center justify-between text-xs font-semibold">
-						<span>Breaks between classes</span>
-						<span className="text-default-500">{preferredBreak} hrs</span>
-					</div>
 					<Slider
 						step={0.5}
 						maxValue={4}
@@ -425,21 +482,20 @@ export const AutoTimetable = () => {
 							setPreferredBreak(num);
 							savePrefs({ preferredBreak: num });
 						}}
-						aria-label="Breaks between classes"
-						size="sm"
-						classNames={{
-							track: 'border-s-primary-100',
-							filler: 'bg-primary',
-						}}
-					/>
+					>
+						<Label className="text-foreground text-xs font-bold">
+							Breaks between classes
+						</Label>
+						<Slider.Output className="text-default-500 text-xs font-bold">{`${preferredBreak} hrs`}</Slider.Output>
+						<Slider.Track>
+							<Slider.Fill />
+							<Slider.Thumb className="bg-default-300 after:bg-default-300! dark:bg-default-300 border-background cursor-grab border-2 shadow-md active:cursor-grabbing" />
+						</Slider.Track>
+					</Slider>
 				</div>
 
 				{/* Max Days Slider */}
 				<div className="flex flex-col gap-1">
-					<div className="text-default-700 flex items-center justify-between text-xs font-semibold">
-						<span>Max days of Uni</span>
-						<span className="text-default-500">{maxDays} days</span>
-					</div>
 					<Slider
 						step={1}
 						maxValue={5}
@@ -450,19 +506,22 @@ export const AutoTimetable = () => {
 							setMaxDays(num);
 							savePrefs({ maxDays: num });
 						}}
-						aria-label="Max days of Uni"
-						size="sm"
-						classNames={{
-							track: 'border-s-primary-100',
-							filler: 'bg-primary',
-						}}
-					/>
+					>
+						<Label className="text-foreground text-xs font-bold">
+							Max days of Uni
+						</Label>
+						<Slider.Output className="text-default-500 text-xs font-bold">{`${maxDays} days`}</Slider.Output>
+						<Slider.Track>
+							<Slider.Fill />
+							<Slider.Thumb className="bg-default-300 after:bg-default-300! border-background cursor-grab border-2 shadow-md active:cursor-grabbing" />
+						</Slider.Track>
+					</Slider>
 				</div>
 
 				{/* Mode Segmented Select */}
 				<div className="flex flex-col gap-1.5">
-					<span className="text-default-700 text-xs font-semibold">Mode</span>
-					<div className="border-default-200 divide-default-200 flex divide-x overflow-hidden rounded-lg border">
+					<span className="text-foreground text-xs font-bold">Mode</span>
+					<div className="border-separator divide-separator bg-content2/10 flex divide-x overflow-hidden rounded-xl border">
 						{MODES.map((m) => {
 							const isSelected = mode === m.value;
 							const tooltipContent =
@@ -472,28 +531,26 @@ export const AutoTimetable = () => {
 										? 'Prioritizes physically attending classes on campus'
 										: 'Prioritizes online/web-based class options';
 							return (
-								<Tooltip
-									key={m.value}
-									content={tooltipContent}
-									size="sm"
-									delay={100}
-									closeDelay={100}
-								>
-									<button
-										type="button"
-										onClick={() => {
-											setMode(m.value);
-											savePrefs({ mode: m.value });
-										}}
-										className={`flex-1 py-1.5 text-xs font-semibold transition-colors ${
-											isSelected
-												? 'bg-default-200 text-default-800 dark:bg-default-300 dark:text-default-900'
-												: 'text-default-400 hover:bg-default-50 bg-transparent'
-										}`}
-									>
-										{m.label}
-									</button>
-								</Tooltip>
+								<div key={m.value} className="flex flex-1 grow">
+									<Tooltip delay={100} closeDelay={100}>
+										<Tooltip.Trigger>
+											<Button
+												onPress={() => {
+													setMode(m.value);
+													savePrefs({ mode: m.value });
+												}}
+												className={`h-auto w-full min-w-0 cursor-pointer rounded-none bg-transparent py-2 text-xs font-bold shadow-none transition-colors ${
+													isSelected
+														? 'bg-default-200 text-foreground dark:bg-default-300'
+														: 'text-default-400 hover:bg-default-100/50 bg-transparent'
+												}`}
+											>
+												{m.label}
+											</Button>
+										</Tooltip.Trigger>
+										<Tooltip.Content>{tooltipContent}</Tooltip.Content>
+									</Tooltip>
+								</div>
 							);
 						})}
 					</div>
@@ -501,29 +558,32 @@ export const AutoTimetable = () => {
 
 				{/* Toggle for Lectures */}
 				<div className="flex items-center justify-between gap-2">
-					<span className="text-default-700 text-xs leading-snug font-semibold">
+					<span className="text-foreground text-xs leading-snug font-bold">
 						{t('auto-timetable.allow-lecture-clashes', {
 							defaultValue: 'Allow lecture clashes',
 						})}
 					</span>
 					<Switch
 						isSelected={ignoreLectures}
-						onValueChange={(val) => {
+						onChange={(val) => {
 							setIgnoreLectures(val);
 							savePrefs({ ignoreLectures: val });
 						}}
-						size="sm"
 						aria-label="Ignore lectures"
-					/>
+					>
+						<Switch.Control>
+							<Switch.Thumb />
+						</Switch.Control>
+					</Switch>
 				</div>
 
 				{/* GO Button */}
 				<Button
-					color="primary"
+					variant="primary"
 					onPress={handleGo}
-					className="flex w-full gap-2 font-bold"
+					className="flex w-full gap-2 rounded-full py-2.5 font-bold shadow-md"
 					size="md"
-					isLoading={isLoading}
+					isPending={isLoading}
 				>
 					{!isLoading && <FaBolt />}
 					<span>{isLoading ? 'GENERATING...' : 'GO'}</span>
@@ -532,57 +592,90 @@ export const AutoTimetable = () => {
 		);
 	};
 
-	const triggerButton = (
-		<Button
-			color="primary"
-			variant="solid"
-			className="flex gap-2 font-bold"
-			size="sm"
-			onPress={() => setIsOpen(true)}
-		>
-			<FaBolt />
-			<span>AUTO-TIMETABLE</span>
-			<FaChevronDown className="text-xs opacity-70" />
-		</Button>
-	);
-
 	if (isMobile) {
 		return (
 			<>
-				{triggerButton}
-				<Drawer
-					className="z-100"
-					isOpen={isOpen}
-					onOpenChange={setIsOpen}
-					placement="bottom"
+				<Button
+					variant="primary"
+					className={clsx(
+						'flex h-8 gap-2 rounded-full font-bold shadow-md',
+						className,
+					)}
+					size="sm"
+					onPress={() => setIsOpen(true)}
+					isDisabled={isDisabled}
 				>
-					<DrawerContent>
-						<DrawerHeader className="border-default-100 flex flex-col gap-1 border-b">
-							<div className="flex items-center gap-2">
-								<FaBolt className="text-primary text-sm" />
-								<span className="text-sm font-bold">
-									{t('auto-timetable.title', {
-										defaultValue: 'Auto-Timetable Preferences',
-									})}
-								</span>
-							</div>
-						</DrawerHeader>
-						<DrawerBody className="pb-8">{renderContent()}</DrawerBody>
-					</DrawerContent>
+					<FaBolt />
+					<span>AUTO-TIMETABLE</span>
+					<FaChevronDown className="text-xs opacity-70" />
+				</Button>
+				<Drawer>
+					<Drawer.Backdrop
+						isOpen={isOpen}
+						onOpenChange={setIsOpen}
+						variant="opaque"
+						className="z-100"
+					>
+						<Drawer.Content placement="bottom">
+							<Drawer.Dialog className="bg-background border-separator max-h-[85vh] overflow-y-auto rounded-t-3xl border-t p-6 pb-12 shadow-2xl">
+								<Drawer.Handle />
+								<Drawer.Header className="border-separator/50 flex flex-col gap-1 border-b pb-2">
+									<Drawer.Heading className="text-foreground flex items-center gap-2 text-xl font-bold">
+										<FaBolt className="text-primary animate-pulse text-sm" />
+										<span>
+											{t('auto-timetable.title', {
+												defaultValue: 'Auto-Timetable Preferences',
+											})}
+										</span>
+									</Drawer.Heading>
+								</Drawer.Header>
+								<Drawer.Body className="pt-4">{renderContent()}</Drawer.Body>
+							</Drawer.Dialog>
+						</Drawer.Content>
+					</Drawer.Backdrop>
 				</Drawer>
 			</>
 		);
 	}
 
+	if (isDisabled) {
+		return (
+			<Button
+				variant="primary"
+				className="flex gap-2 rounded-full font-bold shadow-md"
+				size="sm"
+				isDisabled={true}
+			>
+				<FaBolt />
+				<span>AUTO-TIMETABLE</span>
+				<FaChevronDown className="text-xs opacity-70" />
+			</Button>
+		);
+	}
+
 	return (
-		<Popover
-			isOpen={isOpen}
-			onOpenChange={setIsOpen}
-			placement="bottom-end"
-			shouldCloseOnScroll={false}
-		>
-			<PopoverTrigger>{triggerButton}</PopoverTrigger>
-			<PopoverContent className="w-80 p-4">{renderContent()}</PopoverContent>
+		<Popover isOpen={isOpen} onOpenChange={setIsOpen}>
+			<Popover.Trigger
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				render={(props: any) => (
+					<Button
+						{...props}
+						variant="primary"
+						className="flex gap-2 rounded-full font-bold shadow-md"
+						size="sm"
+						isDisabled={false}
+					>
+						<FaBolt />
+						<span>AUTO-TIMETABLE</span>
+						<FaChevronDown className="text-xs opacity-70" />
+					</Button>
+				)}
+			/>
+			<Popover.Content placement="bottom end">
+				<Popover.Dialog className="bg-background border-separator w-80 rounded-3xl border p-5 shadow-2xl">
+					{renderContent()}
+				</Popover.Dialog>
+			</Popover.Content>
 		</Popover>
 	);
 };

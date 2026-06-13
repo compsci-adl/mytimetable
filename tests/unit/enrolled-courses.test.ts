@@ -41,7 +41,7 @@ const mockCourseData = {
 	id: 'course-adds',
 	course_id: 'adds-123',
 	name: {
-		subject: 'COMP SCI',
+		subject: 'COMP',
 		code: '2103',
 		title: 'Algorithm Design & Data Structures',
 	},
@@ -108,14 +108,14 @@ describe('useEnrolledCourses Zustand Store', () => {
 		localStorage.clear();
 	});
 
-	it('should add a course and initialize its classes based on term and campus preferences', async () => {
+	it('should add a course and Initialiseits classes based on term and campus preferences', async () => {
 		vi.mocked(getCourse).mockResolvedValue(mockCourseData);
 		localStorage.setItem('MTT.term', 'sem2'); // overlaps months 7-12
 
 		// Add course with preference for 'Roseworthy Campus'
 		await useEnrolledCourses.getState().addCourse({
 			id: 'course-adds',
-			name: 'COMP SCI 2103',
+			name: 'COMP 2103',
 			preferredCampuses: ['Roseworthy Campus'],
 		});
 
@@ -139,13 +139,13 @@ describe('useEnrolledCourses Zustand Store', () => {
 		// Add first course
 		await useEnrolledCourses.getState().addCourse({
 			id: 'course-1',
-			name: 'COMP SCI 2103',
+			name: 'COMP 2103',
 		});
 
 		// Add second course
 		await useEnrolledCourses.getState().addCourse({
 			id: 'course-2',
-			name: 'COMP SCI 2103',
+			name: 'COMP 2103',
 		});
 
 		const courses = useEnrolledCourses.getState().courses;
@@ -161,7 +161,7 @@ describe('useEnrolledCourses Zustand Store', () => {
 		// Add course with preferred campus that does not match any classes
 		await useEnrolledCourses.getState().addCourse({
 			id: 'course-adds',
-			name: 'COMP SCI 2103',
+			name: 'COMP 2103',
 			preferredCampuses: ['Mawson Lakes'],
 		});
 
@@ -190,7 +190,7 @@ describe('useEnrolledCourses Zustand Store', () => {
 
 		await useEnrolledCourses.getState().addCourse({
 			id: 'course-empty',
-			name: 'COMP SCI 2103',
+			name: 'COMP 2103',
 		});
 
 		const courses = useEnrolledCourses.getState().courses;
@@ -234,12 +234,26 @@ describe('useEnrolledCourses Zustand Store', () => {
 		expect(courses[0].id).toBe('course-2');
 	});
 
+	it('should clear all enrolled courses', () => {
+		useEnrolledCourses.setState({
+			courses: [
+				{ id: 'course-1', name: 'Course 1', classes: [], color: 0 },
+				{ id: 'course-2', name: 'Course 2', classes: [], color: 1 },
+			],
+		});
+
+		useEnrolledCourses.getState().clearCourses();
+
+		const courses = useEnrolledCourses.getState().courses;
+		expect(courses).toEqual([]);
+	});
+
 	it('should update course class number selection', () => {
 		useEnrolledCourses.setState({
 			courses: [
 				{
 					id: 'course-adds',
-					name: 'COMP SCI 2103',
+					name: 'COMP 2103',
 					classes: [{ id: 'type-lec', classNumber: '101' }],
 					color: 0,
 				},
@@ -261,7 +275,7 @@ describe('useEnrolledCourses Zustand Store', () => {
 			courses: [
 				{
 					id: 'course-adds',
-					name: 'COMP SCI 2103',
+					name: 'COMP 2103',
 					classes: [{ id: 'type-lec', classNumber: '101' }],
 					color: 0,
 				},
@@ -285,7 +299,7 @@ describe('useEnrolledCourses Zustand Store', () => {
 			courses: [
 				{
 					id: 'course-adds',
-					name: 'COMP SCI 2103',
+					name: 'COMP 2103',
 					classes: [{ id: 'type-lec', classNumber: '101' }],
 					color: 0,
 				},
@@ -313,7 +327,7 @@ describe('useEnrolledCourses Zustand Store', () => {
 
 		const addPromise = useEnrolledCourses.getState().addCourse({
 			id: 'course-race',
-			name: 'COMP SCI 2103',
+			name: 'COMP 2103',
 		});
 
 		// Remove the course from state immediately before API completes

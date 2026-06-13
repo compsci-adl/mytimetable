@@ -13,27 +13,38 @@ export const ZoomButtons = () => {
 
 	const { height, setHeight } = useCalendarHourHeight();
 
+	const isMax = height === MAX_HOUR_HEIGHT;
+	const isMin = height === MIN_HOUR_HEIGHT;
+
 	return (
-		<div className="mobile:bottom-3 mobile:right-3 fixed right-8 bottom-8 z-50 flex flex-col gap-2">
-			<Tooltip content={t('zoom.zoom-in')} placement="left">
-				<Button
-					onClick={() => setHeight((h) => h + 0.5)}
-					isDisabled={height === MAX_HOUR_HEIGHT}
-					isIconOnly
-					size="sm"
-				>
-					<FaPlus />
-				</Button>
+		<div className="fixed right-3 bottom-2 z-50 flex flex-col gap-2 md:right-20 md:bottom-8">
+			<Tooltip>
+				<Tooltip.Trigger>
+					<Button
+						onPress={isMax ? undefined : () => setHeight((h) => h + 0.5)}
+						isIconOnly
+						size="sm"
+						isDisabled={isMax}
+						className="bg-content1 hover:bg-default-100 border-separator text-foreground rounded-full border shadow-md disabled:opacity-30"
+					>
+						<FaPlus />
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content placement="left">{t('zoom.zoom-in')}</Tooltip.Content>
 			</Tooltip>
-			<Tooltip content={t('zoom.zoom-out')} placement="left">
-				<Button
-					onClick={() => setHeight((h) => h - 0.5)}
-					isDisabled={height === MIN_HOUR_HEIGHT}
-					isIconOnly
-					size="sm"
-				>
-					<FaMinus />
-				</Button>
+			<Tooltip>
+				<Tooltip.Trigger>
+					<Button
+						onPress={isMin ? undefined : () => setHeight((h) => h - 0.5)}
+						isIconOnly
+						size="sm"
+						isDisabled={isMin}
+						className="bg-content1 hover:bg-default-100 border-separator text-foreground rounded-full border shadow-md disabled:opacity-30"
+					>
+						<FaMinus />
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content placement="left">{t('zoom.zoom-out')}</Tooltip.Content>
 			</Tooltip>
 		</div>
 	);

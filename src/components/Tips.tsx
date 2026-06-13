@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { FaLightbulb } from 'react-icons/fa';
 
 import { shuffle } from '../utils/shuffle';
 
@@ -10,27 +10,53 @@ const TIPS = [
 	<>The class number will be copied if you drag it outside the window.</>,
 	<>
 		We're looking for{' '}
-		<a href="https://github.com/compsci-adl/mytimetable/issues/9">
+		<a
+			href="https://github.com/compsci-adl/mytimetable/issues/9"
+			target="_blank"
+			rel="noopener noreferrer"
+		>
 			translations in multiple languages
 		</a>
 		.
 	</>,
 	<>
 		Share your thoughts to help us improve via{' '}
-		<a href={import.meta.env.VITE_FEEDBACK_FORM_URL}>feedback</a>.
+		<a
+			href={import.meta.env.VITE_FEEDBACK_FORM_URL}
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			feedback
+		</a>
+		.
 	</>,
 	<>
 		This project is open-source on{' '}
-		<a href="https://github.com/compsci-adl/mytimetable">GitHub</a>
-	</>,
-	<>
-		Join the <a href="https://csclub.org.au">CS Club</a>, a community open to
-		everyone interested in computer science.
+		<a
+			href="https://github.com/compsci-adl/mytimetable"
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			GitHub
+		</a>
 	</>,
 	<>
 		Join the{' '}
-		<a href="https://csclub.org.au/open-source">CS Club Open Source Team</a> to
-		work on projects like this!
+		<a href="https://csclub.org.au" target="_blank" rel="noopener noreferrer">
+			CS Club
+		</a>
+		, a community open to everyone interested in computer science.
+	</>,
+	<>
+		Join the{' '}
+		<a
+			href="https://csclub.org.au/open-source"
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			CS Club Open Source Team
+		</a>{' '}
+		to work on projects like this!
 	</>,
 	<>You can search for courses using abbreviations</>,
 ];
@@ -40,25 +66,25 @@ const TIP_ANIMATION_SPEED = 8;
 
 export const Tips = () => {
 	const [tipIndex, setTipIndex] = useState(0);
+	const [opacity, setOpacity] = useState('opacity-100');
+
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setTipIndex((t) => (t + 1) % TIPS.length);
+			setOpacity('opacity-0');
+			setTimeout(() => {
+				setTipIndex((t) => (t + 1) % TIPS.length);
+				setOpacity('opacity-100');
+			}, 500);
 		}, TIP_ANIMATION_SPEED * 1000);
 		return () => clearInterval(interval);
 	}, []);
 
 	return (
-		<AnimatePresence mode="wait">
-			<motion.div
-				key={tipIndex}
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				exit={{ opacity: 0 }}
-				transition={{ duration: 1 }}
-				className="[&>a]:underline"
-			>
-				💡 {tips[tipIndex]}
-			</motion.div>
-		</AnimatePresence>
+		<div
+			className={`flex h-10 items-center justify-center gap-1.5 text-sm leading-5 transition-opacity duration-500 ease-in-out md:h-auto [&>a]:underline ${opacity}`}
+		>
+			<FaLightbulb className="shrink-0 text-xs text-amber-400" />
+			<span>{tips[tipIndex]}</span>
+		</div>
 	);
 };
