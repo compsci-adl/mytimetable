@@ -247,14 +247,12 @@ async function main() {
 	const pkgPath = path.join(process.cwd(), 'package.json');
 	const pkgContent = fs.readFileSync(pkgPath, 'utf-8');
 	const pkg = JSON.parse(pkgContent);
-
 	let oldVersion = pkg.version;
 	const baseBranch = process.env.BASE_BRANCH;
 	if (baseBranch) {
 		const isValidBaseBranch = /^[A-Za-z0-9._/-]+$/.test(baseBranch);
-			const basePkgContent = execFileSync(
-				'git',
-				['show', `origin/${baseBranch}:package.json`],
+		if (!isValidBaseBranch) {
+			console.warn(
 				`Invalid BASE_BRANCH value "${baseBranch}", falling back to local package.json version.`,
 			);
 		} else {
@@ -277,11 +275,8 @@ async function main() {
 			}
 		}
 	}
-	const newVersion = bumpVersion(oldVersion, bumpType);
 
-	pkg.version = newVersion;
-	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '\t') + '\n', 'utf-8');
-	console.log(`Bumped version in package.json: ${oldVersion} -> ${newVersion}`);
+	const newVersion = bumpVersion(oldVersion, bumpType);
 
 	// 5. Update CHANGELOG.md
 	const changelogPath = path.join(process.cwd(), 'CHANGELOG.md');
