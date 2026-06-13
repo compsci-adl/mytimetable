@@ -20,11 +20,24 @@ function sanitiseMarkdown(text: string): string {
 		.trim();
 }
 
+function validateSafeFilePath(filePath: string) {
+	const resolved = path.resolve(filePath);
+	const baseName = path.basename(resolved);
+	if (baseName !== 'CHANGELOG.md') {
+		throw new Error(`Unsafe target file path: ${filePath}`);
+	}
+	const cwd = path.resolve(process.cwd());
+	if (!resolved.startsWith(cwd + path.sep) && resolved !== cwd) {
+		throw new Error(`File path must be inside repository root: ${filePath}`);
+	}
+}
+
 function writeFileAtomic(
 	filePath: string,
 	contents: string,
 	encoding: BufferEncoding,
 ) {
+	validateSafeFilePath(filePath);
 	const dir = path.dirname(filePath);
 	const tempPath = path.join(dir, `.tmp-${process.pid}-${Date.now()}.tmp`);
 	fs.writeFileSync(tempPath, contents, { encoding });
