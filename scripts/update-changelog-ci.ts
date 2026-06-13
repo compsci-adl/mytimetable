@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { execSync } from 'child_process';
+import { execFileSync, execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -251,21 +251,29 @@ async function main() {
 	let oldVersion = pkg.version;
 	const baseBranch = process.env.BASE_BRANCH;
 	if (baseBranch) {
-		try {
-			const basePkgContent = execSync(
-				`git show origin/${baseBranch}:package.json`,
-				{ encoding: 'utf-8' },
-			);
-			const basePkg = JSON.parse(basePkgContent);
-			oldVersion = basePkg.version;
-			console.log(
-				`Retrieved base version from origin/${baseBranch}: ${oldVersion}`,
-			);
-		} catch (e) {
+		const isValidBaseBranch = /^[A-Za-z0-9._/-]+$/.test(baseBranch);
+		if (!isValidBaseBranch) {
 			console.warn(
-				`Could not retrieve base version from origin/${baseBranch}, falling back to local package.json version.`,
-				e,
+				`Invalid BASE_BRANCH value "${baseBranch}", falling back to local package.json version.`,
 			);
+		} else {
+			try {
+				const basePkgContent = execFileSync(
+					'git',
+					['show', `origin/${baseBranch}:package.json`],
+					{ encoding: 'utf-8' },
+				);
+				const basePkg = JSON.parse(basePkgContent);
+				oldVersion = basePkg.version;
+				console.log(
+					`Retrieved base version from origin/${baseBranch}: ${oldVersion}`,
+				);
+			} catch (e) {
+				console.warn(
+					`Could not retrieve base version from origin/${baseBranch}, falling back to local package.json version.`,
+					e,
+				);
+			}
 		}
 	}
 	const newVersion = bumpVersion(oldVersion, bumpType);
