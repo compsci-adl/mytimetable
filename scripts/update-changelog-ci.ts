@@ -12,6 +12,25 @@ function runGit(cmd: string): string {
 	}
 }
 
+function sanitiseMarkdown(text: string): string {
+	return text
+		.replace(/\r?\n|\r/g, ' ')
+		.replace(/\0/g, '')
+		.replace(/[<>]/g, (char) => (char === '<' ? '&lt;' : '&gt;'))
+		.trim();
+}
+
+function writeFileAtomic(
+	filePath: string,
+	contents: string,
+	encoding: BufferEncoding,
+) {
+	const dir = path.dirname(filePath);
+	const tempPath = path.join(dir, `.tmp-${process.pid}-${Date.now()}.tmp`);
+	fs.writeFileSync(tempPath, contents, { encoding });
+	fs.renameSync(tempPath, filePath);
+}
+
 interface Label {
 	name: string;
 }
@@ -126,7 +145,7 @@ function parseCommit(message: string): { type: string; description: string } {
 }
 
 function formatDescription(desc: string, repo: string): string {
-	let text = desc.trim();
+	let text = sanitiseMarkdown(desc);
 	if (text.length === 0) return '';
 	// Capitalise first letter
 	text = text.charAt(0).toUpperCase() + text.slice(1);
@@ -281,10 +300,15 @@ async function main() {
 	// 5. Update CHANGELOG.md
 	const changelogPath = path.join(process.cwd(), 'CHANGELOG.md');
 	let changelogContent = '';
-	if (fs.existsSync(changelogPath)) {
+	try {
 		changelogContent = fs.readFileSync(changelogPath, 'utf-8');
-	} else {
-		changelogContent = `# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n`;
+	} catch (error) {
+		const err = error as NodeJS.ErrnoException;
+		if (err.code === 'ENOENT') {
+			changelogContent = `# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n`;
+		} else {
+			throw err;
+		}
 	}
 
 	// Clean up any existing entry for this version to prevent duplication when re-running in the PR
@@ -356,14 +380,10 @@ async function main() {
 			'\n' +
 			newEntry +
 			changelogContent.substring(insertPos);
-		fs.writeFileSync(changelogPath, updatedChangelog, 'utf-8');
+		writeFileAtomic(changelogPath, updatedChangelog, 'utf-8');
 	} else {
 		// Fallback to prepending
-		fs.writeFileSync(
-			changelogPath,
-			changelogContent + '\n' + newEntry,
-			'utf-8',
-		);
+		writeFileAtomic(changelogPath, changelogContent + '\n' + newEntry, 'utf-8');
 	}
 
 	console.log(
