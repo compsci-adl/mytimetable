@@ -5,12 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0] - 2026-06-11
+## [3.0.0] - 2026-06-13
 
 ### Added
 
-- Major design update ([#96](https://github.com/compsci-adl/mytimetable/pull/96))
-- Add welcome screen ([#94](https://github.com/compsci-adl/mytimetable/pull/94))
+- Add welcome screen ([#94](https://github.com/compsci-adl/mytimetable/pull/94)) ([#100](https://github.com/compsci-adl/mytimetable/pull/100))
+- Design Update ([#96](https://github.com/compsci-adl/mytimetable/pull/96)) ([#100](https://github.com/compsci-adl/mytimetable/pull/100))
+- Quality of life changes ([#98](https://github.com/compsci-adl/mytimetable/pull/98)) ([#100](https://github.com/compsci-adl/mytimetable/pull/100))
+- Update help steps and add new images for improved user guidance ([#99](https://github.com/compsci-adl/mytimetable/pull/99)) ([#100](https://github.com/compsci-adl/mytimetable/pull/100))
+
+### Changed
+
+- Add test for clearing all enrolled courses in Zustand store ([#100](https://github.com/compsci-adl/mytimetable/pull/100))
+
+### Fixed
+
+- Apply security suggestions from code review ([#100](https://github.com/compsci-adl/mytimetable/pull/100))
+- Update workflow to use pnpm for Node.js setup ([#100](https://github.com/compsci-adl/mytimetable/pull/100))
+
+### Package Updates
+
+- Feat: Add changelog, switch to Renovate and improve layout ([#97](https://github.com/compsci-adl/mytimetable/pull/97)) ([#100](https://github.com/compsci-adl/mytimetable/pull/100))
 
 ## [2.4.0] - 2026-06-04
 
