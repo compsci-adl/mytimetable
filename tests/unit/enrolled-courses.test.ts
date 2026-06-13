@@ -234,6 +234,20 @@ describe('useEnrolledCourses Zustand Store', () => {
 		expect(courses[0].id).toBe('course-2');
 	});
 
+	it('should clear all enrolled courses', () => {
+		useEnrolledCourses.setState({
+			courses: [
+				{ id: 'course-1', name: 'Course 1', classes: [], color: 0 },
+				{ id: 'course-2', name: 'Course 2', classes: [], color: 1 },
+			],
+		});
+
+		useEnrolledCourses.getState().clearCourses();
+
+		const courses = useEnrolledCourses.getState().courses;
+		expect(courses).toEqual([]);
+	});
+
 	it('should update course class number selection', () => {
 		useEnrolledCourses.setState({
 			courses: [
