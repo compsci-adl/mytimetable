@@ -40,12 +40,36 @@ function bumpVersion(
 	return `${major}.${minor}.${patch}`;
 }
 
+function validateRepo(repo: string): string {
+	// Expected format: owner/repo, GitHub-safe characters only
+	if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo)) {
+		throw new Error(`Invalid repository format: ${repo}`);
+	}
+	return repo;
+}
+
+function validatePrNumber(prNumber: string): string {
+	// PR number must be a positive integer
+	if (!/^[1-9][0-9]*$/.test(prNumber)) {
+		throw new Error(`Invalid PR number: ${prNumber}`);
+	}
+	return prNumber;
+}
+
 async function getPRCommits(
 	repo: string,
 	prNumber: string,
 	token: string,
 ): Promise<string[]> {
-	const url = `https://api.github.com/repos/${repo}/pulls/${prNumber}/commits`;
+	const safeRepo = validateRepo(repo);
+	const safePrNumber = validatePrNumber(prNumber);
+	const [owner, repoName] = safeRepo.split('/');
+	const url = new URL(
+		`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
+			repoName,
+		)}/pulls/${encodeURIComponent(safePrNumber)}/commits`,
+		'https://api.github.com',
+	).toString();
 	console.log(`Fetching PR commits from: ${url}`);
 	try {
 		const response = await fetch(url, {
