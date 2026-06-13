@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaQuestionCircle } from 'react-icons/fa';
 
+import { getHelpSteps } from '../data/help-steps';
 import { useHelpModal } from '../helpers/help-modal';
 import { useMount } from '../utils/mount';
 import { prefetchImages } from '../utils/prefetch-image';
@@ -11,70 +12,15 @@ import { prefetchImages } from '../utils/prefetch-image';
 export const HelpModal = () => {
 	const { t } = useTranslation();
 
-	const STEPS = [
-		{
-			content: t('help.steps.welcome'),
-			image: {
-				path: '/help/welcome.webp',
-				alt: 'Website preview',
-			},
-		},
-		{
-			content: t('help.steps.select-term'),
-			image: {
-				path: '/help/select-term.webp',
-				alt: 'Select a term',
-			},
-		},
-		{
-			content: t('help.steps.search-course'),
-			image: { path: '/help/search-course.webp', alt: 'Search a course' },
-		},
-		{
-			content: t('help.steps.calendar-dnd'),
-			image: {
-				path: '/help/calendar.webp',
-				alt: 'Drag and drop a course in calendar',
-			},
-		},
-		{
-			content: t('help.steps.change-week'),
-			image: { path: '/help/change-week.webp', alt: 'Change calendar week' },
-		},
-		{
-			content: t('help.steps.course-details'),
-			image: {
-				path: '/help/click-course.webp',
-				alt: 'Highlighted enrolled course',
-			},
-		},
-		{
-			content: t('help.steps.course-modal'),
-			image: {
-				path: '/help/modal.webp',
-				alt: 'Course modal to change class time',
-			},
-		},
-		{
-			content: t('help.steps.ready-button'),
-			image: {
-				path: '/help/ready-button.webp',
-				alt: 'Ready button at bottom',
-			},
-		},
-		{
-			content: t('help.steps.access-adelaide'),
-		},
-	];
-
 	useMount(() => {
-		const imagePaths = STEPS.map((step) => step.image?.path).filter(
-			(p): p is string => Boolean(p),
-		);
+		const imagePaths = getHelpSteps(t)
+			.map((step) => step.image?.path)
+			.filter((p): p is string => Boolean(p));
 		prefetchImages(imagePaths);
 	});
 
 	const helpModal = useHelpModal();
+	const steps = getHelpSteps(t);
 
 	const [isMobile, setIsMobile] = useState(false);
 
@@ -105,7 +51,7 @@ export const HelpModal = () => {
 		helpModal.close();
 	};
 
-	const step = STEPS[stepIndex];
+	const step = steps[stepIndex];
 
 	const renderHelpBody = () => (
 		<div className="flex flex-col gap-4">
@@ -118,7 +64,7 @@ export const HelpModal = () => {
 						aria-label="Help Steps"
 						className="bg-content2 border-separator flex max-w-full gap-1 overflow-x-auto rounded-full border p-1"
 					>
-						{STEPS.map((_, i) => (
+						{steps.map((_, i) => (
 							<Tabs.Tab
 								key={i}
 								id={String(i)}
@@ -177,7 +123,7 @@ export const HelpModal = () => {
 			>
 				{t('help.actions.previous-step')}
 			</Button>
-			{stepIndex < STEPS.length - 1 ? (
+			{stepIndex < steps.length - 1 ? (
 				<Button
 					className="rounded-full px-6"
 					variant="primary"
