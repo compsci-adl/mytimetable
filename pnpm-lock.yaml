@@ -81,6 +81,9 @@ importers:
       '@eslint/js':
         specifier: ^9.39.4
         version: 9.39.4
+      '@internationalized/date':
+        specifier: ^3.12.2
+        version: 3.12.2
       '@playwright/test':
         specifier: ^1.60.0
         version: 1.60.0

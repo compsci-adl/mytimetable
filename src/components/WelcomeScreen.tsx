@@ -318,7 +318,9 @@ export const WelcomeScreen = () => {
 						<div className="flex flex-col items-center space-y-4 md:space-y-6">
 							<Tabs
 								selectedKey={String(stepIndex)}
-								onSelectionChange={(key) => setStepIndex(Number(key))}
+								onSelectionChange={(key: React.Key) =>
+									setStepIndex(Number(key))
+								}
 							>
 								<Tabs.ListContainer className="self-center">
 									<Tabs.List
@@ -343,7 +345,7 @@ export const WelcomeScreen = () => {
 								</Tabs.ListContainer>
 							</Tabs>
 
-							<Card className="bg-content1/50 border-separator min-h-[340px] w-full rounded-3xl border shadow-lg backdrop-blur-md md:min-h-[440px]">
+							<Card className="bg-content1/50 border-separator min-h-85 w-full rounded-3xl border shadow-lg backdrop-blur-md md:min-h-110">
 								<Card.Content className="flex h-full flex-col gap-4 p-4 md:flex-row md:items-center md:gap-12 md:p-8">
 									<div className="flex-1 space-y-4 text-left">
 										<div className="bg-primary/10 text-primary border-primary/20 inline-flex h-12 w-12 items-center justify-center rounded-full border text-xl font-bold">
@@ -356,7 +358,7 @@ export const WelcomeScreen = () => {
 
 									<div className="flex flex-1 items-center justify-center">
 										{steps[stepIndex].image?.path ? (
-											<div className="border-separator bg-content2/30 flex h-[160px] w-full max-w-lg items-center justify-center overflow-hidden rounded-2xl border shadow-md md:h-[300px]">
+											<div className="border-separator bg-content2/30 flex h-40 w-full max-w-lg items-center justify-center overflow-hidden rounded-2xl border shadow-md md:h-75">
 												<img
 													src={steps[stepIndex].image.path}
 													alt={
@@ -367,7 +369,7 @@ export const WelcomeScreen = () => {
 												/>
 											</div>
 										) : (
-											<div className="bg-content2/20 border-separator flex h-[160px] w-full max-w-lg flex-col items-center justify-center rounded-2xl border border-dashed p-4 text-center select-none md:h-[300px] md:p-6">
+											<div className="bg-content2/20 border-separator flex h-40 w-full max-w-lg flex-col items-center justify-center rounded-2xl border border-dashed p-4 text-center select-none md:h-75 md:p-6">
 												<FaCheckCircle className="text-success mb-2 text-4xl" />
 												<span className="text-default-400 text-sm font-semibold">
 													All set! You're ready to schedule.
@@ -423,7 +425,7 @@ export const WelcomeScreen = () => {
 				id="contribute-footer"
 				className="mx-auto flex min-h-screen w-full max-w-5xl snap-start snap-always flex-col items-center gap-8 px-4 pt-24 pb-8 md:px-6"
 			>
-				<div className="flex w-full max-w-4xl flex-grow flex-col items-center justify-center">
+				<div className="flex w-full max-w-4xl grow flex-col items-center justify-center">
 					<Card className="bg-content1/50 border-separator w-full rounded-3xl border p-6 text-center shadow-lg backdrop-blur-md">
 						<Card.Content className="items-center space-y-4 p-2">
 							<h3 className="text-foreground text-xl font-bold">

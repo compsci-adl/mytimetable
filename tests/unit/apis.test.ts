@@ -20,7 +20,7 @@ describe('API functions in src/apis/index.ts', () => {
 			json: mockJson,
 		} as unknown as ReturnType<typeof fetcher.get>);
 
-		const params = { year: 2024, term: 'sem1', subject: 'COMP SCI' };
+		const params = { year: 2024, term: 'sem1', subject: 'COMP' };
 		const result = await getCourses(params);
 
 		expect(fetcher.get).toHaveBeenCalledWith('courses', {
@@ -43,7 +43,7 @@ describe('API functions in src/apis/index.ts', () => {
 	});
 
 	it('should call fetcher.get with correct arguments for getSubjects', async () => {
-		const mockData = ['COMP SCI', 'MATHS'];
+		const mockData = ['COMP', 'MATH'];
 		const mockJson = vi.fn().mockResolvedValue(mockData);
 		vi.mocked(fetcher.get).mockReturnValue({
 			json: mockJson,

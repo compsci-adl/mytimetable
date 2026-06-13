@@ -101,7 +101,7 @@ export const SubjectSelector = ({
 									: t('search.loading')
 								: labelText
 						}
-						className="text-foreground placeholder:text-default-400 h-auto w-full !border-0 !bg-transparent !p-0 !pl-1.5 text-sm !shadow-none focus:!border-0 focus:!bg-transparent focus:!shadow-none focus:!ring-0 focus:!outline-none focus-visible:!outline-none"
+						className="text-foreground placeholder:text-default-400 h-auto w-full border-0! bg-transparent! p-0! pl-1.5! text-sm shadow-none! focus:border-0! focus:bg-transparent! focus:shadow-none! focus:ring-0! focus:outline-none! focus-visible:outline-none!"
 					/>
 					{inputValue && (
 						<Button
@@ -121,7 +121,7 @@ export const SubjectSelector = ({
 
 				<ComboBox.Popover
 					placement="bottom start"
-					className="bg-content1 border-separator min-w-[240px] rounded-2xl border p-1 shadow-lg"
+					className="bg-content1 border-separator min-w-60 rounded-2xl border p-1 shadow-lg"
 				>
 					<ListBox
 						className="max-h-60 overflow-y-auto outline-none"

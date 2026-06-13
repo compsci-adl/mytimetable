@@ -75,7 +75,7 @@ export const EnrolmentModal = ({ isOpen, onOpenChange }: ReadyModalProps) => {
 										return (
 											<div
 												key={cls.typeId}
-												className="border-separator bg-content2/30 min-w-[90px] rounded-xl border p-2.5 text-center"
+												className="border-separator bg-content2/30 min-w-22.5 rounded-xl border p-2.5 text-center"
 											>
 												<div className="border-separator text-foreground border-b pb-1 text-sm font-bold">
 													<span className="flex items-center justify-center gap-1.5">

@@ -7,7 +7,7 @@ test.describe('MyTimetable App Desktop End-to-End Tests', () => {
 		await setupPage(page);
 	});
 
-	test('should customize auto-timetable preferences (Desktop layout) and verify lunch break settings and mode selection', async ({
+	test('should customise auto-timetable preferences (Desktop layout) and verify lunch break settings and mode selection', async ({
 		page,
 	}) => {
 		await page.goto('/');
@@ -95,6 +95,7 @@ test.describe('MyTimetable App Desktop End-to-End Tests', () => {
 					outerHTML: el.outerHTML.slice(0, 200),
 				}));
 		});
+		// eslint-disable-next-line no-console
 		console.log('FOUND TOASTS IN TEST 2:', toasts);
 
 		// We should see a success/warning toast message

@@ -144,7 +144,7 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 			}}
 		>
 			<div
-				className="border-apple-gray-300 bg-background col-span-full col-start-2 grid grid-cols-subgrid border-b-1"
+				className="border-apple-gray-300 bg-background col-span-full col-start-2 grid grid-cols-subgrid border-b"
 				style={{ gridRow: '1 / 2' }}
 			>
 				{WEEK_DAYS.map((day, i) => (
@@ -164,7 +164,7 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 				))}
 			</div>
 			<div
-				className="text-2xs text-apple-gray-500 relative -top-[0.35rem] grid grid-cols-subgrid grid-rows-15 pr-2 text-end"
+				className="text-2xs text-apple-gray-500 relative top-[-0.35rem] grid grid-cols-subgrid grid-rows-15 pr-2 text-end"
 				style={{ gridRow: '2 / 32' }}
 			>
 				{Array.from({ length: 15 }, (_, i) => (
@@ -181,8 +181,8 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 					<div
 						key={i}
 						className={clsx(
-							'border-apple-gray-300 border-r-1',
-							[5, 6, 7, 8, 9].includes(i % 10) && 'border-b-1',
+							'border-apple-gray-300 border-r',
+							[5, 6, 7, 8, 9].includes(i % 10) && 'border-b',
 						)}
 						style={{ height: blockHeight / 2 + 'rem' }}
 					/>

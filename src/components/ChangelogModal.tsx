@@ -132,8 +132,8 @@ export const ChangelogModal = () => {
 							className={clsx(
 								'absolute top-1.5 flex items-center justify-center rounded-full border shadow-none transition-none',
 								isMajorRelease
-									? 'border-primary -left-[33px] h-5 w-5 border-2'
-									: 'border-default-400 -left-[31px] h-4 w-4',
+									? 'border-primary -left-8.25 h-5 w-5 border-2'
+									: 'border-default-400 -left-7.75 h-4 w-4',
 								idx === 0
 									? 'bg-primary border-primary shadow-none'
 									: 'bg-background shadow-none',

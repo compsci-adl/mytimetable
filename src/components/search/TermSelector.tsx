@@ -46,7 +46,7 @@ export const TermSelector = ({
 							<FaChevronDown className="text-default-500 text-xs" />
 						</Select.Indicator>
 					</Select.Trigger>
-					<Select.Popover className="bg-content1 border-separator min-w-[224px] rounded-2xl border p-1 shadow-lg">
+					<Select.Popover className="bg-content1 border-separator min-w-56 rounded-2xl border p-1 shadow-lg">
 						<ListBox className="outline-none" items={TERMS}>
 							{(term) => (
 								<ListBox.Item

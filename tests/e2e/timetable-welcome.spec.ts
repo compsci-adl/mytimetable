@@ -1,7 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-import { setupPage } from './helpers';
-
 test.describe('MyTimetable App Welcome Screen End-to-End Tests', () => {
 	test('should display welcome screen on first visit, allow starting, persist state, and allow re-opening from footer', async ({
 		page,
@@ -42,7 +40,7 @@ test.describe('MyTimetable App Welcome Screen End-to-End Tests', () => {
 		await page.waitForTimeout(500);
 		try {
 			await expect(startButton).not.toBeVisible({ timeout: 2000 });
-		} catch (e) {
+		} catch {
 			// Fallback click in case of transient hydration/event-loop lag
 			await startButton.click({ force: true });
 			await page.waitForTimeout(500);
@@ -73,7 +71,7 @@ test.describe('MyTimetable App Welcome Screen End-to-End Tests', () => {
 		await page.waitForTimeout(500);
 		try {
 			await expect(startButton).not.toBeVisible({ timeout: 2000 });
-		} catch (e) {
+		} catch {
 			await startButton.click({ force: true });
 			await page.waitForTimeout(500);
 		}

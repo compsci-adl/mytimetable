@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -61,8 +62,10 @@ async function getPRCommits(
 			);
 		}
 
-		const data = (await response.json()) as any[];
-		return data.map((c: any) => c.commit.message as string);
+		const data = (await response.json()) as Array<{
+			commit: { message: string };
+		}>;
+		return data.map((c) => c.commit.message);
 	} catch (error) {
 		console.error('Error fetching commits from GitHub API:', error);
 		// Fallback to git log
@@ -89,7 +92,7 @@ function parseCommit(message: string): { type: string; description: string } {
 		return { type: 'deps', description: firstLine };
 	}
 	// Match semantic commit format: "type(scope): description" or "type: description" (allowing optional spaces)
-	const match = firstLine.match(/^(\w+)(?:\([^\)]+\))?\s*:\s*(.+)$/);
+	const match = firstLine.match(/^(\w+)(?:\([^)]+\))?\s*:\s*(.+)$/);
 	if (match) {
 		const type = match[1].toLowerCase();
 		const description = match[2].trim();
@@ -101,7 +104,7 @@ function parseCommit(message: string): { type: string; description: string } {
 function formatDescription(desc: string, repo: string): string {
 	let text = desc.trim();
 	if (text.length === 0) return '';
-	// Capitalize first letter
+	// Capitalise first letter
 	text = text.charAt(0).toUpperCase() + text.slice(1);
 	// Replace (#123) with ([#123](https://github.com/owner/repo/pull/123))
 	text = text.replace(

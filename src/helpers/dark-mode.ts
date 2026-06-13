@@ -31,7 +31,7 @@ const updateDOM = (isDark: boolean) => {
 };
 
 export const useDarkMode = create<DarkModeState>()((set) => {
-	// Initialize immediately for the hook
+	// Initialiseimmediately for the hook
 	const initial = getInitialDarkMode();
 	updateDOM(initial);
 

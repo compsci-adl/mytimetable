@@ -186,10 +186,10 @@ export const CourseCard = ({
 						{isOnlyTime && <FaThumbtack className="text-xs opacity-70" />}
 					</div>
 				</div>
-				<div className="mt-0.5 pr-5 text-xs font-extrabold break-words @min-[75px]:pr-6">
+				<div className="mt-0.5 pr-5 text-xs font-extrabold wrap-break-word @min-[75px]:pr-6">
 					{course.name.code} - {course.classType}
 				</div>
-				<div className="text-2xs mt-0.5 line-clamp-1 pr-5 font-medium break-words opacity-90 @min-[75px]:pr-6">
+				<div className="text-2xs mt-0.5 line-clamp-1 pr-5 font-medium wrap-break-word opacity-90 @min-[75px]:pr-6">
 					{course.name.title}
 				</div>
 				<div className="text-2xs mt-0.5 pr-5 opacity-90 @min-[75px]:pr-6">
@@ -211,7 +211,7 @@ export const CourseCard = ({
 							{isOnlyTime && <FaThumbtack className="text-xs opacity-70" />}
 						</div>
 					</div>
-					<div className="mt-0.5 pr-5 text-xs font-extrabold break-words @min-[75px]:pr-6">
+					<div className="mt-0.5 pr-5 text-xs font-extrabold wrap-break-word @min-[75px]:pr-6">
 						{hasConflict && (
 							<span className="text-warning mr-1 inline-flex">
 								<FaExclamationTriangle />
@@ -238,7 +238,7 @@ export const CourseCard = ({
 							{isOnlyTime && <FaThumbtack className="text-xs opacity-70" />}
 						</div>
 					</div>
-					<div className="mt-0.5 pr-5 text-xs font-extrabold break-words @min-[75px]:pr-6">
+					<div className="mt-0.5 pr-5 text-xs font-extrabold wrap-break-word @min-[75px]:pr-6">
 						{hasConflict && (
 							<span className="text-warning mr-1 inline-flex">
 								<FaExclamationTriangle />
@@ -251,7 +251,7 @@ export const CourseCard = ({
 						)}
 						{course.name.code} - {course.classType}
 					</div>
-					<div className="text-2xs mt-0.5 pr-5 font-medium break-words opacity-90 @min-[75px]:pr-6">
+					<div className="text-2xs mt-0.5 pr-5 font-medium wrap-break-word opacity-90 @min-[75px]:pr-6">
 						{course.name.title}
 					</div>
 				</div>
@@ -268,7 +268,7 @@ export const CourseCard = ({
 							{isOnlyTime && <FaThumbtack className="text-xs opacity-70" />}
 						</div>
 					</div>
-					<div className="mt-0.5 pr-5 text-xs font-extrabold break-words @min-[75px]:pr-6">
+					<div className="mt-0.5 pr-5 text-xs font-extrabold wrap-break-word @min-[75px]:pr-6">
 						{hasConflict && (
 							<span className="text-warning mr-1 inline-flex">
 								<FaExclamationTriangle />
@@ -281,10 +281,10 @@ export const CourseCard = ({
 						)}
 						{course.name.code} - {course.classType}
 					</div>
-					<div className="text-2xs mt-0.5 pr-5 font-medium break-words opacity-90 @min-[75px]:pr-6">
+					<div className="text-2xs mt-0.5 pr-5 font-medium wrap-break-word opacity-90 @min-[75px]:pr-6">
 						{course.name.title}
 					</div>
-					<div className="text-2xs mt-0.5 pr-5 break-words opacity-90 @min-[75px]:pr-6">
+					<div className="text-2xs mt-0.5 pr-5 wrap-break-word opacity-90 @min-[75px]:pr-6">
 						{course.location}
 					</div>
 				</div>
@@ -301,7 +301,7 @@ export const CourseCard = ({
 							{isOnlyTime && <FaThumbtack className="text-xs opacity-70" />}
 						</div>
 					</div>
-					<div className="mt-0.5 pr-5 text-xs font-extrabold break-words @min-[75px]:pr-6">
+					<div className="mt-0.5 pr-5 text-xs font-extrabold wrap-break-word @min-[75px]:pr-6">
 						{hasConflict && (
 							<span className="text-warning mr-1 inline-flex">
 								<FaExclamationTriangle />
@@ -314,10 +314,10 @@ export const CourseCard = ({
 						)}
 						{course.name.code} - {course.classType}
 					</div>
-					<div className="text-2xs mt-0.5 pr-5 font-medium break-words opacity-90 @min-[75px]:pr-6">
+					<div className="text-2xs mt-0.5 pr-5 font-medium wrap-break-word opacity-90 @min-[75px]:pr-6">
 						{course.name.title}
 					</div>
-					<div className="text-2xs mt-0.5 pr-5 break-words opacity-90 @min-[75px]:pr-6">
+					<div className="text-2xs mt-0.5 pr-5 wrap-break-word opacity-90 @min-[75px]:pr-6">
 						{course.location} | {course.campus}
 					</div>
 				</div>
@@ -342,7 +342,7 @@ export const CourseCard = ({
 							)}
 						</div>
 					</div>
-					<div className="mt-0.5 pr-5 text-xs font-extrabold break-words @min-[75px]:pr-6">
+					<div className="mt-0.5 pr-5 text-xs font-extrabold wrap-break-word @min-[75px]:pr-6">
 						{hasConflict && (
 							<Tooltip delay={0}>
 								<Tooltip.Trigger>
@@ -380,12 +380,12 @@ export const CourseCard = ({
 						{course.name.code} - {course.classType}
 					</div>
 					{condensedLevel >= 2 && (
-						<div className="text-2xs mt-0.5 pr-5 font-medium break-words opacity-90 @min-[75px]:pr-6">
+						<div className="text-2xs mt-0.5 pr-5 font-medium wrap-break-word opacity-90 @min-[75px]:pr-6">
 							{course.name.title}
 						</div>
 					)}
 					{condensedLevel >= 3 && (
-						<div className="text-2xs mt-0.5 pr-5 break-words opacity-90 @min-[75px]:pr-6">
+						<div className="text-2xs mt-0.5 pr-5 wrap-break-word opacity-90 @min-[75px]:pr-6">
 							{condensedLevel === 3
 								? course.location
 								: `${course.location} | ${course.campus}`}
@@ -411,7 +411,7 @@ export const CourseCard = ({
 							)}
 						</div>
 					</div>
-					<div className="mt-0.5 pr-5 text-xs font-extrabold break-words @min-[75px]:pr-6">
+					<div className="mt-0.5 pr-5 text-xs font-extrabold wrap-break-word @min-[75px]:pr-6">
 						{hasConflict && (
 							<Tooltip delay={0}>
 								<Tooltip.Trigger>
@@ -448,7 +448,7 @@ export const CourseCard = ({
 						)}
 						{course.name.code} - {course.classType}
 					</div>
-					<div className="text-2xs mt-0.5 line-clamp-1 pr-5 font-medium break-words opacity-90 @min-[75px]:pr-6">
+					<div className="text-2xs mt-0.5 line-clamp-1 pr-5 font-medium wrap-break-word opacity-90 @min-[75px]:pr-6">
 						{course.name.title}
 					</div>
 					<div className="text-2xs mt-0.5 pr-5 opacity-90 @min-[75px]:pr-6">

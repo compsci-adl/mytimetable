@@ -111,7 +111,7 @@ export const HelpModal = () => {
 		<div className="flex flex-col gap-4">
 			<Tabs
 				selectedKey={stepIndexKey}
-				onSelectionChange={(step) => setStepIndex(Number(step))}
+				onSelectionChange={(step: React.Key) => setStepIndex(Number(step))}
 			>
 				<Tabs.ListContainer className="self-center">
 					<Tabs.List

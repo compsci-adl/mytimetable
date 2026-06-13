@@ -93,13 +93,13 @@ export const MobileFilters = ({
 						<Tooltip delay={0}>
 							<Tooltip.Trigger className="w-full">
 								<span className="block w-full">
-									<AutoTimetable className="!w-full" isDisabled={true} />
+									<AutoTimetable className="w-full!" isDisabled={true} />
 								</span>
 							</Tooltip.Trigger>
 							<Tooltip.Content>Please select a course first</Tooltip.Content>
 						</Tooltip>
 					) : (
-						<AutoTimetable className="!w-full" isDisabled={false} />
+						<AutoTimetable className="w-full!" isDisabled={false} />
 					)}
 				</div>
 			</div>

@@ -532,7 +532,7 @@ export const AutoTimetable = ({
 										: 'Prioritizes online/web-based class options';
 							return (
 								<Tooltip key={m.value} delay={100} closeDelay={100}>
-									<Tooltip.Trigger className="flex flex-1 flex-grow">
+									<Tooltip.Trigger className="flex flex-1 grow">
 										<Button
 											onPress={() => {
 												setMode(m.value);
