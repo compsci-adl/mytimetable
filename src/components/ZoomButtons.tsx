@@ -13,16 +13,19 @@ export const ZoomButtons = () => {
 
 	const { height, setHeight } = useCalendarHourHeight();
 
+	const isMax = height === MAX_HOUR_HEIGHT;
+	const isMin = height === MIN_HOUR_HEIGHT;
+
 	return (
 		<div className="fixed right-3 bottom-2 z-50 flex flex-col gap-2 md:right-20 md:bottom-8">
 			<Tooltip>
 				<Tooltip.Trigger>
 					<Button
-						onPress={() => setHeight((h) => h + 0.5)}
-						isDisabled={height === MAX_HOUR_HEIGHT}
+						onPress={isMax ? undefined : () => setHeight((h) => h + 0.5)}
 						isIconOnly
 						size="sm"
-						className="bg-content1 hover:bg-default-100 border-separator text-foreground rounded-full border shadow-md"
+						isDisabled={isMax}
+						className="bg-content1 hover:bg-default-100 border-separator text-foreground rounded-full border shadow-md disabled:opacity-30"
 					>
 						<FaPlus />
 					</Button>
@@ -32,11 +35,11 @@ export const ZoomButtons = () => {
 			<Tooltip>
 				<Tooltip.Trigger>
 					<Button
-						onPress={() => setHeight((h) => h - 0.5)}
-						isDisabled={height === MIN_HOUR_HEIGHT}
+						onPress={isMin ? undefined : () => setHeight((h) => h - 0.5)}
 						isIconOnly
 						size="sm"
-						className="bg-content1 hover:bg-default-100 border-separator text-foreground rounded-full border shadow-md"
+						isDisabled={isMin}
+						className="bg-content1 hover:bg-default-100 border-separator text-foreground rounded-full border shadow-md disabled:opacity-30"
 					>
 						<FaMinus />
 					</Button>

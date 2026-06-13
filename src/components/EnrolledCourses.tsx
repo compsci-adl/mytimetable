@@ -81,8 +81,9 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 				<Tooltip delay={0}>
 					<Tooltip.Trigger>
 						<span
-							aria-hidden
-							className="text-warning mr-1 flex items-center"
+							role="img"
+							aria-label="This course conflicts with another enrolled course"
+							className="text-warning mr-1 flex items-center outline-none"
 							tabIndex={0}
 						>
 							<FaExclamationTriangle />

@@ -331,7 +331,12 @@ export const CourseCard = ({
 							{isOnlyTime && (
 								<Tooltip delay={0}>
 									<Tooltip.Trigger>
-										<div tabIndex={0}>
+										<div
+											tabIndex={0}
+											role="img"
+											aria-label={t('calendar.immoveable-course')}
+											className="outline-none"
+										>
 											<FaThumbtack className="text-xs opacity-70" />
 										</div>
 									</Tooltip.Trigger>
@@ -348,7 +353,8 @@ export const CourseCard = ({
 								<Tooltip.Trigger>
 									<span
 										aria-label="conflict"
-										className="text-warning mr-1 inline-flex"
+										role="img"
+										className="text-warning mr-1 inline-flex outline-none"
 										tabIndex={0}
 									>
 										<FaExclamationTriangle />
@@ -364,7 +370,8 @@ export const CourseCard = ({
 								<Tooltip.Trigger>
 									<span
 										aria-label="full"
-										className="text-warning mr-1 inline-flex"
+										role="img"
+										className="text-warning mr-1 inline-flex outline-none"
 										tabIndex={0}
 									>
 										<FaExclamationTriangle />
@@ -400,7 +407,12 @@ export const CourseCard = ({
 							{isOnlyTime && (
 								<Tooltip delay={0}>
 									<Tooltip.Trigger>
-										<div tabIndex={0}>
+										<div
+											tabIndex={0}
+											role="img"
+											aria-label={t('calendar.immoveable-course')}
+											className="outline-none"
+										>
 											<FaThumbtack className="text-xs opacity-70" />
 										</div>
 									</Tooltip.Trigger>
@@ -417,7 +429,8 @@ export const CourseCard = ({
 								<Tooltip.Trigger>
 									<span
 										aria-label="conflict"
-										className="text-warning mr-1 inline-flex"
+										role="img"
+										className="text-warning mr-1 inline-flex outline-none"
 										tabIndex={0}
 									>
 										<FaExclamationTriangle />
@@ -433,7 +446,8 @@ export const CourseCard = ({
 								<Tooltip.Trigger>
 									<span
 										aria-label="full"
-										className="text-warning mr-1 inline-flex"
+										role="img"
+										className="text-warning mr-1 inline-flex outline-none"
 										tabIndex={0}
 									>
 										<FaExclamationTriangle />

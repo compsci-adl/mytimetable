@@ -118,7 +118,7 @@ export const DesktopFilters = ({
 				{courses.length === 0 ? (
 					<Tooltip delay={0}>
 						<Tooltip.Trigger>
-							<span className="inline-block">
+							<span className="inline-block outline-none" tabIndex={0}>
 								<AutoTimetable isDisabled={true} />
 							</span>
 						</Tooltip.Trigger>

@@ -531,24 +531,26 @@ export const AutoTimetable = ({
 										? 'Prioritizes physically attending classes on campus'
 										: 'Prioritizes online/web-based class options';
 							return (
-								<Tooltip key={m.value} delay={100} closeDelay={100}>
-									<Tooltip.Trigger className="flex flex-1 grow">
-										<Button
-											onPress={() => {
-												setMode(m.value);
-												savePrefs({ mode: m.value });
-											}}
-											className={`h-auto w-full min-w-0 cursor-pointer rounded-none bg-transparent py-2 text-xs font-bold shadow-none transition-colors ${
-												isSelected
-													? 'bg-default-200 text-foreground dark:bg-default-300'
-													: 'text-default-400 hover:bg-default-100/50 bg-transparent'
-											}`}
-										>
-											{m.label}
-										</Button>
-									</Tooltip.Trigger>
-									<Tooltip.Content>{tooltipContent}</Tooltip.Content>
-								</Tooltip>
+								<div key={m.value} className="flex flex-1 grow">
+									<Tooltip delay={100} closeDelay={100}>
+										<Tooltip.Trigger>
+											<Button
+												onPress={() => {
+													setMode(m.value);
+													savePrefs({ mode: m.value });
+												}}
+												className={`h-auto w-full min-w-0 cursor-pointer rounded-none bg-transparent py-2 text-xs font-bold shadow-none transition-colors ${
+													isSelected
+														? 'bg-default-200 text-foreground dark:bg-default-300'
+														: 'text-default-400 hover:bg-default-100/50 bg-transparent'
+												}`}
+											>
+												{m.label}
+											</Button>
+										</Tooltip.Trigger>
+										<Tooltip.Content>{tooltipContent}</Tooltip.Content>
+									</Tooltip>
+								</div>
 							);
 						})}
 					</div>
@@ -636,6 +638,21 @@ export const AutoTimetable = ({
 		);
 	}
 
+	if (isDisabled) {
+		return (
+			<Button
+				variant="primary"
+				className="flex gap-2 rounded-full font-bold shadow-md"
+				size="sm"
+				isDisabled={true}
+			>
+				<FaBolt />
+				<span>AUTO-TIMETABLE</span>
+				<FaChevronDown className="text-xs opacity-70" />
+			</Button>
+		);
+	}
+
 	return (
 		<Popover isOpen={isOpen} onOpenChange={setIsOpen}>
 			<Popover.Trigger
@@ -646,14 +663,14 @@ export const AutoTimetable = ({
 						variant="primary"
 						className="flex gap-2 rounded-full font-bold shadow-md"
 						size="sm"
-						isDisabled={isDisabled}
-					/>
+						isDisabled={false}
+					>
+						<FaBolt />
+						<span>AUTO-TIMETABLE</span>
+						<FaChevronDown className="text-xs opacity-70" />
+					</Button>
 				)}
-			>
-				<FaBolt />
-				<span>AUTO-TIMETABLE</span>
-				<FaChevronDown className="text-xs opacity-70" />
-			</Popover.Trigger>
+			/>
 			<Popover.Content placement="bottom end">
 				<Popover.Dialog className="bg-background border-separator w-80 rounded-3xl border p-5 shadow-2xl">
 					{renderContent()}

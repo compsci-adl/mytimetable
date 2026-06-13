@@ -736,8 +736,13 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 																					<Tooltip delay={0}>
 																						<Tooltip.Trigger>
 																							<span
-																								aria-hidden
-																								className="text-warning flex items-center"
+																								tabIndex={0}
+																								role="img"
+																								aria-label={
+																									t('calendar.conflict') ??
+																									'Conflict with another class'
+																								}
+																								className="text-warning flex items-center outline-none"
 																							>
 																								<FaExclamationTriangle />
 																							</span>
@@ -752,8 +757,15 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 																					<Tooltip delay={0}>
 																						<Tooltip.Trigger>
 																							<span
-																								aria-hidden
-																								className="text-danger flex items-center"
+																								tabIndex={0}
+																								role="img"
+																								aria-label={t(
+																									'calendar.no-available-seats',
+																									{
+																										defaultValue: 'Class full',
+																									},
+																								)}
+																								className="text-danger flex items-center outline-none"
 																							>
 																								<FaExclamationTriangle />
 																							</span>

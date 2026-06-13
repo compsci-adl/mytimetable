@@ -89,15 +89,29 @@ const CalendarHeader = ({
 				{actionButtons.map((a, i) => (
 					<Tooltip key={i} delay={0}>
 						<Tooltip.Trigger>
-							<Button
-								isIconOnly
-								variant="secondary"
-								onPress={a.action}
-								isDisabled={a.disabled}
-								className="bg-default-100 hover:bg-default-200 h-9 w-9 rounded-full text-lg disabled:opacity-30"
-							>
-								{a.icon}
-							</Button>
+							{a.disabled ? (
+								<span tabIndex={0} className="inline-flex outline-none">
+									<Button
+										isIconOnly
+										variant="secondary"
+										onPress={a.action}
+										isDisabled={a.disabled}
+										className="bg-default-100 hover:bg-default-200 h-9 w-9 rounded-full text-lg disabled:opacity-30"
+									>
+										{a.icon}
+									</Button>
+								</span>
+							) : (
+								<Button
+									isIconOnly
+									variant="secondary"
+									onPress={a.action}
+									isDisabled={a.disabled}
+									className="bg-default-100 hover:bg-default-200 h-9 w-9 rounded-full text-lg disabled:opacity-30"
+								>
+									{a.icon}
+								</Button>
+							)}
 						</Tooltip.Trigger>
 						<Tooltip.Content>{a.description}</Tooltip.Content>
 					</Tooltip>
