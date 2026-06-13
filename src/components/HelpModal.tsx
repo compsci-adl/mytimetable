@@ -1,4 +1,4 @@
-import { Button, Card, Drawer, Modal, Tabs } from '@heroui/react';
+import { Button, Card, Drawer, Modal, Tabs, CloseButton } from '@heroui/react';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -111,7 +111,7 @@ export const HelpModal = () => {
 		<div className="flex flex-col gap-4">
 			<Tabs
 				selectedKey={stepIndexKey}
-				onSelectionChange={(step) => setStepIndex(Number(step))}
+				onSelectionChange={(step: React.Key) => setStepIndex(Number(step))}
 			>
 				<Tabs.ListContainer className="self-center">
 					<Tabs.List
@@ -214,13 +214,11 @@ export const HelpModal = () => {
 									<FaQuestionCircle className="text-primary text-sm" />
 									<span>{t('help.title')}</span>
 								</Drawer.Heading>
-								<button
-									onClick={handleClose}
-									className="hover:bg-default-100 text-foreground/75 absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus:outline-none"
+								<CloseButton
 									aria-label="Close"
-								>
-									<span className="text-xl">×</span>
-								</button>
+									onPress={handleClose}
+									className="hover:bg-default-100 text-foreground/75 absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus:outline-none"
+								/>
 							</Drawer.Header>
 							<Drawer.Body className="pt-2">{renderHelpBody()}</Drawer.Body>
 							{renderHelpFooter()}

@@ -1,5 +1,7 @@
-import ky from 'ky';
+import ky, { type Options } from 'ky';
 
-export const fetcher = ky.create({
-	prefixUrl: import.meta.env.VITE_API_BASE_URL,
-});
+const defaultOptions: Options = {
+	prefix: import.meta.env.VITE_API_BASE_URL,
+};
+
+export const fetcher = ky.create(defaultOptions);

@@ -107,7 +107,7 @@ export const CourseSelector = ({
 			className="mobile:flex-row mobile:items-end flex w-full grow flex-col items-stretch gap-2"
 			onSubmit={handleSubmit}
 		>
-			<div className="mobile:w-auto mobile:flex-grow flex w-full flex-col gap-1.5">
+			<div className="mobile:w-auto mobile:grow flex w-full flex-col gap-1.5">
 				<ComboBox
 					selectedKey={selectedCourseId}
 					onSelectionChange={(key) => {
@@ -138,26 +138,27 @@ export const CourseSelector = ({
 						<Input
 							aria-label={labelText}
 							placeholder={labelText}
-							className="text-foreground placeholder:text-default-400 h-auto w-full !border-0 !bg-transparent !p-0 !pl-1.5 text-sm !shadow-none focus:!border-0 focus:!bg-transparent focus:!shadow-none focus:!ring-0 focus:!outline-none focus-visible:!outline-none"
+							className="text-foreground placeholder:text-default-400 h-auto w-full border-0! bg-transparent! p-0! pl-1.5! text-sm shadow-none! focus:border-0! focus:bg-transparent! focus:shadow-none! focus:ring-0! focus:outline-none! focus-visible:outline-none!"
 						/>
 						{inputValue && (
-							<button
-								type="button"
-								onClick={() => {
+							<Button
+								isIconOnly
+								variant="tertiary"
+								onPress={() => {
 									setInputValue('');
 									setSelectedCourseId(null);
 								}}
-								className="text-default-400 hover:text-foreground ml-2 rounded-full p-0.5 transition-colors"
+								className="text-default-400 hover:text-foreground ml-2 h-auto min-w-0 rounded-full bg-transparent p-0.5 shadow-none transition-colors"
 								aria-label="Clear search"
 							>
 								<FaTimes className="size-4" />
-							</button>
+							</Button>
 						)}
 					</ComboBox.InputGroup>
 
 					<ComboBox.Popover
 						placement="bottom start"
-						className="bg-content1 border-separator min-w-[280px] rounded-2xl border p-1 shadow-lg"
+						className="bg-content1 border-separator min-w-70 rounded-2xl border p-1 shadow-lg"
 					>
 						<ListBox
 							className="max-h-60 overflow-y-auto outline-none"

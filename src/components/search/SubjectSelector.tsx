@@ -1,10 +1,11 @@
-import { Label, ComboBox, Input, ListBox } from '@heroui/react';
+import { Label, ComboBox, Input, ListBox, Button } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaSearch, FaTimes } from 'react-icons/fa';
 
 import { getSubjects } from '../../apis';
+import { SUBJECT_CODES } from '../../constants/subject-codes';
 import { YEAR } from '../../constants/year';
 
 interface SubjectSelectorProps {
@@ -29,7 +30,8 @@ export const SubjectSelector = ({
 	const subjectList =
 		subjectsQuery.data?.map((s) => {
 			if (typeof s === 'string') {
-				return { key: s, code: s, name: s };
+				const code = SUBJECT_CODES[s] || s;
+				return { key: s, code: s, name: code !== s ? `${code} - ${s}` : s };
 			}
 			return { key: s.code, code: s.code, name: `${s.code} - ${s.name}` };
 		}) ?? [];
@@ -99,26 +101,27 @@ export const SubjectSelector = ({
 									: t('search.loading')
 								: labelText
 						}
-						className="text-foreground placeholder:text-default-400 h-auto w-full !border-0 !bg-transparent !p-0 !pl-1.5 text-sm !shadow-none focus:!border-0 focus:!bg-transparent focus:!shadow-none focus:!ring-0 focus:!outline-none focus-visible:!outline-none"
+						className="text-foreground placeholder:text-default-400 h-auto w-full border-0! bg-transparent! p-0! pl-1.5! text-sm shadow-none! focus:border-0! focus:bg-transparent! focus:shadow-none! focus:ring-0! focus:outline-none! focus-visible:outline-none!"
 					/>
 					{inputValue && (
-						<button
-							type="button"
-							onClick={() => {
+						<Button
+							isIconOnly
+							variant="tertiary"
+							onPress={() => {
 								setInputValue('');
 								onSubjectChange(null);
 							}}
-							className="text-default-400 hover:text-foreground ml-2 rounded-full p-0.5 transition-colors"
+							className="text-default-400 hover:text-foreground ml-2 h-auto min-w-0 rounded-full bg-transparent p-0.5 shadow-none transition-colors"
 							aria-label="Clear search"
 						>
 							<FaTimes className="size-4" />
-						</button>
+						</Button>
 					)}
 				</ComboBox.InputGroup>
 
 				<ComboBox.Popover
 					placement="bottom start"
-					className="bg-content1 border-separator min-w-[240px] rounded-2xl border p-1 shadow-lg"
+					className="bg-content1 border-separator min-w-60 rounded-2xl border p-1 shadow-lg"
 				>
 					<ListBox
 						className="max-h-60 overflow-y-auto outline-none"

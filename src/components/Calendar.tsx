@@ -1,218 +1,38 @@
 import { Button, Tooltip } from '@heroui/react';
 import clsx from 'clsx';
-import { useRef, useState, type MouseEvent } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
 	FaAngleDoubleLeft,
 	FaAngleDoubleRight,
 	FaAngleLeft,
 	FaAngleRight,
-	FaExclamationTriangle,
-	FaPlus,
 	FaRocket,
-	FaThumbtack,
 } from 'react-icons/fa';
-import { create } from 'zustand';
 
 import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
 import {
 	useCourseColor,
+	useDetailedEnrolledCourses,
 	useEnrolledCourse,
 	useEnrolledCourses,
 } from '../data/enrolled-courses';
-import { useDetailedEnrolledCourses } from '../data/enrolled-courses';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
 import { findConflicts } from '../helpers/conflicts';
 import { useDarkMode } from '../helpers/dark-mode';
+import { useDraggingCourse } from '../helpers/dragging-course';
 import { calcHoursDuration } from '../helpers/hours-duration';
 import { useZoom } from '../helpers/zoom';
 import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
 import { getAccessibleTextColorForCourse } from '../utils/contrast';
 import { timeToDayjs } from '../utils/date';
-import { useDrag, useDrop } from '../utils/dnd';
+import { useDrop } from '../utils/dnd';
 import { ClassModal } from './ClassModal';
+import { CourseCard, InvisiblePlaceholder } from './CourseCard';
 import { EnrolmentModal } from './EnrolmentModal';
-
-type DraggingCourseState = {
-	isDragging: boolean;
-	course: WeekCourse | null;
-	start: (course: WeekCourse) => void;
-	stop: () => void;
-};
-const useDraggingCourse = create<DraggingCourseState>()((set) => ({
-	isDragging: false,
-	course: null,
-	start: (course) => set({ isDragging: true, course }),
-	stop: () => set({ isDragging: false, course: null }),
-}));
-
-// FIXME: Fix grid width to remove this placeholder
-const InvisiblePlaceholder = () => {
-	return (
-		<div className="invisible">
-			PLACEHOLDER DO NOT REMOVE ME AND I AM VERY LOOOOOONG
-		</div>
-	);
-};
-
-type CourseCardProps = {
-	course: WeekCourse;
-	time: DateTimeRange;
-	currentWeek: dayjs.Dayjs;
-	onOpen?: (course: WeekCourse) => void;
-	hasConflict?: boolean;
-};
-const CourseCard = ({
-	course,
-	time,
-	currentWeek,
-	onOpen,
-	hasConflict,
-}: CourseCardProps) => {
-	const { t } = useTranslation();
-
-	const otherTimes = useOtherWeekCourseTimes({
-		courseId: course.id,
-		classTypeId: course.classTypeId,
-		currentWeek,
-	});
-	const isOnlyTime = !otherTimes.some((times) => times.length !== 0);
-
-	const color = useCourseColor(course.id);
-	const colorIndex =
-		useEnrolledCourses(
-			(s) => s.courses.find((c) => c.id === course.id)?.color,
-		) ?? 0;
-	const { isDarkMode } = useDarkMode();
-	const textColor = getAccessibleTextColorForCourse(colorIndex, isDarkMode);
-
-	const draggingCourse = useDraggingCourse();
-	const [isDragging, setIsDragging] = useState(false);
-	const ref = useRef<HTMLDivElement | null>(null);
-	useDrag(
-		ref,
-		{
-			canDrag: () => !isOnlyTime,
-			onDragStart: () => {
-				setIsDragging(true);
-				draggingCourse.start(course);
-			},
-			onDrop: () => {
-				setIsDragging(false);
-				draggingCourse.stop();
-			},
-			getInitialDataForExternal: () => {
-				return { 'text/plain': course.classNumber };
-			},
-		},
-		[isOnlyTime],
-	);
-
-	const isFull =
-		course.available_seats !== undefined &&
-		parseInt(course.available_seats, 10) === 0;
-	return (
-		<div
-			ref={ref}
-			className={clsx(
-				'@container h-full overflow-hidden rounded-2xl border-l-3 p-2 text-xs shadow-sm transition-all duration-200 @min-[75px]:p-2.5',
-				'relative',
-				color.border,
-				color.bg,
-				isDragging ? 'opacity-30' : 'opacity-90 hover:opacity-100',
-				hasConflict && 'relative',
-			)}
-			style={{
-				color: textColor,
-				outline: hasConflict ? '3px solid #f59e0b' : undefined,
-				outlineOffset: hasConflict ? '-3px' : undefined,
-			}}
-		>
-			<div className="text-2xs flex justify-between font-medium">
-				<div>{time.start}</div>
-				<div className="flex items-center gap-1">
-					{isOnlyTime && (
-						<Tooltip delay={0}>
-							<Tooltip.Trigger>
-								<div>
-									<FaThumbtack className="text-xs opacity-70" />
-								</div>
-							</Tooltip.Trigger>
-							<Tooltip.Content>
-								{t('calendar.immoveable-course')}
-							</Tooltip.Content>
-						</Tooltip>
-					)}
-				</div>
-			</div>
-			<div className="absolute right-1 bottom-1 z-30 @min-[75px]:right-1.5 @min-[75px]:bottom-1.5">
-				<Tooltip delay={0}>
-					<Tooltip.Trigger>
-						<Button
-							isIconOnly
-							variant="tertiary"
-							size="sm"
-							className="flex h-5 w-5 items-center justify-center rounded-full bg-current/10 text-xs font-bold transition-colors hover:bg-current/20 @min-[75px]:h-6 @min-[75px]:w-6 @min-[75px]:text-sm"
-							style={{ color: textColor }}
-							onPointerDown={(e) => e.stopPropagation()}
-							onMouseDown={(e: MouseEvent<HTMLButtonElement>) => {
-								e.stopPropagation();
-							}}
-							onPress={() => {
-								if (onOpen) onOpen(course);
-							}}
-						>
-							<FaPlus />
-						</Button>
-					</Tooltip.Trigger>
-					<Tooltip.Content>{t('calendar.open-class')}</Tooltip.Content>
-				</Tooltip>
-			</div>
-			<div className="text-2xs mt-0.5 pr-5 font-extrabold break-words @min-[70px]:text-xs @min-[75px]:pr-6 @min-[90px]:text-sm">
-				{hasConflict && (
-					<Tooltip delay={0}>
-						<Tooltip.Trigger>
-							<span
-								aria-label="conflict"
-								className="text-warning mr-1 inline-flex"
-							>
-								<FaExclamationTriangle />
-							</span>
-						</Tooltip.Trigger>
-						<Tooltip.Content>
-							{t('calendar.conflict') ?? 'Conflict with another class'}
-						</Tooltip.Content>
-					</Tooltip>
-				)}
-				{isFull && (
-					<Tooltip delay={0}>
-						<Tooltip.Trigger>
-							<span aria-label="full" className="text-warning mr-1 inline-flex">
-								<FaExclamationTriangle />
-							</span>
-						</Tooltip.Trigger>
-						<Tooltip.Content>
-							{t('calendar.no-available-seats', {
-								defaultValue: 'Class full',
-							})}
-						</Tooltip.Content>
-					</Tooltip>
-				)}
-				{course.name.code} - {course.classType}{' '}
-			</div>
-			<div className="text-3xs @min-[75px]:text-2xs mt-0.5 line-clamp-1 pr-5 font-medium break-words opacity-90 @max-[60px]:hidden @min-[75px]:pr-6">
-				{course.name.title}
-			</div>
-			<div className="text-3xs @min-[75px]:text-2xs mt-0.5 pr-5 opacity-90 @max-[60px]:hidden @min-[75px]:pr-6">
-				{course.location} | {course.campus}
-			</div>
-			<InvisiblePlaceholder />
-		</div>
-	);
-};
 
 type CalendarHeaderProps = {
 	currentWeek: dayjs.Dayjs;
@@ -269,15 +89,29 @@ const CalendarHeader = ({
 				{actionButtons.map((a, i) => (
 					<Tooltip key={i} delay={0}>
 						<Tooltip.Trigger>
-							<Button
-								isIconOnly
-								variant="secondary"
-								onPress={a.action}
-								isDisabled={a.disabled}
-								className="bg-default-100 hover:bg-default-200 h-9 w-9 rounded-full text-lg disabled:opacity-30"
-							>
-								{a.icon}
-							</Button>
+							{a.disabled ? (
+								<span tabIndex={0} className="inline-flex outline-none">
+									<Button
+										isIconOnly
+										variant="secondary"
+										onPress={a.action}
+										isDisabled={a.disabled}
+										className="bg-default-100 hover:bg-default-200 h-9 w-9 rounded-full text-lg disabled:opacity-30"
+									>
+										{a.icon}
+									</Button>
+								</span>
+							) : (
+								<Button
+									isIconOnly
+									variant="secondary"
+									onPress={a.action}
+									isDisabled={a.disabled}
+									className="bg-default-100 hover:bg-default-200 h-9 w-9 rounded-full text-lg disabled:opacity-30"
+								>
+									{a.icon}
+								</Button>
+							)}
 						</Tooltip.Trigger>
 						<Tooltip.Content>{a.description}</Tooltip.Content>
 					</Tooltip>
@@ -324,7 +158,7 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 			}}
 		>
 			<div
-				className="border-apple-gray-300 bg-background col-span-full col-start-2 grid grid-cols-subgrid border-b-1"
+				className="border-apple-gray-300 bg-background col-span-full col-start-2 grid grid-cols-subgrid border-b"
 				style={{ gridRow: '1 / 2' }}
 			>
 				{WEEK_DAYS.map((day, i) => (
@@ -344,7 +178,7 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 				))}
 			</div>
 			<div
-				className="text-2xs text-apple-gray-500 relative -top-[0.35rem] grid grid-cols-subgrid grid-rows-15 pr-2 text-end"
+				className="text-2xs text-apple-gray-500 relative top-[-0.35rem] grid grid-cols-subgrid grid-rows-15 pr-2 text-end"
 				style={{ gridRow: '2 / 32' }}
 			>
 				{Array.from({ length: 15 }, (_, i) => (
@@ -361,8 +195,8 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 					<div
 						key={i}
 						className={clsx(
-							'border-apple-gray-300 border-r-1',
-							[5, 6, 7, 8, 9].includes(i % 10) && 'border-b-1',
+							'border-apple-gray-300 border-r',
+							[5, 6, 7, 8, 9].includes(i % 10) && 'border-b',
 						)}
 						style={{ height: blockHeight / 2 + 'rem' }}
 					/>
@@ -476,6 +310,18 @@ const CalendarCourses = ({
 	const detailed = useDetailedEnrolledCourses();
 	const { conflictsByClassKey } = findConflicts(detailed);
 
+	const [overlappingKeys, setOverlappingKeys] = useState<
+		Record<string, boolean>
+	>({});
+	const isCondensed = Object.values(overlappingKeys).some(Boolean);
+
+	const handleOverlapChange = useCallback((key: string, overlap: boolean) => {
+		setOverlappingKeys((prev) => {
+			if (prev[key] === overlap) return prev;
+			return { ...prev, [key]: overlap };
+		});
+	}, []);
+
 	// Flatten events so we can handle overlaps between different time ranges
 	type Event = {
 		course: WeekCourse;
@@ -575,6 +421,9 @@ const CalendarCourses = ({
 										const key = `${evt.course.id}|${evt.course.classTypeId}|${evt.course.classNumber}`;
 										return (conflictsByClassKey[key] ?? []).length > 0;
 									})()}
+									isCondensed={isCondensed}
+									cardKey={evt.key}
+									onOverlapChange={handleOverlapChange}
 								/>
 							</div>
 						</div>

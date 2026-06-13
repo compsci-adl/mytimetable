@@ -11,7 +11,6 @@ import {
 	FaYoutube,
 } from 'react-icons/fa';
 
-import { useChangelogModal } from '../helpers/changelog-modal';
 import { useWelcomeScreen } from '../helpers/welcome-screen';
 import { Tips } from './Tips';
 
@@ -80,7 +79,6 @@ const LINKS = [
 export const Footer = () => {
 	const [openModal, setOpenModal] = useState<string | null>(null);
 	const openWelcome = useWelcomeScreen((s) => s.openWelcome);
-	const openChangelog = useChangelogModal((s) => s.open);
 
 	return (
 		<footer className="text-apple-gray-700 space-y-3">
@@ -106,6 +104,7 @@ export const Footer = () => {
 							<h3
 								key={i}
 								className="hover:text-primary cursor-pointer text-xs font-semibold tracking-widest uppercase transition-colors md:text-sm"
+								tabIndex={0}
 								onClick={() => {
 									if (section.title === 'About') {
 										openWelcome();
@@ -113,16 +112,20 @@ export const Footer = () => {
 										setOpenModal(section.title);
 									}
 								}}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										e.preventDefault();
+										if (section.title === 'About') {
+											openWelcome();
+										} else {
+											setOpenModal(section.title);
+										}
+									}
+								}}
 							>
 								{section.title}
 							</h3>
 						))}
-						<h3
-							className="hover:text-primary cursor-pointer text-xs font-semibold tracking-widest uppercase transition-colors md:text-sm"
-							onClick={openChangelog}
-						>
-							Changelog
-						</h3>
 					</div>
 				</div>
 

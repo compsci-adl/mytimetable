@@ -1,4 +1,4 @@
-import { Card, Drawer, Modal } from '@heroui/react';
+import { Card, Drawer, Modal, CloseButton } from '@heroui/react';
 import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -132,8 +132,8 @@ export const ChangelogModal = () => {
 							className={clsx(
 								'absolute top-1.5 flex items-center justify-center rounded-full border shadow-none transition-none',
 								isMajorRelease
-									? 'border-primary -left-[33px] h-5 w-5 border-2'
-									: 'border-default-400 -left-[31px] h-4 w-4',
+									? 'border-primary -left-8.25 h-5 w-5 border-2'
+									: 'border-default-400 -left-7.75 h-4 w-4',
 								idx === 0
 									? 'bg-primary border-primary shadow-none'
 									: 'bg-background shadow-none',
@@ -259,13 +259,11 @@ export const ChangelogModal = () => {
 										'Recent updates and version history',
 									)}
 								</p>
-								<button
-									onClick={handleClose}
-									className="hover:bg-default-100 text-foreground/75 absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus:outline-none"
+								<CloseButton
 									aria-label="Close"
-								>
-									<span className="text-xl">×</span>
-								</button>
+									onPress={handleClose}
+									className="hover:bg-default-100 text-foreground/75 absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus:outline-none"
+								/>
 							</Drawer.Header>
 							<Drawer.Body className="max-h-[60vh] overflow-y-auto py-4 pr-1">
 								{renderTimelineBody()}

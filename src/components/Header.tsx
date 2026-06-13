@@ -117,7 +117,7 @@ export const Header = ({ isWelcome = false }: { isWelcome?: boolean }) => {
 									</Tooltip.Content>
 								</Tooltip>
 								<Popover.Content>
-									<Popover.Dialog className="bg-overlay border-separator flex min-w-[150px] flex-col gap-1 rounded-2xl border p-2 shadow-xl">
+									<Popover.Dialog className="bg-overlay border-separator flex min-w-37.5 flex-col gap-1 rounded-2xl border p-2 shadow-xl">
 										{LANGUAGES.map((language) => (
 											<Button
 												key={language.code}

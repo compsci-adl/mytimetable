@@ -1,7 +1,6 @@
 import type { DateTimeRange } from '../types/course';
 import { timeToDayjs } from './date';
 
-// TODO: Use this function to check if courses clash in a day #5
 /**
  * Check if two time ranges overlap
  * @param a

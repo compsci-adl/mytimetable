@@ -1,4 +1,4 @@
-import { Tooltip, CloseButton } from '@heroui/react';
+import { Tooltip, CloseButton, Button } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -50,8 +50,9 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 	});
 
 	return (
-		<button
-			type="button"
+		<div
+			role="button"
+			tabIndex={0}
 			className={clsx(
 				'border-tiger/25 bg-tiger/5 dark:border-tiger/35 dark:bg-tiger/10 text-foreground focus-visible:ring-tiger flex items-center gap-1.5 rounded-full border py-1 pr-1.5 pl-2.5 text-sm font-semibold shadow-sm transition-all duration-200 outline-none focus-visible:ring-2',
 				isFetching
@@ -61,6 +62,13 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 			onClick={() => {
 				if (isError) return;
 				onOpenModal(id);
+			}}
+			onKeyDown={(e) => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault();
+					if (isError) return;
+					onOpenModal(id);
+				}
 			}}
 		>
 			<span className={clsx('h-2.5 w-2.5 shrink-0 rounded-full', color.dot)} />
@@ -72,7 +80,12 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 			{courseHasConflict[id] && (
 				<Tooltip delay={0}>
 					<Tooltip.Trigger>
-						<span aria-hidden className="text-warning mr-1 flex items-center">
+						<span
+							role="img"
+							aria-label="This course conflicts with another enrolled course"
+							className="text-warning mr-1 flex items-center outline-none"
+							tabIndex={0}
+						>
 							<FaExclamationTriangle />
 						</span>
 					</Tooltip.Trigger>
@@ -85,26 +98,27 @@ const CourseChip = ({ name, id, onOpenModal }: CourseChipProps) => {
 			<span className="text-sm font-semibold">{name}</span>
 
 			{courseInfo?.url && (
-				<span
-					className="hover:bg-default-200 text-default-500 hover:text-foreground ml-1.5 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition-colors"
-					onClick={(e) => {
-						e.stopPropagation();
+				<Button
+					isIconOnly
+					variant="tertiary"
+					onPress={() => {
 						window.open(courseInfo.url, '_blank', 'noopener,noreferrer');
 					}}
+					className="hover:bg-default-200 text-default-500 hover:text-foreground ml-1.5 flex h-5 w-5 min-w-0 cursor-pointer items-center justify-center rounded-full bg-transparent p-0 shadow-none transition-colors"
+					aria-label="View course page"
 				>
 					<FaExternalLinkAlt className="text-2xs" />
-				</span>
+				</Button>
 			)}
 
 			<CloseButton
 				aria-label="Remove course"
-				onClick={(e) => {
-					e.stopPropagation();
+				onPress={() => {
 					removeCourse(id);
 				}}
 				className="hover:bg-tiger/15 hover:text-tiger ml-1 h-5 w-5 rounded-full transition-colors"
 			/>
-		</button>
+		</div>
 	);
 };
 

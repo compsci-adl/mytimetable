@@ -97,23 +97,23 @@ const MeetingsTime = ({
 					<Table.Header className="bg-default-100">
 						<Table.Column
 							isRowHeader
-							className="text-default-500 !rounded-none text-xs font-semibold"
+							className="text-default-500 rounded-none! text-xs font-semibold"
 						>
 							{t('class-modal.dates')}
 						</Table.Column>
-						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
 							{t('class-modal.days')}
 						</Table.Column>
-						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
 							{t('class-modal.time')}
 						</Table.Column>
-						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
 							{t('class-modal.location')}
 						</Table.Column>
-						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
 							{t('class-modal.campus')}
 						</Table.Column>
-						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
 							{t('class-modal.availability')}
 						</Table.Column>
 					</Table.Header>
@@ -123,22 +123,22 @@ const MeetingsTime = ({
 								key={item.id}
 								className="border-separator bg-background hover:bg-default-50 border-b text-sm transition-colors last:border-b-0"
 							>
-								<Table.Cell className="text-foreground !rounded-none py-3">
+								<Table.Cell className="text-foreground rounded-none! py-3">
 									{item.dates}
 								</Table.Cell>
-								<Table.Cell className="text-foreground !rounded-none py-3">
+								<Table.Cell className="text-foreground rounded-none! py-3">
 									{item.day}
 								</Table.Cell>
-								<Table.Cell className="text-foreground !rounded-none py-3">
+								<Table.Cell className="text-foreground rounded-none! py-3">
 									{item.time}
 								</Table.Cell>
-								<Table.Cell className="text-foreground !rounded-none py-3">
+								<Table.Cell className="text-foreground rounded-none! py-3">
 									{item.location}
 								</Table.Cell>
-								<Table.Cell className="text-foreground !rounded-none py-3">
+								<Table.Cell className="text-foreground rounded-none! py-3">
 									{item.campus}
 								</Table.Cell>
-								<Table.Cell className="!rounded-none py-3">
+								<Table.Cell className="rounded-none! py-3">
 									{item.availability ? (
 										<span
 											className={
@@ -238,8 +238,12 @@ export const ClassModal = ({
 											<Tooltip delay={0}>
 												<Tooltip.Trigger>
 													<span
-														aria-hidden
-														className="text-danger flex items-center"
+														tabIndex={0}
+														role="img"
+														aria-label={t('calendar.no-available-seats', {
+															defaultValue: 'Class full',
+														})}
+														className="text-danger flex items-center outline-none"
 													>
 														<FaExclamationTriangle />
 													</span>

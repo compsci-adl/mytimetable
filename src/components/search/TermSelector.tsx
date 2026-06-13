@@ -1,7 +1,6 @@
 import { Label, ListBox, Select } from '@heroui/react';
 import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
-import { toast } from 'sonner';
 
 import { LocalStorageKey } from '../../constants/local-storage-keys';
 import { TERMS } from '../../constants/terms';
@@ -15,7 +14,6 @@ interface TermSelectorProps {
 export const TermSelector = ({
 	selectedTerm,
 	onTermChange,
-	isDisabled,
 }: TermSelectorProps) => {
 	const { t } = useTranslation();
 
@@ -25,13 +23,7 @@ export const TermSelector = ({
 	};
 
 	return (
-		<div
-			className="mobile:w-56 w-full"
-			onClick={() => {
-				if (!isDisabled) return;
-				toast.warning(t('toast.drop-to-change-term'));
-			}}
-		>
+		<div className="mobile:w-56 w-full">
 			<div className="flex flex-col gap-1.5">
 				<Label
 					id="term-label"
@@ -40,7 +32,6 @@ export const TermSelector = ({
 					{t('search.select-term')}
 				</Label>
 				<Select
-					isDisabled={isDisabled}
 					aria-labelledby="term-label"
 					selectedKey={selectedTerm}
 					onSelectionChange={(val) => {
@@ -55,7 +46,7 @@ export const TermSelector = ({
 							<FaChevronDown className="text-default-500 text-xs" />
 						</Select.Indicator>
 					</Select.Trigger>
-					<Select.Popover className="bg-content1 border-separator min-w-[224px] rounded-2xl border p-1 shadow-lg">
+					<Select.Popover className="bg-content1 border-separator min-w-56 rounded-2xl border p-1 shadow-lg">
 						<ListBox className="outline-none" items={TERMS}>
 							{(term) => (
 								<ListBox.Item

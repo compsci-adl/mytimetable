@@ -1,4 +1,4 @@
-import { Modal, Select, ListBox, Table, Tooltip } from '@heroui/react';
+import { Modal, Select, ListBox, Table, Tooltip, Button } from '@heroui/react';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -153,23 +153,23 @@ const MeetingsTime = ({
 					<Table.Header className="bg-default-100">
 						<Table.Column
 							isRowHeader
-							className="text-default-500 !rounded-none text-xs font-semibold"
+							className="text-default-500 rounded-none! text-xs font-semibold"
 						>
 							{t('course-modal.dates')}
 						</Table.Column>
-						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
 							{t('course-modal.days')}
 						</Table.Column>
-						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
 							{t('course-modal.time')}
 						</Table.Column>
-						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
 							{t('course-modal.location')}
 						</Table.Column>
-						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
 							{t('course-modal.campus')}
 						</Table.Column>
-						<Table.Column className="text-default-500 !rounded-none text-xs font-semibold">
+						<Table.Column className="text-default-500 rounded-none! text-xs font-semibold">
 							{t('course-modal.availability')}
 						</Table.Column>
 					</Table.Header>
@@ -179,22 +179,22 @@ const MeetingsTime = ({
 								key={row.id}
 								className="border-separator bg-background hover:bg-default-50 border-b text-sm transition-colors last:border-b-0"
 							>
-								<Table.Cell className="text-foreground !rounded-none py-3">
+								<Table.Cell className="text-foreground rounded-none! py-3">
 									{row.dates}
 								</Table.Cell>
-								<Table.Cell className="text-foreground !rounded-none py-3">
+								<Table.Cell className="text-foreground rounded-none! py-3">
 									{row.day}
 								</Table.Cell>
-								<Table.Cell className="text-foreground !rounded-none py-3">
+								<Table.Cell className="text-foreground rounded-none! py-3">
 									{row.time}
 								</Table.Cell>
-								<Table.Cell className="text-foreground !rounded-none py-3">
+								<Table.Cell className="text-foreground rounded-none! py-3">
 									{row.location}
 								</Table.Cell>
-								<Table.Cell className="text-foreground !rounded-none py-3">
+								<Table.Cell className="text-foreground rounded-none! py-3">
 									{row.campus}
 								</Table.Cell>
-								<Table.Cell className="!rounded-none py-3">
+								<Table.Cell className="rounded-none! py-3">
 									{row.availability ? (
 										<span
 											className={
@@ -380,7 +380,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 											<div
 												className={clsx(
 													'text-foreground overflow-hidden font-normal transition-[max-height] duration-300 ease-in-out',
-													overviewExpanded ? 'max-h-[1000px]' : 'max-h-[55px]',
+													overviewExpanded ? 'max-h-250' : 'max-h-13.75',
 												)}
 											>
 												{courseInfo.course_overview || 'None listed'}
@@ -388,19 +388,20 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 											{!overviewExpanded &&
 												courseInfo.course_overview &&
 												courseInfo.course_overview.length > charLimit && (
-													<div className="from-background absolute bottom-0 left-0 h-6 w-full bg-gradient-to-t to-transparent" />
+													<div className="from-background absolute bottom-0 left-0 h-6 w-full bg-linear-to-t to-transparent" />
 												)}
 										</div>
 										{courseInfo.course_overview &&
 											courseInfo.course_overview.length > charLimit && (
-												<button
-													className="text-primary mt-1.5 cursor-pointer font-bold underline"
-													onClick={() => setOverviewExpanded(!overviewExpanded)}
+												<Button
+													variant="tertiary"
+													className="text-primary mt-1.5 h-auto min-w-0 cursor-pointer bg-transparent p-0 font-bold underline shadow-none"
+													onPress={() => setOverviewExpanded(!overviewExpanded)}
 												>
 													{overviewExpanded
 														? t('course.overview.show-less')
 														: t('course.overview.show-more')}
-												</button>
+												</Button>
 											)}
 									</div>
 									{(() => {
@@ -546,7 +547,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 									})()}
 								</Modal.Header>
 							</header>
-							<Modal.Body className="mt-4 mb-4 max-h-[400px] gap-4 overflow-y-auto pr-2">
+							<Modal.Body className="mt-4 mb-4 max-h-100 gap-4 overflow-y-auto pr-2">
 								{(() => {
 									const aggregated: ConflictDetail[] = [];
 									const seen = new Set<string>();
@@ -707,7 +708,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 													</Select.Trigger>
 													<Select.Popover>
 														<ListBox
-															className="bg-overlay border-separator max-h-[300px] overflow-y-auto rounded-2xl border p-2 shadow-xl"
+															className="bg-overlay border-separator max-h-75 overflow-y-auto rounded-2xl border p-2 shadow-xl"
 															items={listBoxItems}
 														>
 															{(item: CourseListBoxItem) => {
@@ -735,8 +736,13 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 																					<Tooltip delay={0}>
 																						<Tooltip.Trigger>
 																							<span
-																								aria-hidden
-																								className="text-warning flex items-center"
+																								tabIndex={0}
+																								role="img"
+																								aria-label={
+																									t('calendar.conflict') ??
+																									'Conflict with another class'
+																								}
+																								className="text-warning flex items-center outline-none"
 																							>
 																								<FaExclamationTriangle />
 																							</span>
@@ -751,8 +757,15 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 																					<Tooltip delay={0}>
 																						<Tooltip.Trigger>
 																							<span
-																								aria-hidden
-																								className="text-danger flex items-center"
+																								tabIndex={0}
+																								role="img"
+																								aria-label={t(
+																									'calendar.no-available-seats',
+																									{
+																										defaultValue: 'Class full',
+																									},
+																								)}
+																								className="text-danger flex items-center outline-none"
 																							>
 																								<FaExclamationTriangle />
 																							</span>
