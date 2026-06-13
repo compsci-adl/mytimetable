@@ -252,8 +252,9 @@ async function main() {
 	const baseBranch = process.env.BASE_BRANCH;
 	if (baseBranch) {
 		const isValidBaseBranch = /^[A-Za-z0-9._/-]+$/.test(baseBranch);
-		if (!isValidBaseBranch) {
-			console.warn(
+			const basePkgContent = execFileSync(
+				'git',
+				['show', `origin/${baseBranch}:package.json`],
 				`Invalid BASE_BRANCH value "${baseBranch}", falling back to local package.json version.`,
 			);
 		} else {
