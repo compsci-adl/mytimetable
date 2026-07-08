@@ -56,8 +56,23 @@ const LUNCH_END_TIMES = [
 	{ value: '15:00', label: '3pm' },
 ];
 
-const DAYS_SHORT = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
-const DAYS_FULL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const DAYS_SHORT = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+const DAYS_FULL = [
+	'Monday',
+	'Tuesday',
+	'Wednesday',
+	'Thursday',
+	'Friday',
+	'Saturday',
+	'Sunday',
+];
+const DEFAULT_PREFERRED_DAYS = [
+	'Monday',
+	'Tuesday',
+	'Wednesday',
+	'Thursday',
+	'Friday',
+];
 const MODES = [
 	{ value: 'HYBRID', label: 'HYBRID' },
 	{ value: 'IN_PERSON', label: 'IN PERSON' },
@@ -72,7 +87,7 @@ const loadInitialPrefs = () => {
 			return {
 				earliestStart: parsed.earliestStart ?? '09:00',
 				latestEnd: parsed.latestEnd ?? '21:00',
-				preferredDays: parsed.preferredDays ?? DAYS_FULL,
+				preferredDays: parsed.preferredDays ?? DEFAULT_PREFERRED_DAYS,
 				preferredBreak: parsed.preferredBreak ?? 0,
 				maxDays: parsed.maxDays ?? 5,
 				mode: parsed.mode ?? 'HYBRID',
@@ -88,7 +103,7 @@ const loadInitialPrefs = () => {
 	return {
 		earliestStart: '09:00',
 		latestEnd: '21:00',
-		preferredDays: DAYS_FULL,
+		preferredDays: DEFAULT_PREFERRED_DAYS,
 		preferredBreak: 0,
 		maxDays: 5,
 		mode: 'HYBRID',
@@ -498,7 +513,7 @@ export const AutoTimetable = ({
 				<div className="flex flex-col gap-1">
 					<Slider
 						step={1}
-						maxValue={5}
+						maxValue={7}
 						minValue={1}
 						value={maxDays}
 						onChange={(val) => {

@@ -3,30 +3,30 @@ name: Update Changelog and Version
 on:
   pull_request:
     types: [opened, synchronize, labeled, unlabeled]
+  pull_request_target:
+    types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
   update-changelog:
     name: Auto Changelog & Version Bump
-    # Run only for same-repo PRs, and if created by Renovate or has one of the release labels
-    if: |
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      (
-        github.event.pull_request.user.login == 'renovate[bot]' ||
-        contains(github.event.pull_request.labels.*.name, 'patch') ||
-        contains(github.event.pull_request.labels.*.name, 'minor-update') ||
-        contains(github.event.pull_request.labels.*.name, 'major-update')
-      )
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: read
     steps:
-      - name: Checkout repository
+      - name: Checkout base repository
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.repository }}
+          ref: ${{ github.event.pull_request.base.ref }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch and checkout PR branch
+        run: |
+          git remote add pr-head https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git
+          git fetch pr-head ${{ github.event.pull_request.head.ref }}
+          git checkout -B ${{ github.event.pull_request.head.ref }} pr-head/${{ github.event.pull_request.head.ref }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # v4
@@ -39,18 +39,14 @@ jobs:
       - name: Check if already run
         id: check_run
         run: |
-          # Fetch base branch to ensure reference comparison is valid
-          git fetch origin ${{ github.event.pull_request.base.ref }} --depth=1
+          event_action="${{ github.event.action }}"
+          last_commit_subject=$(git log -n 1 --format="%s")
           
-          # Check if any commit in the PR history matches the bot commit prefix
-          bot_commits=$(git log origin/${{ github.event.pull_request.base.ref }}..HEAD --grep="chore: update CHANGELOG.md" --oneline)
-          echo "Bot commits found: $bot_commits"
-          
-          if [ -n "$bot_commits" ]; then
-            echo "Changelog and version have already been updated by the bot in this PR. Skipping."
+          if [ "$event_action" = "synchronize" ] && [[ "$last_commit_subject" == "chore: update CHANGELOG.md"* ]]; then
+            echo "Synchronize event triggered by bot commit. Skipping."
             echo "skip=true" >> $GITHUB_OUTPUT
           else
-            echo "No bot commits found. Proceeding with run."
+            echo "Event action is $event_action and last commit is '$last_commit_subject'. Proceeding."
             echo "skip=false" >> $GITHUB_OUTPUT
           fi
 
@@ -73,4 +69,12 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add package.json CHANGELOG.md
           git commit -m "chore: update CHANGELOG.md and bump version"
-          git push origin "HEAD:$PR_HEAD_REF"
+          
+          if ! git push pr-head "HEAD:$PR_HEAD_REF"; then
+            if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
+              echo "WARNING: Push failed. This is expected because GITHUB_TOKEN has read-only access for fork PRs under the pull_request event."
+              echo "This workflow will trigger and push successfully on the pull_request_target event once merged into main."
+            else
+              exit 1
+            fi
+          fi

@@ -12,12 +12,14 @@ import {
 
 import { WEEK_DAYS } from '../constants/week-days';
 import { YEAR } from '../constants/year';
+import { useCoursesInfo } from '../data/course-info';
 import {
 	useCourseColor,
 	useDetailedEnrolledCourses,
 	useEnrolledCourse,
 	useEnrolledCourses,
 } from '../data/enrolled-courses';
+import { useFilters } from '../data/filters';
 import { useCalendar, useOtherWeekCourseTimes } from '../helpers/calendar';
 import { useCalendarHourHeight } from '../helpers/calendar-hour-height';
 import { findConflicts } from '../helpers/conflicts';
@@ -28,7 +30,7 @@ import { useZoom } from '../helpers/zoom';
 import type dayjs from '../lib/dayjs';
 import type { DateTimeRange, WeekCourse, WeekCourses } from '../types/course';
 import { getAccessibleTextColorForCourse } from '../utils/contrast';
-import { timeToDayjs } from '../utils/date';
+import { isMeetingInTerm, timeToDayjs } from '../utils/date';
 import { useDrop } from '../utils/dnd';
 import { ClassModal } from './ClassModal';
 import { CourseCard, InvisiblePlaceholder } from './CourseCard';
@@ -144,16 +146,24 @@ const EndActions = () => {
 	);
 };
 
-const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
+const CalendarBg = ({
+	currentWeek,
+	showWeekend,
+}: {
+	currentWeek: dayjs.Dayjs;
+	showWeekend: boolean;
+}) => {
 	const { t } = useTranslation();
 
 	const blockHeight = useCalendarHourHeight((s) => s.height);
+	const daysToShow = showWeekend ? WEEK_DAYS : WEEK_DAYS.slice(0, 5);
+	const numDays = daysToShow.length;
 
 	return (
 		<div
 			className="-z-50 grid"
 			style={{
-				gridTemplateColumns: '2.5rem repeat(5, minmax(0, 1fr))',
+				gridTemplateColumns: `2.5rem repeat(${numDays}, minmax(0, 1fr))`,
 				gridTemplateRows: '2.5rem repeat(30, minmax(0, 1fr))',
 			}}
 		>
@@ -161,7 +171,7 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 				className="border-apple-gray-300 bg-background col-span-full col-start-2 grid grid-cols-subgrid border-b"
 				style={{ gridRow: '1 / 2' }}
 			>
-				{WEEK_DAYS.map((day, i) => (
+				{daysToShow.map((day, i) => (
 					<div
 						key={day}
 						className="text-foreground flex justify-center gap-1 py-1 text-lg font-light"
@@ -191,12 +201,12 @@ const CalendarBg = ({ currentWeek }: { currentWeek: dayjs.Dayjs }) => {
 				className="col-span-full col-start-2 grid grid-cols-subgrid grid-rows-subgrid"
 				style={{ gridRow: '2 / 32' }}
 			>
-				{Array.from({ length: 5 * 30 }, (_, i) => (
+				{Array.from({ length: numDays * 30 }, (_, i) => (
 					<div
 						key={i}
 						className={clsx(
 							'border-apple-gray-300 border-r',
-							[5, 6, 7, 8, 9].includes(i % 10) && 'border-b',
+							Math.floor(i / numDays) % 2 === 1 && 'border-b',
 						)}
 						style={{ height: blockHeight / 2 + 'rem' }}
 					/>
@@ -299,10 +309,12 @@ const computeEventColumns = (
 const CalendarCourses = ({
 	courses: day,
 	currentWeek,
+	showWeekend,
 	onCourseClick,
 }: {
 	courses: WeekCourses;
 	currentWeek: dayjs.Dayjs;
+	showWeekend: boolean;
 	onCourseClick?: (course: WeekCourse) => void;
 }) => {
 	const blockHeight = useCalendarHourHeight((s) => s.height);
@@ -331,25 +343,30 @@ const CalendarCourses = ({
 		j: number;
 	};
 
-	const eventsPerDay: Array<Array<Event>> = day.map((times, i) =>
-		times.flatMap((time, j) =>
-			time.courses.map((course, index) => ({
-				course,
-				time: time.time,
-				key: `${course.id}-${course.classTypeId}-${course.classNumber}-${course.location}-${index}`,
-				dayIndex: i,
-				j,
-			})),
-		),
-	);
+	const eventsPerDay: Array<Array<Event>> = day
+		.slice(0, showWeekend ? 7 : 5)
+		.map((times, i) =>
+			times.flatMap((time, j) =>
+				time.courses.map((course, index) => ({
+					course,
+					time: time.time,
+					key: `${course.id}-${course.classTypeId}-${course.classNumber}-${course.location}-${index}`,
+					dayIndex: i,
+					j,
+				})),
+			),
+		);
 
 	const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 	const courseRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
 	return (
 		<div
-			className="absolute top-10 left-10 z-0 grid grid-cols-5 grid-rows-30"
-			style={{ width: 'calc(100% - 2.5rem)' }}
+			className="absolute top-10 left-10 z-0 grid grid-rows-30"
+			style={{
+				width: 'calc(100% - 2.5rem)',
+				gridTemplateColumns: `repeat(${showWeekend ? 7 : 5}, minmax(0, 1fr))`,
+			}}
 			onPointerMove={(e) => {
 				const { clientX, clientY } = e;
 				for (const key of Object.keys(courseRefs.current)) {
@@ -490,8 +507,10 @@ const CourseTimePlaceholderCard = ({
 
 const CalendarCourseOtherTimes = ({
 	currentWeek,
+	showWeekend,
 }: {
 	currentWeek: dayjs.Dayjs;
+	showWeekend: boolean;
 }) => {
 	const blockHeight = useCalendarHourHeight((s) => s.height);
 
@@ -505,7 +524,7 @@ const CalendarCourseOtherTimes = ({
 	const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 	const placeholderRefs = useRef<Record<string, HTMLDivElement | null>>({});
 	if (times.length === 0) return;
-	const eventsPerDay = times.map((dayTimes) =>
+	const eventsPerDay = times.slice(0, showWeekend ? 7 : 5).map((dayTimes) =>
 		dayTimes.flatMap((t, j) =>
 			t.classes.map((c, index) => ({
 				key: `${course.id}-${course.classTypeId}-${c.number}-${c.location}-${index}`,
@@ -518,8 +537,11 @@ const CalendarCourseOtherTimes = ({
 
 	return (
 		<div
-			className="absolute top-10 left-10 z-40 grid grid-cols-5 grid-rows-30"
-			style={{ width: 'calc(100% - 2.5rem)' }}
+			className="absolute top-10 left-10 z-40 grid grid-rows-30"
+			style={{
+				width: 'calc(100% - 2.5rem)',
+				gridTemplateColumns: `repeat(${showWeekend ? 7 : 5}, minmax(0, 1fr))`,
+			}}
 			onPointerMove={(e) => {
 				const { clientX, clientY } = e;
 				for (const key of Object.keys(placeholderRefs.current)) {
@@ -618,6 +640,37 @@ export const Calendar = () => {
 
 	const noCourses = useEnrolledCourses((s) => s.courses.length === 0);
 
+	const coursesInfo = useCoursesInfo();
+	const detailedCourses = useDetailedEnrolledCourses();
+	const hasWeekendClass = detailedCourses.some((c) =>
+		c.classes.some((cls) =>
+			cls.meetings.some((m) => m.day === 'Saturday' || m.day === 'Sunday'),
+		),
+	);
+
+	const selectedTermAlias = useFilters((s) => s.term);
+	const selectedCampuses = useFilters((s) => s.campuses);
+
+	const draggingCourse = useDraggingCourse((s) => s.course);
+	const draggingCourseInfo = draggingCourse
+		? coursesInfo.find((c) => c.id === draggingCourse.id)
+		: null;
+
+	const hasWeekendAlternative = !!draggingCourseInfo?.class_list.some((cl) =>
+		cl.classes.some((cls) =>
+			cls.meetings.some(
+				(m) =>
+					(m.day === 'Saturday' || m.day === 'Sunday') &&
+					isMeetingInTerm(m.date, selectedTermAlias) &&
+					(!selectedCampuses ||
+						selectedCampuses.length === 0 ||
+						selectedCampuses.includes(m.campus)),
+			),
+		),
+	);
+
+	const showWeekend = hasWeekendClass || hasWeekendAlternative;
+
 	const [isClassModalOpen, setIsClassModalOpen] = useState(false);
 	type SelectedClassState = {
 		courseId: string;
@@ -646,13 +699,19 @@ export const Calendar = () => {
 				status={status}
 			/>
 			<div className="no-scrollbar relative overflow-x-auto overscroll-x-contain">
-				<CalendarBg currentWeek={currentWeek} />
+				<CalendarBg currentWeek={currentWeek} showWeekend={showWeekend} />
 				<CalendarCourses
 					courses={courses}
 					currentWeek={currentWeek}
+					showWeekend={showWeekend}
 					onCourseClick={onOpenClass}
 				/>
-				{isDragging && <CalendarCourseOtherTimes currentWeek={currentWeek} />}
+				{isDragging && (
+					<CalendarCourseOtherTimes
+						currentWeek={currentWeek}
+						showWeekend={showWeekend}
+					/>
+				)}
 			</div>
 			{!noCourses && <EndActions />}
 			{selectedClass && (

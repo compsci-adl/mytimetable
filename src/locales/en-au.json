@@ -84,7 +84,7 @@
 		"previous-week": "Previous week",
 		"next-week": "Next week",
 		"last-week": "Last week",
-		"week-days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+		"week-days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
 		"months": [
 			"Janurary",
 			"February",
