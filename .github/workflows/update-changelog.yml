@@ -1,12 +1,13 @@
 name: Update Changelog and Version
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
   update-changelog:
     name: Auto Changelog & Version Bump
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -15,14 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          repository: ${{ github.repository }}
-          ref: ${{ github.event.pull_request.base.ref }}
-          path: base-repo
-
-      - name: Checkout PR branch (fork)
-        uses: actions/checkout@v6
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -57,7 +50,7 @@ jobs:
           PR_LABELS: ${{ toJson(github.event.pull_request.labels) }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
-        run: npx tsx base-repo/scripts/update-changelog-ci.ts
+        run: npx tsx scripts/update-changelog-ci.ts
 
       - name: Commit and Push changes
         if: steps.check_run.outputs.skip != 'true'
