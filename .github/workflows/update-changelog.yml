@@ -8,14 +8,7 @@ jobs:
   update-changelog:
     name: Auto Changelog & Version Bump
     # Run only for same-repo PRs, and if created by Renovate or has one of the release labels
-    if: |
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      (
-        github.event.pull_request.user.login == 'renovate[bot]' ||
-        contains(github.event.pull_request.labels.*.name, 'patch') ||
-        contains(github.event.pull_request.labels.*.name, 'minor-update') ||
-        contains(github.event.pull_request.labels.*.name, 'major-update')
-      )
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -39,18 +32,14 @@ jobs:
       - name: Check if already run
         id: check_run
         run: |
-          # Fetch base branch to ensure reference comparison is valid
-          git fetch origin ${{ github.event.pull_request.base.ref }} --depth=1
+          event_action="${{ github.event.action }}"
+          last_commit_subject=$(git log -n 1 --format="%s")
           
-          # Check if any commit in the PR history matches the bot commit prefix
-          bot_commits=$(git log origin/${{ github.event.pull_request.base.ref }}..HEAD --grep="chore: update CHANGELOG.md" --oneline)
-          echo "Bot commits found: $bot_commits"
-          
-          if [ -n "$bot_commits" ]; then
-            echo "Changelog and version have already been updated by the bot in this PR. Skipping."
+          if [ "$event_action" = "synchronize" ] && [[ "$last_commit_subject" == "chore: update CHANGELOG.md"* ]]; then
+            echo "Synchronize event triggered by bot commit. Skipping."
             echo "skip=true" >> $GITHUB_OUTPUT
           else
-            echo "No bot commits found. Proceeding with run."
+            echo "Event action is $event_action and last commit is '$last_commit_subject'. Proceeding."
             echo "skip=false" >> $GITHUB_OUTPUT
           fi
 
