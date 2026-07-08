@@ -7,7 +7,6 @@ on:
 jobs:
   update-changelog:
     name: Auto Changelog & Version Bump
-    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,6 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -53,7 +53,7 @@ jobs:
         run: npx tsx scripts/update-changelog-ci.ts
 
       - name: Commit and Push changes
-        if: steps.check_run.outputs.skip != 'true'
+        if: steps.check_run.outputs.skip != 'true' && github.event.pull_request.head.repo.full_name == github.repository
         env:
           PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
