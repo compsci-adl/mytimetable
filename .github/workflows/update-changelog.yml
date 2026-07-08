@@ -3,6 +3,8 @@ name: Update Changelog and Version
 on:
   pull_request:
     types: [opened, synchronize, labeled, unlabeled]
+  pull_request_target:
+    types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
   update-changelog:
@@ -12,13 +14,19 @@ jobs:
       contents: write
       pull-requests: read
     steps:
-      - name: Checkout repository
+      - name: Checkout base repository
         uses: actions/checkout@v6
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.repository }}
+          ref: ${{ github.event.pull_request.base.ref }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch and checkout PR branch
+        run: |
+          git remote add pr-head https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git
+          git fetch pr-head ${{ github.event.pull_request.head.ref }}
+          git checkout -B ${{ github.event.pull_request.head.ref }} pr-head/${{ github.event.pull_request.head.ref }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # v4
@@ -53,7 +61,7 @@ jobs:
         run: npx tsx scripts/update-changelog-ci.ts
 
       - name: Commit and Push changes
-        if: steps.check_run.outputs.skip != 'true' && github.event.pull_request.head.repo.full_name == github.repository
+        if: steps.check_run.outputs.skip != 'true'
         env:
           PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
@@ -61,4 +69,4 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add package.json CHANGELOG.md
           git commit -m "chore: update CHANGELOG.md and bump version"
-          git push origin "HEAD:$PR_HEAD_REF"
+          git push pr-head "HEAD:$PR_HEAD_REF"
