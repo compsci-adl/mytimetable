@@ -69,4 +69,12 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add package.json CHANGELOG.md
           git commit -m "chore: update CHANGELOG.md and bump version"
-          git push pr-head "HEAD:$PR_HEAD_REF"
+          
+          if ! git push pr-head "HEAD:$PR_HEAD_REF"; then
+            if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
+              echo "WARNING: Push failed. This is expected because GITHUB_TOKEN has read-only access for fork PRs under the pull_request event."
+              echo "This workflow will trigger and push successfully on the pull_request_target event once merged into main."
+            else
+              exit 1
+            fi
+          fi
