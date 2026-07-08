@@ -318,7 +318,29 @@ async function main() {
 				) {
 					itemText = `${itemText} (#${prNumber})`;
 				}
-				changed.push(formatDescription(itemText, repo));
+
+				const parsed = parseCommit(change);
+				const formattedDesc = formatDescription(itemText, repo);
+
+				if (
+					parsed.type === 'deps' ||
+					parsed.type === 'build' ||
+					parsed.type === 'ci'
+				) {
+					packageUpdates.push(formattedDesc);
+				} else if (parsed.type === 'feat') {
+					added.push(formattedDesc);
+				} else if (parsed.type === 'fix') {
+					fixed.push(formattedDesc);
+				} else if (
+					parsed.type === 'revert' ||
+					parsed.type === 'remove' ||
+					parsed.type === 'removed'
+				) {
+					removed.push(formattedDesc);
+				} else {
+					changed.push(formattedDesc);
+				}
 			}
 			parsedFromPr = true;
 		}
@@ -344,13 +366,13 @@ async function main() {
 
 			const formattedDesc = formatDescription(itemText, repo);
 
-			if (type === 'deps') {
+			if (type === 'deps' || type === 'build' || type === 'ci') {
 				packageUpdates.push(formattedDesc);
 			} else if (type === 'feat') {
 				added.push(formattedDesc);
 			} else if (type === 'fix') {
 				fixed.push(formattedDesc);
-			} else if (type === 'revert') {
+			} else if (type === 'revert' || type === 'remove' || type === 'removed') {
 				removed.push(formattedDesc);
 			} else {
 				changed.push(formattedDesc);
@@ -416,6 +438,16 @@ async function main() {
 	let changelogContent = '';
 	try {
 		changelogContent = fs.readFileSync(changelogPath, 'utf-8');
+		if (
+			prNumber &&
+			(changelogContent.includes(`/pull/${prNumber}`) ||
+				changelogContent.includes(`(#${prNumber})`))
+		) {
+			console.log(
+				`CHANGELOG.md already contains entries for PR #${prNumber}. Skipping version bump and changelog update.`,
+			);
+			process.exit(0);
+		}
 		let maxChangelogVersion = '0.0.0';
 		const versions = getChangelogVersions(changelogContent);
 		for (const v of versions) {
