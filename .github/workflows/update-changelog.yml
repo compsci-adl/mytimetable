@@ -1,117 +1,22 @@
-name: Update Changelog and Version
+name: Changelog CI
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    types: [opened, synchronize, labeled, unlabeled]
-  pull_request_target:
-    types: [opened, synchronize, labeled, unlabeled]
+    types: [opened, synchronize, labeled]
 
 jobs:
-  update-changelog:
-    name: Auto Changelog & Version Bump
+  changelog:
+    name: Run Changelog CI
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch and checkout PR branch
-        if: github.event_name != 'push'
-        run: |
-          git remote add pr-head https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git
-          git fetch pr-head ${{ github.event.pull_request.head.ref }}
-          git checkout -B ${{ github.event.pull_request.head.ref }} pr-head/${{ github.event.pull_request.head.ref }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # v4
+      - name: Run Changelog CI
+        uses: saadmk11/changelog-ci@v1.2.0
         with:
-          version: 11
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Check if already run
-        id: check_run
-        run: |
-          last_commit_subject=$(git log -n 1 --format="%s")
-          
-          if [[ "$last_commit_subject" == "chore: update CHANGELOG.md"* ]]; then
-            echo "Last commit was the bot's changelog update. Skipping."
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "Last commit is '$last_commit_subject'. Proceeding."
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Get PR context
-        if: steps.check_run.outputs.skip != 'true'
-        id: pr_context
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          event_name="${{ github.event_name }}"
-          
-          if [ "$event_name" = "push" ]; then
-            commit_message=$(git log -n 1 --format="%B")
-            pr_number=$(echo "$commit_message" | grep -oE '\(#[0-9]+\)' | head -n 1 | tr -d '(#)')
-            
-            if [ -n "$pr_number" ]; then
-              echo "Parsing details for PR #$pr_number from merge commit..."
-              pr_json=$(gh pr view "$pr_number" --json title,labels,number --repo ${{ github.repository }})
-              
-              pr_title=$(echo "$pr_json" | jq -r '.title')
-              pr_labels=$(echo "$pr_json" | jq -c '.labels')
-              
-              echo "PR_TITLE=$pr_title" >> $GITHUB_ENV
-              echo "PR_LABELS=$pr_labels" >> $GITHUB_ENV
-              echo "PR_NUMBER=$pr_number" >> $GITHUB_ENV
-            else
-              echo "No PR number found in last commit message. Running with default push values."
-            fi
-          else
-            # For pull_request or pull_request_target, we can just use the github event context
-            echo "PR_TITLE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
-            echo "PR_LABELS=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -c '.')" >> $GITHUB_ENV
-            echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
-          fi
-
-      - name: Run update script
-        if: steps.check_run.outputs.skip != 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_TITLE: ${{ env.PR_TITLE }}
-          PR_LABELS: ${{ env.PR_LABELS }}
-          PR_NUMBER: ${{ env.PR_NUMBER }}
-          BASE_BRANCH: ${{ github.event.pull_request.base.ref || 'main' }}
-        run: npx tsx scripts/update-changelog-ci.ts
-
-      - name: Commit and Push changes
-        if: steps.check_run.outputs.skip != 'true'
-        env:
-          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add package.json CHANGELOG.md
-          git commit -m "chore: update CHANGELOG.md and bump version"
-          
-          if [ "${{ github.event_name }}" = "push" ]; then
-            git push origin HEAD:${{ github.ref }}
-          else
-            if ! git push pr-head "HEAD:$PR_HEAD_REF"; then
-              if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
-                echo "WARNING: Push failed. This is expected because GITHUB_TOKEN has read-only access for fork PRs under the pull_request event."
-                echo "This workflow will trigger and push successfully on the pull_request_target event once merged into main."
-              else
-                exit 1
-              fi
-            fi
-          fi
+          changelog_filename: CHANGELOG.md
+          config_file: changelog-ci-config.json
+          github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,31 @@
+{
+	"changelog_type": "pull_request",
+	"header_prefix": "",
+	"commit_changelog": true,
+	"comment_changelog": true,
+	"include_unlabeled_changes": true,
+	"unlabeled_group_title": "Changed",
+	"exclude_labels": ["bot", "dependabot", "ci"],
+	"group_config": [
+		{
+			"title": "Added",
+			"labels": ["enhancement", "feature", "feat"]
+		},
+		{
+			"title": "Changed",
+			"labels": ["changed", "improvement", "refactor", "chore"]
+		},
+		{
+			"title": "Fixed",
+			"labels": ["bug", "bugfix", "fix"]
+		},
+		{
+			"title": "Removed",
+			"labels": ["removed", "revert"]
+		},
+		{
+			"title": "Package Updates",
+			"labels": ["deps", "dependencies", "package-updates"]
+		}
+	]
+}
