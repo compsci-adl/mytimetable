@@ -168,9 +168,57 @@ function parsePrBody(body: string): string[] {
 }
 
 async function main() {
-	const prNumber = process.env.PR_NUMBER;
+	let prNumber = process.env.PR_NUMBER;
 	const repo = process.env.GITHUB_REPOSITORY || 'compsci-adl/mytimetable';
-	const prLabelsStr = process.env.PR_LABELS || '[]';
+	let prLabelsStr = process.env.PR_LABELS || '[]';
+	let prBody = process.env.PR_BODY || '';
+	let baseBranch = process.env.BASE_BRANCH || 'main';
+
+	// Try to resolve context directly from the GitHub Actions event payload
+	const eventPath = process.env.GITHUB_EVENT_PATH;
+	if (eventPath && fs.existsSync(eventPath)) {
+		try {
+			const event = JSON.parse(fs.readFileSync(eventPath, 'utf-8'));
+			const eventName = process.env.GITHUB_EVENT_NAME;
+
+			if (eventName === 'push') {
+				// Parse PR number from merge commit message
+				const commitMsg = runGit('git log -n 1 --format="%B"');
+				const match = commitMsg.match(/\(#[0-9]+\)/);
+				if (match) {
+					prNumber = match[0].replace(/[^0-9]/g, '');
+					console.log(`Parsed PR #${prNumber} from merge commit message.`);
+
+					// Fetch labels and body using GitHub CLI
+					try {
+						const prJson = execSync(
+							`gh pr view ${prNumber} --json labels,body`,
+							{
+								encoding: 'utf-8',
+								env: { ...process.env, GH_TOKEN: process.env.GITHUB_TOKEN },
+							},
+						);
+						const prData = JSON.parse(prJson);
+						prLabelsStr = JSON.stringify(prData.labels || []);
+						prBody = prData.body || '';
+						console.log(`Fetched details for PR #${prNumber} via GitHub CLI.`);
+					} catch (cliError) {
+						console.warn(`Could not fetch PR details via gh CLI:`, cliError);
+					}
+				}
+			} else if (event.pull_request) {
+				prNumber = String(event.pull_request.number);
+				prLabelsStr = JSON.stringify(event.pull_request.labels || []);
+				prBody = event.pull_request.body || '';
+				baseBranch = event.pull_request.base?.ref || 'main';
+				console.log(
+					`Resolved PR #${prNumber} context directly from event webhook payload.`,
+				);
+			}
+		} catch (err) {
+			console.error('Failed to parse GITHUB_EVENT_PATH:', err);
+		}
+	}
 
 	console.log(`PR Number: ${prNumber}`);
 	console.log(`Repository: ${repo}`);
@@ -209,7 +257,6 @@ async function main() {
 	const removed: string[] = [];
 	const packageUpdates: string[] = [];
 
-	const prBody = process.env.PR_BODY || '';
 	const prChanges = parsePrBody(prBody);
 
 	if (prChanges.length === 0) {
@@ -257,12 +304,10 @@ async function main() {
 		}
 	}
 
-	// 4. Update package.json version
 	const pkgPath = path.join(process.cwd(), 'package.json');
 	const pkgContent = fs.readFileSync(pkgPath, 'utf-8');
 	const pkg = JSON.parse(pkgContent);
 	let oldVersion = pkg.version;
-	const baseBranch = process.env.BASE_BRANCH;
 	if (baseBranch) {
 		const isValidBaseBranch = /^[A-Za-z0-9._/-]+$/.test(baseBranch);
 		if (!isValidBaseBranch) {

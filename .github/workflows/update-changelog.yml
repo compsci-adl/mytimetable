@@ -55,57 +55,11 @@ jobs:
             echo "skip=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Get PR context
-        if: steps.check_run.outputs.skip != 'true'
-        id: pr_context
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          event_name="${{ github.event_name }}"
-          
-          if [ "$event_name" = "push" ]; then
-            commit_message=$(git log -n 1 --format="%B")
-            pr_number=$(echo "$commit_message" | grep -oE '\(#[0-9]+\)' | head -n 1 | tr -d '(#)')
-            
-            if [ -n "$pr_number" ]; then
-              echo "Parsing details for PR #$pr_number from merge commit..."
-              pr_json=$(gh pr view "$pr_number" --json title,labels,number,body --repo ${{ github.repository }})
-              
-              pr_title=$(echo "$pr_json" | jq -r '.title')
-              pr_labels=$(echo "$pr_json" | jq -c '.labels')
-              pr_body=$(echo "$pr_json" | jq -r '.body')
-              
-              echo "PR_TITLE=$pr_title" >> $GITHUB_ENV
-              echo "PR_LABELS=$pr_labels" >> $GITHUB_ENV
-              echo "PR_NUMBER=$pr_number" >> $GITHUB_ENV
-              
-              echo "PR_BODY<<EOF" >> $GITHUB_ENV
-              echo "$pr_body" >> $GITHUB_ENV
-              echo "EOF" >> $GITHUB_ENV
-            else
-              echo "No PR number found in last commit message. Running with default push values."
-            fi
-          else
-            # For pull_request or pull_request_target, we can just use the github event context
-            echo "PR_TITLE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
-            echo "PR_LABELS=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -c '.')" >> $GITHUB_ENV
-            echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
-            
-            echo "PR_BODY<<EOF" >> $GITHUB_ENV
-            echo "${{ github.event.pull_request.body }}" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-          fi
-
       - name: Run update script
         if: steps.check_run.outputs.skip != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_TITLE: ${{ env.PR_TITLE }}
-          PR_LABELS: ${{ env.PR_LABELS }}
-          PR_NUMBER: ${{ env.PR_NUMBER }}
-          PR_BODY: ${{ env.PR_BODY }}
-          BASE_BRANCH: ${{ github.event.pull_request.base.ref || 'main' }}
-        run: npx tsx scripts/update-changelog-ci.ts
+        run: pnpm exec tsx scripts/update-changelog-ci.ts
 
       - name: Commit and Push changes
         if: steps.check_run.outputs.skip != 'true'
