@@ -1,16 +1,7 @@
 /* eslint-disable no-console */
-import { execFileSync, execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-
-function runGit(cmd: string): string {
-	try {
-		return execSync(cmd, { encoding: 'utf-8' }).trim();
-	} catch (error) {
-		console.error(`Error running git command: ${cmd}`, error);
-		process.exit(1);
-	}
-}
 
 function sanitiseMarkdown(text: string): string {
 	return text
@@ -70,65 +61,6 @@ function bumpVersion(
 		patch += 1;
 	}
 	return `${major}.${minor}.${patch}`;
-}
-
-function validateRepo(repo: string): string {
-	// Expected format: owner/repo, GitHub-safe characters only
-	if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo)) {
-		throw new Error(`Invalid repository format: ${repo}`);
-	}
-	return repo;
-}
-
-function validatePrNumber(prNumber: string): string {
-	// PR number must be a positive integer
-	if (!/^[1-9][0-9]*$/.test(prNumber)) {
-		throw new Error(`Invalid PR number: ${prNumber}`);
-	}
-	return prNumber;
-}
-
-async function getPRCommits(
-	repo: string,
-	prNumber: string,
-	token: string,
-): Promise<string[]> {
-	const safeRepo = validateRepo(repo);
-	const safePrNumber = validatePrNumber(prNumber);
-	const [owner, repoName] = safeRepo.split('/');
-	const url = new URL(
-		`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(
-			repoName,
-		)}/pulls/${encodeURIComponent(safePrNumber)}/commits`,
-		'https://api.github.com',
-	).toString();
-	console.log(`Fetching PR commits from: ${url}`);
-	try {
-		const response = await fetch(url, {
-			headers: {
-				Authorization: `token ${token}`,
-				Accept: 'application/vnd.github.v3+json',
-				'User-Agent': 'github-actions-changelog-updater',
-			},
-		});
-
-		if (!response.ok) {
-			throw new Error(
-				`Failed to fetch commits: ${response.status} ${response.statusText}`,
-			);
-		}
-
-		const data = (await response.json()) as Array<{
-			commit: { message: string };
-		}>;
-		return data.map((c) => c.commit.message);
-	} catch (error) {
-		console.error('Error fetching commits from GitHub API:', error);
-		// Fallback to git log
-		console.log('Falling back to git log for commits...');
-		const log = runGit('git log -n 20 --format="%s"');
-		return log.split(/\r?\n/).filter(Boolean);
-	}
 }
 
 function isDependencyUpdate(subject: string): boolean {
@@ -200,14 +132,6 @@ function getChangelogVersions(content: string): string[] {
 	return versions;
 }
 
-function isBotCommit(subject: string): boolean {
-	const lower = subject.toLowerCase();
-	return (
-		lower.startsWith('chore: update changelog.md') ||
-		lower.includes('chore: update changelog.md and bump version')
-	);
-}
-
 function parsePrBody(body: string): string[] {
 	const lines = body.split(/\r?\n/);
 	const changes: string[] = [];
@@ -244,7 +168,6 @@ function parsePrBody(body: string): string[] {
 }
 
 async function main() {
-	const token = process.env.GITHUB_TOKEN;
 	const prNumber = process.env.PR_NUMBER;
 	const repo = process.env.GITHUB_REPOSITORY || 'compsci-adl/mytimetable';
 	const prLabelsStr = process.env.PR_LABELS || '[]';
@@ -279,117 +202,29 @@ async function main() {
 
 	console.log(`Determined bump type: ${bumpType}`);
 
-	// 2. Fetch commits
-	let commitMessages: string[] = [];
-	if (repo && prNumber && token) {
-		commitMessages = await getPRCommits(repo, prNumber, token);
-	} else {
-		console.log(
-			'Missing GITHUB_TOKEN, PR_NUMBER, or GITHUB_REPOSITORY. Running in local fallback mode...',
-		);
-		const log = runGit('git log -n 10 --format="%s"');
-		commitMessages = log.split(/\r?\n/).filter(Boolean);
-	}
-
-	console.log(`Retrieved ${commitMessages.length} commits.`);
-
-	// 3. Group messages
+	// 2. Group changes parsed completely from the PR description body's "Changes Made" section
 	const added: string[] = [];
 	const changed: string[] = [];
 	const fixed: string[] = [];
 	const removed: string[] = [];
 	const packageUpdates: string[] = [];
 
-	let parsedFromPr = false;
 	const prBody = process.env.PR_BODY || '';
-	if (prBody) {
-		console.log(
-			'PR Body found in environment. Attempting to parse Changes Made...',
+	const prChanges = parsePrBody(prBody);
+
+	if (prChanges.length === 0) {
+		console.error(
+			'Error: No changes found under "### Changes Made" in the PR description.',
 		);
-		const prChanges = parsePrBody(prBody);
-		if (prChanges.length > 0) {
-			console.log(`Parsed ${prChanges.length} changes from PR description.`);
-			for (const change of prChanges) {
-				let itemText = change;
-				if (
-					prNumber &&
-					!itemText.includes(`(#${prNumber})`) &&
-					!itemText.includes(`[#${prNumber}]`)
-				) {
-					itemText = `${itemText} (#${prNumber})`;
-				}
-
-				const parsed = parseCommit(change);
-				const formattedDesc = formatDescription(itemText, repo);
-
-				if (
-					parsed.type === 'deps' ||
-					parsed.type === 'build' ||
-					parsed.type === 'ci'
-				) {
-					packageUpdates.push(formattedDesc);
-				} else if (parsed.type === 'feat') {
-					added.push(formattedDesc);
-				} else if (parsed.type === 'fix') {
-					fixed.push(formattedDesc);
-				} else if (
-					parsed.type === 'revert' ||
-					parsed.type === 'remove' ||
-					parsed.type === 'removed'
-				) {
-					removed.push(formattedDesc);
-				} else {
-					changed.push(formattedDesc);
-				}
-			}
-			parsedFromPr = true;
-		}
+		console.error(
+			'To update the changelog, please add bullet points under a "### Changes Made" section in your PR description.',
+		);
+		process.exit(1);
 	}
 
-	if (!parsedFromPr) {
-		for (const msg of commitMessages) {
-			if (isBotCommit(msg)) {
-				console.log(`Skipping bot commit: ${msg}`);
-				continue;
-			}
-			const { type, description } = parseCommit(msg);
-
-			// Format commit description with a reference to the PR if available
-			let itemText = description;
-			if (
-				prNumber &&
-				!itemText.includes(`(#${prNumber})`) &&
-				!itemText.includes(`[#${prNumber}]`)
-			) {
-				itemText = `${itemText} (#${prNumber})`;
-			}
-
-			const formattedDesc = formatDescription(itemText, repo);
-
-			if (type === 'deps' || type === 'build' || type === 'ci') {
-				packageUpdates.push(formattedDesc);
-			} else if (type === 'feat') {
-				added.push(formattedDesc);
-			} else if (type === 'fix') {
-				fixed.push(formattedDesc);
-			} else if (type === 'revert' || type === 'remove' || type === 'removed') {
-				removed.push(formattedDesc);
-			} else {
-				changed.push(formattedDesc);
-			}
-		}
-	}
-
-	// If no commits parsed, add a generic description
-	if (
-		added.length === 0 &&
-		changed.length === 0 &&
-		fixed.length === 0 &&
-		removed.length === 0 &&
-		packageUpdates.length === 0
-	) {
-		const fallbackDesc = process.env.PR_TITLE || 'Version update';
-		let itemText = fallbackDesc;
+	console.log(`Parsed ${prChanges.length} changes from PR description.`);
+	for (const change of prChanges) {
+		let itemText = change;
 		if (
 			prNumber &&
 			!itemText.includes(`(#${prNumber})`) &&
@@ -397,7 +232,29 @@ async function main() {
 		) {
 			itemText = `${itemText} (#${prNumber})`;
 		}
-		changed.push(formatDescription(itemText, repo));
+
+		const parsed = parseCommit(change);
+		const formattedDesc = formatDescription(itemText, repo);
+
+		if (
+			parsed.type === 'deps' ||
+			parsed.type === 'build' ||
+			parsed.type === 'ci'
+		) {
+			packageUpdates.push(formattedDesc);
+		} else if (parsed.type === 'feat') {
+			added.push(formattedDesc);
+		} else if (parsed.type === 'fix') {
+			fixed.push(formattedDesc);
+		} else if (
+			parsed.type === 'revert' ||
+			parsed.type === 'remove' ||
+			parsed.type === 'removed'
+		) {
+			removed.push(formattedDesc);
+		} else {
+			changed.push(formattedDesc);
+		}
 	}
 
 	// 4. Update package.json version
