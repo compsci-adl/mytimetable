@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.1] - 2026-07-08
+
+### Changed
+
+- Use new method for changelog CI workflow ([#103](https://github.com/compsci-adl/mytimetable/pull/103))
+- Update changelog for version 3.1.0 with weekend classes support ([#103](https://github.com/compsci-adl/mytimetable/pull/103))
+- Remove old check PR labels workflow ([#103](https://github.com/compsci-adl/mytimetable/pull/103))
+- Update changelog CI configuration to set header prefix to 'v' and remove fetch-depth from checkout step ([#103](https://github.com/compsci-adl/mytimetable/pull/103))
+- Add repository and ref parameters to checkout step in changelog CI workflow ([#103](https://github.com/compsci-adl/mytimetable/pull/103))
+- Implement PR label verification and update changelog workflow ([#103](https://github.com/compsci-adl/mytimetable/pull/103))
+- Update package.json with new version after changelog update ([#103](https://github.com/compsci-adl/mytimetable/pull/103))
+- Update changelog CI workflow to include PR body parsing and version comparison ([#103](https://github.com/compsci-adl/mytimetable/pull/103))
+- Enhance changelog update check to prevent duplicate entries for PRs ([#103](https://github.com/compsci-adl/mytimetable/pull/103))
+
 ## [3.1.0] - 2026-07-08
 
 ### Added
