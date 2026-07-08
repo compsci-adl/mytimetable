@@ -170,6 +170,79 @@ function formatDescription(desc: string, repo: string): string {
 	return text;
 }
 
+function parseSemver(v: string): number[] {
+	const cleaned = v.replace(/^v/, '');
+	const parts = cleaned.split('.').map(Number);
+	return parts.some(isNaN) ? [0, 0, 0] : parts;
+}
+
+function compareVersions(v1: string, v2: string): number {
+	const p1 = parseSemver(v1);
+	const p2 = parseSemver(v2);
+	for (let i = 0; i < 3; i++) {
+		if (p1[i] !== p2[i]) {
+			return p1[i] - p2[i];
+		}
+	}
+	return 0;
+}
+
+function getChangelogVersions(content: string): string[] {
+	const versions: string[] = [];
+	const lines = content.split(/\r?\n/);
+	for (const line of lines) {
+		const trimmed = line.trim();
+		const match = trimmed.match(/^##\s+\[?([0-9]+\.[0-9]+\.[0-9]+)\]?/);
+		if (match) {
+			versions.push(match[1]);
+		}
+	}
+	return versions;
+}
+
+function isBotCommit(subject: string): boolean {
+	const lower = subject.toLowerCase();
+	return (
+		lower.startsWith('chore: update changelog.md') ||
+		lower.includes('chore: update changelog.md and bump version')
+	);
+}
+
+function parsePrBody(body: string): string[] {
+	const lines = body.split(/\r?\n/);
+	const changes: string[] = [];
+	let inChangesSection = false;
+
+	for (const line of lines) {
+		const trimmed = line.trim();
+
+		// Check if we hit the "### Changes Made" header
+		if (/^###\s+changes\s+made/i.test(trimmed)) {
+			inChangesSection = true;
+			continue;
+		}
+
+		// If we are in the section, parse any bullet points
+		if (inChangesSection) {
+			// If we hit any other header (e.g. ## or ###), we exit the section
+			if (/^##+\s+/.test(trimmed) || /^###+\s+/.test(trimmed)) {
+				break;
+			}
+
+			// Match bullet points: - item, * item, etc.
+			const bulletMatch = trimmed.match(/^[-*]\s+(.+)$/);
+			if (bulletMatch) {
+				const itemText = bulletMatch[1].trim();
+				if (itemText) {
+					changes.push(itemText);
+				}
+			}
+		}
+	}
+
+	return changes;
+}
+
 async function main() {
 	const token = process.env.GITHUB_TOKEN;
 	const prNumber = process.env.PR_NUMBER;
@@ -227,31 +300,61 @@ async function main() {
 	const removed: string[] = [];
 	const packageUpdates: string[] = [];
 
-	for (const msg of commitMessages) {
-		const { type, description } = parseCommit(msg);
-
-		// Format commit description with a reference to the PR if available
-		let itemText = description;
-		if (
-			prNumber &&
-			!itemText.includes(`(#${prNumber})`) &&
-			!itemText.includes(`[#${prNumber}]`)
-		) {
-			itemText = `${itemText} (#${prNumber})`;
+	let parsedFromPr = false;
+	const prBody = process.env.PR_BODY || '';
+	if (prBody) {
+		console.log(
+			'PR Body found in environment. Attempting to parse Changes Made...',
+		);
+		const prChanges = parsePrBody(prBody);
+		if (prChanges.length > 0) {
+			console.log(`Parsed ${prChanges.length} changes from PR description.`);
+			for (const change of prChanges) {
+				let itemText = change;
+				if (
+					prNumber &&
+					!itemText.includes(`(#${prNumber})`) &&
+					!itemText.includes(`[#${prNumber}]`)
+				) {
+					itemText = `${itemText} (#${prNumber})`;
+				}
+				changed.push(formatDescription(itemText, repo));
+			}
+			parsedFromPr = true;
 		}
+	}
 
-		const formattedDesc = formatDescription(itemText, repo);
+	if (!parsedFromPr) {
+		for (const msg of commitMessages) {
+			if (isBotCommit(msg)) {
+				console.log(`Skipping bot commit: ${msg}`);
+				continue;
+			}
+			const { type, description } = parseCommit(msg);
 
-		if (type === 'deps') {
-			packageUpdates.push(formattedDesc);
-		} else if (type === 'feat') {
-			added.push(formattedDesc);
-		} else if (type === 'fix') {
-			fixed.push(formattedDesc);
-		} else if (type === 'revert') {
-			removed.push(formattedDesc);
-		} else {
-			changed.push(formattedDesc);
+			// Format commit description with a reference to the PR if available
+			let itemText = description;
+			if (
+				prNumber &&
+				!itemText.includes(`(#${prNumber})`) &&
+				!itemText.includes(`[#${prNumber}]`)
+			) {
+				itemText = `${itemText} (#${prNumber})`;
+			}
+
+			const formattedDesc = formatDescription(itemText, repo);
+
+			if (type === 'deps') {
+				packageUpdates.push(formattedDesc);
+			} else if (type === 'feat') {
+				added.push(formattedDesc);
+			} else if (type === 'fix') {
+				fixed.push(formattedDesc);
+			} else if (type === 'revert') {
+				removed.push(formattedDesc);
+			} else {
+				changed.push(formattedDesc);
+			}
 		}
 	}
 
@@ -308,17 +411,24 @@ async function main() {
 		}
 	}
 
-	const newVersion = bumpVersion(oldVersion, bumpType);
-
-	// Write new version to package.json
-	pkg.version = newVersion;
-	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '\t') + '\n', 'utf-8');
-
-	// 5. Update CHANGELOG.md
+	// Read CHANGELOG.md to ensure we don't regress version compared to existing entries
 	const changelogPath = path.join(process.cwd(), 'CHANGELOG.md');
 	let changelogContent = '';
 	try {
 		changelogContent = fs.readFileSync(changelogPath, 'utf-8');
+		let maxChangelogVersion = '0.0.0';
+		const versions = getChangelogVersions(changelogContent);
+		for (const v of versions) {
+			if (compareVersions(v, maxChangelogVersion) > 0) {
+				maxChangelogVersion = v;
+			}
+		}
+		if (compareVersions(maxChangelogVersion, oldVersion) > 0) {
+			console.log(
+				`CHANGELOG.md has a higher version (${maxChangelogVersion}) than package.json (${oldVersion}). Using ${maxChangelogVersion} as base version.`,
+			);
+			oldVersion = maxChangelogVersion;
+		}
 	} catch (error) {
 		const err = error as NodeJS.ErrnoException;
 		if (err.code === 'ENOENT') {
@@ -327,6 +437,12 @@ async function main() {
 			throw err;
 		}
 	}
+
+	const newVersion = bumpVersion(oldVersion, bumpType);
+
+	// Write new version to package.json
+	pkg.version = newVersion;
+	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '\t') + '\n', 'utf-8');
 
 	// Clean up any existing entry for this version to prevent duplication when re-running in the PR
 	let updatedContent = changelogContent;
