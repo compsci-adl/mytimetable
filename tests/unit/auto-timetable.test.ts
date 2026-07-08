@@ -63,7 +63,14 @@ const makePrefs = (overrides: Partial<Preferences> = {}): Preferences => ({
 });
 
 const makeMeeting = (
-	day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday',
+	day:
+		| 'Monday'
+		| 'Tuesday'
+		| 'Wednesday'
+		| 'Thursday'
+		| 'Friday'
+		| 'Saturday'
+		| 'Sunday',
 	start: string,
 	end: string,
 	overrides: Record<string, unknown> = {},

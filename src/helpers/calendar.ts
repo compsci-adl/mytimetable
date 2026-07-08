@@ -57,7 +57,7 @@ const checkDateRangeInWeek = (
 	weekStart: dayjs.Dayjs,
 	dateRange: DateTimeRange,
 ) => {
-	const weekEnd = weekStart.add(4, 'days');
+	const weekEnd = weekStart.add(6, 'days');
 	return (
 		weekEnd.isSameOrAfter(dateToDayjs(dateRange.start)) &&
 		weekStart.isSameOrBefore(dateToDayjs(dateRange.end))
@@ -74,7 +74,7 @@ export const getWeekCourses = (
 	weekStart: dayjs.Dayjs,
 	enrolledCourses: Array<DetailedEnrolledCourse>,
 ): WeekCourses => {
-	const courses: WeekCourses = [[], [], [], [], []];
+	const courses: WeekCourses = [[], [], [], [], [], [], []];
 
 	enrolledCourses.forEach((c) => {
 		c.classes.forEach((cls) => {
@@ -216,7 +216,7 @@ export const useOtherWeekCourseTimes = ({
 	);
 	if (!classes) return [];
 
-	const times: OtherWeekCoursesTimes = [[], [], [], [], []];
+	const times: OtherWeekCoursesTimes = [[], [], [], [], [], [], []];
 	classes.forEach((cls) => {
 		// Verify if the class option runs in the selected term on the selected campuses
 		const hasValidMeeting = cls.meetings.some(

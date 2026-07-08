@@ -167,6 +167,8 @@ describe('getWeekCourses', () => {
 					],
 				},
 			],
+			[],
+			[],
 		];
 		expect(courses).toEqual(expectedRes);
 	});
@@ -215,6 +217,8 @@ describe('getWeekCourses', () => {
 					],
 				},
 			],
+			[],
+			[],
 		];
 		expect(courses).toEqual(expectedRes);
 	});
@@ -259,6 +263,8 @@ describe('getWeekCourses', () => {
 					],
 				},
 			],
+			[],
+			[],
 			[],
 			[],
 			[],
@@ -345,6 +351,8 @@ describe('getWeekCourses', () => {
 			[],
 			[],
 			[],
+			[],
+			[],
 		];
 		expect(courses).toEqual(expectedRes);
 	});
@@ -427,6 +435,8 @@ describe('getWeekCourses', () => {
 			[],
 			[],
 			[],
+			[],
+			[],
 		];
 		expect(courses).toEqual(expectedRes);
 	});
@@ -500,6 +510,8 @@ describe('getWeekCourses', () => {
 					],
 				},
 			],
+			[],
+			[],
 			[],
 			[],
 			[],
@@ -608,6 +620,6 @@ describe('getWeekCourses', () => {
 		];
 		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
 		// Should return empty week
-		expect(courses).toEqual([[], [], [], [], []]);
+		expect(courses).toEqual([[], [], [], [], [], [], []]);
 	});
 });
