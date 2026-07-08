@@ -41,13 +41,17 @@ jobs:
       - name: Check if already run
         id: check_run
         run: |
-          last_commit_subject=$(git log -n 1 --format="%s")
+          pr_number="${{ github.event.pull_request.number }}"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            commit_message=$(git log -n 1 --format="%B")
+            pr_number=$(echo "$commit_message" | grep -oE '\(#[0-9]+\)' | head -n 1 | tr -d '(#)')
+          fi
           
-          if [[ "$last_commit_subject" == "chore: update CHANGELOG.md"* ]]; then
-            echo "Last commit was the bot's changelog update. Skipping."
+          if [ -n "$pr_number" ] && [ -f CHANGELOG.md ] && (grep -q "/pull/$pr_number" CHANGELOG.md || grep -q "(#$pr_number)" CHANGELOG.md); then
+            echo "Changelog already contains entries for PR #$pr_number. Skipping."
             echo "skip=true" >> $GITHUB_OUTPUT
           else
-            echo "Last commit is '$last_commit_subject'. Proceeding."
+            echo "Changelog does not contain entries for PR #$pr_number. Proceeding."
             echo "skip=false" >> $GITHUB_OUTPUT
           fi
 
