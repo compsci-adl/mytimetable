@@ -310,6 +310,10 @@ async function main() {
 
 	const newVersion = bumpVersion(oldVersion, bumpType);
 
+	// Write new version to package.json
+	pkg.version = newVersion;
+	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '\t') + '\n', 'utf-8');
+
 	// 5. Update CHANGELOG.md
 	const changelogPath = path.join(process.cwd(), 'CHANGELOG.md');
 	let changelogContent = '';
