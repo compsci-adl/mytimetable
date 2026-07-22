@@ -64,6 +64,7 @@ describe('getWeekCourses', () => {
 						type: 'Lecture',
 						typeId: 'l',
 						classNumber: '1',
+						group: '1',
 						size: '100',
 						available_seats: '10',
 						meetings: [
@@ -143,6 +144,7 @@ describe('getWeekCourses', () => {
 							location: 'bragg',
 							campus: 'Adelaide City Campus East',
 							classNumber: '1',
+							group: '1',
 							size: '100',
 							available_seats: '10',
 						},

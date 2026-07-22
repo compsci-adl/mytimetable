@@ -10,6 +10,7 @@ import {
 	coursesToVariables,
 	isLectureMeeting,
 	isOnlineMeeting,
+	evaluateAssignment,
 	type Variable,
 	type Preferences,
 	type Assignment,
@@ -1190,5 +1191,206 @@ describe('checkViolations utility', () => {
 
 		const vars = coursesToVariables([sampleCourse]);
 		expect(vars[0].options[0].group).toBe('01');
+	});
+
+	it('should penalise assignments with inconsistent groups for the same course in evaluateAssignment', () => {
+		const vars: Variable[] = [
+			{
+				courseId: 'c1',
+				classTypeId: 't1',
+				classTypeName: 'Lecture',
+				options: [
+					{
+						number: '101',
+						group: '1',
+						meetings: [
+							{
+								day: 'Monday',
+								time: { start: '09:00', end: '10:00' },
+								location: 'Room 1',
+								campus: 'North Terrace',
+							},
+						],
+					},
+				],
+			},
+			{
+				courseId: 'c1',
+				classTypeId: 't2',
+				classTypeName: 'Practical',
+				options: [
+					{
+						number: '102',
+						group: '2',
+						meetings: [
+							{
+								day: 'Tuesday',
+								time: { start: '10:00', end: '11:00' },
+								location: 'Room 2',
+								campus: 'North Terrace',
+							},
+						],
+					},
+				],
+			},
+		];
+
+		const assignment: Assignment = {
+			t1: '101',
+			t2: '102',
+		};
+
+		const score = evaluateAssignment(assignment, vars, makePrefs());
+		expect(score).toBeLessThan(-100000);
+	});
+
+	it('should handle local search with options missing group attribute in multi-group courses', () => {
+		// Create a large variable set (> 10000 combinations) to trigger solveLocalSearch
+		const vars: Variable[] = [
+			{
+				courseId: 'c1',
+				classTypeId: 't1',
+				classTypeName: 'Lecture',
+				options: Array.from({ length: 110 }, (_, i) => ({
+					number: `10${i}`,
+					group: i % 2 === 0 ? '1' : undefined,
+					meetings: [
+						{
+							day: 'Monday',
+							time: { start: '09:00', end: '10:00' },
+							location: 'Room 1',
+							campus: 'North Terrace',
+						},
+					],
+				})),
+			},
+			{
+				courseId: 'c1',
+				classTypeId: 't2',
+				classTypeName: 'Practical',
+				options: Array.from({ length: 100 }, (_, i) => ({
+					number: `20${i}`,
+					group: '1',
+					meetings: [
+						{
+							day: 'Tuesday',
+							time: { start: '10:00', end: '11:00' },
+							location: 'Room 2',
+							campus: 'North Terrace',
+						},
+					],
+				})),
+			},
+		];
+
+		const assignment = solveAutoTimetable(vars, makePrefs());
+		expect(assignment).not.toBeNull();
+	});
+
+	it('should fallback to all options when a variable in a multi-group course has no matching group options in local search', () => {
+		const vars: Variable[] = [
+			{
+				courseId: 'c1',
+				classTypeId: 't1',
+				classTypeName: 'Lecture',
+				options: Array.from({ length: 105 }, (_, i) => ({
+					number: `10${i}`,
+					group: '1',
+					meetings: [
+						{
+							day: 'Monday',
+							time: { start: '09:00', end: '10:00' },
+							location: 'Room 1',
+							campus: 'North Terrace',
+						},
+					],
+				})),
+			},
+			{
+				courseId: 'c1',
+				classTypeId: 't2',
+				classTypeName: 'Practical',
+				options: Array.from({ length: 100 }, (_, i) => ({
+					number: `20${i}`,
+					group: '2', // No option has group '1'
+					meetings: [
+						{
+							day: 'Tuesday',
+							time: { start: '10:00', end: '11:00' },
+							location: 'Room 2',
+							campus: 'North Terrace',
+						},
+					],
+				})),
+			},
+		];
+
+		const assignment = solveAutoTimetable(vars, makePrefs());
+		expect(assignment).not.toBeNull();
+	});
+
+	it('should handle pruning check when previous variable belongs to a different course', () => {
+		const vars: Variable[] = [
+			{
+				courseId: 'c1',
+				classTypeId: 't1',
+				classTypeName: 'Lecture',
+				options: [
+					{
+						number: '101',
+						group: '1',
+						meetings: [
+							{
+								day: 'Monday',
+								time: { start: '09:00', end: '10:00' },
+								location: 'Room 1',
+								campus: 'North Terrace',
+							},
+						],
+					},
+				],
+			},
+			{
+				courseId: 'c2',
+				classTypeId: 't2',
+				classTypeName: 'Lecture',
+				options: [
+					{
+						number: '201',
+						group: '1',
+						meetings: [
+							{
+								day: 'Tuesday',
+								time: { start: '11:00', end: '12:00' },
+								location: 'Room 2',
+								campus: 'North Terrace',
+							},
+						],
+					},
+				],
+			},
+			{
+				courseId: 'c1',
+				classTypeId: 't3',
+				classTypeName: 'Practical',
+				options: [
+					{
+						number: '102',
+						group: '1',
+						meetings: [
+							{
+								day: 'Wednesday',
+								time: { start: '14:00', end: '15:00' },
+								location: 'Room 3',
+								campus: 'North Terrace',
+							},
+						],
+					},
+				],
+			},
+		];
+
+		const assignment = solveAutoTimetable(vars, makePrefs());
+		expect(assignment).not.toBeNull();
 	});
 });

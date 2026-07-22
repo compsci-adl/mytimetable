@@ -67,7 +67,7 @@ export const isOnlineMeeting = (
 	);
 };
 
-const evaluateAssignment = (
+export const evaluateAssignment = (
 	assignment: Assignment,
 	variables: Variable[],
 	preferences: Preferences,

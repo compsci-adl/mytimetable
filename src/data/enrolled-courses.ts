@@ -99,27 +99,23 @@ export const useEnrolledCourses = create<CoursesState>()(
 						let chosenGroup: string | undefined;
 						if (uniqueGroups.length > 1) {
 							const firstClassType = data.class_list[0];
-							if (firstClassType) {
-								const termClasses = firstClassType.classes.filter((cls) =>
-									cls.meetings.some((m) =>
-										isMeetingInTerm(m.date, selectedTermAlias),
-									),
-								);
-								const candidates =
-									termClasses.length > 0 ? termClasses : firstClassType.classes;
-								const foundByCampus =
-									preferredCampuses && preferredCampuses.length > 0
-										? candidates.find((cls) =>
-												cls.meetings.some((m: Meetings[number]) =>
-													preferredCampuses.includes(m.campus),
-												),
-											)
-										: undefined;
-								const firstChosen = foundByCampus ?? candidates[0];
-								chosenGroup = firstChosen?.group ?? uniqueGroups[0];
-							} else {
-								chosenGroup = uniqueGroups[0];
-							}
+							const termClasses = firstClassType.classes.filter((cls) =>
+								cls.meetings.some((m) =>
+									isMeetingInTerm(m.date, selectedTermAlias),
+								),
+							);
+							const candidates =
+								termClasses.length > 0 ? termClasses : firstClassType.classes;
+							const foundByCampus =
+								preferredCampuses && preferredCampuses.length > 0
+									? candidates.find((cls) =>
+											cls.meetings.some((m: Meetings[number]) =>
+												preferredCampuses.includes(m.campus),
+											),
+										)
+									: undefined;
+							const firstChosen = foundByCampus ?? candidates[0];
+							chosenGroup = firstChosen?.group ?? uniqueGroups[0];
 						}
 
 						enrolledCourse.classes = data.class_list.map((c) => {
