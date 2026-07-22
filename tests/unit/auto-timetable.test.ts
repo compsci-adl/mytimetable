@@ -1197,6 +1197,7 @@ describe('checkViolations utility', () => {
 		const vars: Variable[] = [
 			{
 				courseId: 'c1',
+				courseCode: 'COMP 2103',
 				classTypeId: 't1',
 				classTypeName: 'Lecture',
 				options: [
@@ -1206,6 +1207,7 @@ describe('checkViolations utility', () => {
 						meetings: [
 							{
 								day: 'Monday',
+								date: { start: '03-01', end: '06-01' },
 								time: { start: '09:00', end: '10:00' },
 								location: 'Room 1',
 								campus: 'North Terrace',
@@ -1216,6 +1218,7 @@ describe('checkViolations utility', () => {
 			},
 			{
 				courseId: 'c1',
+				courseCode: 'COMP 2103',
 				classTypeId: 't2',
 				classTypeName: 'Practical',
 				options: [
@@ -1225,6 +1228,7 @@ describe('checkViolations utility', () => {
 						meetings: [
 							{
 								day: 'Tuesday',
+								date: { start: '03-01', end: '06-01' },
 								time: { start: '10:00', end: '11:00' },
 								location: 'Room 2',
 								campus: 'North Terrace',
@@ -1249,6 +1253,7 @@ describe('checkViolations utility', () => {
 		const vars: Variable[] = [
 			{
 				courseId: 'c1',
+				courseCode: 'COMP 2103',
 				classTypeId: 't1',
 				classTypeName: 'Lecture',
 				options: Array.from({ length: 110 }, (_, i) => ({
@@ -1257,6 +1262,7 @@ describe('checkViolations utility', () => {
 					meetings: [
 						{
 							day: 'Monday',
+							date: { start: '03-01', end: '06-01' },
 							time: { start: '09:00', end: '10:00' },
 							location: 'Room 1',
 							campus: 'North Terrace',
@@ -1266,6 +1272,7 @@ describe('checkViolations utility', () => {
 			},
 			{
 				courseId: 'c1',
+				courseCode: 'COMP 2103',
 				classTypeId: 't2',
 				classTypeName: 'Practical',
 				options: Array.from({ length: 100 }, (_, i) => ({
@@ -1274,6 +1281,7 @@ describe('checkViolations utility', () => {
 					meetings: [
 						{
 							day: 'Tuesday',
+							date: { start: '03-01', end: '06-01' },
 							time: { start: '10:00', end: '11:00' },
 							location: 'Room 2',
 							campus: 'North Terrace',
@@ -1291,6 +1299,7 @@ describe('checkViolations utility', () => {
 		const vars: Variable[] = [
 			{
 				courseId: 'c1',
+				courseCode: 'COMP 2103',
 				classTypeId: 't1',
 				classTypeName: 'Lecture',
 				options: Array.from({ length: 105 }, (_, i) => ({
@@ -1299,6 +1308,7 @@ describe('checkViolations utility', () => {
 					meetings: [
 						{
 							day: 'Monday',
+							date: { start: '03-01', end: '06-01' },
 							time: { start: '09:00', end: '10:00' },
 							location: 'Room 1',
 							campus: 'North Terrace',
@@ -1308,6 +1318,7 @@ describe('checkViolations utility', () => {
 			},
 			{
 				courseId: 'c1',
+				courseCode: 'COMP 2103',
 				classTypeId: 't2',
 				classTypeName: 'Practical',
 				options: Array.from({ length: 100 }, (_, i) => ({
@@ -1316,6 +1327,7 @@ describe('checkViolations utility', () => {
 					meetings: [
 						{
 							day: 'Tuesday',
+							date: { start: '03-01', end: '06-01' },
 							time: { start: '10:00', end: '11:00' },
 							location: 'Room 2',
 							campus: 'North Terrace',
@@ -1333,6 +1345,7 @@ describe('checkViolations utility', () => {
 		const vars: Variable[] = [
 			{
 				courseId: 'c1',
+				courseCode: 'COMP 2103',
 				classTypeId: 't1',
 				classTypeName: 'Lecture',
 				options: [
@@ -1342,6 +1355,7 @@ describe('checkViolations utility', () => {
 						meetings: [
 							{
 								day: 'Monday',
+								date: { start: '03-01', end: '06-01' },
 								time: { start: '09:00', end: '10:00' },
 								location: 'Room 1',
 								campus: 'North Terrace',
@@ -1352,6 +1366,7 @@ describe('checkViolations utility', () => {
 			},
 			{
 				courseId: 'c2',
+				courseCode: 'COMP 2104',
 				classTypeId: 't2',
 				classTypeName: 'Lecture',
 				options: [
@@ -1361,6 +1376,7 @@ describe('checkViolations utility', () => {
 						meetings: [
 							{
 								day: 'Tuesday',
+								date: { start: '03-01', end: '06-01' },
 								time: { start: '11:00', end: '12:00' },
 								location: 'Room 2',
 								campus: 'North Terrace',
@@ -1371,6 +1387,7 @@ describe('checkViolations utility', () => {
 			},
 			{
 				courseId: 'c1',
+				courseCode: 'COMP 2103',
 				classTypeId: 't3',
 				classTypeName: 'Practical',
 				options: [
@@ -1380,6 +1397,7 @@ describe('checkViolations utility', () => {
 						meetings: [
 							{
 								day: 'Wednesday',
+								date: { start: '03-01', end: '06-01' },
 								time: { start: '14:00', end: '15:00' },
 								location: 'Room 3',
 								campus: 'North Terrace',

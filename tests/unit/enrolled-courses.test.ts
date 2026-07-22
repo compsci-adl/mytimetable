@@ -503,7 +503,7 @@ describe('useEnrolledCourses Zustand Store', () => {
 			],
 		};
 
-		vi.mocked(getCourse).mockResolvedValueOnce(mockData);
+		vi.mocked(getCourse).mockResolvedValueOnce(mockData as unknown as Course);
 		await useEnrolledCourses.getState().addCourse({
 			id: 'course-campus-grouped',
 			name: 'BIOL 1033',
@@ -609,7 +609,7 @@ describe('useEnrolledCourses Zustand Store', () => {
 			],
 		};
 
-		vi.mocked(getCourse).mockResolvedValueOnce(mockData);
+		vi.mocked(getCourse).mockResolvedValueOnce(mockData as unknown as Course);
 		await useEnrolledCourses.getState().addCourse({
 			id: 'course-update-branches',
 			name: 'BIOL 1034',
@@ -726,7 +726,7 @@ describe('useEnrolledCourses Zustand Store', () => {
 			],
 		};
 
-		vi.mocked(getCourse).mockResolvedValueOnce(mockData);
+		vi.mocked(getCourse).mockResolvedValueOnce(mockData as unknown as Course);
 		await useEnrolledCourses.getState().addCourse({
 			id: 'course-no-group-first',
 			name: 'BIOL 1035',

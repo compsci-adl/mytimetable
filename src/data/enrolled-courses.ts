@@ -8,7 +8,11 @@ import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
 import i18n from '../i18n';
 import { queryClient } from '../lib/query';
-import type { DetailedEnrolledCourse, Meetings } from '../types/course';
+import type {
+	Course as ApiCourse,
+	DetailedEnrolledCourse,
+	Meetings,
+} from '../types/course';
 import { isMeetingInTerm } from '../utils/date';
 import { useCoursesInfo } from './course-info';
 
@@ -173,7 +177,7 @@ export const useEnrolledCourses = create<CoursesState>()(
 				);
 			},
 			updateCourseClass: ({ courseId, classTypeId, classNumber }) => {
-				const courseData = queryClient.getQueryData<Course>([
+				const courseData = queryClient.getQueryData<ApiCourse>([
 					'course',
 					courseId,
 				]);
