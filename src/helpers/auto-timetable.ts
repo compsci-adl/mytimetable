@@ -23,6 +23,7 @@ export type Variable = {
 	options: Array<{
 		number: string;
 		available_seats?: string;
+		group?: string;
 		meetings: Meetings;
 	}>;
 };
@@ -66,12 +67,27 @@ export const isOnlineMeeting = (
 	);
 };
 
-const evaluateAssignment = (
+export const evaluateAssignment = (
 	assignment: Assignment,
 	variables: Variable[],
 	preferences: Preferences,
 ): number => {
 	let score = 0;
+
+	// Group consistency check for the same course
+	const groupsByCourse: Record<string, string> = {};
+	for (const variable of variables) {
+		const chosenNumber = assignment[variable.classTypeId];
+		const option = variable.options.find((o) => o.number === chosenNumber);
+		if (option?.group) {
+			const existingGroup = groupsByCourse[variable.courseId];
+			if (existingGroup && existingGroup !== option.group) {
+				score -= 500000;
+			} else {
+				groupsByCourse[variable.courseId] = option.group;
+			}
+		}
+	}
 
 	type ScheduledMeeting = {
 		courseId: string;
@@ -264,6 +280,28 @@ const hasPartialConflict = (
 	preferences: Preferences,
 	varIdx: number,
 ): boolean => {
+	if (varIdx >= 0) {
+		const currentVar = variables[varIdx];
+		const currentChosen = assignment[currentVar.classTypeId];
+		const currentOption = currentVar.options.find(
+			(o) => o.number === currentChosen,
+		);
+		if (currentOption?.group) {
+			for (let i = 0; i < varIdx; i++) {
+				const prevVar = variables[i];
+				if (prevVar.courseId === currentVar.courseId) {
+					const prevChosen = assignment[prevVar.classTypeId];
+					const prevOption = prevVar.options.find(
+						(o) => o.number === prevChosen,
+					);
+					if (prevOption?.group && prevOption.group !== currentOption.group) {
+						return true; // Prune branch due to group mismatch
+					}
+				}
+			}
+		}
+	}
+
 	const meetings: {
 		day: string;
 		time: { start: string; end: string };
@@ -319,10 +357,33 @@ const solveLocalSearch = (
 
 	const getRandomAssignment = (): Assignment => {
 		const assignment: Assignment = {};
+		const courseVarsMap: Record<string, Variable[]> = {};
 		for (const v of variables) {
-			const randomOption =
-				v.options[Math.floor(Math.random() * v.options.length)];
-			assignment[v.classTypeId] = randomOption.number;
+			courseVarsMap[v.courseId] = courseVarsMap[v.courseId] || [];
+			courseVarsMap[v.courseId].push(v);
+		}
+		for (const [, vars] of Object.entries(courseVarsMap)) {
+			const groups = Array.from(
+				new Set(
+					vars
+						.flatMap((v) => v.options.map((o) => o.group))
+						.filter(
+							(g): g is string => typeof g === 'string' && g.trim() !== '',
+						),
+				),
+			);
+			const chosenGroup =
+				groups.length > 0
+					? groups[Math.floor(Math.random() * groups.length)]
+					: undefined;
+			for (const v of vars) {
+				const groupOptions = chosenGroup
+					? v.options.filter((o) => !o.group || o.group === chosenGroup)
+					: v.options;
+				const pool = groupOptions.length > 0 ? groupOptions : v.options;
+				const randomOption = pool[Math.floor(Math.random() * pool.length)];
+				assignment[v.classTypeId] = randomOption.number;
+			}
 		}
 		return assignment;
 	};
@@ -337,7 +398,12 @@ const solveLocalSearch = (
 			improved = false;
 			for (const v of variables) {
 				const originalVal = current[v.classTypeId];
-				for (const option of v.options) {
+				const currentOpt = v.options.find((o) => o.number === originalVal);
+				const currentGroup = currentOpt?.group;
+				const candidateOptions = currentGroup
+					? v.options.filter((o) => !o.group || o.group === currentGroup)
+					: v.options;
+				for (const option of candidateOptions) {
 					if (option.number === originalVal) continue;
 					current[v.classTypeId] = option.number;
 					const newScore = evaluateAssignment(current, variables, preferences);
@@ -451,6 +517,7 @@ export const coursesToVariables = (courses: Course[]): Variable[] => {
 				options: classesInTerm.map((c) => ({
 					number: c.number,
 					available_seats: c.available_seats,
+					group: c.group,
 					meetings: c.meetings,
 				})),
 			});

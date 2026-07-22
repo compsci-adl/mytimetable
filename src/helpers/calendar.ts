@@ -93,6 +93,9 @@ export const getWeekCourses = (
 					classNumber: cls.classNumber,
 				};
 
+				if (cls.group !== undefined) {
+					newCourse.group = cls.group;
+				}
 				if (cls.size !== undefined) {
 					newCourse.size = cls.size;
 				}
@@ -252,6 +255,7 @@ export const useOtherWeekCourseTimes = ({
 				number: cls.number,
 				location: m.location,
 				campus: m.campus,
+				group: cls.group,
 			};
 			if (existingTime) {
 				existingTime.classes.push(newClass);

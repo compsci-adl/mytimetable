@@ -54,6 +54,7 @@ export type Course = {
 			section?: string;
 			size?: string;
 			available_seats?: string;
+			group?: string;
 			instructor?: string;
 			meetings: Meetings;
 		}>;
@@ -68,6 +69,7 @@ export type DetailedEnrolledCourse = {
 		type: string;
 		classNumber: string;
 		meetings: Meetings;
+		group?: string;
 		size?: string;
 		available_seats?: string;
 	}>;
@@ -81,6 +83,7 @@ export type WeekCourse = {
 	location: string;
 	campus: string;
 	classNumber: string;
+	group?: string;
 	size?: string;
 	available_seats?: string;
 };
@@ -89,7 +92,12 @@ export type WeekCourses = Array<
 >;
 
 export type OtherWeekCourseTime = {
-	classes: Array<{ number: string; location: string; campus: string }>;
+	classes: Array<{
+		number: string;
+		location: string;
+		campus: string;
+		group?: string;
+	}>;
 	time: DateTimeRange;
 };
 export type OtherWeekCoursesTimes = Array<Array<OtherWeekCourseTime>>;

@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationTriangle, FaPlus, FaThumbtack } from 'react-icons/fa';
 
+import { useCoursesInfo } from '../data/course-info';
 import { useCourseColor, useEnrolledCourses } from '../data/enrolled-courses';
 import { useOtherWeekCourseTimes } from '../helpers/calendar';
 import {
@@ -49,6 +50,25 @@ export const CourseCard = ({
 	onOverlapChange,
 }: CourseCardProps) => {
 	const { t } = useTranslation();
+
+	const coursesInfo = useCoursesInfo();
+	const courseInfo = coursesInfo.find((c) => c.id === course.id);
+	const uniqueGroups = Array.from(
+		new Set(
+			courseInfo?.class_list
+				?.flatMap((ct) => ct.classes)
+				?.map((cls) => cls.group)
+				?.filter(
+					(g): g is string => typeof g === 'string' && g.trim() !== '',
+				) ?? [],
+		),
+	);
+	const showGroupOnDesktop = uniqueGroups.length > 1 && !!course.group;
+	const groupDisplay = course.group
+		? course.group.toLowerCase().startsWith('group')
+			? course.group
+			: `Group ${course.group}`
+		: '';
 
 	const blockHeight = useCalendarHourHeight((s) => s.height);
 	// Track the ratio of the pinch threshold (ranges from 0 at MIN_HOUR_HEIGHT to 1 at MAX_HOUR_HEIGHT)
@@ -193,6 +213,9 @@ export const CourseCard = ({
 					{course.name.title}
 				</div>
 				<div className="text-2xs mt-0.5 pr-5 opacity-90 @min-[75px]:pr-6">
+					{showGroupOnDesktop && groupDisplay && (
+						<span className="hidden md:inline">{groupDisplay} | </span>
+					)}
 					{course.location} | {course.campus}
 				</div>
 			</div>
@@ -285,6 +308,9 @@ export const CourseCard = ({
 						{course.name.title}
 					</div>
 					<div className="text-2xs mt-0.5 pr-5 wrap-break-word opacity-90 @min-[75px]:pr-6">
+						{showGroupOnDesktop && groupDisplay && (
+							<span className="hidden md:inline">{groupDisplay} | </span>
+						)}
 						{course.location}
 					</div>
 				</div>
@@ -318,6 +344,9 @@ export const CourseCard = ({
 						{course.name.title}
 					</div>
 					<div className="text-2xs mt-0.5 pr-5 wrap-break-word opacity-90 @min-[75px]:pr-6">
+						{showGroupOnDesktop && groupDisplay && (
+							<span className="hidden md:inline">{groupDisplay} | </span>
+						)}
 						{course.location} | {course.campus}
 					</div>
 				</div>
@@ -393,6 +422,9 @@ export const CourseCard = ({
 					)}
 					{condensedLevel >= 3 && (
 						<div className="text-2xs mt-0.5 pr-5 wrap-break-word opacity-90 @min-[75px]:pr-6">
+							{showGroupOnDesktop && groupDisplay && (
+								<span className="hidden md:inline">{groupDisplay} | </span>
+							)}
 							{condensedLevel === 3
 								? course.location
 								: `${course.location} | ${course.campus}`}
@@ -466,6 +498,9 @@ export const CourseCard = ({
 						{course.name.title}
 					</div>
 					<div className="text-2xs mt-0.5 pr-5 opacity-90 @min-[75px]:pr-6">
+						{showGroupOnDesktop && groupDisplay && (
+							<span className="hidden md:inline">{groupDisplay} | </span>
+						)}
 						{course.location} | {course.campus}
 					</div>
 				</>

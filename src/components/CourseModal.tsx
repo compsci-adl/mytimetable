@@ -600,244 +600,380 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 											</div>
 										);
 									}
-									return courseInfo.class_list.map((classType) => {
-										const classesToShow = classType.classes.filter(
-											(classInfo) =>
-												classInfo.meetings.some(
-													(m) =>
-														isMeetingInTerm(m.date, selectedTermAlias) &&
-														(!selectedCampuses ||
-															selectedCampuses.length === 0 ||
-															selectedCampuses.includes(m.campus)),
+
+									const uniqueGroups = Array.from(
+										new Set(
+											courseInfo.class_list
+												.flatMap((ct) => ct.classes)
+												.map((cls) => cls.group)
+												.filter(
+													(g): g is string =>
+														typeof g === 'string' && g.trim() !== '',
 												),
-										);
-										const isEmpty = classesToShow.length === 0;
-										const selectedKey = getSelectedClassNumber(classType.id);
+										),
+									).sort((a, b) =>
+										a.localeCompare(b, undefined, { numeric: true }),
+									);
 
-										const listBoxItems = (
-											isEmpty
-												? [
-														{
-															id: 'not-available',
-															isNotAvailable: true,
-															label: t('course-modal.not-available', {
-																defaultValue: 'Not available',
-															}),
-															itemConflicted: false,
-															campusList: '',
-															availability: '',
-															isFull: false,
-															classInfo: null,
-														},
-													]
-												: classesToShow.map((classInfo) => {
-														const itemKey = `${id}|${classType.id}|${classInfo.number}`;
-														const itemConflicted =
-															(conflictsByClassKey[itemKey] ?? []).length > 0 ||
-															classConflictsWithEnrolled(
-																classInfo.meetings,
-																classType.id,
-															);
-														const campusList = deduplicateArray(
-															classInfo.meetings
-																.map((m) => m.campus ?? '')
-																.filter(Boolean),
-														).join(', ');
-														const availability =
-															classInfo.available_seats && classInfo.size
-																? `${classInfo.available_seats} / ${classInfo.size}`
-																: undefined;
-														const isFull =
-															classInfo.available_seats !== undefined &&
-															parseInt(classInfo.available_seats, 10) === 0;
+									let activeGroup: string | undefined;
+									if (uniqueGroups.length > 1) {
+										for (const ct of courseInfo.class_list) {
+											const selNum = getSelectedClassNumber(ct.id);
+											if (!selNum) continue;
+											const foundCls = ct.classes.find(
+												(c) => c.number === selNum,
+											);
+											if (
+												foundCls?.group &&
+												uniqueGroups.includes(foundCls.group)
+											) {
+												activeGroup = foundCls.group;
+												break;
+											}
+										}
+										if (!activeGroup) {
+											activeGroup = uniqueGroups[0];
+										}
+									}
 
-														return {
-															id: classInfo.number,
-															isNotAvailable: false,
-															label: classInfo.number,
-															itemConflicted,
-															campusList,
-															availability,
-															isFull,
-															classInfo,
-														};
-													})
-										) as Array<{
-											id: string;
-											isNotAvailable: boolean;
-											label: string;
-											itemConflicted: boolean;
-											campusList: string;
-											availability: string | undefined;
-											isFull: boolean;
-											classInfo: (typeof classType.classes)[number] | null;
-										}>;
-
-										return (
-											<div
-												key={classType.id}
-												className="border-separator bg-content1/75 flex flex-col gap-2 rounded-2xl border p-4"
-											>
-												<div className="text-foreground text-sm font-bold">
-													{classType.type} Time
-												</div>
-												<Select
-													aria-label={`${classType.type} Time`}
-													isDisabled={isEmpty}
-													value={isEmpty ? 'not-available' : selectedKey}
-													onChange={(val) => {
-														if (isEmpty || !val) return;
-														updateClass({
-															classNumber: String(val),
-															classTypeId: classType.id,
-														});
-													}}
-													disabledKeys={
-														isEmpty
-															? ['not-available']
-															: selectedKey
-																? [selectedKey]
-																: []
-													}
-												>
-													<Select.Trigger className="border-separator bg-content2/30 hover:bg-content2/50 flex w-full items-center justify-between rounded-2xl border px-4 py-2.5 transition-colors">
-														<Select.Value />
-														<Select.Indicator>
-															<FaChevronDown className="text-default-500 text-xs" />
-														</Select.Indicator>
-													</Select.Trigger>
-													<Select.Popover>
-														<ListBox
-															className="bg-overlay border-separator max-h-75 overflow-y-auto rounded-2xl border p-2 shadow-xl"
-															items={listBoxItems}
-														>
-															{(item: CourseListBoxItem) => {
-																if (item.isNotAvailable) {
-																	return (
-																		<ListBox.Item
-																			id="not-available"
-																			textValue={item.label}
-																			className="text-default-500 rounded-xl px-3 py-2"
-																		>
-																			{item.label}
-																		</ListBox.Item>
-																	);
+									return (
+										<>
+											{uniqueGroups.length > 1 && (
+												<div className="border-separator bg-content1/75 flex flex-col gap-2 rounded-2xl border p-4">
+													<div className="text-foreground text-sm font-bold">
+														{t('course-modal.group', { defaultValue: 'Group' })}
+													</div>
+													<Select
+														aria-label={t('course-modal.group', {
+															defaultValue: 'Group',
+														})}
+														value={activeGroup}
+														onChange={(val) => {
+															if (!val) return;
+															const newGroup = String(val);
+															courseInfo.class_list.forEach((ct) => {
+																const matchedClasses = ct.classes.filter(
+																	(cls) => !cls.group || cls.group === newGroup,
+																);
+																const pool =
+																	matchedClasses.length > 0
+																		? matchedClasses
+																		: ct.classes;
+																const termClasses = pool.filter((cls) =>
+																	cls.meetings.some((m) =>
+																		isMeetingInTerm(m.date, selectedTermAlias),
+																	),
+																);
+																const candidates =
+																	termClasses.length > 0 ? termClasses : pool;
+																const foundByCampus =
+																	selectedCampuses &&
+																	selectedCampuses.length > 0
+																		? candidates.find((cls) =>
+																				cls.meetings.some((m) =>
+																					selectedCampuses.includes(m.campus),
+																				),
+																			)
+																		: undefined;
+																const chosen = foundByCampus ?? candidates[0];
+																if (chosen) {
+																	updateClass({
+																		classTypeId: ct.id,
+																		classNumber: chosen.number,
+																	});
 																}
-
-																return (
+															});
+														}}
+													>
+														<Select.Trigger className="border-separator bg-content2/30 hover:bg-content2/50 flex w-full items-center justify-between rounded-2xl border px-4 py-2.5 transition-colors">
+															<Select.Value />
+															<Select.Indicator>
+																<FaChevronDown className="text-default-500 text-xs" />
+															</Select.Indicator>
+														</Select.Trigger>
+														<Select.Popover>
+															<ListBox
+																className="bg-overlay border-separator max-h-75 overflow-y-auto rounded-2xl border p-2 shadow-xl"
+																items={uniqueGroups.map((g) => ({
+																	id: g,
+																	label: `Group ${g}`,
+																}))}
+															>
+																{(item: { id: string; label: string }) => (
 																	<ListBox.Item
 																		id={item.id}
 																		textValue={item.label}
 																		className="hover:bg-default-100/50 text-foreground cursor-pointer rounded-xl px-3 py-2 transition-colors"
 																	>
-																		<div>
-																			<div className="flex items-center gap-1.5">
-																				{item.itemConflicted && (
-																					<Tooltip delay={0}>
-																						<Tooltip.Trigger>
-																							<span
-																								tabIndex={0}
-																								role="img"
-																								aria-label={
-																									t('calendar.conflict') ??
-																									'Conflict with another class'
-																								}
-																								className="text-warning flex items-center outline-none"
-																							>
-																								<FaExclamationTriangle />
-																							</span>
-																						</Tooltip.Trigger>
-																						<Tooltip.Content>
-																							{t('calendar.conflict') ??
-																								'Conflict with another class'}
-																						</Tooltip.Content>
-																					</Tooltip>
-																				)}
-																				{item.isFull && (
-																					<Tooltip delay={0}>
-																						<Tooltip.Trigger>
-																							<span
-																								tabIndex={0}
-																								role="img"
-																								aria-label={t(
-																									'calendar.no-available-seats',
-																									{
-																										defaultValue: 'Class full',
-																									},
-																								)}
-																								className="text-danger flex items-center outline-none"
-																							>
-																								<FaExclamationTriangle />
-																							</span>
-																						</Tooltip.Trigger>
-																						<Tooltip.Content>
-																							{t(
-																								'calendar.no-available-seats',
-																								{
-																									defaultValue: 'Class full',
-																								},
-																							)}
-																						</Tooltip.Content>
-																					</Tooltip>
-																				)}
-																				<div className="font-bold">
-																					{item.label}
-																				</div>
-																			</div>
-																			<div className="text-default-500 mt-0.5 text-xs">
-																				{item.classInfo
-																					? getPreviewMeetingInfo(
-																							item.classInfo.meetings,
-																						)
-																					: ''}
-																				{item.campusList
-																					? ` | ${item.campusList}`
-																					: ''}
-																				{item.availability ? (
-																					<>
-																						{' | '}
-																						<span
-																							className={
-																								item.isFull
-																									? 'text-danger font-bold'
-																									: ''
-																							}
-																						>
-																							{item.availability}
-																						</span>
-																					</>
-																				) : (
-																					''
-																				)}
-																			</div>
+																		<div className="font-bold">
+																			{item.label}
 																		</div>
 																	</ListBox.Item>
-																);
+																)}
+															</ListBox>
+														</Select.Popover>
+													</Select>
+												</div>
+											)}
+											{courseInfo.class_list.map((classType) => {
+												const groupMatchedClasses =
+													uniqueGroups.length > 1 && activeGroup
+														? classType.classes.filter(
+																(classInfo) =>
+																	!classInfo.group ||
+																	classInfo.group === activeGroup,
+															)
+														: classType.classes;
+												const pool =
+													groupMatchedClasses.length > 0
+														? groupMatchedClasses
+														: classType.classes;
+
+												const classesToShow = pool.filter((classInfo) =>
+													classInfo.meetings.some(
+														(m) =>
+															isMeetingInTerm(m.date, selectedTermAlias) &&
+															(!selectedCampuses ||
+																selectedCampuses.length === 0 ||
+																selectedCampuses.includes(m.campus)),
+													),
+												);
+												const isEmpty = classesToShow.length === 0;
+												const selectedKey = getSelectedClassNumber(
+													classType.id,
+												);
+
+												const listBoxItems = (
+													isEmpty
+														? [
+																{
+																	id: 'not-available',
+																	isNotAvailable: true,
+																	label: t('course-modal.not-available', {
+																		defaultValue: 'Not available',
+																	}),
+																	itemConflicted: false,
+																	campusList: '',
+																	availability: '',
+																	isFull: false,
+																	classInfo: null,
+																},
+															]
+														: classesToShow.map((classInfo) => {
+																const itemKey = `${id}|${classType.id}|${classInfo.number}`;
+																const itemConflicted =
+																	(conflictsByClassKey[itemKey] ?? []).length >
+																		0 ||
+																	classConflictsWithEnrolled(
+																		classInfo.meetings,
+																		classType.id,
+																	);
+																const campusList = deduplicateArray(
+																	classInfo.meetings
+																		.map((m) => m.campus ?? '')
+																		.filter(Boolean),
+																).join(', ');
+																const availability =
+																	classInfo.available_seats && classInfo.size
+																		? `${classInfo.available_seats} / ${classInfo.size}`
+																		: undefined;
+																const isFull =
+																	classInfo.available_seats !== undefined &&
+																	parseInt(classInfo.available_seats, 10) === 0;
+
+																return {
+																	id: classInfo.number,
+																	isNotAvailable: false,
+																	label: classInfo.number,
+																	itemConflicted,
+																	campusList,
+																	availability,
+																	isFull,
+																	classInfo,
+																};
+															})
+												) as Array<{
+													id: string;
+													isNotAvailable: boolean;
+													label: string;
+													itemConflicted: boolean;
+													campusList: string;
+													availability: string | undefined;
+													isFull: boolean;
+													classInfo: (typeof classType.classes)[number] | null;
+												}>;
+
+												return (
+													<div
+														key={classType.id}
+														className="border-separator bg-content1/75 flex flex-col gap-2 rounded-2xl border p-4"
+													>
+														<div className="text-foreground text-sm font-bold">
+															{classType.type} Time
+														</div>
+														<Select
+															aria-label={`${classType.type} Time`}
+															isDisabled={isEmpty}
+															value={isEmpty ? 'not-available' : selectedKey}
+															onChange={(val) => {
+																if (isEmpty || !val) return;
+																updateClass({
+																	classNumber: String(val),
+																	classTypeId: classType.id,
+																});
 															}}
-														</ListBox>
-													</Select.Popover>
-												</Select>
-												{(() => {
-													const selectedClass = getSelectedClass(classType.id);
-													const size =
-														selectedClass?.size ??
-														selectedClass?.section ??
-														undefined;
-													const availableSeats =
-														selectedClass?.available_seats ?? undefined;
-													return (
-														<MeetingsTime
-															meetings={getMeetings(classType.id)}
-															classType={classType.type}
-															size={size}
-															availableSeats={availableSeats}
-															courseCampus={courseInfo?.campus}
-														/>
-													);
-												})()}
-											</div>
-										);
-									});
+															disabledKeys={
+																isEmpty
+																	? ['not-available']
+																	: selectedKey
+																		? [selectedKey]
+																		: []
+															}
+														>
+															<Select.Trigger className="border-separator bg-content2/30 hover:bg-content2/50 flex w-full items-center justify-between rounded-2xl border px-4 py-2.5 transition-colors">
+																<Select.Value />
+																<Select.Indicator>
+																	<FaChevronDown className="text-default-500 text-xs" />
+																</Select.Indicator>
+															</Select.Trigger>
+															<Select.Popover>
+																<ListBox
+																	className="bg-overlay border-separator max-h-75 overflow-y-auto rounded-2xl border p-2 shadow-xl"
+																	items={listBoxItems}
+																>
+																	{(item: CourseListBoxItem) => {
+																		if (item.isNotAvailable) {
+																			return (
+																				<ListBox.Item
+																					id="not-available"
+																					textValue={item.label}
+																					className="text-default-500 rounded-xl px-3 py-2"
+																				>
+																					{item.label}
+																				</ListBox.Item>
+																			);
+																		}
+
+																		return (
+																			<ListBox.Item
+																				id={item.id}
+																				textValue={item.label}
+																				className="hover:bg-default-100/50 text-foreground cursor-pointer rounded-xl px-3 py-2 transition-colors"
+																			>
+																				<div>
+																					<div className="flex items-center gap-1.5">
+																						{item.itemConflicted && (
+																							<Tooltip delay={0}>
+																								<Tooltip.Trigger>
+																									<span
+																										tabIndex={0}
+																										role="img"
+																										aria-label={
+																											t('calendar.conflict') ??
+																											'Conflict with another class'
+																										}
+																										className="text-warning flex items-center outline-none"
+																									>
+																										<FaExclamationTriangle />
+																									</span>
+																								</Tooltip.Trigger>
+																								<Tooltip.Content>
+																									{t('calendar.conflict') ??
+																										'Conflict with another class'}
+																								</Tooltip.Content>
+																							</Tooltip>
+																						)}
+																						{item.isFull && (
+																							<Tooltip delay={0}>
+																								<Tooltip.Trigger>
+																									<span
+																										tabIndex={0}
+																										role="img"
+																										aria-label={t(
+																											'calendar.no-available-seats',
+																											{
+																												defaultValue:
+																													'Class full',
+																											},
+																										)}
+																										className="text-danger flex items-center outline-none"
+																									>
+																										<FaExclamationTriangle />
+																									</span>
+																								</Tooltip.Trigger>
+																								<Tooltip.Content>
+																									{t(
+																										'calendar.no-available-seats',
+																										{
+																											defaultValue:
+																												'Class full',
+																										},
+																									)}
+																								</Tooltip.Content>
+																							</Tooltip>
+																						)}
+																						<div className="font-bold">
+																							{item.label}
+																						</div>
+																					</div>
+																					<div className="text-default-500 mt-0.5 text-xs">
+																						{item.classInfo
+																							? getPreviewMeetingInfo(
+																									item.classInfo.meetings,
+																								)
+																							: ''}
+																						{item.campusList
+																							? ` | ${item.campusList}`
+																							: ''}
+																						{item.availability ? (
+																							<>
+																								{' | '}
+																								<span
+																									className={
+																										item.isFull
+																											? 'text-danger font-bold'
+																											: ''
+																									}
+																								>
+																									{item.availability}
+																								</span>
+																							</>
+																						) : (
+																							''
+																						)}
+																					</div>
+																				</div>
+																			</ListBox.Item>
+																		);
+																	}}
+																</ListBox>
+															</Select.Popover>
+														</Select>
+														{(() => {
+															const selectedClass = getSelectedClass(
+																classType.id,
+															);
+															const size =
+																selectedClass?.size ??
+																selectedClass?.section ??
+																undefined;
+															const availableSeats =
+																selectedClass?.available_seats ?? undefined;
+															return (
+																<MeetingsTime
+																	meetings={getMeetings(classType.id)}
+																	classType={classType.type}
+																	size={size}
+																	availableSeats={availableSeats}
+																	courseCampus={courseInfo?.campus}
+																/>
+															);
+														})()}
+													</div>
+												);
+											})}
+										</>
+									);
 								})()}
 							</Modal.Body>
 						</>

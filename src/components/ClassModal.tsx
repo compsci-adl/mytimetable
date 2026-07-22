@@ -202,6 +202,16 @@ export const ClassModal = ({
 		selected?.instructor ||
 		(meetingInstructors.length > 0 ? meetingInstructors.join(', ') : undefined);
 
+	const uniqueGroups = Array.from(
+		new Set(
+			courseInfo.class_list
+				.flatMap((ct) => ct.classes)
+				.map((cls) => cls.group)
+				.filter((g): g is string => typeof g === 'string' && g.trim() !== ''),
+		),
+	);
+	const showGroup = uniqueGroups.length > 1 && selected?.group;
+
 	const courseUrl = courseInfo.course_url;
 
 	return (
@@ -257,6 +267,7 @@ export const ClassModal = ({
 										)}
 									<span>
 										{`${classTypeName} | ${t('class-modal.number')} ${classNumber} | ${t('class-modal.section')} ${selected?.section}`}
+										{showGroup ? ` | Group ${selected.group}` : ''}
 										{instructor
 											? ` | ${Array.isArray(instructor) ? instructor.join(', ') : instructor}`
 											: ''}

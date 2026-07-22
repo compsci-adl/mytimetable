@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { getCourse } from '../../src/apis';
 import { useEnrolledCourses } from '../../src/data/enrolled-courses';
+import { useFilters } from '../../src/data/filters';
 import { queryClient } from '../../src/lib/query';
 import type { Course } from '../../src/types/course';
 
@@ -340,5 +341,409 @@ describe('useEnrolledCourses Zustand Store', () => {
 
 		// The course is not in state
 		expect(useEnrolledCourses.getState().courses.length).toBe(0);
+	});
+
+	it('should pick initial classes from the same group when adding a multi-group course', async () => {
+		const mockGroupCourseData: Course = {
+			id: 'course-grouped',
+			course_id: 'group-101',
+			name: { subject: 'BIOL', code: '1032', title: 'Biology' },
+			class_number: 101,
+			year: 2024,
+			term: 'sem1',
+			campus: 'North Terrace',
+			units: 3,
+			course_overview: '',
+			level_of_study: '',
+			requirements: {},
+			class_list: [
+				{
+					id: 'type-lec',
+					category: 'enrolment',
+					type: 'Lecture',
+					classes: [
+						{
+							number: '101',
+							group: '1',
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room 1',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '09:00', end: '10:00' },
+								},
+							],
+						},
+						{
+							number: '201',
+							group: '2',
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room 2',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '14:00', end: '15:00' },
+								},
+							],
+						},
+					],
+				},
+				{
+					id: 'type-wrk',
+					category: 'related',
+					type: 'Workshop',
+					classes: [
+						{
+							number: '102',
+							group: '1',
+							meetings: [
+								{
+									day: 'Tuesday',
+									location: 'Room 3',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '09:00', end: '10:00' },
+								},
+							],
+						},
+						{
+							number: '202',
+							group: '2',
+							meetings: [
+								{
+									day: 'Tuesday',
+									location: 'Room 4',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '14:00', end: '15:00' },
+								},
+							],
+						},
+					],
+				},
+			],
+		};
+
+		vi.mocked(getCourse).mockResolvedValueOnce(mockGroupCourseData);
+		await useEnrolledCourses.getState().addCourse({
+			id: 'course-grouped',
+			name: 'BIOL 1032',
+		});
+
+		const course = useEnrolledCourses
+			.getState()
+			.courses.find((c) => c.id === 'course-grouped');
+		expect(course).toBeDefined();
+		const lecClass = course?.classes.find((c) => c.id === 'type-lec');
+		const wrkClass = course?.classes.find((c) => c.id === 'type-wrk');
+		// Both selected classes should belong to Group 1 (numbers 101 and 102)
+		expect(lecClass?.classNumber).toBe('101');
+		expect(wrkClass?.classNumber).toBe('102');
+
+		// Now update Workshop to 202 (which is in Group 2)
+		queryClient.setQueryData(['course', 'course-grouped'], mockGroupCourseData);
+		useEnrolledCourses.getState().updateCourseClass({
+			courseId: 'course-grouped',
+			classTypeId: 'type-wrk',
+			classNumber: '202',
+		});
+
+		const updatedCourse = useEnrolledCourses
+			.getState()
+			.courses.find((c) => c.id === 'course-grouped');
+		const updatedLec = updatedCourse?.classes.find((c) => c.id === 'type-lec');
+		const updatedWrk = updatedCourse?.classes.find((c) => c.id === 'type-wrk');
+
+		expect(updatedWrk?.classNumber).toBe('202');
+		expect(updatedLec?.classNumber).toBe('201');
+	});
+
+	it('should pick initial group matching preferred campuses when adding a multi-group course', async () => {
+		useFilters.getState().setTerm('sem1');
+		useFilters.getState().setCampuses(['North Terrace']);
+
+		const mockData = {
+			id: 'course-campus-grouped',
+			name: 'BIOL 1033',
+			class_list: [
+				{
+					id: 'type-lec',
+					name: 'Lecture',
+					classes: [
+						{
+							number: '301',
+							group: '1',
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room A',
+									campus: 'Waite',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '10:00', end: '11:00' },
+								},
+							],
+						},
+						{
+							number: '302',
+							group: '2',
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room B',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '11:00', end: '12:00' },
+								},
+							],
+						},
+					],
+				},
+			],
+		};
+
+		vi.mocked(getCourse).mockResolvedValueOnce(mockData);
+		await useEnrolledCourses.getState().addCourse({
+			id: 'course-campus-grouped',
+			name: 'BIOL 1033',
+			preferredCampuses: ['North Terrace'],
+		});
+
+		const course = useEnrolledCourses
+			.getState()
+			.courses.find((c) => c.id === 'course-campus-grouped');
+		expect(course).toBeDefined();
+		const lecClass = course?.classes.find((c) => c.id === 'type-lec');
+		expect(lecClass?.classNumber).toBe('302');
+	});
+
+	it('should handle updateCourseClass edge cases for group auto-switching (already matched, missing enrolled class, empty groupMatchedClasses, empty termClasses)', async () => {
+		const mockData = {
+			id: 'course-update-branches',
+			name: 'BIOL 1034',
+			class_list: [
+				{
+					id: 'type-lec',
+					name: 'Lecture',
+					classes: [
+						{
+							number: '401',
+							group: '1',
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room A',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '10:00', end: '11:00' },
+								},
+							],
+						},
+						{
+							number: '402',
+							group: '2',
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room B',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '11:00', end: '12:00' },
+								},
+							],
+						},
+					],
+				},
+				{
+					id: 'type-wrk',
+					name: 'Workshop',
+					classes: [
+						{
+							number: '501',
+							group: '1',
+							meetings: [
+								{
+									day: 'Tuesday',
+									location: 'Room C',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '10:00', end: '11:00' },
+								},
+							],
+						},
+						{
+							number: '502',
+							group: '3', // Group 3 (no group 2 option) with out-of-term date
+							meetings: [
+								{
+									day: 'Tuesday',
+									location: 'Room D',
+									campus: 'North Terrace',
+									date: { start: '12-01', end: '12-25' },
+									time: { start: '11:00', end: '12:00' },
+								},
+							],
+						},
+					],
+				},
+				{
+					id: 'type-tut',
+					name: 'Tutorial',
+					classes: [
+						{
+							number: '601',
+							group: '2',
+							meetings: [
+								{
+									day: 'Wednesday',
+									location: 'Room E',
+									campus: 'North Terrace',
+									date: { start: '01-01', end: '01-15' }, // Out of term date
+									time: { start: '10:00', end: '11:00' },
+								},
+							],
+						},
+					],
+				},
+			],
+		};
+
+		vi.mocked(getCourse).mockResolvedValueOnce(mockData);
+		await useEnrolledCourses.getState().addCourse({
+			id: 'course-update-branches',
+			name: 'BIOL 1034',
+		});
+
+		queryClient.setQueryData(['course', 'course-update-branches'], mockData);
+
+		// 1. Updating Lecture to 401 (group 1) when Workshop is already 501 (group 1)
+		useEnrolledCourses.getState().updateCourseClass({
+			courseId: 'course-update-branches',
+			classTypeId: 'type-lec',
+			classNumber: '401',
+		});
+
+		// 2. Updating Lecture to 402 (group 2)
+		// Workshop has no group 2 option (groupMatchedClasses.length === 0 fallback),
+		// Tutorial group 2 option has out-of-term date (termClasses.length === 0 fallback)
+		useEnrolledCourses.getState().updateCourseClass({
+			courseId: 'course-update-branches',
+			classTypeId: 'type-lec',
+			classNumber: '402',
+		});
+
+		// 3. Remove Tutorial class from enrolled course to trigger (!enrolledCls) branch
+		useEnrolledCourses.setState((state) => ({
+			courses: state.courses.map((c) =>
+				c.id === 'course-update-branches'
+					? { ...c, classes: c.classes.filter((cls) => cls.id !== 'type-tut') }
+					: c,
+			),
+		}));
+
+		useEnrolledCourses.getState().updateCourseClass({
+			courseId: 'course-update-branches',
+			classTypeId: 'type-lec',
+			classNumber: '401',
+		});
+
+		const updatedCourse = useEnrolledCourses
+			.getState()
+			.courses.find((c) => c.id === 'course-update-branches');
+		expect(updatedCourse).toBeDefined();
+	});
+
+	it('should handle addCourse when first class type has out of term dates and first option has no group', async () => {
+		const mockData = {
+			id: 'course-no-group-first',
+			name: 'BIOL 1035',
+			class_list: [
+				{
+					id: 'type-lec',
+					name: 'Lecture',
+					classes: [
+						{
+							number: '701',
+							// group is undefined
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room A',
+									campus: 'North Terrace',
+									date: { start: '12-01', end: '12-25' }, // Out of term date
+									time: { start: '10:00', end: '11:00' },
+								},
+							],
+						},
+						{
+							number: '702',
+							group: '2',
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room B',
+									campus: 'North Terrace',
+									date: { start: '12-01', end: '12-25' }, // Out of term date
+									time: { start: '11:00', end: '12:00' },
+								},
+							],
+						},
+					],
+				},
+				{
+					id: 'type-wrk',
+					name: 'Workshop',
+					classes: [
+						{
+							number: '801',
+							group: '1',
+							meetings: [
+								{
+									day: 'Tuesday',
+									location: 'Room C',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '10:00', end: '11:00' },
+								},
+							],
+						},
+						{
+							number: '802',
+							group: '2',
+							meetings: [
+								{
+									day: 'Tuesday',
+									location: 'Room D',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '11:00', end: '12:00' },
+								},
+							],
+						},
+					],
+				},
+			],
+		};
+
+		vi.mocked(getCourse).mockResolvedValueOnce(mockData);
+		await useEnrolledCourses.getState().addCourse({
+			id: 'course-no-group-first',
+			name: 'BIOL 1035',
+		});
+
+		queryClient.setQueryData(['course', 'course-no-group-first'], mockData);
+
+		// Also test updateCourseClass for a class number without group (701) to trigger line 197 (!targetGroup)
+		useEnrolledCourses.getState().updateCourseClass({
+			courseId: 'course-no-group-first',
+			classTypeId: 'type-lec',
+			classNumber: '701',
+		});
+
+		const course = useEnrolledCourses
+			.getState()
+			.courses.find((c) => c.id === 'course-no-group-first');
+		expect(course).toBeDefined();
 	});
 });
