@@ -341,4 +341,121 @@ describe('useEnrolledCourses Zustand Store', () => {
 		// The course is not in state
 		expect(useEnrolledCourses.getState().courses.length).toBe(0);
 	});
+
+	it('should pick initial classes from the same group when adding a multi-group course', async () => {
+		const mockGroupCourseData: Course = {
+			id: 'course-grouped',
+			course_id: 'group-101',
+			name: { subject: 'BIOL', code: '1032', title: 'Biology' },
+			class_number: 101,
+			year: 2024,
+			term: 'sem1',
+			campus: 'North Terrace',
+			units: 3,
+			course_overview: '',
+			level_of_study: '',
+			requirements: {},
+			class_list: [
+				{
+					id: 'type-lec',
+					category: 'enrolment',
+					type: 'Lecture',
+					classes: [
+						{
+							number: '101',
+							group: '1',
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room 1',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '09:00', end: '10:00' },
+								},
+							],
+						},
+						{
+							number: '201',
+							group: '2',
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room 2',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '14:00', end: '15:00' },
+								},
+							],
+						},
+					],
+				},
+				{
+					id: 'type-wrk',
+					category: 'related',
+					type: 'Workshop',
+					classes: [
+						{
+							number: '102',
+							group: '1',
+							meetings: [
+								{
+									day: 'Tuesday',
+									location: 'Room 3',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '09:00', end: '10:00' },
+								},
+							],
+						},
+						{
+							number: '202',
+							group: '2',
+							meetings: [
+								{
+									day: 'Tuesday',
+									location: 'Room 4',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '14:00', end: '15:00' },
+								},
+							],
+						},
+					],
+				},
+			],
+		};
+
+		vi.mocked(getCourse).mockResolvedValueOnce(mockGroupCourseData);
+		await useEnrolledCourses.getState().addCourse({
+			id: 'course-grouped',
+			name: 'BIOL 1032',
+		});
+
+		const course = useEnrolledCourses
+			.getState()
+			.courses.find((c) => c.id === 'course-grouped');
+		expect(course).toBeDefined();
+		const lecClass = course?.classes.find((c) => c.id === 'type-lec');
+		const wrkClass = course?.classes.find((c) => c.id === 'type-wrk');
+		// Both selected classes should belong to Group 1 (numbers 101 and 102)
+		expect(lecClass?.classNumber).toBe('101');
+		expect(wrkClass?.classNumber).toBe('102');
+
+		// Now update Workshop to 202 (which is in Group 2)
+		queryClient.setQueryData(['course', 'course-grouped'], mockGroupCourseData);
+		useEnrolledCourses.getState().updateCourseClass({
+			courseId: 'course-grouped',
+			classTypeId: 'type-wrk',
+			classNumber: '202',
+		});
+
+		const updatedCourse = useEnrolledCourses
+			.getState()
+			.courses.find((c) => c.id === 'course-grouped');
+		const updatedLec = updatedCourse?.classes.find((c) => c.id === 'type-lec');
+		const updatedWrk = updatedCourse?.classes.find((c) => c.id === 'type-wrk');
+
+		expect(updatedWrk?.classNumber).toBe('202');
+		expect(updatedLec?.classNumber).toBe('201');
+	});
 });

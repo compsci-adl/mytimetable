@@ -84,15 +84,62 @@ export const useEnrolledCourses = create<CoursesState>()(
 						const selectedTermAlias =
 							localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
 
-						enrolledCourse.classes = data.class_list.map((c) => {
-							const pick = () => {
-								const termClasses = c.classes.filter((cls) =>
+						const uniqueGroups = Array.from(
+							new Set(
+								data.class_list
+									.flatMap((ct) => ct.classes)
+									.map((cls) => cls.group)
+									.filter(
+										(g): g is string =>
+											typeof g === 'string' && g.trim() !== '',
+									),
+							),
+						);
+
+						let chosenGroup: string | undefined;
+						if (uniqueGroups.length > 1) {
+							const firstClassType = data.class_list[0];
+							if (firstClassType) {
+								const termClasses = firstClassType.classes.filter((cls) =>
 									cls.meetings.some((m) =>
 										isMeetingInTerm(m.date, selectedTermAlias),
 									),
 								);
 								const candidates =
-									termClasses.length > 0 ? termClasses : c.classes;
+									termClasses.length > 0 ? termClasses : firstClassType.classes;
+								const foundByCampus =
+									preferredCampuses && preferredCampuses.length > 0
+										? candidates.find((cls) =>
+												cls.meetings.some((m: Meetings[number]) =>
+													preferredCampuses.includes(m.campus),
+												),
+											)
+										: undefined;
+								const firstChosen = foundByCampus ?? candidates[0];
+								chosenGroup = firstChosen?.group ?? uniqueGroups[0];
+							} else {
+								chosenGroup = uniqueGroups[0];
+							}
+						}
+
+						enrolledCourse.classes = data.class_list.map((c) => {
+							const pick = () => {
+								const groupMatchedClasses = chosenGroup
+									? c.classes.filter(
+											(cls) => !cls.group || cls.group === chosenGroup,
+										)
+									: c.classes;
+								const pool =
+									groupMatchedClasses.length > 0
+										? groupMatchedClasses
+										: c.classes;
+
+								const termClasses = pool.filter((cls) =>
+									cls.meetings.some((m) =>
+										isMeetingInTerm(m.date, selectedTermAlias),
+									),
+								);
+								const candidates = termClasses.length > 0 ? termClasses : pool;
 
 								if (preferredCampuses && preferredCampuses.length > 0) {
 									const foundByCampus = candidates.find((cls) =>
@@ -130,6 +177,10 @@ export const useEnrolledCourses = create<CoursesState>()(
 				);
 			},
 			updateCourseClass: ({ courseId, classTypeId, classNumber }) => {
+				const courseData = queryClient.getQueryData<Course>([
+					'course',
+					courseId,
+				]);
 				set(
 					produce((state) => {
 						const course = state.courses.find((c) => c.id === courseId);
@@ -137,6 +188,55 @@ export const useEnrolledCourses = create<CoursesState>()(
 						const classType = course.classes.find((c) => c.id === classTypeId);
 						if (!classType) return;
 						classType.classNumber = classNumber;
+
+						if (courseData) {
+							const targetCt = courseData.class_list.find(
+								(ct) => ct.id === classTypeId,
+							);
+							const targetCls = targetCt?.classes.find(
+								(c) => c.number === classNumber,
+							);
+							const targetGroup = targetCls?.group;
+
+							if (targetGroup) {
+								const selectedTermAlias =
+									localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
+
+								courseData.class_list.forEach((ct) => {
+									if (ct.id === classTypeId) return;
+									const enrolledCls = course.classes.find(
+										(c) => c.id === ct.id,
+									);
+									if (!enrolledCls) return;
+
+									const currentClsInfo = ct.classes.find(
+										(c) => c.number === enrolledCls.classNumber,
+									);
+									if (currentClsInfo?.group === targetGroup) return;
+
+									const groupMatchedClasses = ct.classes.filter(
+										(cls) => !cls.group || cls.group === targetGroup,
+									);
+									const pool =
+										groupMatchedClasses.length > 0
+											? groupMatchedClasses
+											: ct.classes;
+
+									const termClasses = pool.filter((cls) =>
+										cls.meetings.some((m) =>
+											isMeetingInTerm(m.date, selectedTermAlias),
+										),
+									);
+									const candidates =
+										termClasses.length > 0 ? termClasses : pool;
+
+									const chosen = candidates[0];
+									if (chosen) {
+										enrolledCls.classNumber = chosen.number;
+									}
+								});
+							}
+						}
 					}),
 				);
 			},
@@ -196,6 +296,7 @@ export const useDetailedEnrolledCourses = (): Array<DetailedEnrolledCourse> => {
 					type,
 					classNumber: cls.classNumber,
 					meetings,
+					group: found.group,
 					size: found.size,
 					available_seats: found.available_seats,
 				};

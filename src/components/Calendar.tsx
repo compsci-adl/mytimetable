@@ -457,6 +457,7 @@ type CourseTimePlaceholderCardProps = {
 	classTypeId: string;
 	location: string;
 	campus: string;
+	group?: string;
 };
 const CourseTimePlaceholderCard = ({
 	courseId,
@@ -464,6 +465,7 @@ const CourseTimePlaceholderCard = ({
 	classTypeId,
 	location,
 	campus,
+	group,
 }: CourseTimePlaceholderCardProps) => {
 	const color = useCourseColor(courseId);
 	const colorIndex =
@@ -472,6 +474,26 @@ const CourseTimePlaceholderCard = ({
 		) ?? 0;
 	const { isDarkMode } = useDarkMode();
 	const textColor = getAccessibleTextColorForCourse(colorIndex, isDarkMode);
+
+	const coursesInfo = useCoursesInfo();
+	const courseInfo = coursesInfo.find((c) => c.id === courseId);
+	const uniqueGroups = Array.from(
+		new Set(
+			courseInfo?.class_list
+				?.flatMap((ct) => ct.classes)
+				?.map((cls) => cls.group)
+				?.filter(
+					(g): g is string => typeof g === 'string' && g.trim() !== '',
+				) ?? [],
+		),
+	);
+	const hasMultipleGroups = uniqueGroups.length > 1;
+
+	const groupLabel = group
+		? group.toLowerCase().startsWith('group')
+			? group
+			: `Group ${group}`
+		: '';
 
 	const { updateClass } = useEnrolledCourse(courseId);
 	const [isDraggedOver, setIsDraggedOver] = useState(false);
@@ -488,7 +510,7 @@ const CourseTimePlaceholderCard = ({
 	return (
 		<div
 			className={clsx(
-				'relative z-40 h-full w-full overflow-hidden rounded-2xl border border-dashed border-current/40 pt-4 text-xs',
+				'relative z-40 h-full w-full overflow-hidden rounded-2xl border border-dashed border-current/40',
 				color.bg,
 				isDraggedOver
 					? 'scale-98 opacity-80 brightness-75 transition-transform'
@@ -497,8 +519,29 @@ const CourseTimePlaceholderCard = ({
 			style={{ color: textColor }}
 			ref={ref}
 		>
-			<div className="absolute top-1/2 w-full -translate-y-1/2 px-1 text-center font-bold">
-				{location + ' | ' + campus}
+			<div className="pointer-events-none absolute inset-0 flex w-full flex-col items-center justify-center px-1 text-center leading-tight font-bold select-none">
+				{hasMultipleGroups && groupLabel ? (
+					<>
+						<div className="text-2xs font-extrabold md:text-xs">
+							{groupLabel}
+						</div>
+						<div className="block text-[9px] min-[400px]:text-[10px] md:hidden">
+							{campus || location}
+						</div>
+						<div className="hidden text-xs md:block">
+							{location ? `${location}${campus ? ` | ${campus}` : ''}` : campus}
+						</div>
+					</>
+				) : (
+					<>
+						<div className="block text-[9px] min-[400px]:text-[10px] md:hidden">
+							{campus || location}
+						</div>
+						<div className="hidden text-xs md:block">
+							{location ? `${location}${campus ? ` | ${campus}` : ''}` : campus}
+						</div>
+					</>
+				)}
 			</div>
 			<InvisiblePlaceholder />
 		</div>
@@ -610,6 +653,7 @@ const CalendarCourseOtherTimes = ({
 									classTypeId={course.classTypeId}
 									location={evt.classInfo.location}
 									campus={evt.classInfo.campus}
+									group={evt.classInfo.group}
 								/>
 							</div>
 						</div>

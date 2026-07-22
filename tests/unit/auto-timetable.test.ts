@@ -1098,4 +1098,97 @@ describe('checkViolations utility', () => {
 		); // 1 hour preferred break
 		expect(assignment).toEqual({ 'type-1': '101', 'type-2': '201' });
 	});
+
+	it('should strictly select classes from the same group for a course', () => {
+		const vars: Variable[] = [
+			{
+				courseId: 'course-1',
+				courseCode: 'BIOL 1032',
+				classTypeId: 'type-lec',
+				classTypeName: 'Lecture',
+				options: [
+					{
+						number: '101',
+						group: '1',
+						meetings: [makeMeeting('Monday', '09:00', '10:00')],
+					},
+					{
+						number: '201',
+						group: '2',
+						meetings: [makeMeeting('Monday', '14:00', '15:00')],
+					},
+				],
+			},
+			{
+				courseId: 'course-1',
+				courseCode: 'BIOL 1032',
+				classTypeId: 'type-wrk',
+				classTypeName: 'Workshop',
+				options: [
+					{
+						number: '102',
+						group: '1',
+						meetings: [makeMeeting('Tuesday', '09:00', '10:00')],
+					},
+					{
+						number: '202',
+						group: '2',
+						meetings: [makeMeeting('Tuesday', '14:00', '15:00')],
+					},
+				],
+			},
+		];
+
+		const assignment = solveAutoTimetable(vars, makePrefs());
+		expect(assignment).not.toBeNull();
+		const selectedLec = vars[0].options.find(
+			(o) => o.number === assignment!['type-lec'],
+		);
+		const selectedWrk = vars[1].options.find(
+			(o) => o.number === assignment!['type-wrk'],
+		);
+		expect(selectedLec?.group).toBe(selectedWrk?.group);
+	});
+
+	it('should include group property in coursesToVariables options', () => {
+		useFilters.getState().setTerm('sem1');
+		const sampleCourse: Course = {
+			id: 'course-1',
+			course_id: '100',
+			name: { subject: 'BIOL', code: '1032', title: 'Biology' },
+			class_number: 100,
+			year: 2024,
+			term: 'sem1',
+			campus: 'North Terrace',
+			units: 3,
+			course_overview: '',
+			level_of_study: '',
+			requirements: {},
+			class_list: [
+				{
+					id: 'ct-1',
+					category: 'enrolment',
+					type: 'Lecture',
+					classes: [
+						{
+							number: '1001',
+							group: '01',
+							meetings: [
+								{
+									day: 'Monday',
+									location: 'Room 1',
+									campus: 'North Terrace',
+									date: { start: '03-01', end: '06-01' },
+									time: { start: '09:00', end: '10:00' },
+								},
+							],
+						},
+					],
+				},
+			],
+		};
+
+		const vars = coursesToVariables([sampleCourse]);
+		expect(vars[0].options[0].group).toBe('01');
+	});
 });
