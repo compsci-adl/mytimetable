@@ -11,6 +11,11 @@
 	"automerge": true,
 	"automergeType": "pr",
 	"autoApprove": true,
+	"gitIgnoredAuthors": [
+		"github-actions[bot]",
+		"github-actions[bot]@users.noreply.github.com",
+		"41898282+github-actions[bot]@users.noreply.github.com"
+	],
 	"prConcurrentLimit": 1,
 	"prHourlyLimit": 0,
 	"separateMinorPatch": false,
