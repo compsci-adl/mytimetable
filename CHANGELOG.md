@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.2] - 2026-08-01
+
+### Changed
+
+- Fix: Enhance changelog parsing for Renovate PRs ([#107](https://github.com/compsci-adl/mytimetable/pull/107))
+
+## [3.2.1] - 2026-08-01
+
+### Package Updates
+
+- Bump actions/checkout to d23441a ([#105](https://github.com/compsci-adl/mytimetable/pull/105))
+- Bump actions/github-script to f28e40c ([#105](https://github.com/compsci-adl/mytimetable/pull/105))
+
 ## [3.2.0] - 2026-07-22
 
 ### Changed

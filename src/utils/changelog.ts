@@ -24,6 +24,9 @@ export function isDependencyUpdate(itemText: string): boolean {
 		lower.includes('renovate') ||
 		lower.startsWith('bump ') ||
 		lower.includes('npm_and_yarn') ||
+		lower.includes('deps') ||
+		lower.includes('dependency') ||
+		lower.includes('dependencies') ||
 		/bump\s+[\w\-@/]+/i.test(lower)
 	);
 }

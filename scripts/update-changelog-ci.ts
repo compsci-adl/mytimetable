@@ -1,7 +1,11 @@
 /* eslint-disable no-console */
-import { execFileSync } from 'child_process';
+import { execFileSync, execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
+
+function runGit(cmd: string): string {
+	return execSync(cmd, { encoding: 'utf-8' }).trim();
+}
 
 function sanitiseMarkdown(text: string): string {
 	return text
@@ -70,6 +74,9 @@ function isDependencyUpdate(subject: string): boolean {
 		lower.includes('renovate') ||
 		lower.startsWith('bump ') ||
 		lower.includes('npm_and_yarn') ||
+		lower.includes('deps') ||
+		lower.includes('dependency') ||
+		lower.includes('dependencies') ||
 		/bump\s+[\w\-@/]+/i.test(lower)
 	);
 }
@@ -132,7 +139,114 @@ function getChangelogVersions(content: string): string[] {
 	return versions;
 }
 
-function parsePrBody(body: string): string[] {
+export function parseRenovatePrBody(body: string): string[] {
+	const lines = body.split(/\r?\n/);
+	const changes: string[] = [];
+
+	let inTable = false;
+	let packageCol = -1;
+	let changeCol = -1;
+	let updateCol = -1;
+
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i].trim();
+
+		// Detect table header containing '|' and 'package'
+		if (line.includes('|') && /\bpackage\b/i.test(line)) {
+			const cells = line.split('|').map((c) => c.trim());
+			const pCol = cells.findIndex((c) => /^package$/i.test(c));
+			if (pCol !== -1) {
+				packageCol = pCol;
+				changeCol = cells.findIndex((c) => /^change$/i.test(c));
+				updateCol = cells.findIndex((c) => /^update$/i.test(c));
+
+				// Check if next line is a separator line (e.g. |---|---|...)
+				if (i + 1 < lines.length && lines[i + 1].includes('---')) {
+					inTable = true;
+					i++; // Skip separator line
+					continue;
+				}
+			}
+		}
+
+		if (inTable) {
+			// Exit table if line doesn't contain '|' or is empty/separator
+			if (!line.includes('|') || line.startsWith('---') || line === '') {
+				inTable = false;
+				continue;
+			}
+
+			const cells = line.split('|').map((c) => c.trim());
+			if (cells.length <= packageCol) continue;
+
+			const rawPackage = cells[packageCol];
+			if (!rawPackage || rawPackage.startsWith('---')) continue;
+
+			// Extract package name (e.g. "[actions/checkout](https://...)" -> "actions/checkout")
+			const pkgMatch = rawPackage.match(/\[([^\]]+)\]/);
+			const pkgName = pkgMatch
+				? pkgMatch[1].trim()
+				: rawPackage.replace(/[`*]/g, '').trim();
+
+			if (!pkgName) continue;
+
+			let changeStr = '';
+			if (changeCol !== -1 && cells.length > changeCol && cells[changeCol]) {
+				changeStr = cells[changeCol];
+			}
+
+			let updateStr = '';
+			if (updateCol !== -1 && cells.length > updateCol && cells[updateCol]) {
+				updateStr = cells[updateCol];
+			}
+
+			// Clean change string: strip markdown links inside change string e.g. [`5.0.0` -> `5.1.0`](https://...)
+			const cleanChange = changeStr
+				.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+				.trim();
+
+			// Match version change patterns:
+			// Pattern 1: `5.0.0` -> `5.1.0` or 5.0.0 -> 5.1.0 or v1 -> v2
+			const fromToMatch = cleanChange.match(
+				/`?([v\d\w\.\-]+)`?\s*(?:->|→)\s*`?([v\d\w\.\-]+)`?/,
+			);
+			// Pattern 2: -> `d23441a` or → `d23441a` or → d23441a
+			const singleArrowMatch = cleanChange.match(
+				/(?:->|→)\s*`?([v\d\w\.\-]+)`?/,
+			);
+
+			let formattedChange = '';
+			if (fromToMatch && fromToMatch[1] && fromToMatch[2]) {
+				formattedChange = `from ${fromToMatch[1]} to ${fromToMatch[2]}`;
+			} else if (singleArrowMatch && singleArrowMatch[1]) {
+				formattedChange = `to ${singleArrowMatch[1]}`;
+			} else {
+				// Fallback sanitization
+				const sanitized = cleanChange
+					.replace(/[`→]/g, '')
+					.replace(/->/g, 'to')
+					.trim();
+				if (sanitized) {
+					formattedChange = sanitized.startsWith('to ')
+						? sanitized
+						: `to ${sanitized}`;
+				} else if (updateStr) {
+					formattedChange = `(${updateStr.replace(/[`]/g, '').trim()})`;
+				}
+			}
+
+			if (formattedChange) {
+				changes.push(`bump ${pkgName} ${formattedChange}`);
+			} else {
+				changes.push(`bump ${pkgName}`);
+			}
+		}
+	}
+
+	return changes;
+}
+
+export function parsePrBody(body: string, title?: string): string[] {
 	const lines = body.split(/\r?\n/);
 	const changes: string[] = [];
 	let inChangesSection = false;
@@ -164,6 +278,25 @@ function parsePrBody(body: string): string[] {
 		}
 	}
 
+	if (changes.length === 0) {
+		// Fallback for Renovate PRs
+		const renovateChanges = parseRenovatePrBody(body);
+		if (renovateChanges.length > 0) {
+			return renovateChanges;
+		}
+
+		// Fallback for Renovate / Dependabot PRs using PR title if available
+		const isRenovateOrDepsPr =
+			body.includes('renovate') ||
+			body.includes('renovate-debug') ||
+			body.includes('dependabot') ||
+			(title && isDependencyUpdate(title));
+
+		if (isRenovateOrDepsPr && title && title.trim()) {
+			return [title.trim()];
+		}
+	}
+
 	return changes;
 }
 
@@ -172,6 +305,7 @@ async function main() {
 	const repo = process.env.GITHUB_REPOSITORY || 'compsci-adl/mytimetable';
 	let prLabelsStr = process.env.PR_LABELS || '[]';
 	let prBody = process.env.PR_BODY || '';
+	let prTitle = process.env.PR_TITLE || '';
 	let baseBranch = process.env.BASE_BRANCH || 'main';
 
 	// Try to resolve context directly from the GitHub Actions event payload
@@ -189,10 +323,10 @@ async function main() {
 					prNumber = match[0].replace(/[^0-9]/g, '');
 					console.log(`Parsed PR #${prNumber} from merge commit message.`);
 
-					// Fetch labels and body using GitHub CLI
+					// Fetch labels, body, title using GitHub CLI
 					try {
 						const prJson = execSync(
-							`gh pr view ${prNumber} --json labels,body`,
+							`gh pr view ${prNumber} --json labels,body,title`,
 							{
 								encoding: 'utf-8',
 								env: { ...process.env, GH_TOKEN: process.env.GITHUB_TOKEN },
@@ -201,6 +335,7 @@ async function main() {
 						const prData = JSON.parse(prJson);
 						prLabelsStr = JSON.stringify(prData.labels || []);
 						prBody = prData.body || '';
+						prTitle = prData.title || '';
 						console.log(`Fetched details for PR #${prNumber} via GitHub CLI.`);
 					} catch (cliError) {
 						console.warn(`Could not fetch PR details via gh CLI:`, cliError);
@@ -210,6 +345,7 @@ async function main() {
 				prNumber = String(event.pull_request.number);
 				prLabelsStr = JSON.stringify(event.pull_request.labels || []);
 				prBody = event.pull_request.body || '';
+				prTitle = event.pull_request.title || '';
 				baseBranch = event.pull_request.base?.ref || 'main';
 				console.log(
 					`Resolved PR #${prNumber} context directly from event webhook payload.`,
@@ -257,7 +393,7 @@ async function main() {
 	const removed: string[] = [];
 	const packageUpdates: string[] = [];
 
-	const prChanges = parsePrBody(prBody);
+	const prChanges = parsePrBody(prBody, prTitle);
 
 	if (prChanges.length === 0) {
 		console.error(
@@ -458,7 +594,9 @@ async function main() {
 	);
 }
 
-main().catch((err) => {
-	console.error('Fatal error in update-changelog-ci:', err);
-	process.exit(1);
-});
+if (process.env.VITEST !== 'true') {
+	main().catch((err) => {
+		console.error('Fatal error in update-changelog-ci:', err);
+		process.exit(1);
+	});
+}
