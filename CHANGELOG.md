@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.3] - 2026-08-01
+
+### Package Updates
+
+- Bump @eslint/js from 10.0.1 to 10.0.1 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump @internationalized/date from 3.12.2 to 3.12.2 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump @playwright/test from 1.60.0 to 1.60.0 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump @trivago/prettier-plugin-sort-imports from 6.0.2 to 6.0.2 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump @types/react from 19.2.17 to 19.2.17 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump @types/react-dom from 19.2.3 to 19.2.3 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump @types/umami from 2.10.1 to 2.10.1 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump @vitejs/plugin-react from 6.0.2 to 6.0.2 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump @vitest/coverage-v8 from 4.1.8 to 4.1.8 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump autoprefixer from 10.5.0 to 10.5.0 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump eslint from 10.4.1 to 10.4.1 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump eslint-config-prettier from 10.1.8 to 10.1.8 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump eslint-plugin-prettier from 5.5.6 to 5.5.6 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump eslint-plugin-react-hooks from 7.1.1 to 7.1.1 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump eslint-plugin-react-refresh from 0.5.2 to 0.5.2 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump globals from 17.6.0 to 17.6.0 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump lint-staged from 17.0.7 to 17.0.7 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump msw from 2.14.6 to 2.14.6 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump prettier from 3.8.4 to 3.8.4 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump prettier-plugin-tailwindcss from 0.8.0 to 0.8.0 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump simple-git-hooks from 2.13.1 to 2.13.1 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump tsx from 4.19.3 to 4.23.1 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump typescript from 6.0.3 to 6.0.3 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump typescript-eslint from 8.61.0 to 8.61.0 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump vite from 8.0.16 to 8.0.16 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump vite-plugin-pwa from 1.3.0 to 1.3.0 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump vitest from 4.1.8 to 4.1.8 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump workbox-build from 7.4.1 to 7.4.1 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+- Bump workbox-window from 7.4.1 to 7.4.1 ([#108](https://github.com/compsci-adl/mytimetable/pull/108))
+
 ## [3.2.2] - 2026-08-01
 
 ### Changed
