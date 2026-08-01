@@ -64,6 +64,7 @@ export default defineConfig({
 			exclude: [
 				'node_modules/**',
 				'dist/**',
+				'scripts/**',
 				'tests/unit/**',
 				'vite.config.ts',
 				'eslint.config.js',
