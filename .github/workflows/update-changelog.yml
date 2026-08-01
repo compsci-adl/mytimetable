@@ -6,11 +6,17 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, labeled, unlabeled]
+  pull_request_target:
+    types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
   update-changelog:
     name: Auto Changelog & Version Bump
     runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
     permissions:
       contents: write
       pull-requests: read
@@ -70,7 +76,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "chore: update CHANGELOG.md and bump version [skip ci]"
+            git commit -m "chore: update CHANGELOG.md and bump version"
             
             if [ "${{ github.event_name }}" = "push" ]; then
               git push origin HEAD:${{ github.ref }}
