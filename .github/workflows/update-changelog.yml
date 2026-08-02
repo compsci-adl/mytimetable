@@ -55,6 +55,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "chore: update CHANGELOG.md and bump version"
+            git commit -m "chore: update CHANGELOG.md and bump version [skip ci]"
             git push origin HEAD:${{ github.ref }}
           fi
