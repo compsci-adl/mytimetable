@@ -1,11 +1,9 @@
 import {
-	parsePrBody,
-	parseRenovatePrBody,
-} from '../../scripts/update-changelog-ci';
-import {
 	parseChangelog,
 	isDependencyUpdate,
 	isValidChangelogUrl,
+	parsePrBody,
+	parseRenovatePrBody,
 } from '../../src/utils/changelog';
 
 describe('isDependencyUpdate', () => {
@@ -353,5 +351,62 @@ This PR contains the following updates:
 		expect(changes).toEqual([
 			'chore(deps): update actions/checkout to d23441a',
 		]);
+	});
+
+	it('should parse bullet points under ### Changes Made section', () => {
+		const body = `
+### Changes Made
+
+- Add welcome screen feature
+* Fix calendar layout on mobile
+
+### Notes
+- Some non-change notes
+`;
+
+		const changes = parsePrBody(body);
+		expect(changes).toEqual([
+			'Add welcome screen feature',
+			'Fix calendar layout on mobile',
+		]);
+	});
+
+	it('should parse fallback change formatting and empty change cells in Renovate PR tables', () => {
+		const body = `
+| package details |
+| col1 | col2 | col3 | Package |
+|---|---|---|---|
+|
+
+| Package | Type | Update | Change |
+|---|---|---|---|
+| pkg1 | action | minor | custom change text |
+| pkg2 | action | pinDigest | |
+| pkg3 | action | | |
+| | action | minor | v1 -> v2 |
+| [   ] | action | minor | v1 -> v2 |
+|   | action | minor | v1 -> v2 |
+| pkg4 | action | minor | to v1.2.0 |
+|
+| Package | Update |
+|---|---|
+| pkg5 | patch |
+
+| Package | Type |`;
+
+		const changes = parseRenovatePrBody(body);
+		expect(changes).toEqual([
+			'bump pkg1 to custom change text',
+			'bump pkg2 (pinDigest)',
+			'bump pkg3',
+			'bump pkg4 to v1.2.0',
+			'bump pkg5 (patch)',
+		]);
+	});
+
+	it('should handle empty bullet points in parsePrBody', () => {
+		const body = '### Changes Made\n-   \n- valid item';
+		const changes = parsePrBody(body);
+		expect(changes).toEqual(['valid item']);
 	});
 });
