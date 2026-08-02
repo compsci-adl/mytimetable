@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request_target:
-    types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
   update-changelog:
@@ -13,20 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Fetch and checkout PR branch
-        if: github.event_name != 'push'
-        run: |
-          git remote add pr-head https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}.git || git remote set-url pr-head https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}.git
-          git fetch pr-head ${{ github.event.pull_request.head.ref }}
-          git checkout -B ${{ github.event.pull_request.head.ref }} pr-head/${{ github.event.pull_request.head.ref }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # v4
@@ -39,11 +29,8 @@ jobs:
       - name: Check if already run
         id: check_run
         run: |
-          pr_number="${{ github.event.pull_request.number }}"
-          if [ "${{ github.event_name }}" = "push" ]; then
-            commit_message=$(git log -n 1 --format="%B")
-            pr_number=$(echo "$commit_message" | grep -oE '\(#[0-9]+\)' | head -n 1 | tr -d '(#)')
-          fi
+          commit_message=$(git log -n 1 --format="%B")
+          pr_number=$(echo "$commit_message" | grep -oE '\(#[0-9]+\)' | head -n 1 | tr -d '(#)')
           
           if [ -n "$pr_number" ] && [ -f CHANGELOG.md ] && (grep -q "/pull/$pr_number" CHANGELOG.md || grep -q "(#$pr_number)" CHANGELOG.md); then
             echo "Changelog already contains entries for PR #$pr_number. Skipping."
@@ -61,8 +48,6 @@ jobs:
 
       - name: Commit and Push changes
         if: steps.check_run.outputs.skip != 'true'
-        env:
-          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -71,10 +56,5 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "chore: update CHANGELOG.md and bump version"
-            
-            if [ "${{ github.event_name }}" = "push" ]; then
-              git push origin HEAD:${{ github.ref }}
-            else
-              git push pr-head "HEAD:$PR_HEAD_REF"
-            fi
+            git push origin HEAD:${{ github.ref }}
           fi
