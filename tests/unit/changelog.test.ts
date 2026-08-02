@@ -353,12 +353,14 @@ This PR contains the following updates:
 		]);
 	});
 
-	it('should parse bullet points under ### Changes Made section', () => {
+	it('should parse bullet points, numbered lists, and plain text under ### Changes Made section', () => {
 		const body = `
-### Changes Made
+### Description
+Update workflows to support pull_request_target events.
 
-- Add welcome screen feature
-* Fix calendar layout on mobile
+### Changes Made
+Update workflows to support pull_request_target events and check out refs correctly.
+1. Additional numbered item
 
 ### Notes
 - Some non-change notes
@@ -366,8 +368,8 @@ This PR contains the following updates:
 
 		const changes = parsePrBody(body);
 		expect(changes).toEqual([
-			'Add welcome screen feature',
-			'Fix calendar layout on mobile',
+			'Update workflows to support pull_request_target events and check out refs correctly.',
+			'Additional numbered item',
 		]);
 	});
 
@@ -404,9 +406,12 @@ This PR contains the following updates:
 		]);
 	});
 
-	it('should handle empty bullet points in parsePrBody', () => {
+	it('should handle empty bullet points and empty title in parsePrBody', () => {
 		const body = '### Changes Made\n-   \n- valid item';
 		const changes = parsePrBody(body);
 		expect(changes).toEqual(['valid item']);
+
+		const emptyChanges = parsePrBody('No changes here', '');
+		expect(emptyChanges).toEqual([]);
 	});
 });

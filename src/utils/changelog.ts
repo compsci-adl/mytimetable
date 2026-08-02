@@ -265,17 +265,24 @@ export function parsePrBody(body: string, title?: string): string[] {
 			continue;
 		}
 
-		// If we are in the section, parse any bullet points
+		// If we are in the section, parse any items (bullet points, numbered lists, or plain text)
 		if (inChangesSection) {
-			// If we hit any other header (e.g. ## or ###), we exit the section
-			if (/^##+\s+/.test(trimmed) || /^###+\s+/.test(trimmed)) {
+			// If we hit any other header (e.g. ##, ###, etc.), we exit the section
+			if (/^#+\s+/.test(trimmed)) {
 				break;
 			}
 
-			// Match bullet points: - item, * item, etc.
-			const bulletMatch = trimmed.match(/^[-*]\s+(.+)$/);
-			if (bulletMatch) {
-				changes.push(bulletMatch[1].trim());
+			if (trimmed !== '') {
+				// Strip leading list markers: - item, * item, + item, 1. item, 1) item
+				const cleanItem = trimmed.replace(/^([-*+]\s+|\d+[.)]\s+)/, '').trim();
+				if (
+					cleanItem &&
+					cleanItem !== '-' &&
+					cleanItem !== '*' &&
+					cleanItem !== '+'
+				) {
+					changes.push(cleanItem);
+				}
 			}
 		}
 	}
@@ -287,14 +294,8 @@ export function parsePrBody(body: string, title?: string): string[] {
 			return renovateChanges;
 		}
 
-		// Fallback for Renovate / Dependabot PRs using PR title if available
-		const isRenovateOrDepsPr =
-			body.includes('renovate') ||
-			body.includes('renovate-debug') ||
-			body.includes('dependabot') ||
-			(title && isDependencyUpdate(title));
-
-		if (isRenovateOrDepsPr && title && title.trim()) {
+		// Fallback to PR title if available
+		if (title && title.trim()) {
 			return [title.trim()];
 		}
 	}
