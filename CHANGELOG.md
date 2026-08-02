@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.5] - 2026-08-02
+
+### Package Updates
+
+- Bump actions/checkout from v6 to v7 ([#112](https://github.com/compsci-adl/mytimetable/pull/112))
+- Bump actions/github-script from v7 to v9 ([#112](https://github.com/compsci-adl/mytimetable/pull/112))
+- Bump actions/setup-node from v6 to v7 ([#112](https://github.com/compsci-adl/mytimetable/pull/112))
+- Bump pnpm/action-setup from v4 to v6 ([#112](https://github.com/compsci-adl/mytimetable/pull/112))
+
 ## [3.2.4] - 2026-08-02
 
 ### Package Updates
