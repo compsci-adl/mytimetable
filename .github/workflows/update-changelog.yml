@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, synchronize, labeled, unlabeled]
   pull_request_target:
     types: [opened, synchronize, labeled, unlabeled]
 
@@ -13,10 +11,7 @@ jobs:
   update-changelog:
     name: Auto Changelog & Version Bump
     runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'push' ||
-      (github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name == github.repository) ||
-      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     permissions:
       contents: write
       pull-requests: read

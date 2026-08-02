@@ -1,8 +1,6 @@
 name: Check PR Labels
 
 on:
-  pull_request:
-    types: [opened, edited, labeled, unlabeled, synchronize]
   pull_request_target:
     types: [opened, edited, labeled, unlabeled, synchronize]
 
@@ -10,9 +8,7 @@ jobs:
   check-labels:
     name: Verify Release Labels
     runs-on: ubuntu-latest
-    if: |
-      (github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name == github.repository) ||
-      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
+    if: github.event.pull_request.head.repo.full_name == github.repository
     permissions:
       pull-requests: read
     steps:
