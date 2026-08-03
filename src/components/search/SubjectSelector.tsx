@@ -90,8 +90,8 @@ export const SubjectSelector = ({
 				<Label className="text-foreground/80 pl-1 text-xs leading-normal font-bold">
 					{labelText}
 				</Label>
-				<ComboBox.InputGroup className="border-separator bg-content1 focus-within:ring-primary/20 flex h-11 w-full items-center rounded-2xl border px-4 transition-colors focus-within:ring-2">
-					<FaSearch className="text-default-400 mr-3 size-4" />
+				<ComboBox.InputGroup className="border-separator bg-content1 dark:bg-background focus-within:ring-primary/20 flex h-11 w-full items-center rounded-2xl border px-4 transition-colors focus-within:ring-2">
+					<FaSearch className="text-default-400 dark:text-foreground/50 mr-3 size-4" />
 					<Input
 						aria-label={labelText}
 						placeholder={
@@ -111,7 +111,7 @@ export const SubjectSelector = ({
 								setInputValue('');
 								onSubjectChange(null);
 							}}
-							className="text-default-400 hover:text-foreground ml-2 h-auto min-w-0 rounded-full bg-transparent p-0.5 shadow-none transition-colors"
+							className="text-default-400 dark:text-foreground/50 hover:text-foreground ml-2 h-auto min-w-0 rounded-full bg-transparent p-0.5 shadow-none transition-colors"
 							aria-label="Clear search"
 						>
 							<FaTimes className="size-4" />
@@ -121,7 +121,7 @@ export const SubjectSelector = ({
 
 				<ComboBox.Popover
 					placement="bottom start"
-					className="bg-content1 border-separator min-w-60 rounded-2xl border p-1 shadow-lg"
+					className="bg-content1 dark:bg-background border-separator min-w-60 rounded-2xl border p-1 shadow-lg"
 				>
 					<ListBox
 						className="max-h-60 overflow-y-auto outline-none"
@@ -139,7 +139,7 @@ export const SubjectSelector = ({
 								key={item.key}
 								id={item.key}
 								textValue={item.name}
-								className="focus:bg-default-100 hover:bg-default-100/50 text-foreground cursor-pointer rounded-xl px-3 py-2 transition-colors outline-none"
+								className="focus:bg-default-200 dark:focus:bg-foreground/10 hover:bg-default-200 dark:hover:bg-foreground/10 text-foreground cursor-pointer rounded-xl px-3 py-2 transition-colors outline-none"
 							>
 								{item.name}
 							</ListBox.Item>
