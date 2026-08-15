@@ -21,9 +21,9 @@ test.describe('MyTimetable App Desktop End-to-End Tests', () => {
 		).toBeVisible();
 
 		// Trigger Auto Timetable Preferences popover
-		const autoTimetableBtn = page.getByRole('button', {
-			name: 'AUTO-TIMETABLE',
-		});
+		const autoTimetableBtn = page
+			.locator('button')
+			.filter({ hasText: 'AUTO-TIMETABLE' });
 		await expect(autoTimetableBtn).toBeVisible();
 		await autoTimetableBtn.click();
 		await page.waitForTimeout(500); // Let popover open

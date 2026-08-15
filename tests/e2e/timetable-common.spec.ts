@@ -49,7 +49,7 @@ test.describe('MyTimetable App Common End-to-End Tests', () => {
 		await expect(practicalSelect).toBeVisible();
 
 		if (!isMobile) {
-			const listbox = page.locator('[role="listbox"]');
+			const listbox = page.getByRole('listbox', { name: 'Practical Time' });
 			// Open the select dropdown. We retry clicking if it fails to open
 			let opened = false;
 			for (let attempt = 1; attempt <= 3; attempt++) {
