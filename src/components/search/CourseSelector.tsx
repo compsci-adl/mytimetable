@@ -154,6 +154,7 @@ export const CourseSelector = ({
 								<FaTimes className="size-4" />
 							</Button>
 						)}
+						<ComboBox.Trigger className="hidden" />
 					</ComboBox.InputGroup>
 
 					<ComboBox.Popover

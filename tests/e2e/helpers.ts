@@ -27,7 +27,9 @@ export async function setupPage(page: Page) {
 }
 
 export async function enrollMockCourse(page: Page) {
-	const subjectAutocomplete = page.getByLabel('Choose a subject area');
+	const subjectAutocomplete = page.getByRole('combobox', {
+		name: 'Choose a subject area',
+	});
 	// Wait for the subject combobox to be visible and fully loaded (not in loading state)
 	await expect(subjectAutocomplete).toBeVisible({ timeout: 10000 });
 	await expect(subjectAutocomplete).not.toHaveAttribute(
@@ -51,7 +53,9 @@ export async function enrollMockCourse(page: Page) {
 	await subjectOption.click();
 	await page.waitForTimeout(500);
 
-	const courseAutocomplete = page.getByLabel('Search a course');
+	const courseAutocomplete = page.getByRole('combobox', {
+		name: 'Search a course',
+	});
 	await expect(courseAutocomplete).toBeVisible({ timeout: 10000 });
 	await expect(courseAutocomplete).toBeEnabled({ timeout: 10000 });
 	await courseAutocomplete.focus();

@@ -378,9 +378,11 @@ export const AutoTimetable = ({
 						}}
 						aria-label="Enable preferred lunch break"
 					>
-						<Switch.Control>
-							<Switch.Thumb />
-						</Switch.Control>
+						<Switch.Content>
+							<Switch.Control>
+								<Switch.Thumb />
+							</Switch.Control>
+						</Switch.Content>
 					</Switch>
 				</div>
 
@@ -586,9 +588,11 @@ export const AutoTimetable = ({
 						}}
 						aria-label="Ignore lectures"
 					>
-						<Switch.Control>
-							<Switch.Thumb />
-						</Switch.Control>
+						<Switch.Content>
+							<Switch.Control>
+								<Switch.Thumb />
+							</Switch.Control>
+						</Switch.Content>
 					</Switch>
 				</div>
 
@@ -670,22 +674,18 @@ export const AutoTimetable = ({
 
 	return (
 		<Popover isOpen={isOpen} onOpenChange={setIsOpen}>
-			<Popover.Trigger
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				render={(props: any) => (
-					<Button
-						{...props}
-						variant="primary"
-						className="flex gap-2 rounded-full font-bold shadow-md"
-						size="sm"
-						isDisabled={false}
-					>
-						<FaBolt />
-						<span>AUTO-TIMETABLE</span>
-						<FaChevronDown className="text-xs opacity-70" />
-					</Button>
-				)}
-			/>
+			<Popover.Trigger>
+				<Button
+					variant="primary"
+					className="flex gap-2 rounded-full font-bold shadow-md"
+					size="sm"
+					isDisabled={false}
+				>
+					<FaBolt />
+					<span>AUTO-TIMETABLE</span>
+					<FaChevronDown className="text-xs opacity-70" />
+				</Button>
+			</Popover.Trigger>
 			<Popover.Content placement="bottom end">
 				<Popover.Dialog className="bg-background border-separator w-80 rounded-3xl border p-5 shadow-2xl">
 					{renderContent()}

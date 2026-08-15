@@ -18,9 +18,9 @@ test.describe('MyTimetable App Mobile End-to-End Tests', () => {
 		await enrollMockCourse(page);
 
 		// Verify "AUTO-TIMETABLE" button is visible and opens Drawer
-		const autoTimetableBtn = page.getByRole('button', {
-			name: 'AUTO-TIMETABLE',
-		});
+		const autoTimetableBtn = page
+			.locator('button')
+			.filter({ hasText: 'AUTO-TIMETABLE' });
 		await expect(autoTimetableBtn).toBeVisible();
 		await autoTimetableBtn.click();
 
