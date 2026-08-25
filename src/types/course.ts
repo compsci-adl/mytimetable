@@ -29,6 +29,7 @@ export type Course = {
 	units: number;
 	university_wide_elective?: boolean;
 	course_coordinator?: string;
+	course_level: string;
 	course_overview: string;
 	level_of_study: string;
 	requirements: unknown;
