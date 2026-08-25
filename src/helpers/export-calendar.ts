@@ -33,13 +33,13 @@ export const useExportCalendar = () => {
 			.replace(/;/g, '\\;');
 
 	const weekdayMap: Record<string, string> = {
-		Monday: 'MON',
-		Tuesday: 'TUE',
-		Wednesday: 'WED',
-		Thursday: 'THU',
-		Friday: 'FRI',
-		Saturday: 'SAT',
-		Sunday: 'SUN',
+		Monday: 'MO',
+		Tuesday: 'TU',
+		Wednesday: 'WE',
+		Thursday: 'TH',
+		Friday: 'FR',
+		Saturday: 'SA',
+		Sunday: 'SU',
 	};
 
 	const exportIcs = async () => {
