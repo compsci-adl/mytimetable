@@ -369,6 +369,20 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 										</span>
 									</div>
 									<div className="text-default-500 text-sm">
+										{t('course-modal.course_level')}:{' '}
+										<span className="text-foreground font-semibold">
+											{courseInfo.course_level
+												? courseInfo.course_level
+												: 'None listed'}
+										</span>
+									</div>
+									<div className="text-default-500 text-sm">
+										{t('course-modal.units')}:{' '}
+										<span className="text-foreground font-semibold">
+											{courseInfo.units ?? 'None listed'}
+										</span>
+									</div>
+									<div className="text-default-500 text-sm">
 										{t('course-modal.university-wide-elective')}:{' '}
 										<span className="text-foreground font-semibold">
 											{courseInfo.university_wide_elective ? 'True' : 'False'}
