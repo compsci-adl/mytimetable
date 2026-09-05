@@ -355,6 +355,7 @@ describe('useEnrolledCourses Zustand Store', () => {
 			units: 3,
 			course_overview: '',
 			level_of_study: '',
+			course_level: '',
 			requirements: {},
 			class_list: [
 				{

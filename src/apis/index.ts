@@ -11,6 +11,7 @@ type CoursesRes = {
 		};
 		university_wide_elective: boolean;
 		level_of_study: string;
+		course_level: string;
 	}>;
 };
 
