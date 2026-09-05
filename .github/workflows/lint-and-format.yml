@@ -15,7 +15,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
         with:
-          version: 11
+          version: 12
       - run: pnpm install
       - run: pnpm run lint
 
@@ -29,6 +29,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
         with:
-          version: 11
+          version: 12
       - run: pnpm install
       - run: pnpm run format:check
