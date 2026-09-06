@@ -62,7 +62,7 @@ export const HelpModal = () => {
 				<Tabs.ListContainer className="self-center">
 					<Tabs.List
 						aria-label="Help Steps"
-						className="bg-content2 border-separator flex max-w-full gap-1 overflow-x-auto rounded-full border p-1"
+						className="bg-content2 dark:bg-background border-separator flex max-w-full gap-1 overflow-x-auto rounded-full border p-1"
 					>
 						{steps.map((_, i) => (
 							<Tabs.Tab
@@ -90,7 +90,7 @@ export const HelpModal = () => {
 						direction ? 'animate-slide-right' : 'animate-slide-left',
 					)}
 				>
-					<Card className="mobile:p-3 border-separator bg-content1/50 h-full rounded-3xl border p-4 shadow-md md:p-6">
+					<Card className="mobile:p-3 border-separator bg-content1/50 dark:bg-background! h-full rounded-3xl border p-4 shadow-md md:p-6">
 						<Card.Content className="flex h-full flex-col gap-4 md:gap-6">
 							<div className="mobile:text-sm text-foreground px-2 text-center text-base leading-relaxed md:px-4 md:text-lg">
 								{step.content}

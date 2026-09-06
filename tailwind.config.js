@@ -13,7 +13,7 @@ export default {
 				eggshell: '#fdf9ee',
 				sage: '#7a9a7e',
 				tiger: '#fc8500',
-				midnight: '#1c2321',
+				midnight: '#252020',
 				primary: {
 					DEFAULT: '#fc8500',
 					foreground: '#000000',
