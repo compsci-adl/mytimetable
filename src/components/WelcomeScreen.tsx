@@ -130,7 +130,7 @@ export const WelcomeScreen = () => {
 				>
 					<div className="flex flex-col items-center space-y-4 md:space-y-5">
 						{/* Logo */}
-						<div className="group bg-content1/50 border-separator/85 relative rounded-3xl border p-3 shadow-xl transition-all duration-300 hover:scale-105">
+						<div className="group bg-content1/50 dark:bg-background border-separator/85 relative rounded-3xl border p-3 shadow-xl transition-all duration-300 hover:scale-105">
 							<img
 								src="/favicon.svg"
 								alt="MyTimetable Logo"
@@ -185,7 +185,7 @@ export const WelcomeScreen = () => {
 							Powerful Features
 						</h2>
 						<div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-8">
-							<Card className="bg-content1/50 border-separator hover:border-primary/50 rounded-3xl border shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
+							<Card className="bg-content1/50 dark:bg-background border-separator hover:border-primary/50 rounded-3xl border shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
 								<Card.Content className="flex flex-row items-start gap-3 p-4 md:gap-4 md:p-8">
 									<FaPalette className="text-primary shrink-0 text-2xl md:text-5xl" />
 									<div className="space-y-1 text-left">
@@ -201,7 +201,7 @@ export const WelcomeScreen = () => {
 								</Card.Content>
 							</Card>
 
-							<Card className="bg-content1/50 border-separator hover:border-primary/50 rounded-3xl border shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
+							<Card className="bg-content1/50 dark:bg-background border-separator hover:border-primary/50 rounded-3xl border shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
 								<Card.Content className="flex flex-row items-start gap-3 p-4 md:gap-4 md:p-8">
 									<FaRobot className="text-primary shrink-0 text-2xl md:text-5xl" />
 									<div className="space-y-1 text-left">
@@ -217,7 +217,7 @@ export const WelcomeScreen = () => {
 								</Card.Content>
 							</Card>
 
-							<Card className="bg-content1/50 border-separator hover:border-primary/50 rounded-3xl border shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
+							<Card className="bg-content1/50 dark:bg-background border-separator hover:border-primary/50 rounded-3xl border shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
 								<Card.Content className="flex flex-row items-start gap-3 p-4 md:gap-4 md:p-8">
 									<FaCalendar className="text-primary shrink-0 text-2xl md:text-5xl" />
 									<div className="space-y-1 text-left">
@@ -233,7 +233,7 @@ export const WelcomeScreen = () => {
 								</Card.Content>
 							</Card>
 
-							<Card className="bg-content1/50 border-separator hover:border-primary/50 rounded-3xl border shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
+							<Card className="bg-content1/50 dark:bg-background border-separator hover:border-primary/50 rounded-3xl border shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
 								<Card.Content className="flex flex-row items-start gap-3 p-4 md:gap-4 md:p-8">
 									<FaMapMarkerAlt className="text-primary shrink-0 text-2xl md:text-5xl" />
 									<div className="space-y-1 text-left">
@@ -272,7 +272,7 @@ export const WelcomeScreen = () => {
 								<Tabs.ListContainer className="self-center">
 									<Tabs.List
 										aria-label="How to Use Steps"
-										className="bg-content2 border-separator flex max-w-full gap-1 overflow-x-auto rounded-full border p-1"
+										className="bg-content2 dark:bg-background border-separator flex max-w-full gap-1 overflow-x-auto rounded-full border p-1"
 									>
 										{steps.map((_, i) => (
 											<Tabs.Tab
@@ -292,7 +292,7 @@ export const WelcomeScreen = () => {
 								</Tabs.ListContainer>
 							</Tabs>
 
-							<Card className="bg-content1/50 border-separator min-h-85 w-full rounded-3xl border shadow-lg backdrop-blur-md md:min-h-110">
+							<Card className="bg-content1/50 dark:bg-background! border-separator min-h-85 w-full rounded-3xl border shadow-lg backdrop-blur-md md:min-h-110">
 								<Card.Content className="flex h-full flex-col gap-4 p-4 md:flex-row md:items-center md:gap-12 md:p-8">
 									<div className="flex-1 space-y-4 text-left">
 										<div className="bg-primary/10 text-primary border-primary/20 inline-flex h-12 w-12 items-center justify-center rounded-full border text-xl font-bold">
@@ -305,7 +305,7 @@ export const WelcomeScreen = () => {
 
 									<div className="flex flex-1 items-center justify-center">
 										{steps[stepIndex].image?.path ? (
-											<div className="border-separator bg-content2/30 flex h-40 w-full max-w-lg items-center justify-center overflow-hidden rounded-2xl border shadow-md md:h-75">
+											<div className="border-separator bg-content2/30 dark:bg-background flex h-40 w-full max-w-lg items-center justify-center overflow-hidden rounded-2xl border shadow-md md:h-75">
 												<img
 													src={steps[stepIndex].image.path}
 													alt={
@@ -316,7 +316,7 @@ export const WelcomeScreen = () => {
 												/>
 											</div>
 										) : (
-											<div className="bg-content2/20 border-separator flex h-40 w-full max-w-lg flex-col items-center justify-center rounded-2xl border border-dashed p-4 text-center select-none md:h-75 md:p-6">
+											<div className="bg-content2/20 dark:bg-background border-separator flex h-40 w-full max-w-lg flex-col items-center justify-center rounded-2xl border border-dashed p-4 text-center select-none md:h-75 md:p-6">
 												<FaCheckCircle className="text-success mb-2 text-4xl" />
 												<span className="text-default-400 text-sm font-semibold">
 													All set! You're ready to schedule.
@@ -373,7 +373,7 @@ export const WelcomeScreen = () => {
 				className="mx-auto flex min-h-screen w-full max-w-5xl snap-start snap-always flex-col items-center gap-8 px-4 pt-24 pb-8 md:px-6"
 			>
 				<div className="flex w-full max-w-4xl grow flex-col items-center justify-center">
-					<Card className="bg-content1/50 border-separator w-full rounded-3xl border p-6 text-center shadow-lg backdrop-blur-md">
+					<Card className="bg-content1/50 dark:bg-background border-separator w-full rounded-3xl border p-6 text-center shadow-lg backdrop-blur-md">
 						<Card.Content className="items-center space-y-4 p-2">
 							<h3 className="text-foreground text-xl font-bold">
 								Interested in Contributing?

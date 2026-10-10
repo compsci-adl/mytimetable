@@ -40,20 +40,20 @@ export const TermSelector = ({
 						}
 					}}
 				>
-					<Select.Trigger className="border-separator bg-content1 flex h-11 w-full cursor-pointer items-center justify-between rounded-2xl border px-4 text-left text-sm font-medium transition-colors">
+					<Select.Trigger className="border-separator bg-content1 dark:bg-background flex h-11 w-full cursor-pointer items-center justify-between rounded-2xl border px-4 text-left text-sm font-medium transition-colors">
 						<Select.Value>{({ selectedText }) => selectedText}</Select.Value>
 						<Select.Indicator>
-							<FaChevronDown className="text-default-500 text-xs" />
+							<FaChevronDown className="text-default-500 dark:text-foreground/50 text-xs" />
 						</Select.Indicator>
 					</Select.Trigger>
-					<Select.Popover className="bg-content1 border-separator min-w-56 rounded-2xl border p-1 shadow-lg">
+					<Select.Popover className="bg-content1 dark:bg-background border-separator min-w-56 rounded-2xl border p-1 shadow-lg">
 						<ListBox className="outline-none" items={TERMS}>
 							{(term) => (
 								<ListBox.Item
 									key={term.alias}
 									id={term.alias}
 									textValue={term.name}
-									className="focus:bg-default-100 hover:bg-default-100/50 text-foreground relative flex cursor-pointer items-center rounded-xl py-2 pr-3 pl-9 transition-colors outline-none"
+									className="focus:bg-default-200 dark:focus:bg-foreground/10 hover:bg-default-200 dark:hover:bg-foreground/10 text-foreground relative flex cursor-pointer items-center rounded-xl py-2 pr-3 pl-9 transition-colors outline-none"
 								>
 									<ListBox.ItemIndicator className="text-primary absolute left-3 hidden h-4 w-4 items-center justify-center font-bold data-[visible=true]:flex">
 										✓

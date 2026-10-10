@@ -13,7 +13,7 @@
 	--color-eggshell: #fdf9ee;
 	--color-sage: #7a9a7e;
 	--color-tiger: #fc8500;
-	--color-midnight: #1c2321;
+	--color-midnight: #252020;
 
 	--color-primary: var(--accent);
 	--color-primary-foreground: var(--accent-foreground);
@@ -74,14 +74,14 @@
 	--accent: #fc8500;
 	--accent-foreground: #000000;
 	--background: #fdf9ee;
-	--foreground: #1c2321;
+	--foreground: #252020;
 	--success: #7a9a7e;
 	--success-foreground: #fdf9ee;
 
 	--surface: #ffffff;
-	--surface-foreground: #1c2321;
+	--surface-foreground: #252020;
 	--overlay: #ffffff;
-	--overlay-foreground: #1c2321;
+	--overlay-foreground: #252020;
 
 	--separator-color: rgba(122, 154, 126, 0.35); /* Muted Sage Green border */
 
@@ -129,10 +129,10 @@
 .dark {
 	--accent: #fc8500;
 	--accent-foreground: #000000;
-	--background: #1c2321;
+	--background: #252020;
 	--foreground: #fdf9ee;
 	--success: #7a9a7e;
-	--success-foreground: #1c2321;
+	--success-foreground: #252020;
 
 	--surface: #26302d;
 	--surface-foreground: #fdf9ee;
@@ -180,6 +180,15 @@
 	--not-found-500: #ffffff;
 	--not-found-700: #ffffff;
 	--dropzone-bg: rgba(25, 40, 59, 0.4);
+}
+
+/* HeroUI tooltips use --overlay; match the page background in dark mode */
+.dark .tooltip {
+	background-color: var(--background);
+}
+
+.dark .tooltip [data-slot='overlay-arrow'] {
+	fill: var(--background);
 }
 
 * {

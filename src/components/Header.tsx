@@ -20,7 +20,7 @@ const HEADER_BUTTON_PROPS = {
 	isIconOnly: true,
 	variant: 'secondary',
 	className:
-		'text-lg rounded-full flex items-center justify-center bg-default-100 hover:bg-default-200 text-foreground',
+		'text-lg rounded-full flex items-center justify-center bg-default-100 dark:bg-background hover:bg-default-200 dark:hover:bg-foreground/10 text-foreground',
 } as const;
 
 export const Header = ({ isWelcome = false }: { isWelcome?: boolean }) => {
@@ -79,7 +79,7 @@ export const Header = ({ isWelcome = false }: { isWelcome?: boolean }) => {
 										href={import.meta.env.VITE_FEEDBACK_FORM_URL}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="bg-default-100 hover:bg-default-200 text-foreground flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-lg"
+										className="bg-default-100 dark:bg-background hover:bg-default-200 dark:hover:bg-foreground/10 text-foreground flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-lg"
 									>
 										<FaCommentDots />
 									</Link>
@@ -117,7 +117,7 @@ export const Header = ({ isWelcome = false }: { isWelcome?: boolean }) => {
 									</Tooltip.Content>
 								</Tooltip>
 								<Popover.Content>
-									<Popover.Dialog className="bg-overlay border-separator flex min-w-37.5 flex-col gap-1 rounded-2xl border p-2 shadow-xl">
+									<Popover.Dialog className="bg-overlay dark:bg-background border-separator flex min-w-37.5 flex-col gap-1 rounded-2xl border p-2 shadow-xl">
 										{LANGUAGES.map((language) => (
 											<Button
 												key={language.code}
@@ -127,7 +127,7 @@ export const Header = ({ isWelcome = false }: { isWelcome?: boolean }) => {
 													i18n.changeLanguage(language.code);
 													setIsChangeLanguageOpen(false);
 												}}
-												className="hover:bg-default-100 text-foreground justify-start gap-2 rounded-xl px-3 py-2 text-sm"
+												className="hover:bg-default-100 dark:hover:bg-foreground/10 text-foreground justify-start gap-2 rounded-xl px-3 py-2 text-sm"
 											>
 												<span>{language.name} </span>
 												<span className="font-noto-emoji">{language.flag}</span>
