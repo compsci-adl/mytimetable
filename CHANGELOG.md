@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.10] - 2026-10-20
+
+### Package Updates
+
+- Bump vite from 8.0.16 to 8.1.6 ([#131](https://github.com/compsci-adl/mytimetable/pull/131))
+
 ## [3.4.9] - 2026-10-19
 
 ### Package Updates
