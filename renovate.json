@@ -37,18 +37,23 @@
 		},
 		{
 			"matchManagers": ["github-actions"],
-			"matchUpdateTypes": ["security"],
+			"isVulnerabilityAlert": true,
 			"groupName": "GitHub Actions updates",
 			"groupSlug": "github-actions-security-updates"
 		},
 		{
 			"matchManagers": ["github-actions"],
-			"matchUpdateTypes": ["minor", "patch", "digest"],
-			"enabled": false
+			"matchUpdateTypes": ["minor", "patch", "digest"]
 		},
 		{
 			"matchManagers": ["npm"],
-			"matchUpdateTypes": ["security", "pin"],
+			"matchUpdateTypes": ["pin"],
+			"groupName": "npm updates",
+			"groupSlug": "npm-pin-updates"
+		},
+		{
+			"matchManagers": ["npm"],
+			"isVulnerabilityAlert": true,
 			"groupName": "npm updates",
 			"groupSlug": "npm-security-updates"
 		},
