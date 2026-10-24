@@ -26,20 +26,23 @@
 			"matchUpdateTypes": ["major"],
 			"groupName": "GitHub Actions updates",
 			"groupSlug": "github-actions-major-updates",
-			"minimumReleaseAge": "7 days"
+			"minimumReleaseAge": "7 days",
+			"labels": ["major-update"]
 		},
 		{
 			"matchManagers": ["github-actions"],
 			"matchUpdateTypes": ["pin"],
 			"groupName": "GitHub Actions updates",
 			"groupSlug": "github-actions-pin-updates",
-			"minimumReleaseAge": "3 days"
+			"minimumReleaseAge": "3 days",
+			"labels": ["patch"]
 		},
 		{
 			"matchManagers": ["github-actions"],
 			"isVulnerabilityAlert": true,
 			"groupName": "GitHub Actions updates",
-			"groupSlug": "github-actions-security-updates"
+			"groupSlug": "github-actions-security-updates",
+			"labels": ["patch"]
 		},
 		{
 			"matchManagers": ["github-actions"],
@@ -50,13 +53,15 @@
 			"matchManagers": ["npm"],
 			"matchUpdateTypes": ["pin"],
 			"groupName": "npm updates",
-			"groupSlug": "npm-pin-updates"
+			"groupSlug": "npm-pin-updates",
+			"labels": ["patch"]
 		},
 		{
 			"matchManagers": ["npm"],
 			"isVulnerabilityAlert": true,
 			"groupName": "npm updates",
-			"groupSlug": "npm-security-updates"
+			"groupSlug": "npm-security-updates",
+			"labels": ["patch"]
 		},
 		{
 			"matchManagers": ["npm"],
