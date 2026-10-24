@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.12] - 2026-10-24
+
+### Package Updates
+
+- Bump actions/setup-node from 8207627 to 949feb2 ([#134](https://github.com/compsci-adl/mytimetable/pull/134))
+- Bump pnpm/action-setup from 0ebf471 to 0977fd9 ([#134](https://github.com/compsci-adl/mytimetable/pull/134))
+
 ## [3.4.11] - 2026-10-24
 
 ### Package Updates
