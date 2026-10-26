@@ -25,7 +25,7 @@ export const ZoomButtons = () => {
 						isIconOnly
 						size="sm"
 						isDisabled={isMax}
-						className="bg-content1 hover:bg-default-100 border-separator text-foreground rounded-full border shadow-md disabled:opacity-30"
+						className="bg-content1 dark:bg-background hover:bg-default-100 dark:hover:bg-foreground/10 border-separator text-foreground rounded-full border shadow-md disabled:opacity-30"
 					>
 						<FaPlus />
 					</Button>
@@ -39,7 +39,7 @@ export const ZoomButtons = () => {
 						isIconOnly
 						size="sm"
 						isDisabled={isMin}
-						className="bg-content1 hover:bg-default-100 border-separator text-foreground rounded-full border shadow-md disabled:opacity-30"
+						className="bg-content1 dark:bg-background hover:bg-default-100 dark:hover:bg-foreground/10 border-separator text-foreground rounded-full border shadow-md disabled:opacity-30"
 					>
 						<FaMinus />
 					</Button>
