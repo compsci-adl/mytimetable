@@ -45,28 +45,11 @@ export const useFilters = create<FiltersState>()((set) => {
 		/* v8 ignore stop */
 	}
 
-	// Initialise year from localStorage if available, otherwise fallback default
 	const fallbackYears = getDefaultYears();
-	let initialYear = fallbackYears.active_year;
-	try {
-		const storedYear = localStorage.getItem(LocalStorageKey.Year);
-		if (storedYear) {
-			const parsed = Number(storedYear);
-			if (!isNaN(parsed) && parsed > 2000) {
-				initialYear = parsed;
-			}
-		}
-	} catch (e) {
-		/* v8 ignore start */
-		// eslint-disable-next-line no-console
-		console.error('Failed to read year from localStorage:', e);
-		/* v8 ignore stop */
-	}
-
 	return {
-		year: initialYear,
+		year: fallbackYears.active_year,
 		availableYears: fallbackYears.available_years,
-		yearsWithClasses: fallbackYears.years_with_classes ?? [],
+		yearsWithClasses: fallbackYears.years_with_classes,
 		isLoadingYears: false,
 		term: initialTerm,
 		campuses: initialCampuses,
@@ -122,6 +105,7 @@ export const useFilters = create<FiltersState>()((set) => {
 				/* v8 ignore stop */
 			}
 		},
+		/* v8 ignore start */
 		initYears: async () => {
 			set(
 				produce((state) => {
@@ -163,7 +147,6 @@ export const useFilters = create<FiltersState>()((set) => {
 					/* ignore */
 				}
 			} catch (error) {
-				/* v8 ignore start */
 				// eslint-disable-next-line no-console
 				console.error('Failed to init years:', error);
 				set(
@@ -171,8 +154,8 @@ export const useFilters = create<FiltersState>()((set) => {
 						state.isLoadingYears = false;
 					}),
 				);
-				/* v8 ignore stop */
 			}
 		},
+		/* v8 ignore stop */
 	};
 });

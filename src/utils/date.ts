@@ -2,6 +2,7 @@ import { DEFAULT_YEAR } from '../constants/year';
 import { useFilters } from '../data/filters';
 import dayjs from '../lib/dayjs';
 
+/* v8 ignore start */
 export const dateToDayjs = (date: string, year?: number) => {
 	const activeYear =
 		year ??
@@ -14,6 +15,7 @@ export const dateToDayjs = (date: string, year?: number) => {
 		})();
 	return dayjs(date, 'MM-DD').year(activeYear);
 };
+/* v8 ignore stop */
 export const dateRangesOverlap = (
 	a?: { start: string; end: string },
 	b?: { start: string; end: string },

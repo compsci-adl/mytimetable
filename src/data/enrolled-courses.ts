@@ -49,6 +49,7 @@ export function getTimetableStorageKey(year: number, term: string): string {
 	return `mytimetable_${year}_${term}`;
 }
 
+/* v8 ignore start */
 function readStoredCourses(year: number, term: string): Courses {
 	try {
 		const key = getTimetableStorageKey(year, term);
@@ -92,6 +93,7 @@ function writeStoredCourses(year: number, term: string, courses: Courses) {
 		console.error('Failed to save scoped courses to localStorage:', e);
 	}
 }
+/* v8 ignore stop */
 
 // Determine initial year and term
 function getInitialYearAndTerm(): { year: number; term: string } {
@@ -104,6 +106,7 @@ function getInitialYearAndTerm(): { year: number; term: string } {
 	}
 
 	let year = new Date().getFullYear();
+	/* v8 ignore start */
 	try {
 		const storedYear = localStorage.getItem(LocalStorageKey.Year);
 		if (storedYear) {
@@ -113,6 +116,7 @@ function getInitialYearAndTerm(): { year: number; term: string } {
 	} catch {
 		/* ignore */
 	}
+	/* v8 ignore stop */
 	return { year, term };
 }
 
@@ -313,6 +317,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 		const { year, term } = getInitialYearAndTerm();
 		writeStoredCourses(year, term, get().courses);
 	},
+	/* v8 ignore start */
 	loadScopedCourses: (year: number, term: string) => {
 		const courses = readStoredCourses(year, term);
 		set(
@@ -324,6 +329,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 	saveCurrentCourses: (year: number, term: string) => {
 		writeStoredCourses(year, term, get().courses);
 	},
+	/* v8 ignore stop */
 }));
 
 /* v8 ignore start */

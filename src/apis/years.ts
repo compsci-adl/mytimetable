@@ -3,7 +3,7 @@ import { fetcher } from './fetcher';
 export interface YearsResponse {
 	active_year: number;
 	available_years: number[];
-	years_with_classes?: number[];
+	years_with_classes: number[];
 }
 
 export function getDefaultYears(): YearsResponse {
