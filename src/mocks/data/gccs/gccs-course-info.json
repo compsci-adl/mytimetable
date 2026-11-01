@@ -6,7 +6,7 @@
 			"queryname": "COURSE_DTL",
 			"rows": [
 				{
-					"YEAR": "2024",
+					"YEAR": "2026",
 					"COURSE_ID": "106541",
 					"COURSE_OFFER_NBR": 1,
 					"ACAD_CAREER": "UGRD",
@@ -43,12 +43,12 @@
 					"DISCOVERY_EXPERIENCE–COMMUNITY": "N",
 					"SYLLABUS": "This course provides an introduction to key research areas in Computer Science and the 'Grand Challenges'. Topics include AI, Algorithms, Distributed Systems, Networking, Data Mining and Hardware; scholarship and writing in the discipline, critical analysis and thinking skills.",
 					"ISLOP": false,
-					"URL": "https://www.adelaide.edu.au/course-outlines/106541/1/sem-2/2024",
+					"URL": "https://www.adelaide.edu.au/course-outlines/106541/1/sem-2/2026",
 					"CRITICAL_DATES": {
-						"LAST_DAY": "Mon 05/08/2024",
-						"CENSUS_DT": "Wed 14/08/2024",
-						"LAST_DAY_TO_WFN": "Fri 13/09/2024",
-						"LAST_DAY_TO_WF": "Fri 25/10/2024"
+						"LAST_DAY": "Mon 05/08/2026",
+						"CENSUS_DT": "Wed 14/08/2026",
+						"LAST_DAY_TO_WFN": "Fri 13/09/2026",
+						"LAST_DAY_TO_WF": "Fri 25/10/2026"
 					}
 				}
 			]

@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { FaSearch, FaTimes } from 'react-icons/fa';
 
 import { getCourses } from '../../apis';
-import { YEAR } from '../../constants/year';
 import { useEnrolledCourses } from '../../data/enrolled-courses';
 import type { Key } from '../../types/key';
 
 interface CourseSelectorProps {
+	selectedYear: number;
 	selectedTerm: string;
 	subject: string | null;
 	onlyUniversityWide: boolean | undefined;
@@ -18,6 +18,7 @@ interface CourseSelectorProps {
 }
 
 export const CourseSelector = ({
+	selectedYear,
 	selectedTerm,
 	subject,
 	onlyUniversityWide,
@@ -34,7 +35,7 @@ export const CourseSelector = ({
 		queryKey: [
 			'courses',
 			{
-				year: YEAR,
+				year: selectedYear,
 				term: selectedTerm,
 				subject: subject!,
 				university_wide_elective: onlyUniversityWide,
@@ -87,10 +88,16 @@ export const CourseSelector = ({
 
 	const [prevSubject, setPrevSubject] = useState(subject);
 	const [prevTerm, setPrevTerm] = useState(selectedTerm);
+	const [prevYear, setPrevYear] = useState(selectedYear);
 
-	if (subject !== prevSubject || selectedTerm !== prevTerm) {
+	if (
+		subject !== prevSubject ||
+		selectedTerm !== prevTerm ||
+		selectedYear !== prevYear
+	) {
 		setPrevSubject(subject);
 		setPrevTerm(selectedTerm);
+		setPrevYear(selectedYear);
 		setSelectedCourseId(null);
 		setInputValue('');
 	}

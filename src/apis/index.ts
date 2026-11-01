@@ -38,3 +38,5 @@ export const getSubjects = async (params: { year: number; term: string }) => {
 		.json();
 	return res as SubjectsRes;
 };
+
+export * from './years';

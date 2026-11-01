@@ -34,14 +34,15 @@ const CURRENT_MONDAY = getMonday(dayjs());
  */
 export const getStartEndWeek = (
 	dates: Array<{ start: string; end: string }>,
+	year?: number,
 ): [dayjs.Dayjs, dayjs.Dayjs] => {
 	if (dates.length === 0) return [CURRENT_MONDAY, CURRENT_MONDAY];
 
 	let startWeek = MAX_DATE;
 	let endWeek = MIN_DATE;
 	dates.forEach((date) => {
-		const start = dateToDayjs(date.start);
-		const end = dateToDayjs(date.end);
+		const start = dateToDayjs(date.start, year);
+		const end = dateToDayjs(date.end, year);
 		if (start.isBefore(startWeek)) {
 			startWeek = start;
 		}
@@ -57,10 +58,11 @@ const checkDateRangeInWeek = (
 	weekStart: dayjs.Dayjs,
 	dateRange: DateTimeRange,
 ) => {
+	const weekYear = weekStart.year();
 	const weekEnd = weekStart.add(6, 'days');
 	return (
-		weekEnd.isSameOrAfter(dateToDayjs(dateRange.start)) &&
-		weekStart.isSameOrBefore(dateToDayjs(dateRange.end))
+		weekEnd.isSameOrAfter(dateToDayjs(dateRange.start, weekYear)) &&
+		weekStart.isSameOrBefore(dateToDayjs(dateRange.end, weekYear))
 	);
 };
 
@@ -149,7 +151,8 @@ export const useCalendar = () => {
 	const dates = enrolledCourses.flatMap((c) =>
 		c.classes.flatMap((cls) => cls.meetings.flatMap((m) => m.date)),
 	);
-	const [startWeek, endWeek] = getStartEndWeek(dates);
+	const selectedYear = useFilters((s) => s.year);
+	const [startWeek, endWeek] = getStartEndWeek(dates, selectedYear);
 
 	const [currentWeek, setCurrentWeek] = useState(CURRENT_MONDAY);
 

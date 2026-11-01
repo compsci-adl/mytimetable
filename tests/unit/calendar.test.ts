@@ -37,13 +37,16 @@ vi.hoisted(() => {
 
 describe('getStartEndWeek', () => {
 	it('should return the first date (Monday) of the start and end week', () => {
-		const [start, end] = getStartEndWeek([
-			{ start: '09-18', end: '10-12' },
-			{ start: '11-13', end: '12-01' },
-			{ start: '12-12', end: '11-11' },
-		]);
-		expect(start.format('MM-DD')).toBe('09-16');
-		expect(end.format('MM-DD')).toBe('11-25');
+		const [start, end] = getStartEndWeek(
+			[
+				{ start: '09-18', end: '10-12' },
+				{ start: '11-13', end: '12-01' },
+				{ start: '12-12', end: '11-11' },
+			],
+			2026,
+		);
+		expect(start.format('MM-DD')).toBe('09-14');
+		expect(end.format('MM-DD')).toBe('11-30');
 	});
 
 	it('should return current Monday if dates list is empty', () => {
@@ -114,7 +117,7 @@ describe('getWeekCourses', () => {
 				],
 			},
 		];
-		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
+		const courses = getWeekCourses(dayjs('2026-09-14'), enrolledCourses);
 		const expectedRes: WeekCourses = [
 			[
 				{
@@ -197,7 +200,7 @@ describe('getWeekCourses', () => {
 				],
 			},
 		];
-		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
+		const courses = getWeekCourses(dayjs('2026-09-14'), enrolledCourses);
 		const expectedRes: WeekCourses = [
 			[],
 			[],
@@ -247,7 +250,7 @@ describe('getWeekCourses', () => {
 				],
 			},
 		];
-		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
+		const courses = getWeekCourses(dayjs('2026-09-14'), enrolledCourses);
 		const expectedRes: WeekCourses = [
 			[
 				{
@@ -317,7 +320,7 @@ describe('getWeekCourses', () => {
 				],
 			},
 		];
-		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
+		const courses = getWeekCourses(dayjs('2026-09-14'), enrolledCourses);
 		const expectedRes: WeekCourses = [
 			[
 				{
@@ -401,7 +404,7 @@ describe('getWeekCourses', () => {
 				],
 			},
 		];
-		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
+		const courses = getWeekCourses(dayjs('2026-09-14'), enrolledCourses);
 		const expectedRes: WeekCourses = [
 			[
 				{
@@ -485,7 +488,7 @@ describe('getWeekCourses', () => {
 				],
 			},
 		];
-		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
+		const courses = getWeekCourses(dayjs('2026-09-14'), enrolledCourses);
 		const expectedRes: WeekCourses = [
 			[
 				{
@@ -588,7 +591,7 @@ describe('getWeekCourses', () => {
 				],
 			},
 		];
-		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
+		const courses = getWeekCourses(dayjs('2026-09-14'), enrolledCourses);
 		const mondayCourses = courses[0];
 		// Three separate 1h slots, sorted by start time ascending
 		expect(mondayCourses.length).toBe(3);
@@ -620,7 +623,7 @@ describe('getWeekCourses', () => {
 				],
 			},
 		];
-		const courses = getWeekCourses(dayjs('2024-09-16'), enrolledCourses);
+		const courses = getWeekCourses(dayjs('2026-09-14'), enrolledCourses);
 		// Should return empty week
 		expect(courses).toEqual([[], [], [], [], [], [], []]);
 	});

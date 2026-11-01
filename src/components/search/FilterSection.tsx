@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
 import { getCourses } from '../../apis';
-import { YEAR } from '../../constants/year';
 
 interface FilterSectionProps {
+	selectedYear?: number;
 	selectedTerm: string;
 	subject: string | null;
 	levelOfStudy: string | undefined;
@@ -21,6 +21,7 @@ interface FilterSectionProps {
 }
 
 export const FilterSection = ({
+	selectedYear,
 	selectedTerm,
 	subject,
 	levelOfStudy,
@@ -55,7 +56,7 @@ export const FilterSection = ({
 		queryKey: [
 			'courses',
 			{
-				year: YEAR,
+				year: selectedYear ?? new Date().getFullYear(),
 				term: selectedTerm,
 				subject: subject!,
 				university_wide_elective: undefined,

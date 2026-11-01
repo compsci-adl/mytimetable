@@ -6,7 +6,7 @@
 			"queryname": "COURSE_DTL",
 			"rows": [
 				{
-					"YEAR": "2024",
+					"YEAR": "2026",
 					"COURSE_ID": "107592",
 					"COURSE_OFFER_NBR": 1,
 					"ACAD_CAREER": "UGRD",
@@ -43,12 +43,12 @@
 					"DISCOVERY_EXPERIENCE–COMMUNITY": "N",
 					"SYLLABUS": "The course is structured to take students from an introductory knowledge of C++ to a higher level, as well as addressing some key areas of computer programming and algorithm design. Topics include: review of class hierarchies, inheritance, friends, polymorphism and type systems; recursion; OO design principles, abstract data types, testing and software reuse; introductory data structures: linked lists, stacks, queues, trees, heaps, algorithmic strategies for searching and sorting data in these structures; introductory complexity analysis.",
 					"ISLOP": false,
-					"URL": "https://www.adelaide.edu.au/course-outlines/107592/1/sem-2/2024",
+					"URL": "https://www.adelaide.edu.au/course-outlines/107592/1/sem-2/2026",
 					"CRITICAL_DATES": {
-						"LAST_DAY": "Mon 05/08/2024",
-						"CENSUS_DT": "Wed 14/08/2024",
-						"LAST_DAY_TO_WFN": "Fri 13/09/2024",
-						"LAST_DAY_TO_WF": "Fri 25/10/2024"
+						"LAST_DAY": "Mon 05/08/2026",
+						"CENSUS_DT": "Wed 14/08/2026",
+						"LAST_DAY_TO_WFN": "Fri 13/09/2026",
+						"LAST_DAY_TO_WF": "Fri 25/10/2026"
 					}
 				}
 			]

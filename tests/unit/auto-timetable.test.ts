@@ -1158,7 +1158,7 @@ describe('checkViolations utility', () => {
 			course_id: '100',
 			name: { subject: 'BIOL', code: '1032', title: 'Biology' },
 			class_number: 100,
-			year: 2024,
+			year: 2026,
 			term: 'sem1',
 			campus: 'North Terrace',
 			units: 3,

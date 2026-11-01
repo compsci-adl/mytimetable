@@ -6,15 +6,16 @@ import { FaSearch, FaTimes } from 'react-icons/fa';
 
 import { getSubjects } from '../../apis';
 import { SUBJECT_CODES } from '../../constants/subject-codes';
-import { YEAR } from '../../constants/year';
 
 interface SubjectSelectorProps {
+	selectedYear: number;
 	selectedTerm: string;
 	subject: string | null;
 	onSubjectChange: (subject: string | null) => void;
 }
 
 export const SubjectSelector = ({
+	selectedYear,
 	selectedTerm,
 	subject,
 	onSubjectChange,
@@ -23,7 +24,7 @@ export const SubjectSelector = ({
 	const [inputValue, setInputValue] = useState('');
 
 	const subjectsQuery = useQuery({
-		queryKey: ['subjects', { year: YEAR, term: selectedTerm }] as const,
+		queryKey: ['subjects', { year: selectedYear, term: selectedTerm }] as const,
 		queryFn: ({ queryKey }) => getSubjects(queryKey[1]),
 	});
 

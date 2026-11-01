@@ -192,9 +192,9 @@ describe('getTermMonths', () => {
 
 describe('getMonday', () => {
 	it('should return Monday of the week for a given dayjs date', () => {
-		const tuesday = dateToDayjs('06-04'); // 2024-06-04 is Tuesday
+		const tuesday = dateToDayjs('06-02', 2026); // 2026-06-02 is Tuesday
 		const monday = getMonday(tuesday);
 		expect(monday.isoWeekday()).toBe(1);
-		expect(monday.format('MM-DD')).toBe('06-03');
+		expect(monday.format('MM-DD')).toBe('06-01');
 	});
 });

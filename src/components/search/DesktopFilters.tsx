@@ -7,6 +7,7 @@ import { AutoTimetable } from '../AutoTimetable';
 import { FilterSection } from './FilterSection';
 
 interface DesktopFiltersProps {
+	selectedYear?: number;
 	selectedTerm: string;
 	subject: string | null;
 	levelOfStudy: string | undefined;
@@ -25,6 +26,7 @@ interface DesktopFiltersProps {
 }
 
 export const DesktopFilters = ({
+	selectedYear,
 	selectedTerm,
 	subject,
 	levelOfStudy,
@@ -146,6 +148,7 @@ export const DesktopFilters = ({
 							</Modal.Header>
 							<Modal.Body>
 								<FilterSection
+									selectedYear={selectedYear}
 									selectedTerm={selectedTerm}
 									subject={subject}
 									levelOfStudy={tempLevelOfStudy}
