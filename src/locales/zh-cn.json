@@ -17,6 +17,8 @@
 		"dates": "日期",
 		"days": "星期",
 		"time": "时间",
+		"course-color": "课程颜色",
+		"color-option": "课程颜色 {{number}}",
 		"location": "地点"
 	},
 	"calendar": {

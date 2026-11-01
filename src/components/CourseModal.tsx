@@ -8,10 +8,12 @@ import {
 	FaSpinner,
 } from 'react-icons/fa';
 
+import { COURSE_COLORS } from '../constants/course-colors';
 import { useGetCourseInfo } from '../data/course-info';
 import {
 	useEnrolledCourse,
 	useDetailedEnrolledCourses,
+	useEnrolledCourses,
 } from '../data/enrolled-courses';
 import { useFilters } from '../data/filters';
 import { findConflicts } from '../helpers/conflicts';
@@ -257,6 +259,7 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 	const courseInfo = useGetCourseInfo(id);
 	const { t } = useTranslation();
 	const { course, updateClass } = useEnrolledCourse(id);
+	const setCourseColor = useEnrolledCourses((s) => s.setCourseColor);
 	const detailed = useDetailedEnrolledCourses();
 	const selectedTermAlias = useFilters((s) => s.term);
 	const selectedCampuses = useFilters((s) => s.campuses);
@@ -352,6 +355,35 @@ export const CourseModal = ({ isOpen, onOpenChange, id }: CourseModalProps) => {
 											</div>
 										)}
 									</Modal.Heading>
+									{course && (
+										<div className="mt-2 flex flex-wrap items-center gap-2">
+											<span className="text-default-500 text-sm">
+												{t('course-modal.course-color')}:
+											</span>
+											<div className="flex items-center gap-2">
+												{COURSE_COLORS.map((color, index) => (
+													<button
+														key={index}
+														type="button"
+														aria-label={t('course-modal.color-option', {
+															number: index + 1,
+														})}
+														aria-pressed={course.color === index}
+														title={t('course-modal.color-option', {
+															number: index + 1,
+														})}
+														onClick={() => setCourseColor(id, index)}
+														className={clsx(
+															'focus-visible:ring-primary focus-visible:ring-offset-background h-6 w-6 rounded-full transition-transform hover:scale-110 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+															color.dot,
+															course.color === index &&
+																'ring-primary ring-2 ring-offset-2',
+														)}
+													/>
+												))}
+											</div>
+										</div>
+									)}
 									<div className="text-default-500 mt-2 text-sm">
 										{t('course-modal.level_of_study')}:{' '}
 										<span className="text-foreground font-semibold">
