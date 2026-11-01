@@ -8,6 +8,7 @@ import { AutoTimetable } from '../AutoTimetable';
 import { FilterSection } from './FilterSection';
 
 interface MobileFiltersProps {
+	selectedYear?: number;
 	selectedTerm: string;
 	subject: string | null;
 	levelOfStudy: string | undefined;
@@ -28,6 +29,7 @@ interface MobileFiltersProps {
 }
 
 export const MobileFilters = ({
+	selectedYear,
 	selectedTerm,
 	subject,
 	levelOfStudy,
@@ -208,6 +210,7 @@ export const MobileFilters = ({
 							</Drawer.Header>
 							<Drawer.Body className="pt-4">
 								<FilterSection
+									selectedYear={selectedYear}
 									selectedTerm={selectedTerm}
 									subject={subject}
 									levelOfStudy={levelOfStudy}

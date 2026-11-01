@@ -11,7 +11,6 @@ import {
 } from 'react-icons/fa';
 
 import { WEEK_DAYS } from '../constants/week-days';
-import { YEAR } from '../constants/year';
 import { useCoursesInfo } from '../data/course-info';
 import {
 	useCourseColor,
@@ -47,6 +46,7 @@ const CalendarHeader = ({
 	status,
 }: CalendarHeaderProps) => {
 	const { t } = useTranslation();
+	const selectedYear = useFilters((s) => s.year);
 
 	const actionButtons = [
 		{
@@ -85,7 +85,7 @@ const CalendarHeader = ({
 						]
 					}
 				</span>
-				<span className="text-default-500 font-light">{YEAR}</span>
+				<span className="text-default-500 font-light">{selectedYear}</span>
 			</h2>
 			<div className="flex gap-1">
 				{actionButtons.map((a, i) => (

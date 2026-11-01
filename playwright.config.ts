@@ -65,7 +65,6 @@ export default defineConfig({
 		timeout: 120000,
 		env: {
 			VITE_API_BASE_URL: '/mock',
-			VITE_YEAR: '2024',
 		},
 	},
 });

@@ -141,6 +141,13 @@ const subjects = [
 ];
 
 export const handlers = [
+	http.get('/mock/years', async () => {
+		return HttpResponse.json({
+			active_year: 2026,
+			available_years: [2026, 2027, 2028],
+			years_with_classes: [2026, 2027],
+		});
+	}),
 	http.get('/mock/subjects', async () => {
 		return HttpResponse.json(subjects);
 	}),

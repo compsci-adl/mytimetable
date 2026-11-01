@@ -1,5 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+vi.mock('../../src/apis/years', () => ({
+	fetchAvailableYears: vi.fn().mockResolvedValue({
+		active_year: 2026,
+		available_years: [2026, 2027, 2028],
+		years_with_classes: [2026, 2027],
+	}),
+	getDefaultYears: vi.fn().mockReturnValue({
+		active_year: 2026,
+		available_years: [2026, 2027],
+		years_with_classes: [2026],
+	}),
+}));
+
 const localStorageStore: Record<string, string> = {};
 const localStorageMock = {
 	getItem: vi.fn((key: string) => localStorageStore[key] || null),
@@ -115,5 +128,21 @@ describe('useFilters Zustand Store', () => {
 
 		useFilters.getState().setCampuses(undefined);
 		expect(useFilters.getState().campuses).toBeUndefined();
+	});
+
+	it('should set year and persist to localStorage', async () => {
+		const { useFilters } = await import('../../src/data/filters');
+		useFilters.getState().setYear(2027);
+		expect(useFilters.getState().year).toBe(2027);
+		expect(localStorageMock.getItem('MTT.year')).toBe('2027');
+	});
+
+	it('should handle initYears and update active year and available years', async () => {
+		const { useFilters } = await import('../../src/data/filters');
+		await useFilters.getState().initYears();
+		expect(useFilters.getState().year).toBe(2027);
+		expect(useFilters.getState().availableYears).toEqual([2026, 2027, 2028]);
+		expect(useFilters.getState().yearsWithClasses).toEqual([2026, 2027]);
+		expect(useFilters.getState().isLoadingYears).toBe(false);
 	});
 });
