@@ -35,6 +35,7 @@ type CoursesState = {
 		},
 	) => void;
 	removeCourse: (courseId: string) => void;
+	setCourseColor: (courseId: string, color: number) => void;
 	clearCourses: () => void;
 	updateCourseClass: (props: {
 		courseId: string;
@@ -240,6 +241,23 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 		set(
 			produce((state) => {
 				state.courses = state.courses.filter((c) => c.id !== courseId);
+			}),
+		);
+		const { year, term } = getInitialYearAndTerm();
+		writeStoredCourses(year, term, get().courses);
+	},
+	setCourseColor: (courseId, color) => {
+		if (
+			!Number.isInteger(color) ||
+			color < 0 ||
+			color >= COURSE_COLORS.length
+		) {
+			return;
+		}
+		set(
+			produce((state) => {
+				const course = state.courses.find((c) => c.id === courseId);
+				if (course) course.color = color;
 			}),
 		);
 		const { year, term } = getInitialYearAndTerm();

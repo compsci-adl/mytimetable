@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { getCourse } from '../../src/apis';
-import { useEnrolledCourses } from '../../src/data/enrolled-courses';
+import {
+	getTimetableStorageKey,
+	useEnrolledCourses,
+} from '../../src/data/enrolled-courses';
 import { useFilters } from '../../src/data/filters';
 import { queryClient } from '../../src/lib/query';
 import type { Course } from '../../src/types/course';
@@ -153,6 +156,23 @@ describe('useEnrolledCourses Zustand Store', () => {
 		expect(courses.length).toBe(2);
 		expect(courses[0].color).toBe(0);
 		expect(courses[1].color).toBe(1);
+	});
+
+	it('should update and persist a course color', () => {
+		useEnrolledCourses.setState({
+			courses: [{ id: 'course-1', name: 'COMP 2103', classes: [], color: 0 }],
+		});
+
+		useEnrolledCourses.getState().setCourseColor('course-1', 4);
+
+		expect(useEnrolledCourses.getState().courses[0].color).toBe(4);
+		expect(
+			JSON.parse(
+				localStorage.getItem(
+					getTimetableStorageKey(new Date().getFullYear(), 'sem1'),
+				)!,
+			)[0].color,
+		).toBe(4);
 	});
 
 	it('should fall back to first candidate if preferred campus is not found', async () => {
