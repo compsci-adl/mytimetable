@@ -147,7 +147,7 @@ export const Footer = () => {
 							<a
 								href={link}
 								key={i}
-								className="bg-default-100 hover:bg-default-200 text-foreground flex h-8 w-8 items-center justify-center rounded-full text-lg transition-all duration-300 hover:scale-110"
+								className="bg-default-100 dark:bg-background hover:bg-default-200 dark:hover:bg-foreground/10 text-foreground flex h-8 w-8 items-center justify-center rounded-full text-lg transition-all duration-300 hover:scale-110"
 								target="_blank"
 								rel="noopener noreferrer"
 							>
