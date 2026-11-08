@@ -41,6 +41,8 @@
 		"location": "Location",
 		"campus": "Campus",
 		"availability": "Availability",
+		"course-color": "Course colour",
+		"color-option": "Course colour {{number}}",
 		"no-class-info": "No class information is currently available, please try again later.",
 		"conflicts-with-other-classes": "Conflicts with other classes",
 		"university-wide-elective": "University-wide elective",
