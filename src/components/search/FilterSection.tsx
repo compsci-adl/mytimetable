@@ -158,7 +158,6 @@ export const FilterSection = ({
 									className={`max-h-20 w-auto opacity-100 transition-all duration-200 ease-in-out`}
 								>
 									<Checkbox
-										id={`level-${lvl}`}
 										isSelected={currentLevelOfStudy === lvl}
 										isDisabled={
 											currentLevelOfStudy !== undefined &&
@@ -168,14 +167,11 @@ export const FilterSection = ({
 											setLevelOfStudy(isSelected ? lvl : undefined)
 										}
 									>
-										<Checkbox.Control>
-											<Checkbox.Indicator />
-										</Checkbox.Control>
 										<Checkbox.Content>
-											<Label
-												htmlFor={`level-${lvl}`}
-												className="text-foreground cursor-pointer text-xs font-semibold select-none"
-											>
+											<Checkbox.Control>
+												<Checkbox.Indicator />
+											</Checkbox.Control>
+											<Label className="text-foreground cursor-pointer text-xs font-semibold select-none">
 												{t(labelKey[lvl])}
 											</Label>
 										</Checkbox.Content>
@@ -203,20 +199,16 @@ export const FilterSection = ({
 							}`}
 						>
 							<Checkbox
-								id="uni-wide"
 								isSelected={currentOnlyUniversityWide === true}
 								onChange={(isSelected) =>
 									setOnlyUniversityWide(isSelected ? true : undefined)
 								}
 							>
-								<Checkbox.Control>
-									<Checkbox.Indicator />
-								</Checkbox.Control>
 								<Checkbox.Content>
-									<Label
-										htmlFor="uni-wide"
-										className="text-foreground cursor-pointer text-xs font-semibold select-none"
-									>
+									<Checkbox.Control>
+										<Checkbox.Indicator />
+									</Checkbox.Control>
+									<Label className="text-foreground cursor-pointer text-xs font-semibold select-none">
 										{t('search.university-wide-elective')}
 									</Label>
 								</Checkbox.Content>
@@ -233,7 +225,6 @@ export const FilterSection = ({
 						{Array.from(availableCampuses).map((campus) => (
 							<Checkbox
 								key={campus}
-								id={`campus-${campus}`}
 								isSelected={currentCampuses?.includes(campus) ?? false}
 								onChange={(isSelected) => {
 									if (!isSelected) {
@@ -246,14 +237,11 @@ export const FilterSection = ({
 									setCampuses([...(currentCampuses ?? []), campus]);
 								}}
 							>
-								<Checkbox.Control>
-									<Checkbox.Indicator />
-								</Checkbox.Control>
 								<Checkbox.Content>
-									<Label
-										htmlFor={`campus-${campus}`}
-										className="text-foreground cursor-pointer text-xs font-semibold select-none"
-									>
+									<Checkbox.Control>
+										<Checkbox.Indicator />
+									</Checkbox.Control>
+									<Label className="text-foreground cursor-pointer text-xs font-semibold select-none">
 										{campus}
 									</Label>
 								</Checkbox.Content>
