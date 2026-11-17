@@ -21,6 +21,10 @@ const localStorageMock = {
 			delete localStorageStore[key];
 		});
 	},
+	key: (index: number) => Object.keys(localStorageStore)[index] ?? null,
+	get length() {
+		return Object.keys(localStorageStore).length;
+	},
 };
 Object.defineProperty(globalThis, 'localStorage', {
 	value: localStorageMock,
@@ -746,5 +750,55 @@ describe('useEnrolledCourses Zustand Store', () => {
 			.getState()
 			.courses.find((c) => c.id === 'course-no-group-first');
 		expect(course).toBeDefined();
+	});
+
+	it('should keep timetables separate when switching years', () => {
+		useEnrolledCourses.setState({
+			courses: [{ id: 'course-1', name: 'Course 1', classes: [], color: 0 }],
+		});
+		useEnrolledCourses.getState().saveCurrentCourses(2027, 'sem1');
+
+		useEnrolledCourses.getState().loadScopedCourses(2026, 'sem1');
+		expect(useEnrolledCourses.getState().courses).toEqual([]);
+
+		useEnrolledCourses.setState({
+			courses: [{ id: 'course-2', name: 'Course 2', classes: [], color: 1 }],
+		});
+		useEnrolledCourses.getState().saveCurrentCourses(2026, 'sem1');
+
+		useEnrolledCourses.getState().loadScopedCourses(2027, 'sem1');
+		const courses = useEnrolledCourses.getState().courses;
+		expect(courses.length).toBe(1);
+		expect(courses[0].id).toBe('course-1');
+	});
+
+	it('should keep timetables separate when switching terms', () => {
+		useEnrolledCourses.setState({
+			courses: [{ id: 'course-1', name: 'Course 1', classes: [], color: 0 }],
+		});
+		useEnrolledCourses.getState().saveCurrentCourses(2026, 'sem1');
+
+		useEnrolledCourses.getState().loadScopedCourses(2026, 'sem2');
+		expect(useEnrolledCourses.getState().courses).toEqual([]);
+	});
+
+	it('should load legacy courses when no scoped timetable is saved', () => {
+		localStorage.setItem(
+			'MTT.enrolled-courses',
+			JSON.stringify({
+				state: {
+					courses: [
+						{ id: 'course-1', name: 'Course 1', classes: [], color: 0 },
+					],
+				},
+				version: 0,
+			}),
+		);
+
+		useEnrolledCourses.getState().loadScopedCourses(2026, 'sem1');
+
+		const courses = useEnrolledCourses.getState().courses;
+		expect(courses.length).toBe(1);
+		expect(courses[0].id).toBe('course-1');
 	});
 });

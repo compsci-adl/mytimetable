@@ -45,11 +45,22 @@ type CoursesState = {
 	saveCurrentCourses: (year: number, term: string) => void;
 };
 
+const TIMETABLE_STORAGE_KEY_PREFIX = 'mytimetable_';
+
 export function getTimetableStorageKey(year: number, term: string): string {
-	return `mytimetable_${year}_${term}`;
+	return `${TIMETABLE_STORAGE_KEY_PREFIX}${year}_${term}`;
 }
 
 /* v8 ignore start */
+function hasScopedTimetables(): boolean {
+	for (let i = 0; i < localStorage.length; i++) {
+		if (localStorage.key(i)?.startsWith(TIMETABLE_STORAGE_KEY_PREFIX)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function readStoredCourses(year: number, term: string): Courses {
 	try {
 		const key = getTimetableStorageKey(year, term);
@@ -64,6 +75,10 @@ function readStoredCourses(year: number, term: string): Courses {
 			}
 		}
 		// Fallback for initial migration: check old MTT.enrolled-courses
+		// Every save also updates the legacy key, so only read it before any scoped timetable exists
+		if (hasScopedTimetables()) {
+			return [];
+		}
 		const legacy = localStorage.getItem(LocalStorageKey.EnrolledCourses);
 		if (legacy) {
 			const parsedLegacy = JSON.parse(legacy);
