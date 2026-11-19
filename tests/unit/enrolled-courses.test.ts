@@ -801,4 +801,64 @@ describe('useEnrolledCourses Zustand Store', () => {
 		expect(courses.length).toBe(1);
 		expect(courses[0].id).toBe('course-1');
 	});
+
+	it('should save a course to its own timetable when the year changes before the course loads', async () => {
+		let resolvePromise: (value: Course) => void = () => {};
+		const promise = new Promise<Course>((resolve) => {
+			resolvePromise = resolve;
+		});
+		vi.mocked(getCourse).mockImplementationOnce(() => promise);
+		localStorage.setItem('MTT.year', '2027');
+
+		const addPromise = useEnrolledCourses.getState().addCourse({
+			id: 'course-adds',
+			name: 'COMP 2103',
+		});
+
+		// Switch to an empty 2026 timetable before the API call completes
+		useEnrolledCourses.getState().saveCurrentCourses(2027, 'sem1');
+		useFilters.getState().setYear(2026);
+		useEnrolledCourses.getState().loadScopedCourses(2026, 'sem1');
+
+		resolvePromise(mockCourseData);
+		await addPromise;
+
+		expect(useEnrolledCourses.getState().courses).toEqual([]);
+
+		useEnrolledCourses.getState().loadScopedCourses(2027, 'sem1');
+		const courses = useEnrolledCourses.getState().courses;
+		expect(courses.length).toBe(1);
+		expect(courses[0].id).toBe('course-adds');
+		expect(courses[0].classes.length).toBeGreaterThan(0);
+	});
+
+	it('should save legacy courses under the year they load in', async () => {
+		localStorage.setItem(
+			'MTT.enrolled-courses',
+			JSON.stringify({
+				state: {
+					courses: [
+						{ id: 'course-1', name: 'Course 1', classes: [], color: 0 },
+					],
+				},
+				version: 0,
+			}),
+		);
+		vi.resetModules();
+		vi.doMock('../../src/i18n', () => ({
+			default: { t: (key: string) => key },
+		}));
+		const { useEnrolledCourses: useStartupCourses } =
+			await import('../../src/data/enrolled-courses');
+		const year = new Date().getFullYear();
+
+		expect(useStartupCourses.getState().courses[0].id).toBe('course-1');
+		expect(localStorage.getItem('MTT.year')).toBe(String(year));
+
+		useStartupCourses.getState().loadScopedCourses(year + 1, 'sem1');
+		expect(useStartupCourses.getState().courses).toEqual([]);
+
+		useStartupCourses.getState().loadScopedCourses(year, 'sem1');
+		expect(useStartupCourses.getState().courses[0].id).toBe('course-1');
+	});
 });

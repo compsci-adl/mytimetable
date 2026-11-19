@@ -108,6 +108,17 @@ function writeStoredCourses(year: number, term: string, courses: Courses) {
 		console.error('Failed to save scoped courses to localStorage:', e);
 	}
 }
+
+function saveLegacyCourses(year: number, term: string, courses: Courses) {
+	writeStoredCourses(year, term, courses);
+	try {
+		// Save the year too, or initYears selects the newest year and shows these courses under it
+		localStorage.setItem(LocalStorageKey.Year, String(year));
+	} catch (e) {
+		// eslint-disable-next-line no-console
+		console.error('Failed to save year to localStorage:', e);
+	}
+}
 /* v8 ignore stop */
 
 // Determine initial year and term
@@ -137,6 +148,9 @@ function getInitialYearAndTerm(): { year: number; term: string } {
 
 const { year: initialYear, term: initialTerm } = getInitialYearAndTerm();
 const initialCourses = readStoredCourses(initialYear, initialTerm);
+if (initialCourses.length > 0 && !hasScopedTimetables()) {
+	saveLegacyCourses(initialYear, initialTerm, initialCourses);
+}
 
 export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 	courses: initialCourses,
@@ -170,85 +184,86 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 			queryFn: ({ queryKey }) => getCourse({ id: queryKey[1] }),
 		});
 		// Initialise course classes to default, preferring classes that
-		// have meetings overlapping the currently selected term
-		set(
-			produce((state) => {
-				const enrolledCourse = state.courses.find((c) => c.id === course.id);
-				if (!enrolledCourse) return;
+		// have meetings overlapping the term the course was added to
+		const initialiseClasses = (state: Pick<CoursesState, 'courses'>) => {
+			const enrolledCourse = state.courses.find((c) => c.id === course.id);
+			if (!enrolledCourse) return;
 
-				const selectedTermAlias =
-					localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
-
-				const uniqueGroups = Array.from(
-					new Set(
-						data.class_list
-							.flatMap((ct) => ct.classes)
-							.map((cls) => cls.group)
-							.filter(
-								(g): g is string => typeof g === 'string' && g.trim() !== '',
-							),
-					),
-				);
-
-				let chosenGroup: string | undefined;
-				if (uniqueGroups.length > 1) {
-					const firstClassType = data.class_list[0];
-					const termClasses = firstClassType.classes.filter((cls) =>
-						cls.meetings.some((m) =>
-							isMeetingInTerm(m.date, selectedTermAlias),
+			const uniqueGroups = Array.from(
+				new Set(
+					data.class_list
+						.flatMap((ct) => ct.classes)
+						.map((cls) => cls.group)
+						.filter(
+							(g): g is string => typeof g === 'string' && g.trim() !== '',
 						),
-					);
-					const candidates =
-						termClasses.length > 0 ? termClasses : firstClassType.classes;
-					const foundByCampus =
-						preferredCampuses && preferredCampuses.length > 0
-							? candidates.find((cls) =>
-									cls.meetings.some((m: Meetings[number]) =>
-										preferredCampuses.includes(m.campus),
-									),
-								)
-							: undefined;
-					const firstChosen = foundByCampus ?? candidates[0];
-					chosenGroup = firstChosen?.group ?? uniqueGroups[0];
-				}
+				),
+			);
 
-				enrolledCourse.classes = data.class_list.map((c) => {
-					const pick = () => {
-						const groupMatchedClasses = chosenGroup
-							? c.classes.filter(
-									(cls) => !cls.group || cls.group === chosenGroup,
-								)
-							: c.classes;
-						const pool =
-							groupMatchedClasses.length > 0 ? groupMatchedClasses : c.classes;
-
-						const termClasses = pool.filter((cls) =>
-							cls.meetings.some((m) =>
-								isMeetingInTerm(m.date, selectedTermAlias),
-							),
-						);
-						const candidates = termClasses.length > 0 ? termClasses : pool;
-
-						if (preferredCampuses && preferredCampuses.length > 0) {
-							const foundByCampus = candidates.find((cls) =>
+			let chosenGroup: string | undefined;
+			if (uniqueGroups.length > 1) {
+				const firstClassType = data.class_list[0];
+				const termClasses = firstClassType.classes.filter((cls) =>
+					cls.meetings.some((m) => isMeetingInTerm(m.date, term)),
+				);
+				const candidates =
+					termClasses.length > 0 ? termClasses : firstClassType.classes;
+				const foundByCampus =
+					preferredCampuses && preferredCampuses.length > 0
+						? candidates.find((cls) =>
 								cls.meetings.some((m: Meetings[number]) =>
 									preferredCampuses.includes(m.campus),
 								),
-							);
-							if (foundByCampus) return foundByCampus;
-						}
+							)
+						: undefined;
+				const firstChosen = foundByCampus ?? candidates[0];
+				chosenGroup = firstChosen?.group ?? uniqueGroups[0];
+			}
 
-						return candidates[0];
-					};
+			enrolledCourse.classes = data.class_list.map((c) => {
+				const pick = () => {
+					const groupMatchedClasses = chosenGroup
+						? c.classes.filter((cls) => !cls.group || cls.group === chosenGroup)
+						: c.classes;
+					const pool =
+						groupMatchedClasses.length > 0 ? groupMatchedClasses : c.classes;
 
-					const chosen = pick();
-					return {
-						id: c.id,
-						classNumber: chosen?.number ?? 'not-available',
-					};
-				});
-			}),
-		);
+					const termClasses = pool.filter((cls) =>
+						cls.meetings.some((m) => isMeetingInTerm(m.date, term)),
+					);
+					const candidates = termClasses.length > 0 ? termClasses : pool;
+
+					if (preferredCampuses && preferredCampuses.length > 0) {
+						const foundByCampus = candidates.find((cls) =>
+							cls.meetings.some((m: Meetings[number]) =>
+								preferredCampuses.includes(m.campus),
+							),
+						);
+						if (foundByCampus) return foundByCampus;
+					}
+
+					return candidates[0];
+				};
+
+				const chosen = pick();
+				return {
+					id: c.id,
+					classNumber: chosen?.number ?? 'not-available',
+				};
+			});
+		};
+
+		const current = getInitialYearAndTerm();
+		if (current.year !== year || current.term !== term) {
+			// The user switched timetables while the course loaded, so update the one it was added to
+			const stored = produce(
+				{ courses: readStoredCourses(year, term) },
+				initialiseClasses,
+			);
+			writeStoredCourses(year, term, stored.courses);
+			return;
+		}
+		set(produce(initialiseClasses));
 		writeStoredCourses(year, term, get().courses);
 	},
 	removeCourse: (courseId) => {
