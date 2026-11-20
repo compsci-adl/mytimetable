@@ -3,9 +3,10 @@ import { test, expect, type Page } from '@playwright/test';
 import { setupPage, enrollMockCourse } from './helpers';
 
 const COURSE_DETAILS_URL = /\/mock\/courses\/[^/?]+$/;
+const YEARS_URL = /\/mock\/years/;
 
 async function openApp(page: Page) {
-	const yearsResponse = page.waitForResponse(/\/mock\/years/);
+	const yearsResponse = page.waitForResponse(YEARS_URL);
 	await page.goto('/');
 	await yearsResponse;
 	await expect(
@@ -29,30 +30,31 @@ async function selectTerm(page: Page, term: string) {
 	await page.waitForTimeout(500);
 }
 
-async function delayCourseRequests(page: Page) {
-	// Keep course detail requests until the test releases them
-	await page.addInitScript(() => {
+async function delayRequests(page: Page, url: RegExp) {
+	// Keep matching requests until the test releases them
+	await page.addInitScript((source) => {
+		const pattern = new RegExp(source);
 		let release = () => {};
 		const released = new Promise<void>((resolve) => {
 			release = resolve;
 		});
-		Object.assign(window, { releaseCourseRequests: () => release() });
+		Object.assign(window, { releaseRequests: () => release() });
 		const originalFetch = window.fetch.bind(window);
 		window.fetch = async (input, init) => {
 			const url = input instanceof Request ? input.url : String(input);
-			if (/\/mock\/courses\/[^/?]+$/.test(url)) {
+			if (pattern.test(url)) {
 				await released;
 			}
 			return originalFetch(input, init);
 		};
-	});
+	}, url.source);
 }
 
-async function releaseCourseRequests(page: Page) {
-	const courseResponse = page.waitForResponse(COURSE_DETAILS_URL);
-	await page.evaluate('releaseCourseRequests()');
-	await courseResponse;
-	await page.waitForTimeout(500); // Let the course classes save
+async function releaseRequests(page: Page, url: RegExp) {
+	const response = page.waitForResponse(url);
+	await page.evaluate('releaseRequests()');
+	await response;
+	await page.waitForTimeout(500); // Let the app handle the response
 }
 
 test.describe('MyTimetable App Year End-to-End Tests', () => {
@@ -63,7 +65,7 @@ test.describe('MyTimetable App Year End-to-End Tests', () => {
 	test('should keep a course in its own year when the year changes before the course loads', async ({
 		page,
 	}) => {
-		await delayCourseRequests(page);
+		await delayRequests(page, COURSE_DETAILS_URL);
 		await openApp(page);
 
 		// The mock API makes 2027 the default year
@@ -79,8 +81,7 @@ test.describe('MyTimetable App Year End-to-End Tests', () => {
 		await page.getByRole('button', { name: 'Switch', exact: true }).click();
 		await expect(courseChip).toHaveCount(0);
 
-		await releaseCourseRequests(page);
-		await expect(courseChip).toHaveCount(0);
+		await releaseRequests(page, COURSE_DETAILS_URL);
 
 		await selectYear(page, 2027);
 		await expect(courseChip.first()).toBeVisible();
@@ -100,7 +101,7 @@ test.describe('MyTimetable App Year End-to-End Tests', () => {
 		await openApp(otherPage);
 		await selectYear(otherPage, 2028);
 
-		await delayCourseRequests(page);
+		await delayRequests(page, COURSE_DETAILS_URL);
 		await openApp(page);
 		await selectYear(page, 2027);
 
@@ -119,7 +120,7 @@ test.describe('MyTimetable App Year End-to-End Tests', () => {
 			otherPage.locator('span').filter({ hasText: '2103' }).first(),
 		).toBeVisible();
 
-		await releaseCourseRequests(page);
+		await releaseRequests(page, COURSE_DETAILS_URL);
 
 		await selectYear(page, 2027);
 		await expect(courseChip.first()).toBeVisible();
@@ -212,10 +213,14 @@ test.describe('MyTimetable App Year End-to-End Tests', () => {
 		await expect(otherYearCourseChip).toHaveCount(0);
 	});
 
-	test('should keep the timetable of another term when a term switch is cancelled', async ({
+	test('should keep the term and both timetables when a term switch is cancelled', async ({
 		page,
 	}) => {
 		await page.addInitScript(() => {
+			// Seed storage on the first load only, so the reload keeps what the app saved
+			if (window.localStorage.getItem('mytimetable_2027_sem1') !== null) {
+				return;
+			}
 			window.localStorage.setItem('MTT.year', '2027');
 			window.localStorage.setItem('MTT.term', 'sem1');
 			window.localStorage.setItem(
@@ -246,6 +251,11 @@ test.describe('MyTimetable App Year End-to-End Tests', () => {
 		await selectTerm(page, 'Semester 2');
 		await page.getByRole('button', { name: 'Cancel', exact: true }).click();
 
+		await openApp(page);
+		await expect(
+			page.getByRole('button', { name: /Select a term/ }),
+		).toContainText('Semester 1');
+
 		await page
 			.getByRole('button', { name: 'Remove course', exact: true })
 			.click();
@@ -257,5 +267,49 @@ test.describe('MyTimetable App Year End-to-End Tests', () => {
 		await expect(
 			page.locator('span').filter({ hasText: '1104' }).first(),
 		).toBeVisible();
+	});
+
+	test('should wait for the year to load before searching courses or switching term', async ({
+		page,
+	}) => {
+		await page.clock.setFixedTime(new Date('2026-08-01T10:00:00'));
+		await page.addInitScript(() => {
+			window.localStorage.setItem('MTT.year', '2027');
+		});
+		await delayRequests(page, YEARS_URL);
+		const subjectYears: string[] = [];
+		page.on('request', (request) => {
+			const url = new URL(request.url());
+			if (url.pathname.endsWith('/mock/subjects')) {
+				subjectYears.push(url.searchParams.get('year') ?? '');
+			}
+		});
+		await page.goto('/');
+
+		// The selected year stays at the calendar year until the years request finishes
+		await page.waitForTimeout(1000); // Give a subjects request for 2026 time to start
+		expect(subjectYears).not.toContain('2026');
+		await expect(
+			page.getByRole('combobox', { name: 'Choose a subject area' }),
+		).toBeDisabled();
+		await expect(
+			page.getByRole('button', { name: /Select a term/ }),
+		).toBeDisabled();
+
+		await releaseRequests(page, YEARS_URL);
+		await expect(
+			page.getByRole('button', { name: /Select a year/ }),
+		).toContainText('2027');
+
+		await enrollMockCourse(page);
+		const courseChip = page.locator('span').filter({ hasText: '2103' });
+		await expect(courseChip.first()).toBeVisible();
+
+		await selectYear(page, 2026);
+		await page.getByRole('button', { name: 'Switch', exact: true }).click();
+		await expect(courseChip).toHaveCount(0);
+
+		await selectYear(page, 2027);
+		await expect(courseChip.first()).toBeVisible();
 	});
 });

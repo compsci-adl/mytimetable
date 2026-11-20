@@ -15,6 +15,7 @@ interface CourseSelectorProps {
 	onlyUniversityWide: boolean | undefined;
 	levelOfStudy: string | undefined;
 	campuses?: string[] | undefined;
+	isDisabled?: boolean;
 }
 
 export const CourseSelector = ({
@@ -24,6 +25,7 @@ export const CourseSelector = ({
 	onlyUniversityWide,
 	levelOfStudy,
 	campuses,
+	isDisabled = false,
 }: CourseSelectorProps) => {
 	const { t } = useTranslation();
 	const enrolledCourses = useEnrolledCourses();
@@ -43,7 +45,7 @@ export const CourseSelector = ({
 			},
 		] as const,
 		queryFn: ({ queryKey }) => getCourses(queryKey[1]),
-		enabled: subject !== null,
+		enabled: subject !== null && !isDisabled,
 	});
 
 	const courses = coursesQuery.data?.courses;
@@ -133,7 +135,7 @@ export const CourseSelector = ({
 					}}
 					className="w-full"
 					menuTrigger="focus"
-					isDisabled={coursesQuery.isPending}
+					isDisabled={isDisabled || coursesQuery.isPending}
 					disabledKeys={disabledKeys}
 					items={filteredCourses}
 				>
@@ -200,7 +202,7 @@ export const CourseSelector = ({
 			<Button
 				variant="primary"
 				type="submit"
-				isDisabled={!selectedCourseId || coursesQuery.isPending}
+				isDisabled={isDisabled || !selectedCourseId || coursesQuery.isPending}
 				className="mobile:w-auto h-11 w-full rounded-full px-6"
 			>
 				{t('search.add')}

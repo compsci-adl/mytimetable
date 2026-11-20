@@ -40,6 +40,11 @@ export const SearchForm = () => {
 	}, [initYears, loadScopedCourses]);
 
 	const hasCourses = enrolledCourses.courses.length > 0;
+	// Edits save to the loaded timetable, so the controls wait for the years request and a matching timetable
+	const isTimetableReady =
+		!isLoadingYears &&
+		enrolledCourses.year === selectedYear &&
+		enrolledCourses.term === selectedTerm;
 
 	// Pending changes (held while confirm modal is open)
 	const [pendingChange, setPendingChange] = useState<{
@@ -335,18 +340,19 @@ export const SearchForm = () => {
 					value={selectedYear}
 					options={availableYears}
 					onChange={handleYearChange}
-					disabled={isLoadingYears}
+					disabled={!isTimetableReady}
 				/>
 				<TermSelector
 					selectedTerm={selectedTerm}
 					onTermChange={handleTermChange}
-					isDisabled={false}
+					isDisabled={!isTimetableReady}
 				/>
 				<SubjectSelector
 					selectedYear={selectedYear}
 					selectedTerm={selectedTerm}
 					subject={subject}
 					onSubjectChange={setSubject}
+					isDisabled={!isTimetableReady}
 				/>
 				<CourseSelector
 					selectedYear={selectedYear}
@@ -355,6 +361,7 @@ export const SearchForm = () => {
 					onlyUniversityWide={onlyUniversityWide}
 					levelOfStudy={levelOfStudy}
 					campuses={campuses}
+					isDisabled={!isTimetableReady}
 				/>
 			</div>
 			{isMobile ? (

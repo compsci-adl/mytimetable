@@ -17,7 +17,7 @@ type FiltersState = {
 	initYears: () => Promise<void>;
 };
 
-export const useFilters = create<FiltersState>()((set) => {
+export const useFilters = create<FiltersState>()((set, get) => {
 	// Initialise from localStorage safely
 	let initialTerm = 'sem1';
 	try {
@@ -124,7 +124,9 @@ export const useFilters = create<FiltersState>()((set) => {
 				const storedYear = localStorage.getItem(LocalStorageKey.Year);
 				const parsedStoredYear = storedYear ? Number(storedYear) : null;
 
-				let activeYear = latestYearWithClasses;
+				let activeYear = Number.isInteger(latestYearWithClasses)
+					? latestYearWithClasses
+					: get().year;
 				// If stored preference exists and is among available years, keep it
 				if (
 					parsedStoredYear &&
@@ -142,7 +144,10 @@ export const useFilters = create<FiltersState>()((set) => {
 					}),
 				);
 				try {
-					localStorage.setItem(LocalStorageKey.Year, String(activeYear));
+					// A failed request returns a fallback list, so only save a year when none is saved
+					if (!parsedStoredYear) {
+						localStorage.setItem(LocalStorageKey.Year, String(activeYear));
+					}
 				} catch {
 					/* ignore */
 				}

@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+import type { YearsResponse } from '../../src/apis/years';
+
 vi.mock('../../src/apis/years', () => ({
 	fetchAvailableYears: vi.fn().mockResolvedValue({
 		active_year: 2026,
@@ -144,5 +146,31 @@ describe('useFilters Zustand Store', () => {
 		expect(useFilters.getState().availableYears).toEqual([2026, 2027, 2028]);
 		expect(useFilters.getState().yearsWithClasses).toEqual([2026, 2027]);
 		expect(useFilters.getState().isLoadingYears).toBe(false);
+	});
+
+	it('should keep a saved year that the years response does not offer', async () => {
+		localStorageMock.setItem('MTT.year', '2026');
+		const { fetchAvailableYears } = await import('../../src/apis/years');
+		vi.mocked(fetchAvailableYears).mockResolvedValueOnce({
+			active_year: 2027,
+			available_years: [2027, 2028],
+			years_with_classes: [2027],
+		});
+		const { useFilters } = await import('../../src/data/filters');
+		await useFilters.getState().initYears();
+		expect(useFilters.getState().year).toBe(2027);
+		expect(localStorageMock.getItem('MTT.year')).toBe('2026');
+	});
+
+	it('should keep the current year when the years response has no active year', async () => {
+		const { fetchAvailableYears } = await import('../../src/apis/years');
+		vi.mocked(fetchAvailableYears).mockResolvedValueOnce({
+			available_years: [2026, 2027],
+			years_with_classes: [],
+		} as unknown as YearsResponse);
+		const { useFilters } = await import('../../src/data/filters');
+		await useFilters.getState().initYears();
+		expect(useFilters.getState().year).toBe(2026);
+		expect(localStorageMock.getItem('MTT.year')).toBe('2026');
 	});
 });

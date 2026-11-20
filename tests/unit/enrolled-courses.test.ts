@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { getCourse } from '../../src/apis';
 import { useEnrolledCourses } from '../../src/data/enrolled-courses';
@@ -111,6 +111,11 @@ describe('useEnrolledCourses Zustand Store', () => {
 		queryClient.clear();
 		vi.clearAllMocks();
 		localStorage.clear();
+	});
+
+	afterEach(() => {
+		vi.useRealTimers();
+		vi.doUnmock('../../src/i18n');
 	});
 
 	it('should add a course and Initialiseits classes based on term and campus preferences', async () => {
@@ -835,7 +840,6 @@ describe('useEnrolledCourses Zustand Store', () => {
 		}));
 		const { useEnrolledCourses: useStartupCourses } =
 			await import('../../src/data/enrolled-courses');
-		vi.useRealTimers();
 
 		expect(useStartupCourses.getState().year).toBe(2026);
 		expect(useStartupCourses.getState().term).toBe('sem2');
