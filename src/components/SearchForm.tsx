@@ -29,10 +29,22 @@ export const SearchForm = () => {
 	const setCampuses = useFilters((s) => s.setCampuses);
 
 	useEffect(() => {
-		initYears();
-	}, [initYears]);
+		initYears().then(() => {
+			// initYears may select a year other than the one the courses were loaded for
+			const { year, term } = useFilters.getState();
+			const loaded = useEnrolledCourses.getState();
+			if (loaded.year !== year || loaded.term !== term) {
+				loadScopedCourses(year, term);
+			}
+		});
+	}, [initYears, loadScopedCourses]);
 
 	const hasCourses = enrolledCourses.courses.length > 0;
+	// Edits save to the loaded timetable, so the controls wait for the years request and a matching timetable
+	const isTimetableReady =
+		!isLoadingYears &&
+		enrolledCourses.year === selectedYear &&
+		enrolledCourses.term === selectedTerm;
 
 	// Pending changes (held while confirm modal is open)
 	const [pendingChange, setPendingChange] = useState<{
@@ -92,14 +104,14 @@ export const SearchForm = () => {
 	};
 
 	const doSwitchYear = (newYear: number) => {
-		saveCurrentCourses(selectedYear, selectedTerm);
+		saveCurrentCourses();
 		setSelectedYear(newYear);
 		loadScopedCourses(newYear, selectedTerm);
 		setSubject(null);
 	};
 
 	const doSwitchTerm = (newTerm: string) => {
-		saveCurrentCourses(selectedYear, selectedTerm);
+		saveCurrentCourses();
 		setSelectedTerm(newTerm);
 		loadScopedCourses(selectedYear, newTerm);
 		setSubject(null);
@@ -328,18 +340,19 @@ export const SearchForm = () => {
 					value={selectedYear}
 					options={availableYears}
 					onChange={handleYearChange}
-					disabled={isLoadingYears}
+					disabled={!isTimetableReady}
 				/>
 				<TermSelector
 					selectedTerm={selectedTerm}
 					onTermChange={handleTermChange}
-					isDisabled={false}
+					isDisabled={!isTimetableReady}
 				/>
 				<SubjectSelector
 					selectedYear={selectedYear}
 					selectedTerm={selectedTerm}
 					subject={subject}
 					onSubjectChange={setSubject}
+					isDisabled={!isTimetableReady}
 				/>
 				<CourseSelector
 					selectedYear={selectedYear}
@@ -348,6 +361,7 @@ export const SearchForm = () => {
 					onlyUniversityWide={onlyUniversityWide}
 					levelOfStudy={levelOfStudy}
 					campuses={campuses}
+					isDisabled={!isTimetableReady}
 				/>
 			</div>
 			{isMobile ? (

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { getCourse } from '../../src/apis';
 import { useEnrolledCourses } from '../../src/data/enrolled-courses';
@@ -20,6 +20,10 @@ const localStorageMock = {
 		Object.keys(localStorageStore).forEach((key) => {
 			delete localStorageStore[key];
 		});
+	},
+	key: (index: number) => Object.keys(localStorageStore)[index] ?? null,
+	get length() {
+		return Object.keys(localStorageStore).length;
 	},
 };
 Object.defineProperty(globalThis, 'localStorage', {
@@ -103,15 +107,20 @@ const mockCourseData = {
 describe('useEnrolledCourses Zustand Store', () => {
 	beforeEach(() => {
 		// Reset Zustand store state and queryClient cache before each test
-		useEnrolledCourses.setState({ courses: [] });
+		useEnrolledCourses.setState({ courses: [], year: 2026, term: 'sem1' });
 		queryClient.clear();
 		vi.clearAllMocks();
 		localStorage.clear();
 	});
 
+	afterEach(() => {
+		vi.useRealTimers();
+		vi.doUnmock('../../src/i18n');
+	});
+
 	it('should add a course and Initialiseits classes based on term and campus preferences', async () => {
 		vi.mocked(getCourse).mockResolvedValue(mockCourseData);
-		localStorage.setItem('MTT.term', 'sem2'); // overlaps months 7-12
+		useEnrolledCourses.setState({ term: 'sem2' }); // overlaps months 7-12
 
 		// Add course with preference for 'Roseworthy Campus'
 		await useEnrolledCourses.getState().addCourse({
@@ -157,7 +166,7 @@ describe('useEnrolledCourses Zustand Store', () => {
 
 	it('should fall back to first candidate if preferred campus is not found', async () => {
 		vi.mocked(getCourse).mockResolvedValue(mockCourseData);
-		localStorage.setItem('MTT.term', 'sem2');
+		useEnrolledCourses.setState({ term: 'sem2' });
 
 		// Add course with preferred campus that does not match any classes
 		await useEnrolledCourses.getState().addCourse({
@@ -746,5 +755,101 @@ describe('useEnrolledCourses Zustand Store', () => {
 			.getState()
 			.courses.find((c) => c.id === 'course-no-group-first');
 		expect(course).toBeDefined();
+	});
+
+	it('should keep timetables separate when switching years', () => {
+		useEnrolledCourses.getState().loadScopedCourses(2027, 'sem1');
+		useEnrolledCourses.setState({
+			courses: [{ id: 'course-1', name: 'Course 1', classes: [], color: 0 }],
+		});
+		useEnrolledCourses.getState().saveCurrentCourses();
+
+		useEnrolledCourses.getState().loadScopedCourses(2026, 'sem1');
+		expect(useEnrolledCourses.getState().courses).toEqual([]);
+
+		useEnrolledCourses.setState({
+			courses: [{ id: 'course-2', name: 'Course 2', classes: [], color: 1 }],
+		});
+		useEnrolledCourses.getState().saveCurrentCourses();
+
+		useEnrolledCourses.getState().loadScopedCourses(2027, 'sem1');
+		const courses = useEnrolledCourses.getState().courses;
+		expect(courses.length).toBe(1);
+		expect(courses[0].id).toBe('course-1');
+	});
+
+	it('should keep timetables separate when switching terms', () => {
+		useEnrolledCourses.setState({
+			courses: [{ id: 'course-1', name: 'Course 1', classes: [], color: 0 }],
+		});
+		useEnrolledCourses.getState().saveCurrentCourses();
+
+		useEnrolledCourses.getState().loadScopedCourses(2026, 'sem2');
+		expect(useEnrolledCourses.getState().courses).toEqual([]);
+	});
+
+	it('should save a course to its own timetable when the year changes before the course loads', async () => {
+		let resolvePromise: (value: Course) => void = () => {};
+		const promise = new Promise<Course>((resolve) => {
+			resolvePromise = resolve;
+		});
+		vi.mocked(getCourse).mockImplementationOnce(() => promise);
+		useEnrolledCourses.getState().loadScopedCourses(2027, 'sem1');
+
+		const addPromise = useEnrolledCourses.getState().addCourse({
+			id: 'course-adds',
+			name: 'COMP 2103',
+		});
+
+		// Switch to an empty 2026 timetable before the API call completes
+		useEnrolledCourses.getState().saveCurrentCourses();
+		useEnrolledCourses.getState().loadScopedCourses(2026, 'sem1');
+		// Another tab selects 2027 and changes the saved year
+		localStorage.setItem('MTT.year', '2027');
+
+		resolvePromise(mockCourseData);
+		await addPromise;
+
+		expect(useEnrolledCourses.getState().courses).toEqual([]);
+
+		useEnrolledCourses.getState().loadScopedCourses(2027, 'sem1');
+		const courses = useEnrolledCourses.getState().courses;
+		expect(courses.length).toBe(1);
+		expect(courses[0].id).toBe('course-adds');
+		expect(courses[0].classes.length).toBeGreaterThan(0);
+	});
+
+	it('should save legacy courses under 2026 when first opened in a later year', async () => {
+		vi.useFakeTimers({ toFake: ['Date'] });
+		vi.setSystemTime(new Date('2027-01-15T10:00:00'));
+		localStorage.setItem('MTT.term', 'sem2');
+		localStorage.setItem(
+			'MTT.enrolled-courses',
+			JSON.stringify({
+				state: {
+					courses: [
+						{ id: 'course-1', name: 'Course 1', classes: [], color: 0 },
+					],
+				},
+				version: 0,
+			}),
+		);
+		vi.resetModules();
+		vi.doMock('../../src/i18n', () => ({
+			default: { t: (key: string) => key },
+		}));
+		const { useEnrolledCourses: useStartupCourses } =
+			await import('../../src/data/enrolled-courses');
+
+		expect(useStartupCourses.getState().year).toBe(2026);
+		expect(useStartupCourses.getState().term).toBe('sem2');
+		expect(useStartupCourses.getState().courses[0].id).toBe('course-1');
+		expect(localStorage.getItem('MTT.year')).toBe('2026');
+
+		useStartupCourses.getState().loadScopedCourses(2027, 'sem2');
+		expect(useStartupCourses.getState().courses).toEqual([]);
+
+		useStartupCourses.getState().loadScopedCourses(2026, 'sem2');
+		expect(useStartupCourses.getState().courses[0].id).toBe('course-1');
 	});
 });

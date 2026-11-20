@@ -5,6 +5,7 @@ import { create } from 'zustand';
 import { getCourse } from '../apis';
 import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
+import { LEGACY_YEAR } from '../constants/year';
 import i18n from '../i18n';
 import { queryClient } from '../lib/query';
 import type {
@@ -29,6 +30,8 @@ export type Courses = Array<EnrolledCourseItem>;
 
 type CoursesState = {
 	courses: Courses;
+	year: number; // Year of the timetable in courses
+	term: string; // Term of the timetable in courses
 	addCourse: (
 		course: Omit<EnrolledCourseItem, 'classes' | 'color'> & {
 			preferredCampuses?: string[];
@@ -42,14 +45,25 @@ type CoursesState = {
 		classNumber: string;
 	}) => void;
 	loadScopedCourses: (year: number, term: string) => void;
-	saveCurrentCourses: (year: number, term: string) => void;
+	saveCurrentCourses: () => void;
 };
 
+const TIMETABLE_STORAGE_KEY_PREFIX = 'mytimetable_';
+
 export function getTimetableStorageKey(year: number, term: string): string {
-	return `mytimetable_${year}_${term}`;
+	return `${TIMETABLE_STORAGE_KEY_PREFIX}${year}_${term}`;
 }
 
 /* v8 ignore start */
+function hasScopedTimetables(): boolean {
+	for (let i = 0; i < localStorage.length; i++) {
+		if (localStorage.key(i)?.startsWith(TIMETABLE_STORAGE_KEY_PREFIX)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function readStoredCourses(year: number, term: string): Courses {
 	try {
 		const key = getTimetableStorageKey(year, term);
@@ -61,15 +75,6 @@ function readStoredCourses(year: number, term: string): Courses {
 			}
 			if (parsed && Array.isArray(parsed.courses)) {
 				return parsed.courses;
-			}
-		}
-		// Fallback for initial migration: check old MTT.enrolled-courses
-		const legacy = localStorage.getItem(LocalStorageKey.EnrolledCourses);
-		if (legacy) {
-			const parsedLegacy = JSON.parse(legacy);
-			const state = parsedLegacy?.state?.courses ?? parsedLegacy?.courses;
-			if (Array.isArray(state) && state.length > 0) {
-				return state;
 			}
 		}
 	} catch (e) {
@@ -91,6 +96,24 @@ function writeStoredCourses(year: number, term: string, courses: Courses) {
 	} catch (e) {
 		// eslint-disable-next-line no-console
 		console.error('Failed to save scoped courses to localStorage:', e);
+	}
+}
+
+// Move courses saved before multi-year support into their own timetable
+function migrateLegacyCourses(term: string) {
+	try {
+		// Every save also updates the legacy key, so only read it before any scoped timetable exists
+		if (hasScopedTimetables()) return;
+		const legacy = localStorage.getItem(LocalStorageKey.EnrolledCourses);
+		if (!legacy) return;
+		const parsedLegacy = JSON.parse(legacy);
+		const courses = parsedLegacy?.state?.courses ?? parsedLegacy?.courses;
+		if (!Array.isArray(courses) || courses.length === 0) return;
+		writeStoredCourses(LEGACY_YEAR, term, courses);
+		localStorage.setItem(LocalStorageKey.Year, String(LEGACY_YEAR));
+	} catch (e) {
+		// eslint-disable-next-line no-console
+		console.error('Failed to migrate legacy courses in localStorage:', e);
 	}
 }
 /* v8 ignore stop */
@@ -120,11 +143,14 @@ function getInitialYearAndTerm(): { year: number; term: string } {
 	return { year, term };
 }
 
+migrateLegacyCourses(getInitialYearAndTerm().term);
 const { year: initialYear, term: initialTerm } = getInitialYearAndTerm();
 const initialCourses = readStoredCourses(initialYear, initialTerm);
 
 export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 	courses: initialCourses,
+	year: initialYear,
+	term: initialTerm,
 	addCourse: async (course) => {
 		// Limit to max 10 courses
 		const currentCourses = get().courses;
@@ -144,7 +170,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 				state.courses.push({ ...course, classes: [], color });
 			}),
 		);
-		const { year, term } = getInitialYearAndTerm();
+		const { year, term } = get();
 		writeStoredCourses(year, term, get().courses);
 
 		const preferredCampuses = course.preferredCampuses;
@@ -155,85 +181,85 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 			queryFn: ({ queryKey }) => getCourse({ id: queryKey[1] }),
 		});
 		// Initialise course classes to default, preferring classes that
-		// have meetings overlapping the currently selected term
-		set(
-			produce((state) => {
-				const enrolledCourse = state.courses.find((c) => c.id === course.id);
-				if (!enrolledCourse) return;
+		// have meetings overlapping the term the course was added to
+		const initialiseClasses = (state: Pick<CoursesState, 'courses'>) => {
+			const enrolledCourse = state.courses.find((c) => c.id === course.id);
+			if (!enrolledCourse) return;
 
-				const selectedTermAlias =
-					localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
-
-				const uniqueGroups = Array.from(
-					new Set(
-						data.class_list
-							.flatMap((ct) => ct.classes)
-							.map((cls) => cls.group)
-							.filter(
-								(g): g is string => typeof g === 'string' && g.trim() !== '',
-							),
-					),
-				);
-
-				let chosenGroup: string | undefined;
-				if (uniqueGroups.length > 1) {
-					const firstClassType = data.class_list[0];
-					const termClasses = firstClassType.classes.filter((cls) =>
-						cls.meetings.some((m) =>
-							isMeetingInTerm(m.date, selectedTermAlias),
+			const uniqueGroups = Array.from(
+				new Set(
+					data.class_list
+						.flatMap((ct) => ct.classes)
+						.map((cls) => cls.group)
+						.filter(
+							(g): g is string => typeof g === 'string' && g.trim() !== '',
 						),
-					);
-					const candidates =
-						termClasses.length > 0 ? termClasses : firstClassType.classes;
-					const foundByCampus =
-						preferredCampuses && preferredCampuses.length > 0
-							? candidates.find((cls) =>
-									cls.meetings.some((m: Meetings[number]) =>
-										preferredCampuses.includes(m.campus),
-									),
-								)
-							: undefined;
-					const firstChosen = foundByCampus ?? candidates[0];
-					chosenGroup = firstChosen?.group ?? uniqueGroups[0];
-				}
+				),
+			);
 
-				enrolledCourse.classes = data.class_list.map((c) => {
-					const pick = () => {
-						const groupMatchedClasses = chosenGroup
-							? c.classes.filter(
-									(cls) => !cls.group || cls.group === chosenGroup,
-								)
-							: c.classes;
-						const pool =
-							groupMatchedClasses.length > 0 ? groupMatchedClasses : c.classes;
-
-						const termClasses = pool.filter((cls) =>
-							cls.meetings.some((m) =>
-								isMeetingInTerm(m.date, selectedTermAlias),
-							),
-						);
-						const candidates = termClasses.length > 0 ? termClasses : pool;
-
-						if (preferredCampuses && preferredCampuses.length > 0) {
-							const foundByCampus = candidates.find((cls) =>
+			let chosenGroup: string | undefined;
+			if (uniqueGroups.length > 1) {
+				const firstClassType = data.class_list[0];
+				const termClasses = firstClassType.classes.filter((cls) =>
+					cls.meetings.some((m) => isMeetingInTerm(m.date, term)),
+				);
+				const candidates =
+					termClasses.length > 0 ? termClasses : firstClassType.classes;
+				const foundByCampus =
+					preferredCampuses && preferredCampuses.length > 0
+						? candidates.find((cls) =>
 								cls.meetings.some((m: Meetings[number]) =>
 									preferredCampuses.includes(m.campus),
 								),
-							);
-							if (foundByCampus) return foundByCampus;
-						}
+							)
+						: undefined;
+				const firstChosen = foundByCampus ?? candidates[0];
+				chosenGroup = firstChosen?.group ?? uniqueGroups[0];
+			}
 
-						return candidates[0];
-					};
+			enrolledCourse.classes = data.class_list.map((c) => {
+				const pick = () => {
+					const groupMatchedClasses = chosenGroup
+						? c.classes.filter((cls) => !cls.group || cls.group === chosenGroup)
+						: c.classes;
+					const pool =
+						groupMatchedClasses.length > 0 ? groupMatchedClasses : c.classes;
 
-					const chosen = pick();
-					return {
-						id: c.id,
-						classNumber: chosen?.number ?? 'not-available',
-					};
-				});
-			}),
-		);
+					const termClasses = pool.filter((cls) =>
+						cls.meetings.some((m) => isMeetingInTerm(m.date, term)),
+					);
+					const candidates = termClasses.length > 0 ? termClasses : pool;
+
+					if (preferredCampuses && preferredCampuses.length > 0) {
+						const foundByCampus = candidates.find((cls) =>
+							cls.meetings.some((m: Meetings[number]) =>
+								preferredCampuses.includes(m.campus),
+							),
+						);
+						if (foundByCampus) return foundByCampus;
+					}
+
+					return candidates[0];
+				};
+
+				const chosen = pick();
+				return {
+					id: c.id,
+					classNumber: chosen?.number ?? 'not-available',
+				};
+			});
+		};
+
+		if (get().year !== year || get().term !== term) {
+			// The user switched timetables while the course loaded, so update the one it was added to
+			const stored = produce(
+				{ courses: readStoredCourses(year, term) },
+				initialiseClasses,
+			);
+			writeStoredCourses(year, term, stored.courses);
+			return;
+		}
+		set(produce(initialiseClasses));
 		writeStoredCourses(year, term, get().courses);
 	},
 	removeCourse: (courseId) => {
@@ -242,7 +268,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 				state.courses = state.courses.filter((c) => c.id !== courseId);
 			}),
 		);
-		const { year, term } = getInitialYearAndTerm();
+		const { year, term } = get();
 		writeStoredCourses(year, term, get().courses);
 	},
 	clearCourses: () => {
@@ -251,7 +277,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 				state.courses = [];
 			}),
 		);
-		const { year, term } = getInitialYearAndTerm();
+		const { year, term } = get();
 		writeStoredCourses(year, term, []);
 	},
 	updateCourseClass: ({ courseId, classTypeId, classNumber }) => {
@@ -277,8 +303,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 					const targetGroup = targetCls?.group;
 
 					if (targetGroup) {
-						const selectedTermAlias =
-							localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
+						const selectedTermAlias = state.term;
 
 						courseData.class_list.forEach((ct) => {
 							if (ct.id === classTypeId) return;
@@ -314,7 +339,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 				}
 			}),
 		);
-		const { year, term } = getInitialYearAndTerm();
+		const { year, term } = get();
 		writeStoredCourses(year, term, get().courses);
 	},
 	/* v8 ignore start */
@@ -323,10 +348,13 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 		set(
 			produce((state) => {
 				state.courses = courses;
+				state.year = year;
+				state.term = term;
 			}),
 		);
 	},
-	saveCurrentCourses: (year: number, term: string) => {
+	saveCurrentCourses: () => {
+		const { year, term } = get();
 		writeStoredCourses(year, term, get().courses);
 	},
 	/* v8 ignore stop */

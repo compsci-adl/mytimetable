@@ -12,6 +12,7 @@ interface SubjectSelectorProps {
 	selectedTerm: string;
 	subject: string | null;
 	onSubjectChange: (subject: string | null) => void;
+	isDisabled?: boolean;
 }
 
 export const SubjectSelector = ({
@@ -19,6 +20,7 @@ export const SubjectSelector = ({
 	selectedTerm,
 	subject,
 	onSubjectChange,
+	isDisabled = false,
 }: SubjectSelectorProps) => {
 	const { t } = useTranslation();
 	const [inputValue, setInputValue] = useState('');
@@ -26,6 +28,7 @@ export const SubjectSelector = ({
 	const subjectsQuery = useQuery({
 		queryKey: ['subjects', { year: selectedYear, term: selectedTerm }] as const,
 		queryFn: ({ queryKey }) => getSubjects(queryKey[1]),
+		enabled: !isDisabled,
 	});
 
 	const subjectList =
@@ -85,7 +88,7 @@ export const SubjectSelector = ({
 				}}
 				className="w-full"
 				menuTrigger="focus"
-				isDisabled={subjectsQuery.isPending}
+				isDisabled={isDisabled || subjectsQuery.isPending}
 				items={filteredSubjects}
 			>
 				<Label className="text-foreground/80 pl-1 text-xs leading-normal font-bold">

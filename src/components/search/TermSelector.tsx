@@ -2,7 +2,6 @@ import { Label, ListBox, Select } from '@heroui/react';
 import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
 
-import { LocalStorageKey } from '../../constants/local-storage-keys';
 import { TERMS } from '../../constants/terms';
 
 interface TermSelectorProps {
@@ -14,13 +13,9 @@ interface TermSelectorProps {
 export const TermSelector = ({
 	selectedTerm,
 	onTermChange,
+	isDisabled,
 }: TermSelectorProps) => {
 	const { t } = useTranslation();
-
-	const changeTerm = (term: string) => {
-		onTermChange(term);
-		localStorage.setItem(LocalStorageKey.Term, term);
-	};
 
 	return (
 		<div className="mobile:w-56 w-full">
@@ -34,13 +29,14 @@ export const TermSelector = ({
 				<Select
 					aria-labelledby="term-label"
 					selectedKey={selectedTerm}
+					isDisabled={isDisabled}
 					onSelectionChange={(val) => {
 						if (val) {
-							changeTerm(String(val));
+							onTermChange(String(val));
 						}
 					}}
 				>
-					<Select.Trigger className="border-separator bg-content1 flex h-11 w-full cursor-pointer items-center justify-between rounded-2xl border px-4 text-left text-sm font-medium transition-colors">
+					<Select.Trigger className="border-separator bg-content1 flex h-11 w-full cursor-pointer items-center justify-between rounded-2xl border px-4 text-left text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50">
 						<Select.Value>{({ selectedText }) => selectedText}</Select.Value>
 						<Select.Indicator>
 							<FaChevronDown className="text-default-500 text-xs" />
