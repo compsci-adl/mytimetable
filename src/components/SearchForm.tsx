@@ -29,8 +29,15 @@ export const SearchForm = () => {
 	const setCampuses = useFilters((s) => s.setCampuses);
 
 	useEffect(() => {
-		initYears();
-	}, [initYears]);
+		initYears().then(() => {
+			// initYears may select a year other than the one the courses were loaded for
+			const { year, term } = useFilters.getState();
+			const loaded = useEnrolledCourses.getState();
+			if (loaded.year !== year || loaded.term !== term) {
+				loadScopedCourses(year, term);
+			}
+		});
+	}, [initYears, loadScopedCourses]);
 
 	const hasCourses = enrolledCourses.courses.length > 0;
 
@@ -92,14 +99,14 @@ export const SearchForm = () => {
 	};
 
 	const doSwitchYear = (newYear: number) => {
-		saveCurrentCourses(selectedYear, selectedTerm);
+		saveCurrentCourses();
 		setSelectedYear(newYear);
 		loadScopedCourses(newYear, selectedTerm);
 		setSubject(null);
 	};
 
 	const doSwitchTerm = (newTerm: string) => {
-		saveCurrentCourses(selectedYear, selectedTerm);
+		saveCurrentCourses();
 		setSelectedTerm(newTerm);
 		loadScopedCourses(selectedYear, newTerm);
 		setSubject(null);

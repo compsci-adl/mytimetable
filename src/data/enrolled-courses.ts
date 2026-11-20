@@ -5,6 +5,7 @@ import { create } from 'zustand';
 import { getCourse } from '../apis';
 import { COURSE_COLORS, NOT_FOUND_COLOR } from '../constants/course-colors';
 import { LocalStorageKey } from '../constants/local-storage-keys';
+import { LEGACY_YEAR } from '../constants/year';
 import i18n from '../i18n';
 import { queryClient } from '../lib/query';
 import type {
@@ -29,6 +30,8 @@ export type Courses = Array<EnrolledCourseItem>;
 
 type CoursesState = {
 	courses: Courses;
+	year: number; // Year of the timetable in courses
+	term: string; // Term of the timetable in courses
 	addCourse: (
 		course: Omit<EnrolledCourseItem, 'classes' | 'color'> & {
 			preferredCampuses?: string[];
@@ -42,7 +45,7 @@ type CoursesState = {
 		classNumber: string;
 	}) => void;
 	loadScopedCourses: (year: number, term: string) => void;
-	saveCurrentCourses: (year: number, term: string) => void;
+	saveCurrentCourses: () => void;
 };
 
 const TIMETABLE_STORAGE_KEY_PREFIX = 'mytimetable_';
@@ -74,19 +77,6 @@ function readStoredCourses(year: number, term: string): Courses {
 				return parsed.courses;
 			}
 		}
-		// Fallback for initial migration: check old MTT.enrolled-courses
-		// Every save also updates the legacy key, so only read it before any scoped timetable exists
-		if (hasScopedTimetables()) {
-			return [];
-		}
-		const legacy = localStorage.getItem(LocalStorageKey.EnrolledCourses);
-		if (legacy) {
-			const parsedLegacy = JSON.parse(legacy);
-			const state = parsedLegacy?.state?.courses ?? parsedLegacy?.courses;
-			if (Array.isArray(state) && state.length > 0) {
-				return state;
-			}
-		}
 	} catch (e) {
 		// eslint-disable-next-line no-console
 		console.error('Failed to read scoped courses from localStorage:', e);
@@ -109,14 +99,21 @@ function writeStoredCourses(year: number, term: string, courses: Courses) {
 	}
 }
 
-function saveLegacyCourses(year: number, term: string, courses: Courses) {
-	writeStoredCourses(year, term, courses);
+// Move courses saved before multi-year support into their own timetable
+function migrateLegacyCourses(term: string) {
 	try {
-		// Save the year too, or initYears selects the newest year and shows these courses under it
-		localStorage.setItem(LocalStorageKey.Year, String(year));
+		// Every save also updates the legacy key, so only read it before any scoped timetable exists
+		if (hasScopedTimetables()) return;
+		const legacy = localStorage.getItem(LocalStorageKey.EnrolledCourses);
+		if (!legacy) return;
+		const parsedLegacy = JSON.parse(legacy);
+		const courses = parsedLegacy?.state?.courses ?? parsedLegacy?.courses;
+		if (!Array.isArray(courses) || courses.length === 0) return;
+		writeStoredCourses(LEGACY_YEAR, term, courses);
+		localStorage.setItem(LocalStorageKey.Year, String(LEGACY_YEAR));
 	} catch (e) {
 		// eslint-disable-next-line no-console
-		console.error('Failed to save year to localStorage:', e);
+		console.error('Failed to migrate legacy courses in localStorage:', e);
 	}
 }
 /* v8 ignore stop */
@@ -146,14 +143,14 @@ function getInitialYearAndTerm(): { year: number; term: string } {
 	return { year, term };
 }
 
+migrateLegacyCourses(getInitialYearAndTerm().term);
 const { year: initialYear, term: initialTerm } = getInitialYearAndTerm();
 const initialCourses = readStoredCourses(initialYear, initialTerm);
-if (initialCourses.length > 0 && !hasScopedTimetables()) {
-	saveLegacyCourses(initialYear, initialTerm, initialCourses);
-}
 
 export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 	courses: initialCourses,
+	year: initialYear,
+	term: initialTerm,
 	addCourse: async (course) => {
 		// Limit to max 10 courses
 		const currentCourses = get().courses;
@@ -173,7 +170,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 				state.courses.push({ ...course, classes: [], color });
 			}),
 		);
-		const { year, term } = getInitialYearAndTerm();
+		const { year, term } = get();
 		writeStoredCourses(year, term, get().courses);
 
 		const preferredCampuses = course.preferredCampuses;
@@ -253,8 +250,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 			});
 		};
 
-		const current = getInitialYearAndTerm();
-		if (current.year !== year || current.term !== term) {
+		if (get().year !== year || get().term !== term) {
 			// The user switched timetables while the course loaded, so update the one it was added to
 			const stored = produce(
 				{ courses: readStoredCourses(year, term) },
@@ -272,7 +268,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 				state.courses = state.courses.filter((c) => c.id !== courseId);
 			}),
 		);
-		const { year, term } = getInitialYearAndTerm();
+		const { year, term } = get();
 		writeStoredCourses(year, term, get().courses);
 	},
 	clearCourses: () => {
@@ -281,7 +277,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 				state.courses = [];
 			}),
 		);
-		const { year, term } = getInitialYearAndTerm();
+		const { year, term } = get();
 		writeStoredCourses(year, term, []);
 	},
 	updateCourseClass: ({ courseId, classTypeId, classNumber }) => {
@@ -307,8 +303,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 					const targetGroup = targetCls?.group;
 
 					if (targetGroup) {
-						const selectedTermAlias =
-							localStorage.getItem(LocalStorageKey.Term) ?? 'sem1';
+						const selectedTermAlias = state.term;
 
 						courseData.class_list.forEach((ct) => {
 							if (ct.id === classTypeId) return;
@@ -344,7 +339,7 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 				}
 			}),
 		);
-		const { year, term } = getInitialYearAndTerm();
+		const { year, term } = get();
 		writeStoredCourses(year, term, get().courses);
 	},
 	/* v8 ignore start */
@@ -353,10 +348,13 @@ export const useEnrolledCourses = create<CoursesState>()((set, get) => ({
 		set(
 			produce((state) => {
 				state.courses = courses;
+				state.year = year;
+				state.term = term;
 			}),
 		);
 	},
-	saveCurrentCourses: (year: number, term: string) => {
+	saveCurrentCourses: () => {
+		const { year, term } = get();
 		writeStoredCourses(year, term, get().courses);
 	},
 	/* v8 ignore stop */
